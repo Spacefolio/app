@@ -1,10 +1,13 @@
+//color selections
 $nav-background-color: #060d13;
 $active-text-color: white;
 $inactive-text-color: dimgray;
 $button-hover-background-color: #121d27;
+$nav-border: 1px solid #262d34;
+//button widths
 $nav-trade-btn-width: 92px;
 $nav-order-btn-width: 130px;
-$nav-border: 1px solid #262d34;
+
 
 .nav-container {
   font-weight: 500;
@@ -17,7 +20,9 @@ $nav-border: 1px solid #262d34;
   border-bottom: $nav-border;
 }
   .nav-branding-area-container {
+    flex-shrink: 0;
     width: 280px;
+    height: 100%;
     font-weight: 800;
     font-size: 1.4em;
     color: white;
@@ -32,6 +37,10 @@ $nav-border: 1px solid #262d34;
   }
     .orders-btn, .portfolio-btn {
       width: $nav-order-btn-width;
+    }
+    .trade-btn {
+      flex-shrink: 0;
+      width: $nav-trade-btn-width;
     }
     .text-nowrap{
       white-space: nowrap;
@@ -62,6 +71,4 @@ $nav-border: 1px solid #262d34;
       cursor: pointer;
     }
   }
-  .trade-btn {
-    width: $nav-trade-btn-width;
-  }
+  
