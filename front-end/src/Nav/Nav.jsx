@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {NavLink} from 'react-router-dom';
 import "./Nav.scss";
 import { userActions } from "../_actions";
 import account_photo_placeholder from "../public/account_photo_placeholder.png";
@@ -15,6 +16,9 @@ export const Nav = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authentication.user);
 
+  const{logout} = userActions;
+  // const activePage = useSelector((state) => state.page.current)
+
   //get the current page im on from the redux store to ensure the proper nav tab is highlighted
 
   //update the redux state of the current page if i click a link to a new page
@@ -23,18 +27,18 @@ export const Nav = () => {
       <div className="nav-branding-area-container center-my-children">
         <div>AlgoNexus</div>
       </div>
-      <div className="nav-button trade-btn">
+      <NavLink to="/trade" activeClassName='active-page-btn' className="nav-button trade-btn">
         <div>Trade</div>
-      </div>
+      </NavLink>
       <div className="nav-flex-spacer"></div>
       <div className="account-links-container">
-        <div className="nav-button orders-btn">
+        <a className="nav-button orders-btn">
           <div>Orders</div>
-        </div>
-        <div className="nav-button portfolio-btn">
+        </a>
+        <NavLink to="/portfolio" activeClassName='active-page-btn' className="nav-button portfolio-btn" >
           <div>Portfolio</div>
-        </div>
-        <div className="nav-button account-btn">
+        </NavLink>
+        <div onClick={() => dispatch(logout())} className="nav-button account-btn">
           <div className='account-btn-item-group'>
             <div className='text-nowrap'>
               {user.firstName} {user.lastName}

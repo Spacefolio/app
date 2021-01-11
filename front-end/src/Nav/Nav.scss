@@ -4,6 +4,7 @@ $active-text-color: white;
 $inactive-text-color: dimgray;
 $button-hover-background-color: #121d27;
 $nav-border: 1px solid #262d34;
+$active-page-btn-underline-color: #0e7dff;
 //button widths
 $nav-trade-btn-width: 92px;
 $nav-order-btn-width: 130px;
@@ -24,7 +25,7 @@ $nav-order-btn-width: 130px;
     width: 280px;
     height: 100%;
     font-weight: 800;
-    font-size: 1.4em;
+    font-size: 1.8em;
     color: white;
   }
   .nav-flex-spacer {
@@ -71,4 +72,9 @@ $nav-order-btn-width: 130px;
       cursor: pointer;
     }
   }
-  
+  .active-page-btn{
+    border-bottom: 5px solid $active-page-btn-underline-color;
+    &:focus{
+      
+    }
+  }

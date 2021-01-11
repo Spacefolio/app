@@ -29,9 +29,10 @@ export const App = () => {
       <Router history={history}>
         <Switch>
           <PrivateRoute exact path="/trade" component={Application} />
+          <PrivateRoute exact path="/portfolio" component={Application} />
           <Route path="/login" component={LoginPage} />
           <Route path="/register" component={RegisterPage} />
-          <Redirect from="*" to="/trade" />
+          <Redirect from='*' to="/trade"/>
         </Switch>
       </Router>
     </div>

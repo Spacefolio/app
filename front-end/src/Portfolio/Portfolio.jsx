@@ -5,7 +5,7 @@ import './Portfolio.scss';
 
 import { userActions } from "../_actions";
 
-export const Dashboard = () => {
+export const Portfolio = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.users);
   const user = useSelector((state) => state.authentication.user);
