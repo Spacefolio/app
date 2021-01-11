@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'Metropolis';
+  src: local('Metropolis'), url(../fonts/Metropolis-medium.otf) format('opentype');
+}
+
+body{
+  font-family: Metropolis;
+}
+.center-my-children{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+.center-my-children-column{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
