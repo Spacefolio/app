@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import './Dashboard.scss';
-
+import "./Dashboard.scss";
+import { Chart } from "../Chart";
+import { OrderBook } from "./TradeComponents";
+import { OrderPanel } from "../OrderPanel";
 import { userActions } from "../_actions";
+import { MarketSelector } from "../MarketSelector";
 
 export const Dashboard = () => {
   const dispatch = useDispatch();
@@ -22,9 +25,11 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="center-my-children-column">
-      <h1>Hi {user.firstName}!</h1>
-      <p>You're looking at the Trading Page</p>
-    </div>
+      <div className="trade-window-grid-container">
+        <MarketSelector />
+        <OrderPanel />
+        <Chart />
+        <OrderBook />
+      </div>
   );
 };

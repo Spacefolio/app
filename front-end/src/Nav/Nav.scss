@@ -1,7 +1,7 @@
 //color selections
 $nav-background-color: #060d13;
 $active-text-color: white;
-$inactive-text-color: dimgray;
+$inactive-text-color: #6a6e62;
 $button-hover-background-color: #121d27;
 $nav-border: 1px solid #262d34;
 $active-page-btn-underline-color: #0e7dff;
@@ -74,7 +74,5 @@ $nav-order-btn-width: 130px;
   }
   .active-page-btn{
     border-bottom: 5px solid $active-page-btn-underline-color;
-    &:focus{
-      
-    }
+    color: $active-text-color;
   }

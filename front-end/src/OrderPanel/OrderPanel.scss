@@ -1,0 +1,6 @@
+$nav-border: 1px solid #262d34;
+
+.order-panel-container {
+  grid-area: orderPanel;
+  border-right: $nav-border;
+}

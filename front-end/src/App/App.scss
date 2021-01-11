@@ -1,10 +1,18 @@
 @font-face {
   font-family: 'Metropolis';
-  src: local('Metropolis'), url(../fonts/Metropolis-medium.otf) format('opentype');
+  src: local('Metropolis'), url(../fonts//Metropolis/Metropolis-medium.otf) format('opentype');
 }
-
-body{
+*{
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+body, html{
+  height: 100%;
   font-family: Metropolis;
+}
+#app-wrapper, #app{
+  height: 100%;
 }
 .center-my-children{
   display:flex;

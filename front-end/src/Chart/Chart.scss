@@ -1,0 +1,6 @@
+$nav-border: 1px solid #262d34;
+
+.chart-container {
+  grid-area: Chart;
+  border-bottom: $nav-border;
+}

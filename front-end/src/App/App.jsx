@@ -9,8 +9,7 @@ import { Application } from "../Application";
 import { LoginPage } from "../LoginPage";
 import { RegisterPage } from "../RegisterPage";
 
-import './App.scss';
-
+import "./App.scss";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -22,7 +21,7 @@ export const App = () => {
     dispatch(clearAlerts());
   });
   return (
-    <div>
+    <div id="app-wrapper">
       {alert.message && (
         <div className={`alert ${alert.type}`}>{alert.message}</div>
       )}
@@ -32,7 +31,7 @@ export const App = () => {
           <PrivateRoute exact path="/portfolio" component={Application} />
           <Route path="/login" component={LoginPage} />
           <Route path="/register" component={RegisterPage} />
-          <Redirect from='*' to="/trade"/>
+          <Redirect from="*" to="/trade" />
         </Switch>
       </Router>
     </div>
