@@ -9,7 +9,7 @@ export const RegisterPage = () => {
   const registering = useSelector((state) => state.registration.registering);
   const dispatch = useDispatch();
 
-  const {register} = userActions;
+  const { register } = userActions;
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");

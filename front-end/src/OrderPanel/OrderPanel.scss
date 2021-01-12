@@ -1,6 +1,111 @@
 $nav-border: 1px solid #262d34;
+$trade-page-panel-header-color: #121d27;
+$form-input-background-color: #263543;
+$form-components-width: 220px;
+$form-text-color: #70939f;
 
 .order-panel-container {
   grid-area: orderPanel;
   border-right: $nav-border;
+  background-color: $trade-page-panel-header-color;
+}
+.order-form-buysell-toggle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+}
+.order-form-buy-selector,
+.order-form-sell-selector {
+  color: $form-text-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $form-components-width/2;
+  height: 25px;
+  background-color: $form-input-background-color;
+  cursor: pointer;
+}
+.order-form-container {
+  width: 100%;
+  font-size: 0.8em;
+}
+.order-form-inner-container {
+  width: $form-components-width;
+}
+.order-type-selector-container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px;
+  width: 100%;
+}
+.order-type-selector-container > div {
+  width: 100%;
+  display: flex;
+  align-items: bottom;
+  justify-content: center;
+  padding: 0 15px 3px 15px;
+  border-bottom: 2px solid #313e4b;
+}
+.order-form-amount-inputs-container {
+  margin: 20px 0;
+  width: 100%;
+}
+.order-form-input-container {
+  display: flex;
+  color: $form-text-color;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.order-form-input-textbox {
+  border: 0;
+  text-align: right;
+  font-weight: 500;
+  padding: 10px;
+  width: 100%;
+  background-color: $form-input-background-color;
+  &:active {
+    border: 0;
+  }
+}
+.order-form-input-ticker {
+  background-color: $form-input-background-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-left: 0.25px solid $trade-page-panel-header-color;
+}
+.order-form-submit-btn {
+  font-size: 0.95em;
+  margin-top: 20px;
+  padding: 15px 0 10px 0;
+  width: 100%;
+}
+.input-section-label {
+  margin-bottom: 5px;
+}
+.order-form-divider {
+  border-bottom: 2px solid #313e4b;
+}
+.order-form-terms-text {
+  font-size: 0.85em;
+  margin: 15px 0;
+}
+.order-form-terms-text > a {
+  border-bottom: 0.5px solid;
+}
+.order-form-calculations-container {
+  font-size: 0.9em;
+  width: 100%;
+  color: white;
+  margin: 15px 0;
+}
+.order-form-calculation-section-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
 }

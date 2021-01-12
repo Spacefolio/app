@@ -1,4 +1,5 @@
-$trade-page-panel-background-color: #121d27;
+$trade-page-panel-background-color: #070f15;
+$trade-page-panel-header-color: #121d27;
 $nav-background-color: #060d13;
 $active-text-color: white;
 $inactive-text-color: #6a6e62;
@@ -14,10 +15,22 @@ $active-page-btn-underline-color: #0e7dff;
   display: grid;
   height: calc(100vh - 57px);
   grid-template-columns: 280px auto;
-  grid-template-rows: 57px 50% auto;
+  grid-template-rows: 57px 70% auto;
   grid-template-areas:
     "marketSelector marketSelector"
     "orderPanel Chart"
     "orderPanel OrderBook";
   overflow: hidden;
+}
+.trade-panel-header-bar {
+  background-color: $trade-page-panel-header-color;
+  height: 46px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  padding: 0 30px;
+  align-items: center;
+  color: $active-text-color;
+  width: 100%;
+  border-bottom: $nav-border;
 }

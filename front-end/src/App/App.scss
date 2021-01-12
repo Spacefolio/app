@@ -1,31 +1,42 @@
 @font-face {
-  font-family: 'Metropolis';
-  src: local('Metropolis'), url(../fonts//Metropolis/Metropolis-medium.otf) format('opentype');
+  font-family: "Metropolis";
+  src: local("Metropolis"),
+    url(../fonts//Metropolis/Metropolis-medium.otf) format("opentype");
 }
-*{
+* {
   padding: 0;
   margin: 0;
   border: none;
 }
-body, html{
+body,
+html {
   height: 100%;
   font-family: Metropolis;
 }
-#app-wrapper, #app{
+#app-wrapper,
+#app {
   height: 100%;
 }
-.center-my-children{
-  display:flex;
+.center-my-children {
+  display: flex;
   justify-content: center;
   align-items: center;
 }
-.center-my-children-column{
-  display:flex;
+.center-my-children-column {
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-a, a:hover, a:focus, a:active {
+a,
+a:hover,
+a:focus,
+a:active {
   text-decoration: none;
   color: inherit;
+}
+input {
+  &:focus {
+    outline: none
+  }
 }

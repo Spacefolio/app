@@ -7,7 +7,9 @@ export const OrderBook = () => {
 
   return (
     <div className="trade-panel-container order-book-container">
-      <div>i'm an Order Book</div>
+      <div className="trade-panel-header-bar">
+        <div>My Orders</div>
+      </div>
     </div>
   );
 };
