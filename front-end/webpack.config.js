@@ -1,4 +1,6 @@
 var HtmlWebpackPlugin = require("html-webpack-plugin");
+require('dotenv').config();
+
 
 module.exports = {
   mode: "development",
@@ -32,7 +34,7 @@ module.exports = {
   externals: {
     // global app config object
     config: JSON.stringify({
-      apiUrl: "http://3.208.28.234/api",
+      apiUrl: process.env.NODE_ENV == 'DEVELOPMENT'? 'http://localhost:4000': '/api',
     }),
   },
 };
