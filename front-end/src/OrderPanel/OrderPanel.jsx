@@ -87,19 +87,22 @@ export const OrderPanel = () => {
                 STOP
               </div>
             </div>
-            <div className="order-form-amount-inputs-container">
-              <div>
-                <div className="input-section-label">Stop Price</div>
-                <div className="order-form-input-container">
-                  <input
-                    placeholder="0.00"
-                    className="order-form-input-textbox"
-                    value={stopPrice}
-                  ></input>
-                  <div className="order-form-input-ticker">{baseTicker}</div>
+            <div className="order-form-user-inputs-container">
+              {orderType == "STOP" ? (
+                <div className="order-form-user-input-container">
+                  <div className="input-section-label">Stop Price</div>
+                  <div className="order-form-input-container">
+                    <input
+                      placeholder="0.00"
+                      className="order-form-input-textbox"
+                      value={stopPrice}
+                    ></input>
+                    <div className="order-form-input-ticker">{baseTicker}</div>
+                  </div>
                 </div>
-              </div>
-              <div>
+              ) : null}
+
+              <div className="order-form-user-input-container">
                 <div className="input-section-label">Amount</div>
                 <div className="order-form-input-container">
                   <input
@@ -112,17 +115,20 @@ export const OrderPanel = () => {
                   </div>
                 </div>
               </div>
-              <div>
-                <div className="input-section-label">Limit Price</div>
-                <div className="order-form-input-container">
-                  <input
-                    placeholder="0.00"
-                    className="order-form-input-textbox"
-                    value={stopPrice}
-                  ></input>
-                  <div className="order-form-input-ticker">{baseTicker}</div>
+              {orderType == "STOP" || orderType == "LIMIT" ? (
+                <div className="order-form-user-input-container">
+                  <div className="input-section-label">Limit Price</div>
+                  <div className="order-form-input-container">
+                    <input
+                      placeholder="0.00"
+                      className="order-form-input-textbox"
+                      value={stopPrice}
+                    ></input>
+                    <div className="order-form-input-ticker">{baseTicker}</div>
+                  </div>
                 </div>
-              </div>
+              ) : null}
+
               <div className="order-form-terms-text">
                 By placing an order you agree to our{" "}
                 <a href="/terms">Terms of Service</a>
