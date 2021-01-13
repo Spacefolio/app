@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./OrderPanel.scss";
 
+
+//need to label and name form components and create the handleSubmit function
+
+//connect to the redux state and pull down order actions and the trading page data
+
+
+
 export const OrderPanel = () => {
   const [sellOrBuy, setSellOrBuy] = useState("BUY");
 

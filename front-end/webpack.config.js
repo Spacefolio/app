@@ -4,6 +4,7 @@ require('dotenv').config();
 
 module.exports = {
   mode: "development",
+  entry: ['@babel/polyfill', './src/index.jsx'],
   resolve: {
     extensions: [".js", ".jsx"],
   },
@@ -20,6 +21,10 @@ module.exports = {
       {
         test: /\.(png|woff|woff2|eot|ttf|svg|otf)$/,
         loader: "url-loader?limit=100000",
+      },
+      {
+        test: /\.(tsv|dsv)$/,
+        loader: "dsv-loader",
       },
     ],
   },
