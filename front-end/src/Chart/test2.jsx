@@ -207,7 +207,8 @@ var CandleStickChartWithDarkTheme = (props) => {
             fill={(d) => (d.close > d.open ? "#6BA583" : "#DB0000")}
           />
 
-          <OHLCTooltip origin={[-40, -10]} />
+          <OHLCTooltip origin={[-0, -10]} textFill={'white'}
+          />
           {/* <MovingAverageTooltip
 						onClick={e => console.log(e)}
 						origin={[-38, 15]}
