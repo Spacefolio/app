@@ -7,6 +7,14 @@ import MSFT from "../public/MSFT.tsv";
 import { tsvParse, csvParse } from "d3-dsv";
 import { timeParse } from "d3-time-format";
 
+//link order panel and chart throught redux state to enable order visualization and drag and drop orders
+
+//create tool panel component to overlay the chart and allow for all of the indicators and tool integrations with a gui for using them
+
+//dynamically allocate space for indicator charts upon selection and enable component resizing for the individual charts.
+
+//look into extracting the indicator logic out into a custom component that allows custom parameters and add methods for returning entry/exit values
+
 const parseData = (parse) => {
   return function (d) {
     d.date = parse(d.date);
