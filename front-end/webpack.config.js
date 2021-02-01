@@ -1,18 +1,28 @@
 var HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
 require('dotenv').config();
 
 
 module.exports = {
   mode: "development",
   entry: ['@babel/polyfill', './src/index.jsx'],
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
+  },
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: [".js", ".jsx", ".ts", ".tsx" ],
   },
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        loader: "babel-loader",
+        test: /\.(ts|tsx)$/,
+        use: "ts-loader",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.jsx$/,
+        use: "babel-loader",
       },
       {
         test: /\.(scss|css)$/,
