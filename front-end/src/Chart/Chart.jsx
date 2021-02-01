@@ -52,7 +52,7 @@ export const Chart = () => {
   return (
     <div className="trade-panel-container chart-container">
       <div className="trade-panel-header-bar">
-        <div>Pornhub</div>
+        <div>Definitley not Pornhub ;)</div>
       </div>
       <div className="chart-display-container"
       ref={(ref)}
