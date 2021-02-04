@@ -53,7 +53,7 @@ export const Nav = () => {
   return (
     <div className="nav-container">
       <div className="nav-branding-area-container center-my-children">
-        <div>AlgoNexus</div>
+        <div>Algonex</div>
       </div>
       <NavLink
         to="/trade"
