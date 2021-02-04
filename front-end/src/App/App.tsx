@@ -10,14 +10,15 @@ import { LoginPage } from "../LoginPage";
 import { RegisterPage } from "../RegisterPage";
 
 import "./App.scss";
+import "./variables.scss";
 
 export const App = () => {
   const dispatch = useDispatch();
-  const alert = useSelector((state) => state.alert);
+  const alert = useSelector((state: any) => state.alert);
 
   const clearAlerts = alertActions.clear;
 
-  history.listen((location, action) => {
+  history.listen((location: any, action: any) => {
     dispatch(clearAlerts());
   });
   return (
