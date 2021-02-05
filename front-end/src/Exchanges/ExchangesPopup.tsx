@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { exchangeService } from "../_services";
-import './ExchangesPopup.scss';
+import "./ExchangesPopup.scss";
 
 type exchangeData = {
   nickname: string;
   name: string;
   imageURL: string;
-}
+};
 
 interface ExchangesPopupProps {}
 
@@ -17,9 +17,11 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
   const { getAll } = exchangeService;
 
   useEffect(() => {
-    getAll();
-    console.log("sup")
-  },[]);
+    getAll().then((data) => {
+      setExchangeData(data);
+    });
+    console.log(exchangeData);
+  }, []);
 
   return (
     <div className="exchange-popup-wrapper">
@@ -29,7 +31,8 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
         </div>
         <div className="my-exchanges-list-container">
           {
-            //loop though all of the users linked exchanges and display them with an exchange component 
+            //loop though all of the users linked exchanges and display them with an exchange component
+            exchangeData ? <div>exchangeData</div> : "nothing here dawg"
           }
         </div>
       </div>
@@ -38,10 +41,8 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
   );
 };
 
-interface ExchangeItemProps {
+interface ExchangeItemProps {}
 
-}
-
-const ExchangeItem: React.FC<ExchangeItemProps> = ({})  => {
-return(<div></div>);
-}
+const ExchangeItem: React.FC<ExchangeItemProps> = ({}) => {
+  return <div></div>;
+};
