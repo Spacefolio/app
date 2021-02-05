@@ -18,4 +18,5 @@ db.once("open", function callback() {
 mongoose.Promise = global.Promise;
 module.exports = {
   User: require("../users/user.model"),
+  Exchange: require("../exchanges/exchange.model")
 };

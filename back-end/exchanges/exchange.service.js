@@ -1,51 +1,47 @@
-﻿const config = require('config.json');
+const config = require('config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('_helpers/db');
 const User = db.User;
-const mongoose = require('mongoose');
+const Exchange = db.Exchange;
+const UserService = require('../users/user.service.js');
+const userModel = require('../users/user.model');
 
 module.exports = {
-    authenticate,
     getAll,
-    getById,
-    create,
-    update,
-    delete: _delete
+    //getById,
+    create
+    //update,
+    //delete: _delete
 };
 
-async function authenticate({ username, password }) {
-    const user = await User.findOne({ username });
-    if (user && bcrypt.compareSync(password, user.hash)) {
-        const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '7d' });
-        return {
-            ...user.toJSON(),
-            token
-        };
-    }
-}
-
-async function getAll() {
-    return await User.find();
-}
-
-async function getById(id) {
-    return await User.findById(id);
-}
-
-async function create(userParam) {
-    // validate
+async function getAll(id) {
+    const user = await User.findById(id).populate('linkedExchanges');
     
-    if (await User.findOne({ username: userParam.username })) {
-        throw 'Username "' + userParam.username + '" is already taken';
-    }
+    if (!user) { res.send(404, 'User not Found'); }
 
-    const user = new User(userParam);
+    return user.linkedExchanges;
+}
 
-    // hash password
-    if (userParam.password) {
-        user.hash = bcrypt.hashSync(userParam.password, 10);
-    }
+/*
+async function getById(exchangeId) {
+    const exchange = await Exchange.findById(exchangeId);
+
+    if (!exchange) {res.send(404, 'Exchange not found')}
+
+    return exchange;
+}
+*/
+
+async function create(id, exchangeParam) {
+    // validate
+    const user = await User.findById(id);
+
+    const exchange = new Exchange(exchangeParam);
+    const savedExchange = await exchange.save();
+
+
+    user.linkedExchanges.push(savedExchange._id);
 
     // save user
     user.save(function(err, user) {
@@ -54,8 +50,11 @@ async function create(userParam) {
             res.send(400, 'Bad Request');
         }
     });
+
+    return savedExchange;
 }
 
+/*
 async function update(id, userParam) {
     const user = await User.findById(id);
 
@@ -79,3 +78,4 @@ async function update(id, userParam) {
 async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
+*/
