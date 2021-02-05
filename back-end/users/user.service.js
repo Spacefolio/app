@@ -69,7 +69,7 @@ async function update(id, userParam) {
     if (userParam.password) {
         userParam.hash = bcrypt.hashSync(userParam.password, 10);
     }
-
+ 
     // copy userParam properties to user
     Object.assign(user, userParam);
 

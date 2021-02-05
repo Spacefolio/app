@@ -1,22 +1,54 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect } from "react";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import "./Nav.scss";
 import { userActions } from "../_actions";
 import account_photo_placeholder from "../public/account_photo_placeholder.png";
-
-const Dropdown = () => {
-  const [accountDropdownVisible, setAccountDropdownVisible] = useState(false);
-
-  return <div></div>;
-};
+import Dropdown from "../_components/Dropdown";
 
 export const Nav = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.authentication.user);
+  const user = useSelector((state: any) => state.authentication.user);
+  const [accountDropdownVisible, setAccountDropdownVisible] = useState(false);
 
   const { logout } = userActions;
+
+  const container = useRef();
+
+  const ddownItems = [
+    {
+      id: 1,
+      title: "Profile",
+      onClickHandler: () => {},
+      selected: false,
+      key: "hi",
+    },
+    {
+      id: 2,
+      title: "My Exchanges",
+      onClickHandler: () => {},
+      selected: false,
+      key: "subs",
+    },
+    {
+      id: 3,
+      title: "Subscription",
+      onClickHandler: () => {},
+      selected: false,
+      key: "hi",
+    },
+    {
+      id: 4,
+      title: "Logout",
+      onClickHandler: () => {
+        dispatch(logout());
+        location.reload();
+      },
+      selected: false,
+      key: "yo",
+    },
+  ];
 
   return (
     <div className="nav-container">
@@ -30,6 +62,7 @@ export const Nav = () => {
       >
         <div>Trade</div>
       </NavLink>
+
       <div className="nav-flex-spacer"></div>
       <div className="account-links-container">
         <a className="nav-button orders-btn">
@@ -42,22 +75,31 @@ export const Nav = () => {
         >
           <div>Portfolio</div>
         </NavLink>
-        <div
-          onClick={() => {
-            dispatch(logout());
-            window.location.reload();
-          }}
-          className="nav-button account-btn"
-        >
-          <div className="account-btn-item-group">
-            <div className="text-nowrap">
-              {user.firstName} {user.lastName}
+        <div style={{ position: "relative" }} ref={container}>
+          <div
+            onClick={() => {
+              setAccountDropdownVisible(!accountDropdownVisible);
+            }}
+            className="nav-button account-btn"
+          >
+            <div className="account-btn-item-group">
+              <div className="text-nowrap">
+                {user.firstName} {user.lastName}
+              </div>
+              <img
+                className="account-btn-user-photo"
+                src={account_photo_placeholder}
+              ></img>
             </div>
-            <img
-              className="account-btn-user-photo"
-              src={account_photo_placeholder}
-            ></img>
           </div>
+          {accountDropdownVisible ? (
+            <Dropdown
+              isVisible={accountDropdownVisible}
+              setVisiblity={setAccountDropdownVisible}
+              items={ddownItems}
+              containerRef={container}
+            />
+          ) : null}
         </div>
       </div>
     </div>
