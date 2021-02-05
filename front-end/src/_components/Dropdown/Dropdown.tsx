@@ -1,5 +1,3 @@
-import { type } from "os";
-import { node } from "prop-types";
 import React, { useState, useEffect } from "react";
 import "./Dropdown.scss";
 
@@ -19,7 +17,7 @@ interface DropdownProps {
   containerRef: any;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({
+export const Dropdown: React.FC<DropdownProps> = ({
   items,
   setVisiblity,
   isVisible,
@@ -56,5 +54,3 @@ const Dropdown: React.FC<DropdownProps> = ({
     </div>
   );
 };
-
-export default Dropdown;

@@ -5,12 +5,14 @@ import { NavLink } from "react-router-dom";
 import "./Nav.scss";
 import { userActions } from "../_actions";
 import account_photo_placeholder from "../public/account_photo_placeholder.png";
-import Dropdown from "../_components/Dropdown";
+import { Dropdown, Modal } from "../_components";
+import {ExchangesPopup} from '../Exchanges';
 
 export const Nav = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.authentication.user);
   const [accountDropdownVisible, setAccountDropdownVisible] = useState(false);
+  const [exchangesPopupVisible, setExchangesPopupVisible] = useState(true);
 
   const { logout } = userActions;
 
@@ -22,12 +24,15 @@ export const Nav = () => {
       title: "Profile",
       onClickHandler: () => {},
       selected: false,
-      key: "hi",
+      key: "kgjh",
     },
     {
       id: 2,
       title: "My Exchanges",
-      onClickHandler: () => {},
+      onClickHandler: () => {
+        setExchangesPopupVisible(true);
+        setAccountDropdownVisible(false);
+      },
       selected: false,
       key: "subs",
     },
@@ -49,6 +54,8 @@ export const Nav = () => {
       key: "yo",
     },
   ];
+
+  const dismissable = () => {};
 
   return (
     <div className="nav-container">
@@ -102,6 +109,11 @@ export const Nav = () => {
           ) : null}
         </div>
       </div>
+      <Modal
+        dismiss={() => setExchangesPopupVisible(false)}
+        children={<ExchangesPopup/>}
+        visible={exchangesPopupVisible}
+      />
     </div>
   );
 };
