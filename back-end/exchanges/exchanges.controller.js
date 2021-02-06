@@ -12,6 +12,7 @@ router.get('/', getAll);
 module.exports = router;
 
 function create(req, res, next) {
+  console.log(req.body, req.user.sub);
     exchangeService.create(req.user.sub, req.body)
         .then((linkedExchange) => linkedExchange ? res.json(linkedExchange) : res.sendStatus(404))
         .catch(err => next(err));

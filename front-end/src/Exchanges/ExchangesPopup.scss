@@ -1,24 +1,23 @@
-.exchange-popup-wrapper{
-  display:flex;
+.exchange-popup-wrapper {
+  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 1000px;
+  padding: 10%;
 }
-.my-exchanges-wrapper{
+.exchange-popup-innner-wrapper {
+  position: relative;
+  background-color: blue;
+}
 
+.my-exchanges-wrapper {
 }
-.my-exchanges-label-container{
+.my-exchanges-label-container {
   width: 100%;
-
 }
-.my-exchanges-label{
-
+.my-exchanges-label {
 }
-.add-exchange-wrapper{
-
+.add-exchange-wrapper {
 }
-.my-exchanges-list-container{
+.my-exchanges-list-container {
   padding: 10px;
-
 }
+

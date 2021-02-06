@@ -1,10 +1,10 @@
-.close-button-wrapper {
+.delete-button-wrapper {
   position: absolute;
   &:hover {
     cursor: pointer;
   }
 }
-.close-button-svg {
+.delete-button-svg {
   fill: var(--close-button-color);
   &:hover {
     fill: var(--close-button-hover-color);

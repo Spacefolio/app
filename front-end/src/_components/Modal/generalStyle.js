@@ -8,12 +8,10 @@ bottom: 0;
 z-index: 1050;
 display: flex;
 align-items: center;
+justify-content: center;
 `;
 export const ModalBoxSetup = styled.div`
 position: absolute;
-left: 10%;
-right: 10%;
-width: "32%";
 overflow:hidden;
 padding:16px;
 margin: 50px auto;

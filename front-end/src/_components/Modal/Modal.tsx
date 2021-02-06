@@ -6,22 +6,26 @@ interface DropdownProps {
   visible: boolean;
   dismiss(): void;
   children: any;
+  clickOutsidedismiss?: boolean;
 }
 
 export const Modal: React.FC<DropdownProps> = ({
   visible,
   dismiss,
   children,
+  clickOutsidedismiss
 }) => {
   return (
     <React.Fragment>
       {visible ? (
         <ModalWrapper>
           <ModalBoxSetup>
-            <CloseButton clickAction={() => dismiss()}></CloseButton>
+            <CloseButton top="5px" right="5px" clickAction={() => dismiss()}></CloseButton>
             {children}
           </ModalBoxSetup>
-          <ModalBg onClick={() => dismiss()} />
+          <ModalBg onClick={() => {
+            clickOutsidedismiss? dismiss(): null
+          }} />
         </ModalWrapper>
       ) : null}
     </React.Fragment>

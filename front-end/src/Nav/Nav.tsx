@@ -55,8 +55,6 @@ export const Nav = () => {
     },
   ];
 
-  const dismissable = () => {};
-
   return (
     <div className="nav-container">
       <div className="nav-branding-area-container center-my-children">
@@ -113,6 +111,7 @@ export const Nav = () => {
         dismiss={() => setExchangesPopupVisible(false)}
         children={<ExchangesPopup/>}
         visible={exchangesPopupVisible}
+        clickOutsidedismiss={false}
       />
     </div>
   );
