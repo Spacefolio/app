@@ -10,9 +10,9 @@ const userModel = require('../users/user.model');
 module.exports = {
     getAll,
     //getById,
-    create
+    create,
     //update,
-    //delete: _delete
+    delete: _delete
 };
 
 async function getAll(id) {
@@ -29,7 +29,7 @@ async function getById(exchangeId) {
 
     if (!exchange) {res.send(404, 'Exchange not found')}
 
-    return exchange;
+    return exchange;    
 }
 */
 
@@ -42,7 +42,7 @@ async function create(id, exchangeParam) {
 
 
     user.linkedExchanges.push(savedExchange._id);
-
+ 
     // save user
     user.save(function(err, user) {
         if (err) {
@@ -74,8 +74,8 @@ async function update(id, userParam) {
 
     await user.save();
 }
-
-async function _delete(id) {
-    await User.findByIdAndRemove(id);
-}
 */
+
+async function _delete(userId, exchangeId) {
+    const user = await User.findByIdAndRemove(userId);
+}

@@ -7,7 +7,7 @@ router.post('/', create);
 router.get('/', getAll);
 //router.get('/:id', getById);
 //router.put('/:id', update);
-//router.delete('/:id', _delete);
+router.delete('/:id', _delete);
 
 module.exports = router;
 
@@ -40,10 +40,8 @@ function update(req, res, next) {
 }
 */
 
-/*
 function _delete(req, res, next) {
-    userService.delete(req.params.id)
+    exchangeService.delete(req.user.sub, req.params.id)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
-*/
