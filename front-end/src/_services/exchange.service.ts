@@ -1,45 +1,46 @@
 import config from "config";
 import { authHeader } from "../_helpers";
-
-interface exchange {
-  name: string;
-  nickname?: string;
-  apiKey: string;
-  apiSecret: string;
-  passphrase: string;
-}
+import { exchangeData } from "../types";
+import axios from "axios";
 
 export const exchangeService = {
   addNew,
   getAll,
-  // getById,
-  // delete: _delete
+  update,
+  delete: _delete,
 };
 
 async function getAll() {
+  console.log("get all service");
+
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   };
-  console.log("apiURL", config.get("apiUrl"));
+
+  axios
+    .get(`https://google.com`)
+    .then((response) => {
+      console.log(response);
+      return(response);
+    });
+}
+
+async function addNew(exchange: exchangeData) {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(exchange),
+  };
   const response = await fetch(
     `${"http://localhost:4000"}/exchanges`,
     requestOptions
   );
-  console.log('gottem', response);
+
   return handleResponse(response);
 }
 
-// function getById(id: any) {
-//     const requestOptions = {
-//         method: 'GET',
-//         headers: authHeader()
-//     };
-
-//     return fetch(`${config.get("apiUrl")}/users/${id}`, requestOptions).then(handleResponse);
-// }
-
-async function addNew(exchange: exchange) {
+async function update(exchange: exchangeData) {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },

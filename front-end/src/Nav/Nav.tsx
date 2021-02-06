@@ -12,7 +12,7 @@ export const Nav = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.authentication.user);
   const [accountDropdownVisible, setAccountDropdownVisible] = useState(false);
-  const [exchangesPopupVisible, setExchangesPopupVisible] = useState(true);
+  const [exchangesPopupVisible, setExchangesPopupVisible] = useState(false);
 
   const { logout } = userActions;
 

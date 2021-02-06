@@ -19,6 +19,7 @@ function create(req, res, next) {
 }
 
 function getAll(req, res, next) {
+  console.log('anything');
     exchangeService.getAll(req.user.sub)
         .then(linkedExchanges => res.json(linkedExchanges))
         .catch(err => next(err));

@@ -1,26 +1,28 @@
-const config = require('config.json');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const db = require('_helpers/db');
+const config = require("config.json");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const db = require("_helpers/db");
 const User = db.User;
 const Exchange = db.Exchange;
-const UserService = require('../users/user.service.js');
-const userModel = require('../users/user.model');
+const UserService = require("../users/user.service.js");
+const userModel = require("../users/user.model");
 
 module.exports = {
-    getAll,
-    //getById,
-    create,
-    //update,
-    delete: _delete
+  getAll,
+  //getById,
+  create,
+  //update,
+  delete: _delete,
 };
 
 async function getAll(id) {
-    const user = await User.findById(id).populate('linkedExchanges');
-    
-    if (!user) { res.send(404, 'User not Found'); }
-
-    return user.linkedExchanges;
+  console.log("got hit");
+  const user = await User.findById(id).populate("linkedExchanges");
+  if (!user) {
+    res.send(404, "User not Found");
+  }
+  console.log(user.linkedExchanges);
+  return user.linkedExchanges;
 }
 
 /*
@@ -34,24 +36,23 @@ async function getById(exchangeId) {
 */
 
 async function create(id, exchangeParam) {
-    // validate
-    const user = await User.findById(id);
+  // validate
+  const user = await User.findById(id);
 
-    const exchange = new Exchange(exchangeParam);
-    const savedExchange = await exchange.save();
+  const exchange = new Exchange(exchangeParam);
+  const savedExchange = await exchange.save();
 
+  user.linkedExchanges.push(savedExchange._id);
 
-    user.linkedExchanges.push(savedExchange._id);
- 
-    // save user
-    user.save(function(err, user) {
-        if (err) {
-            console.log(err);
-            res.send(400, 'Bad Request');
-        }
-    });
+  // save user
+  user.save(function (err, user) {
+    if (err) {
+      console.log(err);
+      res.send(400, "Bad Request");
+    }
+  });
 
-    return savedExchange;
+  return savedExchange;
 }
 
 /*
@@ -77,5 +78,5 @@ async function update(id, userParam) {
 */
 
 async function _delete(userId, exchangeId) {
-    const user = await User.findByIdAndRemove(userId);
+  const user = await User.findByIdAndRemove(userId);
 }

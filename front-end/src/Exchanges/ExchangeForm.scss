@@ -1,17 +1,19 @@
 .add-exchange-data-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 5px;
 }
 .add-exchange-row-label {
+  padding-right: 10px;
 }
 .add-exchange-row-input {
+
+  right: 0px;
   padding: 0 5px;
   border: 1px solid black;
   border-radius: 3px;
-  position: absolute;
-  right: 0px;
 }
 .add-exchange-form {
-  margin: 20px;
-  width: 300px;
   position: relative;
 }

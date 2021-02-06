@@ -1,3 +1,3 @@
 export * from './ExchangesPopup'
-export * from './AddExchangeForm'
+export * from './ExchangeForm'
 export * from './ExchangeItem'

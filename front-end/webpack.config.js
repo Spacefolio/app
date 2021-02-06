@@ -59,7 +59,7 @@ module.exports = {
     config: JSON.stringify({
       apiUrl:
         process.env.NODE_ENV == "DEVELOPMENT"
-          ? "https://localhost:4000"
+          ? "http://localhost:4000"
           : "/api",
     }),
   },

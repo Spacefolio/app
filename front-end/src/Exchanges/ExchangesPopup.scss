@@ -1,16 +1,18 @@
 .exchange-popup-wrapper {
-  display: flex;
-  flex-direction: column;
   padding: 10%;
+  width: 500px;
 }
-.exchange-popup-innner-wrapper {
+.exchange-popup-inner-wrapper {
   position: relative;
-  background-color: blue;
 }
 
 .my-exchanges-wrapper {
+  width: 100%;
 }
 .my-exchanges-label-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
 }
 .my-exchanges-label {
@@ -18,6 +20,6 @@
 .add-exchange-wrapper {
 }
 .my-exchanges-list-container {
-  padding: 10px;
+  width: 100%;
 }
 
