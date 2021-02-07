@@ -7,6 +7,7 @@ const schema = new Schema({
     passphrase: { type: String, required: true },
     name: { type: String, required: true },
     nickname: { type: String },
+    exchangeType: { type: Number, required: true },
     addedDate: { type: Date, default: Date.now }
 });
 
