@@ -1,7 +1,8 @@
 ﻿const config = require('config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-import { User, IUser, ILoginRequest, IRegisterRequest, IUserDocument, IUserModel } from './user.model';
+import { User } from '../_helpers/db';
+import { IUser, ILoginRequest, IRegisterRequest, IUserDocument, IUserModel } from './user.model';
 
 export const userService = {
     authenticate,
@@ -12,8 +13,8 @@ export const userService = {
     delete: _delete
 };
 
-async function authenticate(userRequest: ILoginRequest) {
-    const user = await User.findById(userRequest.username);
+async function authenticate(userRequest: any) {
+    const user = await User.findOne({ username: userRequest.username });
     if (user && bcrypt.compareSync(userRequest.password, user.hash)) {
         const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '7d' });
         return {

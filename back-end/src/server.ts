@@ -8,7 +8,6 @@ import jwt from './_helpers/jwt';
 import { errorHandler } from './_helpers/error-handler';
 import { usersRouter } from './users/users.controller';
 import { exchangesRouter } from './exchanges/exchanges.controller';
-import { User, ExchangeAccount } from './_helpers/db';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

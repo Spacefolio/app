@@ -1,4 +1,4 @@
-import { connectionString } from "../../config.json";
+import * as config from "../../config.json";
 import mongoose from "mongoose";
 import { User } from '../users/user.model';
 import { ExchangeAccount } from '../exchanges/exchange.model';
@@ -11,7 +11,7 @@ const connectionOptions = {
   useFindAndModify: false,
 };
 console.log(process.env.MONGODB_URI);
-mongoose.connect(process.env.MONGODB_URI || connectionString, connectionOptions, () => {});
+mongoose.connect(process.env.MONGODB_URI || config.connectionString, connectionOptions, () => {});
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function callback() {
