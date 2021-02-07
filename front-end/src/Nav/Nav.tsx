@@ -12,7 +12,7 @@ export const Nav = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.authentication.user);
   const [accountDropdownVisible, setAccountDropdownVisible] = useState(false);
-  const [exchangesPopupVisible, setExchangesPopupVisible] = useState(true);
+  const [exchangesPopupVisible, setExchangesPopupVisible] = useState(false);
 
   const { logout } = userActions;
 
@@ -54,8 +54,6 @@ export const Nav = () => {
       key: "yo",
     },
   ];
-
-  const dismissable = () => {};
 
   return (
     <div className="nav-container">
@@ -113,6 +111,7 @@ export const Nav = () => {
         dismiss={() => setExchangesPopupVisible(false)}
         children={<ExchangesPopup/>}
         visible={exchangesPopupVisible}
+        clickOutsidedismiss={false}
       />
     </div>
   );

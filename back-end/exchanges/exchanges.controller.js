@@ -12,12 +12,14 @@ router.delete('/:id', _delete);
 module.exports = router;
 
 function create(req, res, next) {
+  console.log(req.body, req.user.sub);
     exchangeService.create(req.user.sub, req.body)
         .then((linkedExchange) => linkedExchange ? res.json(linkedExchange) : res.sendStatus(404))
         .catch(err => next(err));
 }
 
 function getAll(req, res, next) {
+  console.log('anything');
     exchangeService.getAll(req.user.sub)
         .then(linkedExchanges => res.json(linkedExchanges))
         .catch(err => next(err));

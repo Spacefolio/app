@@ -1,24 +1,25 @@
-.exchange-popup-wrapper{
-  display:flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 1000px;
+.exchange-popup-wrapper {
+  padding: 10%;
+  width: 500px;
 }
-.my-exchanges-wrapper{
+.exchange-popup-inner-wrapper {
+  position: relative;
+}
 
-}
-.my-exchanges-label-container{
+.my-exchanges-wrapper {
   width: 100%;
-
 }
-.my-exchanges-label{
-
+.my-exchanges-label-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
-.add-exchange-wrapper{
-
+.my-exchanges-label {
 }
-.my-exchanges-list-container{
-  padding: 10px;
-
+.add-exchange-wrapper {
 }
+.my-exchanges-list-container {
+  width: 100%;
+}
+
