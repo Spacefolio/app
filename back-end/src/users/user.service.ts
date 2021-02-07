@@ -1,11 +1,9 @@
 ﻿const config = require('config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const db = require('_helpers/db');
-const User = db.User;
-const mongoose = require('mongoose');
+import { User, IUser, ILoginRequest, IRegisterRequest, IUserDocument, IUserModel } from './user.model';
 
-module.exports = {
+export const userService = {
     authenticate,
     getAll,
     getById,
@@ -14,9 +12,9 @@ module.exports = {
     delete: _delete
 };
 
-async function authenticate({ username, password }) {
-    const user = await User.findOne({ username });
-    if (user && bcrypt.compareSync(password, user.hash)) {
+async function authenticate(userRequest: ILoginRequest) {
+    const user = await User.findById(userRequest.username);
+    if (user && bcrypt.compareSync(userRequest.password, user.hash)) {
         const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '7d' });
         return {
             ...user.toJSON(),
@@ -29,11 +27,11 @@ async function getAll() {
     return await User.find();
 }
 
-async function getById(id) {
+async function getById(id: string) {
     return await User.findById(id);
 }
 
-async function create(userParam) {
+async function create(userParam: IRegisterRequest) {
     // validate
     
     if (await User.findOne({ username: userParam.username })) {
@@ -51,12 +49,12 @@ async function create(userParam) {
     user.save(function(err, user) {
         if (err) {
             console.log(err);
-            res.send(400, 'Bad Request');
+            throw "Bad Request"
         }
     });
 }
 
-async function update(id, userParam) {
+async function update(id: string, userParam: IRegisterRequest) {
     const user = await User.findById(id);
 
     // validate
@@ -67,7 +65,7 @@ async function update(id, userParam) {
 
     // hash password if it was entered
     if (userParam.password) {
-        userParam.hash = bcrypt.hashSync(userParam.password, 10);
+        user.hash = bcrypt.hashSync(userParam.password, 10);
     }
  
     // copy userParam properties to user
@@ -76,6 +74,6 @@ async function update(id, userParam) {
     await user.save();
 }
 
-async function _delete(id) {
+async function _delete(id: string) {
     await User.findByIdAndRemove(id);
 }

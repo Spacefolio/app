@@ -1,14 +1,8 @@
-const config = require("config.json");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const db = require("_helpers/db");
-const User = db.User;
-const Exchange = db.Exchange;
-const UserService = require('../users/user.service.js');
-const userModel = require('../users/user.model');
-const ccxt = require('ccxt');
+import { IUser, User } from '../users/user.model';
+import { IExchangeAccount, IExchangeAccountRequest, ExchangeAccount } from './exchange.model';
+import ccxt from 'ccxt';
 
-module.exports = {
+export const exchangeService = {
     getAll,
     getById,
     create,
@@ -16,25 +10,27 @@ module.exports = {
     delete: _delete
 };
 
-async function getAll(id) {
+async function getAll(id: string) {
   console.log("got hit");
   const user = await User.findById(id).populate("linkedExchanges");
+  
   if (!user) {
-    res.send(404, "User not Found");
+    throw("User not Found");
   }
+
   console.log(user.linkedExchanges);
   return user.linkedExchanges;
 }
 
-async function getById(exchangeId) {
-    const exchange = await Exchange.findById(exchangeId);
+async function getById(exchangeId: string) {
+    const exchange = await ExchangeAccount.findById(exchangeId);
 
-    if (!exchange) {res.send(404, 'Exchange not found')}
+    if (!exchange) {throw('Exchange not found');}
 
     return exchange;
 }
 
-async function create(id, exchangeParam) {
+async function create(id: string, exchangeParam: IExchangeAccountRequest) {
   // validate
   const user = await User.findById(id);
 
@@ -49,33 +45,37 @@ async function create(id, exchangeParam) {
             'enableRateLimit': true,
         });
 
+    coinbasePro.fetchBalance().then((balances: any) => {
+      console.log(balances);
+    }).catch((err: any) => { throw(err.message); });
     console.log(coinbasePro.requiredCredentials);
+
     //console.log(await coinbasePro.fetchBalance());
     //console.log(coinbasePro.has);
     //console.log(await coinbasePro.fetchMyTrades('XLM/USD'));
-    console.log(await coinbasePro.fetchTicker('XLM/USD'));
+    //console.log(await coinbasePro.fetchTicker('XLM/USD'));
 
-    const exchangeObject = new Exchange(exchangeParam);
+    const exchangeObject = new ExchangeAccount(exchangeParam);
     const savedExchange = await exchangeObject.save();
 
   // save user
-  user.save(function (err, user) {
+  user.save(function (err: any, user: any) {
     if (err) {
       console.log(err);
-      res.send(400, "Bad Request");
+      throw("Bad Request");
     }
   });
 
   return savedExchange;
 }
 
-async function update(userId, exchangeId, exchangeParam) {
+async function update(userId: string, exchangeId: string, exchangeParam: IExchangeAccountRequest) {
     const user = await User.findById(userId);
 
     // validate
     if (!user) throw 'User not found';
 
-    const exchange = await Exchange.findById(exchangeId);
+    const exchange = await ExchangeAccount.findById(exchangeId);
 
     // copy exchangeParam properties to exchange
     Object.assign(exchange, exchangeParam);
@@ -83,14 +83,18 @@ async function update(userId, exchangeId, exchangeParam) {
     await exchange.save();
 }
 
-async function _delete(userId, exchangeId) {
-    const user = await User.findById(userId);
+async function _delete(userId: string, exchangeId: string) {
+    var user = await User.findById(userId);
 
     if (!user) throw 'User not found';
 
-    user.linkedExchanges.remove(exchangeId);
+    const updatedArray = user.linkedExchanges.filter((item) => {
+      return item != exchangeId
+    });
 
-    const exchange = await Exchange.findByIdAndRemove(exchangeId);
+    user.linkedExchanges = updatedArray;
+
+    const exchange = await ExchangeAccount.findByIdAndRemove(exchangeId);
 
     await user.save();
 }
