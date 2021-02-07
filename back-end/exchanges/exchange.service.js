@@ -4,16 +4,16 @@ const bcrypt = require("bcryptjs");
 const db = require("_helpers/db");
 const User = db.User;
 const Exchange = db.Exchange;
-const UserService = require('../users/user.service.js');
-const userModel = require('../users/user.model');
-const ccxt = require('ccxt');
+const UserService = require("../users/user.service.js");
+const userModel = require("../users/user.model");
+const ccxt = require("ccxt");
 
 module.exports = {
-    getAll,
-    getById,
-    create,
-    update,
-    delete: _delete
+  getAll,
+  getById,
+  create,
+  update,
+  delete: _delete,
 };
 
 async function getAll(id) {
@@ -27,39 +27,41 @@ async function getAll(id) {
 }
 
 async function getById(exchangeId) {
-    const exchange = await Exchange.findById(exchangeId);
+  const exchange = await Exchange.findById(exchangeId);
 
-    if (!exchange) {res.send(404, 'Exchange not found')}
+  if (!exchange) {
+    res.send(404, "Exchange not found");
+  }
 
-    return exchange;
+  return exchange;
 }
 
 async function create(id, exchangeParam) {
   // validate
   const user = await User.findById(id);
 
-    // verify connection to exchange
-    const exchangeId = 'coinbasepro'
-        , exchangeClass = ccxt[exchangeId]
-        , coinbasePro = new exchangeClass ({
-            'apiKey': exchangeParam.apiKey,
-            'secret': exchangeParam.apiSecret,
-            'password': exchangeParam.passphrase,
-            'timeout': 30000,
-            'enableRateLimit': true,
-        });
+  // verify connection to exchange
+  const exchangeId = "coinbasepro",
+    exchangeClass = ccxt[exchangeId],
+    coinbasePro = new exchangeClass({
+      apiKey: exchangeParam.apiKey,
+      secret: exchangeParam.apiSecret,
+      password: exchangeParam.passphrase,
+      timeout: 30000,
+      enableRateLimit: true,
+    });
 
-    console.log(coinbasePro.requiredCredentials);
-    //console.log(await coinbasePro.fetchBalance());
-    //console.log(coinbasePro.has);
-    //console.log(await coinbasePro.fetchMyTrades('XLM/USD'));
-    console.log(await coinbasePro.fetchTicker('XLM/USD'));
+  // console.log(coinbasePro.requiredCredentials);
+  //console.log(await coinbasePro.fetchBalance());
+  //console.log(coinbasePro.has);
+  //console.log(await coinbasePro.fetchMyTrades('XLM/USD'));
+  // console.log(await coinbasePro.fetchTicker('XLM/USD'));
 
-    const exchangeObject = new Exchange(exchangeParam);
-    const savedExchange = await exchangeObject.save();
+  const exchangeObject = new Exchange(exchangeParam);
+  const savedExchange = await exchangeObject.save();
 
   // save user
-  user.save(function (err, user) {
+  user.save(function (user, err) {
     if (err) {
       console.log(err);
       res.send(400, "Bad Request");
@@ -70,27 +72,27 @@ async function create(id, exchangeParam) {
 }
 
 async function update(userId, exchangeId, exchangeParam) {
-    const user = await User.findById(userId);
+  const user = await User.findById(userId);
 
-    // validate
-    if (!user) throw 'User not found';
+  // validate
+  if (!user) throw "User not found";
 
-    const exchange = await Exchange.findById(exchangeId);
+  const exchange = await Exchange.findById(exchangeId);
 
-    // copy exchangeParam properties to exchange
-    Object.assign(exchange, exchangeParam);
+  // copy exchangeParam properties to exchange
+  Object.assign(exchange, exchangeParam);
 
-    await exchange.save();
+  await exchange.save();
 }
 
 async function _delete(userId, exchangeId) {
-    const user = await User.findById(userId);
+  const user = await User.findById(userId);
 
-    if (!user) throw 'User not found';
+  if (!user) throw "User not found";
 
-    user.linkedExchanges.remove(exchangeId);
+  user.linkedExchanges.remove(exchangeId);
 
-    const exchange = await Exchange.findByIdAndRemove(exchangeId);
+  const exchange = await Exchange.findByIdAndRemove(exchangeId);
 
-    await user.save();
+  await user.save();
 }

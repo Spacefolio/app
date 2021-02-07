@@ -1,9 +1,10 @@
 import config from "config";
 import { authHeader } from "../_helpers";
-import { exchangeData } from "../types";
+import { IExchangeAccountRequest, IExchangeAccount } from "../types";
 import axios from "axios";
 
 export const exchangeService = {
+  getInfo,
   addNew,
   getAll,
   update,
@@ -11,60 +12,97 @@ export const exchangeService = {
 };
 
 async function getAll() {
-  console.log("get all service");
-
+  const Authorization = authHeader().Authorization;
   const requestOptions = {
-    method: "GET",
-    headers: authHeader(),
+    Authorization: Authorization,
+    "Content-Type": "application/json",
   };
 
-  axios
-    .get(`https://google.com`)
+  return await axios
+    .get(`http://localhost:4000/exchanges`, { headers: requestOptions })
     .then((response) => {
       console.log(response);
-      return(response);
+      return response;
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
+}
+async function getInfo() {
+  return await axios
+    .get("https://s3.amazonaws.com/statics.algonex.us/exchanges.json")
+    .then((response) => {
+      return response;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return err;
     });
 }
 
-async function addNew(exchange: exchangeData) {
+async function addNew(exchange: IExchangeAccountRequest) {
+  const Authorization = authHeader().Authorization;
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(exchange),
+    Authorization: Authorization,
+    "Content-Type": "application/json",
   };
-  const response = await fetch(
-    `${"http://localhost:4000"}/exchanges`,
-    requestOptions
-  );
-
-  return handleResponse(response);
+  console.log("adding new");
+  axios
+    .post(`http://localhost:4000/exchanges`, exchange, {
+      headers: requestOptions,
+    })
+    .then((response) => {
+      console.log("response", response);
+      return response;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return err;
+    });
 }
 
-async function update(exchange: exchangeData) {
+async function update(id: string, data: IExchangeAccountRequest) {
+  const Authorization = authHeader().Authorization;
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(exchange),
+    Authorization: Authorization,
+    "Content-Type": "application/json",
   };
-  const response = await fetch(
-    `${"http://localhost:4000"}/exchanges`,
-    requestOptions
-  );
-  return handleResponse(response);
+  console.log("adding new");
+  axios
+    .put(`http://localhost:4000/exchanges/?id=${id}`, data, {
+      headers: requestOptions,
+    })
+    .then((response) => {
+      console.log("response", response);
+      return response;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return err;
+    });
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-async function _delete(id: any) {
+async function _delete(id: string) {
+  const Authorization = authHeader().Authorization;
   const requestOptions = {
-    method: "DELETE",
-    headers: authHeader(),
+    Authorization: Authorization,
+    "Content-Type": "application/json",
   };
-
-  const response = await fetch(
-    `${config.get("apiUrl")}/exchanges/${id}`,
-    requestOptions
-  );
-  return handleResponse(response);
+  console.log("adding new");
+  axios
+    .delete(`http://localhost:4000/exchanges/?id=${id}`, {
+      headers: requestOptions,
+    })
+    .then((response) => {
+      console.log("response", response);
+      return response;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return err;
+    });
 }
 
 function handleResponse(response: any) {
@@ -72,6 +110,7 @@ function handleResponse(response: any) {
     const data = text && JSON.parse(text);
     if (!response.ok) {
       if (response.status === 401) {
+        console.log(response);
         // auto logout if 401 response returned from api
         location.reload();
       }
