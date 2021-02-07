@@ -27,7 +27,7 @@ async function getById(exchangeId: string) {
 
     if (!exchange) {throw('Exchange not found');}
 
-    return exchange;
+  return exchange;
 }
 
 async function create(id: string, exchangeParam: IExchangeAccountRequest) {
@@ -72,21 +72,21 @@ async function create(id: string, exchangeParam: IExchangeAccountRequest) {
 async function update(userId: string, exchangeId: string, exchangeParam: IExchangeAccountRequest) {
     const user = await User.findById(userId);
 
-    // validate
-    if (!user) throw 'User not found';
+  // validate
+  if (!user) throw "User not found";
 
     const exchange = await ExchangeAccount.findById(exchangeId);
 
-    // copy exchangeParam properties to exchange
-    Object.assign(exchange, exchangeParam);
+  // copy exchangeParam properties to exchange
+  Object.assign(exchange, exchangeParam);
 
-    await exchange.save();
+  await exchange.save();
 }
 
 async function _delete(userId: string, exchangeId: string) {
     var user = await User.findById(userId);
 
-    if (!user) throw 'User not found';
+  if (!user) throw "User not found";
 
     const updatedArray = user.linkedExchanges.filter((item) => {
       return item != exchangeId
@@ -96,5 +96,5 @@ async function _delete(userId: string, exchangeId: string) {
 
     const exchange = await ExchangeAccount.findByIdAndRemove(exchangeId);
 
-    await user.save();
+  await user.save();
 }

@@ -23,3 +23,12 @@
   width: 100%;
 }
 
+.exchange-search-bar{
+  border-radius: 5px;
+  border: lightblue solid 3px;
+  width: 100%;
+  padding: 10px;
+  &:focus{
+    
+  }
+}

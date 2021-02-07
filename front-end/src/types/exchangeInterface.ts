@@ -1,9 +1,24 @@
-export interface exchangeData {
-  id?: string;
+export interface IExchangeAccount {
+  id: string;
+  exchangeType: number;
   nickname: string;
   name: string;
-  imageURL: string;
+  logoUrl: string;
   apiKey: string;
   apiSecret: string;
   passphrase: string;
+}
+export interface IExchangeAccountRequest {
+  exchangeType: number;
+  nickname: string;
+  name: string;
+  logoUrl: string;
+  apiKey: string;
+  apiSecret: string;
+  passphrase: string;
+}
+export interface IExchangeReference {
+  id: number;
+  name: string;
+  logoUrl: string;
 }
