@@ -5,8 +5,8 @@ const exchangeService = require('./exchange.service');
 // routes
 router.post('/', create);
 router.get('/', getAll);
-//router.get('/:id', getById);
-//router.put('/:id', update);
+router.get('/:id', getById);
+router.put('/:id', update);
 router.delete('/:id', _delete);
 
 module.exports = router;
@@ -23,21 +23,17 @@ function getAll(req, res, next) {
         .catch(err => next(err));
 }
 
-/*
 function getById(req, res, next) {
     exchangeService.getById(req.params.id, req.params.exchangeId)
-        .then(exchange => user ? res.json(user) : res.sendStatus(404))
+        .then(exchange => exchange ? res.json(exchange) : res.sendStatus(404))
         .catch(err => next(err));
 }
-*/
 
-/*
 function update(req, res, next) {
-    userService.update(req.params.id, req.body)
+    exchangeService.update(req.user.sub, req.params.id, req.body)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
-*/
 
 function _delete(req, res, next) {
     exchangeService.delete(req.user.sub, req.params.id)

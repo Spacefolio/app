@@ -6,12 +6,13 @@ const User = db.User;
 const Exchange = db.Exchange;
 const UserService = require('../users/user.service.js');
 const userModel = require('../users/user.model');
+const ccxt = require('ccxt');
 
 module.exports = {
     getAll,
-    //getById,
+    getById,
     create,
-    //update,
+    update,
     delete: _delete
 };
 
@@ -23,23 +24,37 @@ async function getAll(id) {
     return user.linkedExchanges;
 }
 
-/*
 async function getById(exchangeId) {
     const exchange = await Exchange.findById(exchangeId);
 
     if (!exchange) {res.send(404, 'Exchange not found')}
 
-    return exchange;    
+    return exchange;
 }
-*/
 
 async function create(id, exchangeParam) {
     // validate
     const user = await User.findById(id);
 
-    const exchange = new Exchange(exchangeParam);
-    const savedExchange = await exchange.save();
+    // verify connection to exchange
+    const exchangeId = 'coinbasepro'
+        , exchangeClass = ccxt[exchangeId]
+        , coinbasePro = new exchangeClass ({
+            'apiKey': exchangeParam.apiKey,
+            'secret': exchangeParam.apiSecret,
+            'password': exchangeParam.passphrase,
+            'timeout': 30000,
+            'enableRateLimit': true,
+        });
 
+    console.log(coinbasePro.requiredCredentials);
+    //console.log(await coinbasePro.fetchBalance());
+    //console.log(coinbasePro.has);
+    //console.log(await coinbasePro.fetchMyTrades('XLM/USD'));
+    console.log(await coinbasePro.fetchTicker('XLM/USD'));
+
+    const exchangeObject = new Exchange(exchangeParam);
+    const savedExchange = await exchangeObject.save();
 
     user.linkedExchanges.push(savedExchange._id);
  
@@ -54,28 +69,28 @@ async function create(id, exchangeParam) {
     return savedExchange;
 }
 
-/*
-async function update(id, userParam) {
-    const user = await User.findById(id);
+async function update(userId, exchangeId, exchangeParam) {
+    const user = await User.findById(userId);
 
     // validate
     if (!user) throw 'User not found';
-    if (user.username !== userParam.username && await User.findOne({ username: userParam.username })) {
-        throw 'Username "' + userParam.username + '" is already taken';
-    }
 
-    // hash password if it was entered
-    if (userParam.password) {
-        userParam.hash = bcrypt.hashSync(userParam.password, 10);
-    }
+    const exchange = await Exchange.findById(exchangeId);
 
-    // copy userParam properties to user
-    Object.assign(user, userParam);
+    // copy exchangeParam properties to exchange
+    Object.assign(exchange, exchangeParam);
 
-    await user.save();
+    await exchange.save();
 }
-*/
 
 async function _delete(userId, exchangeId) {
-    const user = await User.findByIdAndRemove(userId);
+    const user = await User.findById(userId);
+
+    if (!user) throw 'User not found';
+
+    user.linkedExchanges.remove(exchangeId);
+
+    const exchange = await Exchange.findByIdAndRemove(exchangeId);
+
+    await user.save();
 }
