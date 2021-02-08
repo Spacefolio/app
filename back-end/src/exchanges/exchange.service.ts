@@ -45,10 +45,12 @@ async function create(id: string, exchangeParam: IExchangeAccountRequest) {
             'enableRateLimit': true,
         });
 
-    coinbasePro.fetchBalance().then((balances: any) => {
+    const response = await coinbasePro.fetchBalance().then((balances: any) => {
       console.log(balances);
-    }).catch((err: any) => { throw(err.message); });
+    }).catch((err: any) => { return err; });
     console.log(coinbasePro.requiredCredentials);
+
+    if (response) { return response; }
 
     //console.log(await coinbasePro.fetchBalance());
     //console.log(coinbasePro.has);
