@@ -1,5 +1,7 @@
-const config = require("config.json");
-const mongoose = require("mongoose");
+import * as config from "../../config.json";
+import mongoose from "mongoose";
+import { User } from '../users/user.model';
+import { ExchangeAccount } from '../exchanges/exchange.model';
 require("dotenv").config();
 
 const connectionOptions = {
@@ -16,7 +18,8 @@ db.once("open", function callback() {
   console.log("DB Connected");
 });
 mongoose.Promise = global.Promise;
-module.exports = {
-  User: require("../users/user.model"),
-  Exchange: require("../exchanges/exchange.model")
-};
+
+export {
+  User,
+  ExchangeAccount
+}

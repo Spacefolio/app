@@ -1,8 +1,9 @@
-const expressJwt = require('express-jwt');
+import expressJwt from 'express-jwt';
+import { Request } from 'express';
 const config = require('config.json');
-const userService = require('../users/user.service');
+import { userService } from '../users/user.service';
 
-module.exports = jwt;
+export default jwt;
 
 function jwt() {
     const secret = config.secret;
@@ -15,7 +16,7 @@ function jwt() {
     });
 }
 
-async function isRevoked(req, payload, done) {
+async function isRevoked(req: Request, payload: any, done: any) {
     const user = await userService.getById(payload.sub);
 
     // revoke token if user no longer exists
