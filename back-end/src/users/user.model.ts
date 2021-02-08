@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     hash: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    linkedExchanges: [ { type: Schema.Types.ObjectId, ref: 'Exchange' } ],
+    linkedExchanges: [ { type: Schema.Types.ObjectId, ref: 'ExchangeAccount' } ],
     createdDate: { type: Date, default: Date.now }
 });
 
