@@ -1,6 +1,10 @@
 import { userConstants } from '../_constants';
 
-export function registration(state = {}, action) {
+interface IRegistrationAction{
+  type: string
+}
+
+export function registration(state = {}, action: IRegistrationAction) {
   switch (action.type) {
     case userConstants.REGISTER_REQUEST:
       return { registering: true };

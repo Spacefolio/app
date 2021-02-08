@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { exchangeService } from "../_services";
+import { exchangeActions } from "../_actions";
 import "./ExchangesPopup.scss";
 import { ExchangeForm, ExchangeItem } from "../Exchanges";
 import { IExchangeAccount, IExchangeReference } from "../types";
 import { Modal } from "../_components";
+import { useDispatch, useSelector } from "react-redux";
 
 interface ExchangesPopupProps {}
 
 export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
-  const [userLinkedExchanges, setUserLinkedExchanges] = useState([]);
+  const dispatch = useDispatch;
+
+  const loadingExchanges = useSelector((state: any) => state.exchanges.loading);
+  const userLinkedExchanges = useSelector((state: any) => state.exchanges.exchanges);
+
   const [exchangeRef, setExchangeRef] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
 
@@ -17,32 +22,29 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
     null
   );
 
-  const { getAll, getInfo } = exchangeService;
+  // const { getAll, getInfo } = exchangeService;
 
-  const getExchangeRef = async () => {
-    getInfo()
-      .then((res: any) => {
-        setExchangeRef(res.data.exchanges);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const getExchangeRef = async () => {
+  //   getInfo()
+  //     .then((res: any) => {
+  //       setExchangeRef(res.data.exchanges);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
-  const getExchangeData = () => {
-    getAll()
-      .then((res: any) => {
-        setUserLinkedExchanges(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const getExchangeData = () => {
+  //   getAll()
+  //     .then((res: any) => {
+  //       setUserLinkedExchanges(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
-  useEffect(() => {
-    getExchangeRef();
-    getExchangeData();
-  }, []);
+  useEffect(() => {exchangeActions.getAll()}, []);
 
   return (
     <div className="exchange-popup-wrapper">
@@ -54,11 +56,13 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
           <div className="my-exchanges-list-container">
             {
               //loop though all of the users linked exchanges and display them with an exchange component
-              userLinkedExchanges.length != 0
-                ? userLinkedExchanges.map((item: IExchangeAccount) => {
-                    return <ExchangeItem data={item} />;
-                  })
-                : "Add a test exchange below"
+               loadingExchanges != 0 ? (
+                userLinkedExchanges.map((item: IExchangeAccount) => {
+                  return <ExchangeItem data={item} />;
+                })
+              ) : (
+                "You have no linked accounts... Add one below"
+              )
             }
           </div>
         </div>
@@ -70,19 +74,23 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
           visible={addExchangeVisible}
         />
         <div className="add-exchange-wrapper">
-          <div><input
-            className="exchange-search-bar"
-            name="search"
-            type="text"
-            placeholder="search"
-            value={searchFilter}
-            onChange={(e) => setSearchFilter(e.target.value)}
-          /></div>
+          <div>
+            <input
+              className="exchange-search-bar"
+              name="search"
+              type="text"
+              placeholder="search"
+              value={searchFilter}
+              onChange={(e) => setSearchFilter(e.target.value)}
+            />
+          </div>
           {exchangeRef.length != 0
             ? exchangeRef
                 .filter((item: IExchangeReference) => {
                   if (searchFilter != "") {
-                    return item.name.toLowerCase().startsWith(searchFilter.toLowerCase())
+                    return item.name
+                      .toLowerCase()
+                      .startsWith(searchFilter.toLowerCase());
                     // return item.name.toLowerCase() == searchFilter.toLowerCase();
                   } else return true;
                 })

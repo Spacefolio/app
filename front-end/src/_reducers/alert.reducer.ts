@@ -1,6 +1,11 @@
 import { alertConstants } from '../_constants';
 
-export function alert(state = {}, action) {
+interface IAlertAction {
+  type: string;
+  message: string;
+}
+
+export function alert(state = {}, action: IAlertAction) {
   switch (action.type) {
     case alertConstants.SUCCESS:
       return {

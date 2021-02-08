@@ -1,14 +1,20 @@
 import { userConstants } from '../_constants';
 
+interface IUserAuthentication{
+  type: string;
+  user?: any
+  username?: string;
+}
+
 let user = JSON.parse(localStorage.getItem('user'));
 const initialState = user ? { loggedIn: true, user } : {};
 
-export function authentication(state = initialState, action) {
+export function authentication(state = initialState, action: IUserAuthentication) {
   switch (action.type) {
     case userConstants.LOGIN_REQUEST:
       return {
         loggingIn: true,
-        user: action.user
+        user: action.username
       };
     case userConstants.LOGIN_SUCCESS:
       return {

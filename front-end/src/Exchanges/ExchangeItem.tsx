@@ -3,7 +3,7 @@ import { DeleteButton, EditButton } from "../_components";
 import { IExchangeAccount } from "../types/exchangeInterface";
 import { Modal } from "../_components";
 import { ExchangeForm } from "./ExchangeForm";
-import { exchangeService } from "../_services";
+import { exchangeActions } from "../_actions";
 
 
 interface ExchangeItemProps {
@@ -28,13 +28,13 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
       <DeleteButton
         right="0px"
         clickAction={() => {
-          exchangeService.delete(data.id);
+          exchangeActions.delete(data.id);
         }}
       />
       <Modal
         visible={editExchangeVisible}
         dismiss={() => setEditExchangeVisible(false)}
-        children={<ExchangeForm formType={"edit"} editData={data} />}
+        children={<ExchangeForm formType={"edit"} editData={data}/>}
       />
       <EditButton
         right="30px"

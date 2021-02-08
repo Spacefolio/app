@@ -22,7 +22,7 @@ export const Nav = () => {
     {
       id: 1,
       title: "Profile",
-      onClickHandler: () => {},
+      onClickHandler: () => {console.log(user);},
       selected: false,
       key: "kgjh",
     },
@@ -55,6 +55,8 @@ export const Nav = () => {
     },
   ];
 
+                
+              
   return (
     <div className="nav-container">
       <div className="nav-branding-area-container center-my-children">

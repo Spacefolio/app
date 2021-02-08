@@ -1,52 +1,76 @@
 import { exchangeConstants } from "../_constants";
 import { exchangeService } from "../_services";
-import { alertActions } from ".";
+import { alertActions } from "./alert.actions";
 import { history } from "../_helpers";
+import {
+  IExchangeAccount,
+  IExchangeAccountRequest,
+} from "../types/exchangeInterface";
 
 export const exchangeActions = {
-  // addNew,
+  addNew,
   getAll,
-  // delete: _delete,
+  update,
+  delete: _delete,
 };
 
-// function addNew(exchange: any) {
-//   return (
-//     dispatch: (arg0: {
-//       type: string;
-//       user?: any;
-//       message?: any;
-//       error?: any;
-//     }) => void
-//   ) => {
-//     dispatch(request(exchange));
+function addNew(exchange: IExchangeAccountRequest) {
+  return (dispatch: any) => {
+    dispatch(request(exchange));
 
-//     exchangeService.addNew(exchange).then(
-//       (user) => {
-//         dispatch(success());
-//         dispatch(alertActions.success("Registration successful"));
-//       },
-//       (error) => {
-//         dispatch(failure(error.toString()));
-//         dispatch(alertActions.error(error.toString()));
-//       }
-//     );
-//   };
+    exchangeService.addNew(exchange).then(
+      (res: any) => {
+        dispatch(success(res));
+        dispatch(alertActions.success("Exchange Added"));
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(alertActions.error(error.toString()));
+      }
+    );
+  };
 
-//   function request(user: any) {
-//     return { type: exchangeConstants.REGISTER_REQUEST, user };
-//   }
-//   function success(user: undefined) {
-//     return { type: exchangeConstants.REGISTER_SUCCESS, user };
-//   }
-//   function failure(error: any) {
-//     return { type: exchangeConstants.REGISTER_FAILURE, error };
-//   }
-// }
+  function request(exchange: IExchangeAccountRequest) {
+    return { type: exchangeConstants.ADDNEW_REQUEST, exchange };
+  }
+  function success(exchange: IExchangeAccount) {
+    return { type: exchangeConstants.ADDNEW_SUCCESS, exchange };
+  }
+  function failure(error: any) {
+    return { type: exchangeConstants.ADDNEW_FAILURE, error };
+  }
+}
+
+function update(exchange: IExchangeAccount) {
+  return (dispatch: any) => {
+    dispatch(request(exchange));
+
+    exchangeService.addNew(exchange).then(
+      (res: any) => {
+        dispatch(success(res));
+        dispatch(alertActions.success("update successful"));
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(alertActions.error(error.toString()));
+      }
+    );
+  };
+
+  function request(user: any) {
+    return { type: exchangeConstants.UPDATE_REQUEST, user };
+  }
+  function success(user: undefined) {
+    return { type: exchangeConstants.UPDATE_SUCCESS, user };
+  }
+  function failure(error: any) {
+    return { type: exchangeConstants.UPDATE_FAILURE, error };
+  }
+}
 
 function getAll() {
-  return (
-    dispatch: (arg0: { type: string; users?: any; error?: any }) => void
-  ) => {
+  console.log('getting all your exchanges')
+  return (dispatch: any) => {
     dispatch(request());
 
     exchangeService.getAll().then(
@@ -67,23 +91,23 @@ function getAll() {
   }
 }
 
-// function _delete(id: any) {
-//   return (dispatch: (arg0: { type: string; id: any; error?: any }) => void) => {
-//     dispatch(request(id));
+function _delete(id: any) {
+  return (dispatch: any) => {
+    dispatch(request(id));
 
-//     exchangeService.delete(id).then(
-//       (user) => dispatch(success(id)),
-//       (error) => dispatch(failure(id, error.toString()))
-//     );
-//   };
+    exchangeService.delete(id).then(
+      (user) => dispatch(success(id)),
+      (error) => dispatch(failure(id, error.toString()))
+    );
+  };
 
-//   function request(id: any) {
-//     return { type: exchangeConstants.DELETE_REQUEST, id };
-//   }
-//   function success(id: any) {
-//     return { type: exchangeConstants.DELETE_SUCCESS, id };
-//   }
-//   function failure(id: any, error: any) {
-//     return { type: exchangeConstants.DELETE_FAILURE, id, error };
-//   }
-// }
+  function request(id: any) {
+    return { type: exchangeConstants.DELETE_REQUEST, id };
+  }
+  function success(id: any) {
+    return { type: exchangeConstants.DELETE_SUCCESS, id };
+  }
+  function failure(id: any, error: any) {
+    return { type: exchangeConstants.DELETE_FAILURE, id, error };
+  }
+}
