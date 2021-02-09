@@ -81,6 +81,7 @@ async function update(id: string, data: IExchangeAccountRequest) {
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 async function _delete(id: string) {
+  console.log("service", id);
   const Authorization = authHeader().Authorization;
   const requestOptions = {
     Authorization: Authorization,
@@ -92,7 +93,6 @@ async function _delete(id: string) {
       headers: requestOptions,
     })
     .then((response) => {
-      console.log("response", response);
       return response;
     })
     .catch((err) => {

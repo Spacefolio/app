@@ -114,21 +114,24 @@ function getRef() {
   }
 }
 
-function _delete(id: any) {
+function _delete(id: string) {
+  console.log("action", id);
   return (dispatch: any) => {
     dispatch(request(id));
+
     exchangeService
       .delete(id)
       .then((res) => {
-        console.log(res)
         dispatch(success(id))})
-      .catch((error) => dispatch(failure(id, error.toString())));
+        dispatch(alertActions.success("Deleted"))
+      .catch((error: any) => dispatch(failure(id, error.toString())));
   };
 
-  function request(id: any) {
+  function request(id: string) {
+    console.log(id);
     return { type: exchangeConstants.DELETE_REQUEST, id };
   }
-  function success(id: any) {
+  function success(id: string) {
     return { type: exchangeConstants.DELETE_SUCCESS, id };
   }
   function failure(id: any, error: any) {

@@ -5,9 +5,9 @@ interface IExchangeAction {
   type: string;
   exchanges?: IExchangeAccount[];
 
-  id: string;
+  id?: string;
   error?: string;
-  exchangeAccount?: string;
+  exchangeAccount?: any;
 }
 
 interface IExchangeAccountState extends IExchangeAccount {
@@ -49,26 +49,25 @@ export function exchanges(
 
     case exchangeConstants.DELETE_REQUEST:
       return {
-        ...state,
-        exchanges: state.exchanges.exchanges.map(
-          (exchange: IExchangeAccountState) =>
-            exchange.id === action.id
-              ? { ...exchange, deleting: true }
-              : exchange
-        ),
+        ...state
       };
     case exchangeConstants.DELETE_SUCCESS:
       // remove deleted user from state
+      console.log("reducer", action.id)
       return {
+        ...state,
         exchanges: state.exchanges.filter(
-          (exchange: IExchangeAccountState) => exchange.id !== action.id
+          (item: IExchangeAccount) => {
+            console.log(item.id)
+            return item.id !== action.id
+          }
         ),
       };
     case exchangeConstants.DELETE_FAILURE:
       // remove 'deleting:true' property and add 'deleteError:[error]' property to user
       return {
         ...state,
-        items: state.exchanges.exchanges.map(
+        items: state.exchanges.map(
           (exchange: IExchangeAccountState) => {
             if (exchange.id === action.id) {
               // make copy of user without 'deleting:true' property
@@ -97,12 +96,11 @@ export function exchanges(
     case exchangeConstants.UPDATE_REQUEST:
       return { ...state, addingExchange: true };
     case exchangeConstants.UPDATE_SUCCESS:
-      console.log(action.exchangeAccount);
       return {
         ...state,
         addingExchange: false,
         exchanges: state.exchanges.map((item: IExchangeAccount) => {
-          if (item.id == action.id) {
+          if (item.id == action.exchangeAccount.id) {
             return action.exchangeAccount;
           } else {
             return item;
