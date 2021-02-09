@@ -23,12 +23,10 @@ function addNew(exchange: IExchangeAccountRequest) {
     exchangeService
       .addNew(exchange)
       .then((res: any) => {
-        console.log(res);
         dispatch(success(res));
         dispatch(alertActions.success("Exchange Added"));
       })
       .catch((error) => {
-        console.log("mufukin error bitch");
         dispatch(failure(error.toString()));
         dispatch(alertActions.error(error.toString()));
       });
@@ -37,19 +35,19 @@ function addNew(exchange: IExchangeAccountRequest) {
   function request(exchange: IExchangeAccountRequest) {
     return { type: exchangeConstants.ADDNEW_REQUEST, exchange };
   }
-  function success(exchange: IExchangeAccount) {
-    return { type: exchangeConstants.ADDNEW_SUCCESS, exchange };
+  function success(exchangeAccount: IExchangeAccount) {
+    return { type: exchangeConstants.ADDNEW_SUCCESS, exchangeAccount };
   }
   function failure(error: any) {
     return { type: exchangeConstants.ADDNEW_FAILURE, error };
   }
 }
 
-function update(exchange: IExchangeAccount) {
+function update(exchange: IExchangeAccountRequest, id: string) {
   return (dispatch: any) => {
     dispatch(request(exchange));
 
-    exchangeService.update(exchange.id, exchange).then(
+    exchangeService.update(id, exchange).then(
       (res: any) => {
         dispatch(success(res));
         dispatch(alertActions.success("update successful"));
@@ -61,11 +59,11 @@ function update(exchange: IExchangeAccount) {
     );
   };
 
-  function request(user: any) {
-    return { type: exchangeConstants.UPDATE_REQUEST, user };
+  function request(exchange: any) {
+    return { type: exchangeConstants.UPDATE_REQUEST, exchange };
   }
-  function success(user: undefined) {
-    return { type: exchangeConstants.UPDATE_SUCCESS, user };
+  function success(exchangeAccount: IExchangeAccount) {
+    return { type: exchangeConstants.UPDATE_SUCCESS, exchangeAccount };
   }
   function failure(error: any) {
     return { type: exchangeConstants.UPDATE_FAILURE, error };

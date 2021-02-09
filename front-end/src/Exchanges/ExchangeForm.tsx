@@ -24,29 +24,17 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
   );
   const dispatch = useDispatch();
 
-  const data = (formType == "add") ? addData : editData;
-
-  const [exchangeType, setExchangeType] = useState(
-    formType == "add" ? addData.id : editData.exchangeType
-  );
+  const data = formType == "add" ? addData : editData;
+  const [exchangeType, setExchangeType] = useState(formType == "add" ? addData.id : editData.exchangeType);
   const [apiKey, setApiKey] = useState(editData ? editData.apiKey : "");
-  const [apiSecret, setApiSecret] = useState(
-    editData ? editData.apiSecret : ""
-  );
-  const [passphrase, setPassphrase] = useState(
-    editData ? editData.passphrase : ""
-  );
-  const [name, setName] = useState(
-    formType == "add" ? addData.name : editData.name
-  );
-  const [nickname, setNickname] = useState(
-    formType == "add" ? data.name : editData.nickname
-  );
+  const [apiSecret, setApiSecret] = useState(    editData ? editData.apiSecret : ""  );
+  const [passphrase, setPassphrase] = useState(    editData ? editData.passphrase : ""  );
+  const [name, setName] = useState(    formType == "add" ? addData.name : editData.name  );
+  const [nickname, setNickname] = useState(    formType == "add" ? data.name : editData.nickname  );
   const [exchange, setExchange] = useState<any>();
 
   useEffect(() => {
     setExchange({
-      id: editData.id,
       exchangeType,
       apiKey,
       apiSecret,
@@ -57,11 +45,11 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
   }, [exchangeType, apiKey, apiSecret, passphrase, name, nickname]);
 
   const handleSubmit = () => {
-    dispatch(exchangeActions.addNew(exchange))
+    dispatch(exchangeActions.addNew(exchange));
   };
 
   const handleUpdate = () => {
-    dispatch(exchangeActions.update(exchange))
+    dispatch(exchangeActions.update(exchange, editData.id));
   };
 
   const formTypeEdit = {
@@ -139,7 +127,8 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
             color: "white",
           }}
         >
-          <div style={{ cursor: "pointer" }}>{formTypeData.buttonText}</div>
+          <div style={{ cursor: "pointer" }}>{formTypeData.buttonText}{addingExchange ? "ing...": null}</div>
+          
         </div>
       </div>
     </form>

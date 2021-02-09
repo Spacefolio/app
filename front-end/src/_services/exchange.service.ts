@@ -51,7 +51,6 @@ async function addNew(exchange: IExchangeAccountRequest) {
       headers: requestOptions,
     })
     .then((response) => {
-      console.log("response", response);
       return response.data;
     })
     .catch((err) => {
@@ -66,14 +65,13 @@ async function update(id: string, data: IExchangeAccountRequest) {
     Authorization: Authorization,
     "Content-Type": "application/json",
   };
-  console.log(id, data);
   return await axios
     .put(`http://localhost:4000/exchanges/${id}`, data, {
       headers: requestOptions,
     })
     .then((response) => {
-      console.log("\n\nresponse", response);
-      return response;
+      console.log("\n\nresponse", response.data);
+      return response.data;
     })
     .catch((err) => {
       console.log("\n\nerr", err);

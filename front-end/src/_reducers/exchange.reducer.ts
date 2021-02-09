@@ -4,6 +4,7 @@ import { IExchangeAccount } from "../types";
 interface IExchangeAction {
   type: string;
   exchanges?: IExchangeAccount[];
+
   id: string;
   error?: string;
   exchangeAccount?: string;
@@ -14,7 +15,7 @@ interface IExchangeAccountState extends IExchangeAccount {
 }
 
 export function exchanges(
-  state: any = { exchanges: [], loading: false, exchangeRef: []},
+  state: any = { exchanges: [], exchangeRef: [], addingExchange: false },
   action: IExchangeAction
 ) {
   switch (action.type) {
@@ -29,13 +30,12 @@ export function exchanges(
       };
     case exchangeConstants.GETALL_FAILURE:
       return {
-
         error: action.error,
       };
 
     case exchangeConstants.GETREF_REQUEST:
       return {
-        ...state
+        ...state,
       };
     case exchangeConstants.GETREF_SUCCESS:
       return {
@@ -50,14 +50,17 @@ export function exchanges(
     case exchangeConstants.DELETE_REQUEST:
       return {
         ...state,
-        exchanges: state.exchanges.exchanges.map((exchange: IExchangeAccountState) =>
-          exchange.id === action.id ? { ...exchange, deleting: true } : exchange
+        exchanges: state.exchanges.exchanges.map(
+          (exchange: IExchangeAccountState) =>
+            exchange.id === action.id
+              ? { ...exchange, deleting: true }
+              : exchange
         ),
       };
     case exchangeConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
-        exchanges: state.exchanges.exchanges.filter(
+        exchanges: state.exchanges.filter(
           (exchange: IExchangeAccountState) => exchange.id !== action.id
         ),
       };
@@ -65,24 +68,49 @@ export function exchanges(
       // remove 'deleting:true' property and add 'deleteError:[error]' property to user
       return {
         ...state,
-        items: state.exchanges.map((exchange: IExchangeAccountState) => {
-          if (exchange.id === action.id) {
-            // make copy of user without 'deleting:true' property
-            const { deleting, ...exchangeCopy } = exchange;
-            // return copy of user with 'deleteError:[error]' property
-            return { ...exchangeCopy, deleteError: action.error };
-          }
+        items: state.exchanges.exchanges.map(
+          (exchange: IExchangeAccountState) => {
+            if (exchange.id === action.id) {
+              // make copy of user without 'deleting:true' property
+              const { deleting, ...exchangeCopy } = exchange;
+              // return copy of user with 'deleteError:[error]' property
+              return { ...exchangeCopy, deleteError: action.error };
+            }
 
-          return exchange;
-        }),
+            return exchange;
+          }
+        ),
       };
 
     case exchangeConstants.ADDNEW_REQUEST:
-      return { ...state };
+      return { ...state, addingExchange: true };
     case exchangeConstants.ADDNEW_SUCCESS:
-      return {...state};
+      console.log(action.exchangeAccount);
+      return {
+        ...state,
+        addingExchange: false,
+        exchanges: [...state.exchanges, action.exchangeAccount],
+      };
     case exchangeConstants.ADDNEW_FAILURE:
-      return {...state};
+      return { ...state };
+
+    case exchangeConstants.UPDATE_REQUEST:
+      return { ...state, addingExchange: true };
+    case exchangeConstants.UPDATE_SUCCESS:
+      console.log(action.exchangeAccount);
+      return {
+        ...state,
+        addingExchange: false,
+        exchanges: state.exchanges.map((item: IExchangeAccount) => {
+          if (item.id == action.id) {
+            return action.exchangeAccount;
+          } else {
+            return item;
+          }
+        }),
+      };
+    case exchangeConstants.UPDATE_FAILURE:
+      return { ...state };
 
     default:
       return state;
