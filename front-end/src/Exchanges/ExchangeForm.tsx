@@ -24,7 +24,7 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
   );
   const dispatch = useDispatch();
 
-  const data = formType == "add" ? addData : editData;
+  const data = (formType == "add") ? addData : editData;
 
   const [exchangeType, setExchangeType] = useState(
     formType == "add" ? addData.id : editData.exchangeType
@@ -42,10 +42,11 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
   const [nickname, setNickname] = useState(
     formType == "add" ? data.name : editData.nickname
   );
-  const [exchange, setExchange] = useState<IExchangeAccountRequest>();
+  const [exchange, setExchange] = useState<any>();
 
   useEffect(() => {
     setExchange({
+      id: editData.id,
       exchangeType,
       apiKey,
       apiSecret,
@@ -56,11 +57,11 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
   }, [exchangeType, apiKey, apiSecret, passphrase, name, nickname]);
 
   const handleSubmit = () => {
-    dispatch(exchangeActions.addNew)
+    dispatch(exchangeActions.addNew(exchange))
   };
 
-  const handleUpdate = async () => {
-    dispatch(exchangeActions.update)
+  const handleUpdate = () => {
+    dispatch(exchangeActions.update(exchange))
   };
 
   const formTypeEdit = {

@@ -1,6 +1,7 @@
 export interface IExchangeAccount {
+  addedDate?: string;
   id: string;
-  exchangeType: number;
+  exchangeType: string;
   nickname: string;
   name: string;
   logoUrl: string;
@@ -9,7 +10,7 @@ export interface IExchangeAccount {
   passphrase: string;
 }
 export interface IExchangeAccountRequest {
-  exchangeType: number;
+  exchangeType: string;
   nickname: string;
   name: string;
   apiKey: string;
@@ -17,7 +18,7 @@ export interface IExchangeAccountRequest {
   passphrase: string;
 }
 export interface IExchangeReference {
-  id: number;
+  id: string;
   name: string;
   logoUrl: string;
 }

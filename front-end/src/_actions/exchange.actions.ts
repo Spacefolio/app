@@ -6,10 +6,12 @@ import {
   IExchangeAccount,
   IExchangeAccountRequest,
 } from "../types/exchangeInterface";
+import { exchanges } from "../_reducers/exchange.reducer";
 
 export const exchangeActions = {
   addNew,
   getAll,
+  getRef,
   update,
   delete: _delete,
 };
@@ -18,16 +20,18 @@ function addNew(exchange: IExchangeAccountRequest) {
   return (dispatch: any) => {
     dispatch(request(exchange));
 
-    exchangeService.addNew(exchange).then(
-      (res: any) => {
+    exchangeService
+      .addNew(exchange)
+      .then((res: any) => {
+        console.log(res);
         dispatch(success(res));
         dispatch(alertActions.success("Exchange Added"));
-      },
-      (error) => {
+      })
+      .catch((error) => {
+        console.log("mufukin error bitch");
         dispatch(failure(error.toString()));
         dispatch(alertActions.error(error.toString()));
-      }
-    );
+      });
   };
 
   function request(exchange: IExchangeAccountRequest) {
@@ -45,7 +49,7 @@ function update(exchange: IExchangeAccount) {
   return (dispatch: any) => {
     dispatch(request(exchange));
 
-    exchangeService.addNew(exchange).then(
+    exchangeService.update(exchange.id, exchange).then(
       (res: any) => {
         dispatch(success(res));
         dispatch(alertActions.success("update successful"));
@@ -69,14 +73,13 @@ function update(exchange: IExchangeAccount) {
 }
 
 function getAll() {
-  console.log('getting all your exchanges')
   return (dispatch: any) => {
     dispatch(request());
 
-    exchangeService.getAll().then(
-      (exchanges) => dispatch(success(exchanges)),
-      (error) => dispatch(failure(error.toString()))
-    );
+    exchangeService
+      .getAll()
+      .then((exchanges) => dispatch(success(exchanges)))
+      .catch((error) => dispatch(failure(error)));
   };
 
   function request() {
@@ -91,14 +94,37 @@ function getAll() {
   }
 }
 
+function getRef() {
+  return (dispatch: any) => {
+    dispatch(request());
+
+    exchangeService
+      .getInfo()
+      .then((exchanges) => dispatch(success(exchanges)))
+      .catch((error) => dispatch(failure(error.toString())));
+  };
+
+  function request() {
+    return { type: exchangeConstants.GETREF_REQUEST };
+  }
+  function success(exchanges: any) {
+    console.log(exchanges);
+    return { type: exchangeConstants.GETREF_SUCCESS, exchanges };
+  }
+  function failure(error: any) {
+    return { type: exchangeConstants.GETREF_FAILURE, error };
+  }
+}
+
 function _delete(id: any) {
   return (dispatch: any) => {
     dispatch(request(id));
-
-    exchangeService.delete(id).then(
-      (user) => dispatch(success(id)),
-      (error) => dispatch(failure(id, error.toString()))
-    );
+    exchangeService
+      .delete(id)
+      .then((res) => {
+        console.log(res)
+        dispatch(success(id))})
+      .catch((error) => dispatch(failure(id, error.toString())));
   };
 
   function request(id: any) {

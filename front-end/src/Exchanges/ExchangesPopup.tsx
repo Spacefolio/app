@@ -9,42 +9,24 @@ import { useDispatch, useSelector } from "react-redux";
 interface ExchangesPopupProps {}
 
 export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
-  const dispatch = useDispatch;
+  const dispatch = useDispatch();
 
   const loadingExchanges = useSelector((state: any) => state.exchanges.loading);
-  const userLinkedExchanges = useSelector((state: any) => state.exchanges.exchanges);
+  const userLinkedExchanges = useSelector(
+    (state: any) => state.exchanges.exchanges
+  );
+  const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef);
 
-  const [exchangeRef, setExchangeRef] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
-
   const [addExchangeVisible, setAddExchangeVisible] = useState(false);
   const [addExchangeData, setAddExchangeData] = useState<IExchangeReference>(
     null
   );
 
-  // const { getAll, getInfo } = exchangeService;
-
-  // const getExchangeRef = async () => {
-  //   getInfo()
-  //     .then((res: any) => {
-  //       setExchangeRef(res.data.exchanges);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  // const getExchangeData = () => {
-  //   getAll()
-  //     .then((res: any) => {
-  //       setUserLinkedExchanges(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  useEffect(() => {exchangeActions.getAll()}, []);
+  useEffect(() => {
+    dispatch(exchangeActions.getAll());
+    dispatch(exchangeActions.getRef());
+  }, []);
 
   return (
     <div className="exchange-popup-wrapper">
@@ -54,16 +36,11 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
             <h1 className="my-exchanges-label">My Exchanges</h1>
           </div>
           <div className="my-exchanges-list-container">
-            {
-              //loop though all of the users linked exchanges and display them with an exchange component
-               loadingExchanges != 0 ? (
-                userLinkedExchanges.map((item: IExchangeAccount) => {
+            {userLinkedExchanges.length != 0
+              ? userLinkedExchanges.map((item: IExchangeAccount) => {
                   return <ExchangeItem data={item} />;
                 })
-              ) : (
-                "You have no linked accounts... Add one below"
-              )
-            }
+              : "You have no linked accounts... Add one below"}
           </div>
         </div>
         <Modal

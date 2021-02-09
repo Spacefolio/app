@@ -6,41 +6,58 @@ interface IExchangeAction {
   exchanges?: IExchangeAccount[];
   id: string;
   error?: string;
+  exchangeAccount?: string;
 }
 
 interface IExchangeAccountState extends IExchangeAccount {
   deleting?: string;
 }
 
-export function exchanges(state: any = {}, action: IExchangeAction) {
+export function exchanges(
+  state: any = { exchanges: [], loading: false, exchangeRef: []},
+  action: IExchangeAction
+) {
   switch (action.type) {
     case exchangeConstants.GETALL_REQUEST:
       return {
-        loading: true,
+        ...state,
       };
     case exchangeConstants.GETALL_SUCCESS:
       return {
+        ...state,
         exchanges: action.exchanges,
       };
     case exchangeConstants.GETALL_FAILURE:
       return {
+
         error: action.error,
       };
 
-
-
+    case exchangeConstants.GETREF_REQUEST:
+      return {
+        ...state
+      };
+    case exchangeConstants.GETREF_SUCCESS:
+      return {
+        ...state,
+        exchangeRef: action.exchanges,
+      };
+    case exchangeConstants.GETREF_FAILURE:
+      return {
+        error: action.error,
+      };
 
     case exchangeConstants.DELETE_REQUEST:
       return {
         ...state,
-        items: state.items.map((exchange: IExchangeAccountState) =>
+        exchanges: state.exchanges.exchanges.map((exchange: IExchangeAccountState) =>
           exchange.id === action.id ? { ...exchange, deleting: true } : exchange
         ),
       };
     case exchangeConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
-        items: state.items.filter(
+        exchanges: state.exchanges.exchanges.filter(
           (exchange: IExchangeAccountState) => exchange.id !== action.id
         ),
       };
@@ -60,23 +77,12 @@ export function exchanges(state: any = {}, action: IExchangeAction) {
         }),
       };
 
-
-
-
     case exchangeConstants.ADDNEW_REQUEST:
-      return { addingExhchange: true };
+      return { ...state };
     case exchangeConstants.ADDNEW_SUCCESS:
-      return {};
+      return {...state};
     case exchangeConstants.ADDNEW_FAILURE:
-      return {};
-
-
-
-
-
-
-
-
+      return {...state};
 
     default:
       return state;

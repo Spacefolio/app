@@ -6,7 +6,7 @@ export interface IExchangeAccount {
     passphrase: string;
     name: string;
     nickname: string;
-    exchangeType: number;
+    exchangeType: string;
     addedDate: Date;
 }
 
@@ -16,7 +16,7 @@ export interface IExchangeAccountRequest {
     passphrase: string;
     name: string;
     nickname?: string;
-    exchangeType: number;
+    exchangeType: ('coinbasepro'|'binance'|'kucoin'|'binanceus'|'hitbtc'|'coinbase');
 }
 
 export interface IExchangeAccountDocument extends mongoose.Document {
@@ -25,7 +25,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
     passphrase: string;
     name: string;
     nickname: string;
-    exchangeType: number;
+    exchangeType: string;
     addedDate: Date;
 }
 
@@ -39,7 +39,7 @@ const exchangeAccountSchema = new mongoose.Schema({
     passphrase: { type: String, required: true },
     name: { type: String, required: true },
     nickname: { type: String },
-    exchangeType: { type: Number, required: true },
+    exchangeType: { type: String, required: true },
     addedDate: { type: Date, default: Date.now }
 });
 

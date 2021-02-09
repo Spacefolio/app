@@ -21,8 +21,7 @@ async function getAll() {
   return await axios
     .get(`http://localhost:4000/exchanges`, { headers: requestOptions })
     .then((response) => {
-      console.log(response);
-      return response;
+      return response.data;
     })
     .catch((err) => {
       console.log(err);
@@ -31,9 +30,9 @@ async function getAll() {
 }
 async function getInfo() {
   return await axios
-    .get("https://s3.amazonaws.com/statics.algonex.us/exchanges.json")
+    .get("http://s3.amazonaws.com/statics.algonex.us/exchanges.json")
     .then((response) => {
-      return response;
+      return response.data.exchanges;
     })
     .catch((err) => {
       console.log("err", err);
@@ -47,14 +46,13 @@ async function addNew(exchange: IExchangeAccountRequest) {
     Authorization: Authorization,
     "Content-Type": "application/json",
   };
-  console.log("adding new");
-  axios
+  return await axios
     .post(`http://localhost:4000/exchanges`, exchange, {
       headers: requestOptions,
     })
     .then((response) => {
       console.log("response", response);
-      return response;
+      return response.data;
     })
     .catch((err) => {
       console.log("err", err);
@@ -68,17 +66,17 @@ async function update(id: string, data: IExchangeAccountRequest) {
     Authorization: Authorization,
     "Content-Type": "application/json",
   };
-  console.log("adding new");
-  axios
-    .put(`http://localhost:4000/exchanges/?id=${id}`, data, {
+  console.log(id, data);
+  return await axios
+    .put(`http://localhost:4000/exchanges/${id}`, data, {
       headers: requestOptions,
     })
     .then((response) => {
-      console.log("response", response);
+      console.log("\n\nresponse", response);
       return response;
     })
     .catch((err) => {
-      console.log("err", err);
+      console.log("\n\nerr", err);
       return err;
     });
 }
@@ -90,9 +88,9 @@ async function _delete(id: string) {
     Authorization: Authorization,
     "Content-Type": "application/json",
   };
-  console.log("adding new");
-  axios
-    .delete(`http://localhost:4000/exchanges/?id=${id}`, {
+  
+  return await axios
+    .delete(`http://localhost:4000/exchanges/${id}`, {
       headers: requestOptions,
     })
     .then((response) => {

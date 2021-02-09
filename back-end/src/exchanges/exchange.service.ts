@@ -1,21 +1,26 @@
-import { IUser, User } from '../users/user.model';
-import { IExchangeAccount, IExchangeAccountRequest, ExchangeAccount } from './exchange.model';
-import ccxt from 'ccxt';
+import { IUser, User } from "../users/user.model";
+import {
+  IExchangeAccount,
+  IExchangeAccountRequest,
+  ExchangeAccount,
+} from "./exchange.model";
+import ccxt from "ccxt";
+import axios from "axios";
 
 export const exchangeService = {
-    getAll,
-    getById,
-    create,
-    update,
-    delete: _delete
+  getAll,
+  getById,
+  create,
+  update,
+  delete: _delete,
 };
 
 async function getAll(id: string) {
   console.log("got hit");
   const user = await User.findById(id).populate("linkedExchanges");
-  
+
   if (!user) {
-    throw("User not Found");
+    throw "User not Found";
   }
 
   console.log(user.linkedExchanges);
@@ -23,61 +28,78 @@ async function getAll(id: string) {
 }
 
 async function getById(exchangeId: string) {
-    const exchange = await ExchangeAccount.findById(exchangeId);
+  const exchange = await ExchangeAccount.findById(exchangeId);
 
-    if (!exchange) {throw('Exchange not found');}
+  if (!exchange) {
+    throw "Exchange not found";
+  }
 
   return exchange;
 }
 
-async function create(id: string, exchangeParam: IExchangeAccountRequest) {
+interface IExchangeRef {
+  id: string;
+  name: string;
+  logoUrl: string;
+}
+async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   // validate
-  const user = await User.findById(id);
+  const user = await User.findById(userId);
 
-    // verify connection to exchange
-    const exchangeId = 'coinbasepro'
-        , exchangeClass = ccxt[exchangeId]
-        , coinbasePro = new exchangeClass ({
-            'apiKey': exchangeParam.apiKey,
-            'secret': exchangeParam.apiSecret,
-            'password': exchangeParam.passphrase,
-            'timeout': 30000,
-            'enableRateLimit': true,
-        });
+  // verify connection to exchange
+  const exchangeId = exchangeParam.exchangeType;
+  const exchangeClass = ccxt["coinbasepro"];
+  const Exchange = new exchangeClass({
+    apiKey: exchangeParam.apiKey,
+    secret: exchangeParam.apiSecret,
+    password: exchangeParam.passphrase,
+    timeout: 30000,
+    enableRateLimit: true,
+  });
 
-    const response = await coinbasePro.fetchBalance().then((balances: any) => {
+  const response = await Exchange
+    .fetchBalance()
+    .then((balances: any) => {
       console.log(balances);
-    }).catch((err: any) => { return err; });
-    console.log(coinbasePro.requiredCredentials);
+    })
+    .catch((err: any) => {
+      return err;
+    });
+  console.log(Exchange.requiredCredentials);
 
-    if (response) { return response; }
+  if (response) {
+    return response;
+  }
 
-    //console.log(await coinbasePro.fetchBalance());
-    //console.log(coinbasePro.has);
-    //console.log(await coinbasePro.fetchMyTrades('XLM/USD'));
-    //console.log(await coinbasePro.fetchTicker('XLM/USD'));
+  const exchangeObject = new ExchangeAccount(exchangeParam);
+  const savedExchange = await exchangeObject.save();
 
-    const exchangeObject = new ExchangeAccount(exchangeParam);
-    const savedExchange = await exchangeObject.save();
-
+  user.linkedExchanges.push(savedExchange.id);
   // save user
   user.save(function (err: any, user: any) {
     if (err) {
       console.log(err);
-      throw("Bad Request");
+      throw "Bad Request";
     }
   });
 
   return savedExchange;
 }
 
-async function update(userId: string, exchangeId: string, exchangeParam: IExchangeAccountRequest) {
-    const user = await User.findById(userId);
+async function update(
+  userId: string,
+  exchangeId: string,
+  exchangeParam: IExchangeAccountRequest
+) {
+
+  const user = await User.findById(userId);
 
   // validate
   if (!user) throw "User not found";
 
-    const exchange = await ExchangeAccount.findById(exchangeId);
+  const exchange = await ExchangeAccount.findById(exchangeId);
+
+  if (!exchange) throw "Exchange account not found";
 
   // copy exchangeParam properties to exchange
   Object.assign(exchange, exchangeParam);
@@ -86,17 +108,18 @@ async function update(userId: string, exchangeId: string, exchangeParam: IExchan
 }
 
 async function _delete(userId: string, exchangeId: string) {
-    var user = await User.findById(userId);
+  console.log(userId, exchangeId);
+  var user = await User.findById(userId);
 
   if (!user) throw "User not found";
 
-    const updatedArray = user.linkedExchanges.filter((item) => {
-      return item != exchangeId
-    });
+  const updatedArray = user.linkedExchanges.filter((item) => {
+    return item != exchangeId;
+  });
 
-    user.linkedExchanges = updatedArray;
+  user.linkedExchanges = updatedArray;
 
-    const exchange = await ExchangeAccount.findByIdAndRemove(exchangeId);
+  const exchange = await ExchangeAccount.findByIdAndRemove(exchangeId);
 
   await user.save();
 }
