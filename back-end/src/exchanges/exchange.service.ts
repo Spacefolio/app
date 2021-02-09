@@ -16,14 +16,12 @@ export const exchangeService = {
 };
 
 async function getAll(id: string) {
-  console.log("got hit");
   const user = await User.findById(id).populate("linkedExchanges");
 
   if (!user) {
     throw "User not Found";
   }
 
-  console.log(user.linkedExchanges);
   return user.linkedExchanges;
 }
 
@@ -104,7 +102,7 @@ async function update(
   // copy exchangeParam properties to exchange
   Object.assign(exchange, exchangeParam);
 
-  await exchange.save();
+  return await exchange.save();
 }
 
 async function _delete(userId: string, exchangeId: string) {

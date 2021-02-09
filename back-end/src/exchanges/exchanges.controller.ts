@@ -20,7 +20,6 @@ function create(req: any, res: Response, next: NextFunction) {
 }
 
 function getAll(req: any, res: Response, next: NextFunction) {
-  console.log('anything');
     exchangeService.getAll(req.user.sub)
         .then(linkedExchanges => res.json(linkedExchanges))
         .catch(err => next(err));
@@ -34,7 +33,7 @@ function getById(req: any, res: Response, next: NextFunction) {
 
 function update(req: any, res: Response, next: NextFunction) {
     exchangeService.update(req.user.sub, req.params.id, req.body)
-        .then(() => res.json({}))
+        .then((exchange) => exchange ? res.json(exchange): res.sendStatus(400))
         .catch(err => next(err));
 }
 
