@@ -14,7 +14,8 @@ export const exchangeService = {
   create,
   update,
   delete: _delete,
-  getRequiredCredentials
+  getRequiredCredentials,
+  syncExchangeData
 };
 
 async function getAll(id: string) {
@@ -133,4 +134,17 @@ async function getRequiredCredentials(exchangeType: exchangeType)
   const Exchange = new exchangeClass();
 
   return Exchange.requiredCredentials;
+}
+
+async function syncExchangeData(userId: string)
+{
+  const snooze = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const sleep = async () => {
+    console.log('About to snooze without halting the event loop');
+    await snooze(3000);
+    console.log('done!');
+  }
+
+  await sleep();
 }
