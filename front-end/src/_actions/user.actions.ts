@@ -3,6 +3,7 @@ import { userService } from '../_services';
 import { alertActions } from '.';
 import { history } from '../_helpers';
 import {IUser} from '../types';
+import { Redirect } from 'react-router';
 
 export const userActions = {
     login,

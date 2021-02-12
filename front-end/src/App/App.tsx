@@ -21,22 +21,22 @@ export const App = () => {
   const clearAlerts = alertActions.clear;
 
   history.listen((location: any, action: any) => {
-    console.log(location, action);
     dispatch(clearAlerts());
   });
   return (
-    <ErrorBoundary>
+
       <AppContainer>
         <Alert />
         <Router history={history}>
           <Switch>
-            <PrivateRoute exact path="" component={Application} />
+            
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/register" component={RegisterPage} />
-            <Redirect from="*" to="/"/>
+            <PrivateRoute path="/" component={Application} />
+            <Redirect from="*" to=""/>
           </Switch>
         </Router>
       </AppContainer>
-    </ErrorBoundary>
+
   );
 };

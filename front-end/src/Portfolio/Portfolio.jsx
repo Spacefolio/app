@@ -43,7 +43,7 @@ export const Portfolio = () => {
         <Route exact path={`${path}/transactions`} component={Transactions} />
         <Route exact path={`${path}/orders`} component={OpenOrders} />
         <Route exact path={`${path}/holdings`} component={Holdings} />
-        <Redirect from="/" to={`${path}/charts`} />
+        <Redirect from={`${path}`} to={`${path}/charts`} />
       </Switch>
     </PortfolioWrapper>
   );
