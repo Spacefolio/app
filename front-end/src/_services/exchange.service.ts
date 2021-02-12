@@ -1,4 +1,3 @@
-import config from "config";
 import { authHeader } from "../_helpers";
 import { IExchangeAccountRequest, IExchangeAccount } from "../types";
 import axios from "axios";

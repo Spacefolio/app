@@ -8,5 +8,4 @@ export const CardWrapper = styled.div`
   background: white;
   border-radius: 15px;
   padding: 20px;
-  margin: 5px;
 `;

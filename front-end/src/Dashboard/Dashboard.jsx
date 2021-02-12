@@ -9,11 +9,11 @@ export const Dashboard = () => {
 
   return (
       <DashboardWrapper>
-        <FlexCard gridName={"one"} children={<div>{"hi there number 1"}</div>} />
-        <FlexCard gridName={"two"} children={<div>{"hi there number 2"}</div>} />
-        <FlexCard gridName={"three"} children={<div>{"hi there number 3"}</div>} />
-        <FlexCard gridName={"four"} children={<div>{"hi there number 4"}</div>} />
-        <FlexCard gridName={"five"} children={<div>{"hi there number 5"}</div>} />
+        <FlexCard gridName={"one"} children={<div>{"Portfolio summary card"}</div>} />
+        <FlexCard gridName={"two"} children={<div>{"My Exchanges card"}</div>} />
+        <FlexCard gridName={"three"} children={<div>{"another one"}</div>} />
+        <FlexCard gridName={"four"} children={<div>{"another one"}</div>} />
+        <FlexCard gridName={"five"} children={<div>{"another one"}</div>} />
       </DashboardWrapper>
   );
 };

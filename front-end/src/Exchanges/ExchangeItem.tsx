@@ -42,23 +42,27 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
     >
       <img height="25px" width="25px" src={logoUrl}></img>
       <div>{data.nickname}</div>
-      <DeleteButton
-        right="0px"
-        clickAction={() => {
+      <div
+        onClick={() => {
           dispatch(exchangeActions.delete(data.id));
         }}
-      />
+        style={{width: "1.5em",position: "absolute", right: "0px" }}
+      >
+        <DeleteButton />
+      </div>
       <Modal
         visible={editExchangeVisible}
         dismiss={() => setEditExchangeVisible(false)}
         children={<EditExchangeForm exchangeAccountData={data} />}
       />
-      <EditButton
-        right="30px"
-        clickAction={() => {
+      <div
+        onClick={() => {
           setEditExchangeVisible(true);
         }}
-      />
+        style={{width: "1.5em",position: "absolute", right: "30px" }}
+      >
+        <EditButton />
+      </div>
     </div>
   );
 };

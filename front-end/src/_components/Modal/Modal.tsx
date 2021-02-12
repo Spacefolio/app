@@ -20,11 +20,18 @@ export const Modal: React.FC<DropdownProps> = ({
       {visible ? (
         <ModalWrapper>
           <ModalBoxSetup>
-            <CloseButton
-              top="5px"
-              right="5px"
-              clickAction={() => dismiss()}
-            ></CloseButton>
+            <div
+              onClick={() => dismiss()}
+              style={{
+                position: "absolute",
+                top: "5px",
+                right: "5px",
+                width: "2em",
+              }}
+            >
+              <CloseButton />
+            </div>
+
             {children}
           </ModalBoxSetup>
           <ModalBg

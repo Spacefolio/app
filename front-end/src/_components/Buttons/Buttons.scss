@@ -1,0 +1,39 @@
+.close-button,
+.sync-button,
+.delete-button,
+.edit-button {
+  width: 100%;
+  cursor: pointer;
+  fill: var(--primary-dark3);
+  &:hover {
+    fill: var(--accent-base);
+  }
+}
+.edit-button {
+}
+.delete-button {
+  &:hover {
+    fill: var(--error-base);
+  }
+}
+.sync-button {
+}
+.close-button {
+  &:hover {
+    fill: var(--error-base);
+  }
+}
+.syncing {
+  animation-name: spin;
+  animation-duration: 3000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

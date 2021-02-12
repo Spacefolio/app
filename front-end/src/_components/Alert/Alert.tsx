@@ -12,8 +12,10 @@ export const Alert = () => {
     <div className="alert-wrapper">
       {alert.message && (
         <div className={`alert-container ${alert.type}`}>
-          <div style={{marginRight: '10px'}}>{alert.message}</div>
-          <CloseButton width="1.5em" clickAction={() => dispatch(alertActions.clear())}/>
+          <div style={{ marginRight: "10px" }}>{alert.message}</div>
+          <div style={{width: "1.5em"}} onClick={() => dispatch(alertActions.clear())}>
+            <CloseButton />
+          </div>
         </div>
       )}
     </div>
