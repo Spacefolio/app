@@ -5,8 +5,8 @@
   }
 }
 .Edit-button-svg {
-  fill: var(--close-button-color);
+  fill: var(--secondary-dark4);
   &:hover {
-    fill: var(--close-button-hover-color);
+    fill: var(--error-base);
   }
 }

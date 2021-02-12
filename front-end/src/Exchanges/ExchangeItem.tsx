@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DeleteButton, EditButton } from "../_components";
-import { IExchangeAccount, IExchangeReference } from "../types/exchangeInterface";
+import {
+  IExchangeAccount,
+  IExchangeReference,
+} from "../types/exchangeInterface";
 import { Modal } from "../_components";
-import { ExchangeForm } from "./ExchangeForm";
+import { EditExchangeForm } from "./EditExchangeForm";
 import { exchangeActions } from "../_actions";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,22 +14,25 @@ interface ExchangeItemProps {
 }
 
 export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
-  const [editExchangeVisible, setEditExchangeVisible] = useState(false);
-
-  const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef)
-
   const dispatch = useDispatch();
 
-  const getLogoUrl = () =>{
-    const targetRef = exchangeRef.filter((refItem: IExchangeReference) =>{
-      return refItem.id === data.exchangeType
-    })[0]
-    console.log(targetRef);
-    return targetRef.logoUrl
-  }
+  const [logoUrl, setLogoUrl] = useState("");
+  const [editExchangeVisible, setEditExchangeVisible] = useState(false);
+  const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef);
+
+  useEffect(() => {
+    const targetRef: IExchangeReference = exchangeRef.filter(
+      (refItem: IExchangeReference) => {
+        return refItem.id === data.exchangeType;
+      }
+    )[0];
+
+    setLogoUrl(targetRef.logoUrl);
+  }, []);
+
   return (
     <div
-      key={data.exchangeType}
+      key={data.id}
       style={{
         padding: "10px 0px",
         position: "relative",
@@ -34,7 +40,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
         alignItems: "center",
       }}
     >
-      <img height="25px" width="25px" src={getLogoUrl()}></img>
+      <img height="25px" width="25px" src={logoUrl}></img>
       <div>{data.nickname}</div>
       <DeleteButton
         right="0px"
@@ -45,7 +51,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
       <Modal
         visible={editExchangeVisible}
         dismiss={() => setEditExchangeVisible(false)}
-        children={<ExchangeForm formType={"edit"} editData={data} />}
+        children={<EditExchangeForm exchangeAccountData={data} />}
       />
       <EditButton
         right="30px"

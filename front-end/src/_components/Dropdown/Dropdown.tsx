@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import "./Dropdown.scss";
+import { DDList, DDListItem, DDWrapper } from "./generalStyle";
 
-type DropdownItem = {
+interface DropdownItem {
   id: number;
   title: string;
   onClickHandler?(): void;
   selected: boolean;
   key: string;
-};
+}
 interface DropdownProps {
   items: DropdownItem[];
   setVisiblity: any;
@@ -42,15 +42,20 @@ export const Dropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <div className="dd-wrapper" style={{}}>
-      <div className="dd-list"></div>
-      {dItems.map((item: DropdownItem) => {
-        return (
-          <div key={item.key} onClick={() => item.onClickHandler()} className="dd-list-item">
-            {item.title}
-          </div>
-        );
-      })}
-    </div>
+    <DDWrapper>
+      <DDList>
+        {dItems.map((item: DropdownItem) => {
+          return (
+            <DDListItem
+              key={item.key}
+              onClick={() => item.onClickHandler()}
+              className="dd-list-item"
+            >
+              {item.title}
+            </DDListItem>
+          );
+        })}
+      </DDList>
+    </DDWrapper>
   );
 };

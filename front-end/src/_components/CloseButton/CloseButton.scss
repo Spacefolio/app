@@ -1,12 +1,11 @@
 .close-button-wrapper {
-  position: absolute;
   &:hover {
     cursor: pointer;
   }
 }
 .close-button-svg {
-  fill: var(--close-button-color);
+  fill: var(--primary-dark3);
   &:hover {
-    fill: var(--close-button-hover-color);
+    fill: var(--error-base);
   }
 }

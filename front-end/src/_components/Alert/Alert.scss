@@ -1,0 +1,22 @@
+.alert-sucess {
+  background-color: var(--primary-base);
+}
+.alert-danger {
+  background-color: var(--accent-base);
+}
+
+.alert-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  position: fixed;
+  top: 10%;
+  z-index: 500;
+}
+.alert-wrapper{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}

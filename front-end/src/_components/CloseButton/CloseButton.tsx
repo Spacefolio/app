@@ -1,19 +1,31 @@
 import React from "react";
-import './CloseButton.scss'
+import "./CloseButton.scss";
 
 interface CloseButtonProps {
   clickAction(): void;
   top?: string;
   left?: string;
   right?: string;
+  width?: string;
 }
 
-export const CloseButton: React.FC<CloseButtonProps> = ({clickAction, top, left, right}) => {
+export const CloseButton: React.FC<CloseButtonProps> = ({
+  clickAction,
+  top,
+  left,
+  right,
+  width = "2em",
+}) => {
+  const position = (top || right || left)? "absolute": "relative"
   return (
-    <div className="close-button-wrapper" style={{top, right, left}} onClick={() => clickAction()}>
+    <div
+      className="close-button-wrapper"
+      style={{ position, top, right, left }}
+      onClick={() => clickAction()}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        style={{ width: "2em"}}
+        style={{ width }}
         viewBox="0 0 16 16"
         className="close-button-svg"
       >

@@ -1,13 +1,3 @@
-.nav-container {
-  font-weight: 500;
-  font-size: 1em;
-  display: flex;
-  width: 100%;
-  height: 57px;
-  align-items: center;
-  background-color: var(--nav-background-color);
-  border-bottom: var(--nav-border);
-}
   .nav-branding-area-container {
     flex-shrink: 0;
     width: 280px;
@@ -24,13 +14,6 @@
     display: flex;
     justify-content: space-between;
   }
-    .orders-btn, .portfolio-btn {
-      width: var(--nav-order-btn-width);
-    }
-    .trade-btn {
-      flex-shrink: 0;
-      width: var(--nav-trade-btn-width);
-    }
     .text-nowrap{
       white-space: nowrap;
     }
@@ -51,17 +34,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--inactive-text-color);
+    color: var(--primary-dark3);
     height: 57px;
-    border-right: var(--nav-border);
-    border-left: var(--nav-border);
     &:hover {
-      background-color: var(--button-hover-background-color);
-      color: var(--active-text-color);
+      color: var(--primary-dark2);
       cursor: pointer;
     }
   }
   .active-page-btn{
-    border-bottom: 3px solid var(--active-page-btn-underline-color);
-    color: var(--active-text-color);
+    border-bottom: 3px solid var(--primary-base);
   }

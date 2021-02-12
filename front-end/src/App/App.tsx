@@ -8,8 +8,10 @@ import { PrivateRoute } from "../_components";
 import { Application } from "../Application";
 import { LoginPage } from "../LoginPage";
 import { RegisterPage } from "../RegisterPage";
+import { Alert, ErrorBoundary } from "../_components";
 
 import "./App.scss";
+import { AppContainer } from "./generalStyle";
 import "./variables.scss";
 
 export const App = () => {
@@ -19,22 +21,22 @@ export const App = () => {
   const clearAlerts = alertActions.clear;
 
   history.listen((location: any, action: any) => {
+    console.log(location, action);
     dispatch(clearAlerts());
   });
   return (
-    <div id="app-wrapper">
-      {alert.message && (
-        <div className={`alert ${alert.type}`}>{alert.message}</div>
-      )}
-      <Router history={history}>
-        <Switch>
-          <PrivateRoute exact path="/trade" component={Application} />
-          <PrivateRoute exact path="/portfolio" component={Application} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/register" component={RegisterPage} />
-          <Redirect from="*" to="/trade" />
-        </Switch>
-      </Router>
-    </div>
+    <ErrorBoundary>
+      <AppContainer>
+        <Alert />
+        <Router history={history}>
+          <Switch>
+            <PrivateRoute exact path="" component={Application} />
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/register" component={RegisterPage} />
+            <Redirect from="*" to="/"/>
+          </Switch>
+        </Router>
+      </AppContainer>
+    </ErrorBoundary>
   );
 };

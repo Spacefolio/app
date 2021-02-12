@@ -2,36 +2,29 @@ import React, { useEffect, useState } from "react";
 import "./ExchangeForm.scss";
 import { exchangeActions } from "../_actions";
 import {
-  IExchangeAccountRequest,
-  IExchangeAccount,
-  IExchangeReference,
+  IExchangeAccount, IExchangeAccountRequest,
 } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 
 interface ExchangeFormProps {
-  editData?: IExchangeAccount;
-  addData?: IExchangeReference;
-  formType: "add" | "edit";
+ exchangeAccountData: IExchangeAccount;
 }
 
-export const ExchangeForm: React.FC<ExchangeFormProps> = ({
-  editData,
-  addData,
-  formType,
+export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
+  exchangeAccountData
 }) => {
   const addingExchange = useSelector(
     (state: any) => state.exchanges.addingExchange
   );
   const dispatch = useDispatch();
 
-  const data = formType == "add" ? addData : editData;
-  const [exchangeType, setExchangeType] = useState(formType == "add" ? addData.id : editData.exchangeType);
-  const [apiKey, setApiKey] = useState(editData ? editData.apiKey : "");
-  const [apiSecret, setApiSecret] = useState(    editData ? editData.apiSecret : ""  );
-  const [passphrase, setPassphrase] = useState(    editData ? editData.passphrase : ""  );
-  const [name, setName] = useState(    formType == "add" ? addData.name : editData.name  );
-  const [nickname, setNickname] = useState(    formType == "add" ? data.name : editData.nickname  );
-  const [exchange, setExchange] = useState<any>();
+  const [exchangeType, setExchangeType] = useState(exchangeAccountData.exchangeType);
+  const [apiKey, setApiKey] = useState(exchangeAccountData.apiKey);
+  const [apiSecret, setApiSecret] = useState(exchangeAccountData.apiSecret);
+  const [passphrase, setPassphrase] = useState(exchangeAccountData.passphrase);
+  const [name, setName] = useState(exchangeAccountData.name);
+  const [nickname, setNickname] = useState(exchangeAccountData.nickname);
+  const [exchange, setExchange] = useState<IExchangeAccountRequest>({exchangeType, apiKey, apiSecret, passphrase, name, nickname});
 
   useEffect(() => {
     setExchange({
@@ -44,39 +37,23 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
     });
   }, [exchangeType, apiKey, apiSecret, passphrase, name, nickname]);
 
-  const handleSubmit = () => {
-    dispatch(exchangeActions.addNew(exchange));
-  };
-
   const handleUpdate = () => {
-    dispatch(exchangeActions.update(exchange, editData.id));
+    dispatch(exchangeActions.update(exchange, exchangeAccountData.id));
   };
-
-  const formTypeEdit = {
-    formTitle: "Edit Exchange",
-    buttonText: "Update",
-    buttonAction: handleUpdate,
-  };
-  const formTypeAdd = {
-    formTitle: "Add Exchange",
-    buttonText: "Submit",
-    buttonAction: handleSubmit,
-  };
-  const formTypeData = formType == "edit" ? formTypeEdit : formTypeAdd;
 
   return (
     <form className="add-exchange-form">
       <div>
-        <h1>{formTypeData.formTitle}</h1>
+        <h1>Edit Exchange Info</h1>
       </div>
       <div className="add-exchange-data-row">
         <div>
           {name}
-          <img src={data.logoUrl} />
+          <img src={exchangeAccountData.logoUrl} />
         </div>
       </div>
       <div className="add-exchange-data-row">
-        <label className="add-exchange-row-label">Nickname</label>
+        <label className="add-exchange-row-label">NICKNAME</label>
         <input
           name="nickname"
           onChange={(e) => setNickname(e.target.value)}
@@ -86,7 +63,7 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
         />
       </div>
       <div className="add-exchange-data-row">
-        <label className="add-exchange-row-label">Api Key</label>
+        <label className="add-exchange-row-label">API KEY</label>
         <input
           name="apiKey"
           onChange={(e) => setApiKey(e.target.value)}
@@ -96,7 +73,7 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
         />
       </div>
       <div className="add-exchange-data-row">
-        <label className="add-exchange-row-label">Api secret</label>
+        <label className="add-exchange-row-label">API SECRET</label>
         <input
           name="apiSecret"
           onChange={(e) => setApiSecret(e.target.value)}
@@ -106,7 +83,7 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
         />
       </div>
       <div className="add-exchange-data-row">
-        <label className="add-exchange-row-label">Passphrase</label>
+        <label className="add-exchange-row-label">PASSPHRASE</label>
         <input
           name="passphrase"
           onChange={(e) => setPassphrase(e.target.value)}
@@ -117,7 +94,7 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
       </div>
       <div>
         <div
-          onClick={() => formTypeData.buttonAction()}
+          onClick={() => handleUpdate()}
           className="center-my-children"
           style={{
             borderRadius: "3px",
@@ -127,7 +104,7 @@ export const ExchangeForm: React.FC<ExchangeFormProps> = ({
             color: "white",
           }}
         >
-          <div style={{ cursor: "pointer" }}>{formTypeData.buttonText}{addingExchange ? "ing...": null}</div>
+          <div style={{ cursor: "pointer" }}>{addingExchange ? "Updating...": "Update"}</div>
           
         </div>
       </div>

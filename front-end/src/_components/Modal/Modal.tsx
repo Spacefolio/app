@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ModalBg, ModalBoxSetup, ModalWrapper } from "./generalStyle";
-import {CloseButton} from '../../_components';
+import { CloseButton } from "../../_components";
 
 interface DropdownProps {
   visible: boolean;
@@ -13,19 +13,25 @@ export const Modal: React.FC<DropdownProps> = ({
   visible,
   dismiss,
   children,
-  clickOutsidedismiss
+  clickOutsidedismiss,
 }) => {
   return (
     <React.Fragment>
       {visible ? (
         <ModalWrapper>
           <ModalBoxSetup>
-            <CloseButton top="5px" right="5px" clickAction={() => dismiss()}></CloseButton>
+            <CloseButton
+              top="5px"
+              right="5px"
+              clickAction={() => dismiss()}
+            ></CloseButton>
             {children}
           </ModalBoxSetup>
-          <ModalBg onClick={() => {
-            clickOutsidedismiss? dismiss(): null
-          }} />
+          <ModalBg
+            onClick={() => {
+              clickOutsidedismiss ? dismiss() : null;
+            }}
+          />
         </ModalWrapper>
       ) : null}
     </React.Fragment>

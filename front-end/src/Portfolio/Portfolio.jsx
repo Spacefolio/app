@@ -1,30 +1,50 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import {
+  NavLink,
+  Router,
+  Route,
+  Switch,
+  useRouteMatch,
+  Redirect,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import './Portfolio.scss';
-
+import { history } from "../_helpers";
+import "./Portfolio.scss";
+import { PrivateRoute } from "../_components";
+import { PortfolioWrapper, TabWrapper, TabItem } from "./generalStyle";
 import { userActions } from "../_actions";
+import { MetaPortfolio, Transactions, OpenOrders, Holdings, Charts } from "../Portfolio";
 
 export const Portfolio = () => {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.users);
   const user = useSelector((state) => state.authentication.user);
 
-  const getUsers = userActions.getAll;
-  const deleteUser = userActions.delete;
-
-  useEffect(() => {
-    dispatch(getUsers());
-  }, []);
-
-  const handleDeleteUser = (id) => {
-    return (e) => dispatch(deleteUser(id));
-  };
+  const { path } = useRouteMatch("/portfolio");
 
   return (
-    <div className="center-my-children-column">
-      <h1>Hi {user.firstName}!</h1>
-      <p>You're Looking at the portfolio page</p>
-    </div>
+    <PortfolioWrapper>
+      <MetaPortfolio/>
+      <TabWrapper>
+        <TabItem>
+          <NavLink activeClassName='active-page-btn' to={`${path}/charts`}>Charts</NavLink>
+        </TabItem>
+        <TabItem>
+          <NavLink activeClassName='active-page-btn' to={`${path}/holdings`}>Holdings</NavLink>
+        </TabItem>
+        <TabItem>
+          <NavLink activeClassName='active-page-btn' to={`${path}/transactions`}>Transactions</NavLink>
+        </TabItem>
+        <TabItem>
+          <NavLink activeClassName='active-page-btn' to={`${path}/orders`}>Orders</NavLink>
+        </TabItem>
+      </TabWrapper>
+      <Switch>
+        <Route exact path={`${path}/charts`} component={Charts} />
+        <Route exact path={`${path}/transactions`} component={Transactions} />
+        <Route exact path={`${path}/orders`} component={OpenOrders} />
+        <Route exact path={`${path}/holdings`} component={Holdings} />
+        <Redirect from="/" to={`${path}/charts`} />
+      </Switch>
+    </PortfolioWrapper>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { exchangeActions } from "../_actions";
 import "./ExchangesPopup.scss";
-import { ExchangeForm, ExchangeItem } from "../Exchanges";
+import { AddExchangeForm, ExchangeItem } from "../Exchanges";
 import { IExchangeAccount, IExchangeReference } from "../types";
 import { Modal } from "../_components";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,7 +47,7 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
           dismiss={() => {
             setAddExchangeVisible(false);
           }}
-          children={<ExchangeForm addData={addExchangeData} formType={"add"} />}
+          children={<AddExchangeForm exchangeRefInfo={addExchangeData} />}
           visible={addExchangeVisible}
         />
         <div className="add-exchange-wrapper">
@@ -68,7 +68,6 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
                     return item.name
                       .toLowerCase()
                       .startsWith(searchFilter.toLowerCase());
-                    // return item.name.toLowerCase() == searchFilter.toLowerCase();
                   } else return true;
                 })
                 .map((item: IExchangeReference) => {
