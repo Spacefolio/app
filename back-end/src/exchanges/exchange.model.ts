@@ -16,8 +16,10 @@ export interface IExchangeAccountRequest {
     passphrase: string;
     name: string;
     nickname?: string;
-    exchangeType: ('coinbasepro'|'binance'|'kucoin'|'binanceus'|'hitbtc'|'coinbase');
+    exchangeType: exchangeType;
 }
+
+export type exchangeType = ('coinbasepro'|'binance'|'kucoin'|'binanceus'|'hitbtc'|'coinbase');
 
 export interface IExchangeAccountDocument extends mongoose.Document {
     apiKey: string;
@@ -36,7 +38,7 @@ export interface IExchangeAccountModel extends mongoose.Model<IExchangeAccountDo
 const exchangeAccountSchema = new mongoose.Schema({
     apiKey: { type: String, required: true },
     apiSecret: { type: String, required: true },
-    passphrase: { type: String, required: true },
+    passphrase: { type: String, required: false },
     name: { type: String, required: true },
     nickname: { type: String },
     exchangeType: { type: String, required: true },

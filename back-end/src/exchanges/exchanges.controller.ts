@@ -9,6 +9,9 @@ router.get('/', getAll);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
+router.post('/sync', sync);
+
+router.get('/requiredCredentials/:exchangeType', getRequiredCredentials);
 
 export { router as exchangesRouter };
 
@@ -41,4 +44,18 @@ function _delete(req: any, res: Response, next: NextFunction) {
     exchangeService.delete(req.user.sub, req.params.id)
         .then(() => res.json({}))
         .catch(err => next(err));
+}
+
+function getRequiredCredentials(req: any, res: Response, next: NextFunction)
+{
+  exchangeService.getRequiredCredentials(req.params.exchangeType)
+    .then((requiredCredentials: object) => res.json(requiredCredentials))
+    .catch(err => next(err));
+}
+
+function sync(req:any, res: Response, next: NextFunction)
+{
+  exchangeService.syncExchangeData(req.user.sub)
+    .then(() => res.json({}))
+    .catch(err => next(err));
 }
