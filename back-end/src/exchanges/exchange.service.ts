@@ -47,7 +47,6 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   const user = await User.findById(userId);
 
   // verify connection to exchange
-  const exchangeId = exchangeParam.exchangeType;
   const exchangeClass = ccxt[exchangeParam.exchangeType];
   const Exchange = new exchangeClass({
     apiKey: exchangeParam.apiKey,

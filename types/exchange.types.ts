@@ -28,9 +28,11 @@ export interface ICoin extends IAsset {
 }
 
 export interface IExchangeAccountRequest {
-  apiKey: string;
-  apiSecret: string;
-  passphrase: string;
+  apiInfo: {
+    apiKey: string;
+    apiSecret: string;
+    passphrase: string;
+  } 
   name: string;
   nickname?: string;
   exchangeType: exchangeType;
