@@ -1,25 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IExchangeAccount } from '../../../types';
-
-export interface IUser {
-    username: string;
-    hash: string;
-    firstName: string;
-    lastName: string;
-    linkedExchanges: string[];
-}
-
-export interface ILoginRequest {
-    username: string;
-    password: string;
-}
-
-export interface IRegisterRequest {
-    username: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-}
+import { IUser } from '../../../types';
 
 export interface IUserModel extends mongoose.Model<IUserDocument> {
     build(attr: IUser): IUserDocument

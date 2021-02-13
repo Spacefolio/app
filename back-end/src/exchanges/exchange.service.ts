@@ -1,6 +1,5 @@
-import { IUser, User } from '../users/user.model';
+import { User } from '../users/user.model';
 import {
-  IExchangeAccount,
   IExchangeAccountRequest,
   exchangeType
 } from "../../../types";
