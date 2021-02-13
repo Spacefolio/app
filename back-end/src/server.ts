@@ -8,6 +8,7 @@ import jwt from './_helpers/jwt';
 import { errorHandler } from './_helpers/error-handler';
 import { usersRouter } from './users/users.controller';
 import { exchangesRouter } from './exchanges/exchanges.controller';
+import { portfolioRouter } from './portfolios/portfolios.controller';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -19,6 +20,7 @@ app.use(jwt());
 // api routes
 app.use('/users', usersRouter);
 app.use('/exchanges', exchangesRouter);
+app.use('/portfolio', portfolioRouter);
 
 // global error handler
 app.use(errorHandler);

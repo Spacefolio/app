@@ -17,7 +17,7 @@ export const exchangeService = {
   syncExchangeData
 };
 
-async function getAll(id: string) {
+async function getAll(id: string, populatePortfolioItems: boolean) {
   const user = await User.findById(id).populate("linkedExchanges");
 
   if (!user) {
@@ -137,8 +137,9 @@ async function getRequiredCredentials(exchangeType: exchangeType)
 
 async function syncExchangeData(userId: string)
 {
-
-  // check all exchanges to see if there is new data
+  // updateOrders
+  // updateTransactions
+  // check all exchanges to see if there is new data for the user's 
   // update the database with new information
   const snooze = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -154,4 +155,9 @@ async function syncExchangeData(userId: string)
 async function getUpdatedPortfolioValues(userId: string)
 {
   return
+}
+
+async function getCoinData(coinId: string)
+{
+  /* Get updated coin metadata and price data */
 }
