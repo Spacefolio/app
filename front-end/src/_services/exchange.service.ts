@@ -20,11 +20,11 @@ async function getAll() {
   return await axios
     .get(`http://localhost:4000/exchanges`, { headers: requestOptions })
     .then((response) => {
+      console.log(response)
       return response.data;
     })
     .catch((err) => {
-      console.log(err);
-      return err;
+      throw err
     });
 }
 async function getInfo() {
@@ -45,6 +45,7 @@ async function addNew(exchange: IExchangeAccountRequest) {
     Authorization: Authorization,
     "Content-Type": "application/json",
   };
+  console.log("front end service", exchange);
   return await axios
     .post(`http://localhost:4000/exchanges`, exchange, {
       headers: requestOptions,
@@ -53,8 +54,7 @@ async function addNew(exchange: IExchangeAccountRequest) {
       return response.data;
     })
     .catch((err) => {
-      console.log("err", err);
-      return err;
+      throw err;
     });
 }
 
@@ -73,8 +73,7 @@ async function update(id: string, data: IExchangeAccountRequest) {
       return response.data;
     })
     .catch((err) => {
-      console.log("\n\nerr", err);
-      return err;
+      throw err
     });
 }
 
@@ -95,8 +94,7 @@ async function _delete(id: string) {
       return response;
     })
     .catch((err) => {
-      console.log("err", err);
-      return err;
+      throw err
     });
 }
 

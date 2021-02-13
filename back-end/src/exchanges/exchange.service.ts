@@ -53,16 +53,15 @@ async function getById(exchangeId: string) {
 
 async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   // validate
+  
   const user = await User.findById(userId);
 
   // verify connection to exchange
   const Exchange = createExchange(exchangeParam);
-  Exchange.checkRequiredCredentials();
-
   const response = await Exchange
     .fetchBalance()
     .then((balances: any) => {
-      //console.log(balances);
+      console.log(balances);
     })
     .catch((err: any) => {
       return err;
@@ -71,9 +70,11 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   if (response) {
     throw response.message;
   }
-
+   
   const exchangeObject = new ExchangeAccount(exchangeParam);
+   console.log("exchangeParam",exchangeParam);
   const savedExchange = await exchangeObject.save();
+  
 
   user.linkedExchanges.push(savedExchange.id);
   // save user
@@ -165,7 +166,7 @@ function createExchange(exchangeAccount: IExchangeAccount|IExchangeAccountReques
 {
   const exchangeClass = ccxt[exchangeAccount.exchangeType];
   return new exchangeClass({
-    //apiKey: exchangeAccount.apiInfo.apiKey,
+    apiKey: exchangeAccount.apiInfo.apiKey,
     secret: exchangeAccount.apiInfo.apiSecret,
     password: exchangeAccount.apiInfo.passphrase,
     timeout: 30000,
