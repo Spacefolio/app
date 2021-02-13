@@ -49,9 +49,9 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   // verify connection to exchange
   const exchangeClass = ccxt[exchangeParam.exchangeType];
   const Exchange = new exchangeClass({
-    apiKey: exchangeParam.apiKey,
-    secret: exchangeParam.apiSecret,
-    password: exchangeParam.passphrase,
+    apiKey: exchangeParam.apiInfo.apiKey,
+    secret: exchangeParam.apiInfo.apiSecret,
+    password: exchangeParam.apiInfo.passphrase,
     timeout: 30000,
     enableRateLimit: true,
   });
