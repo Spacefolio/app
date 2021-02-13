@@ -8,14 +8,15 @@ import {
 import { FlexCard, SyncButton } from "../../_components";
 import { portfolioService } from "../../_services";
 import { alertActions } from "../../_actions";
-import { PortfolioLineChart } from "../Charts/PortfolioLineChart";
-import useDimensions from 'react-use-dimensions';
+import { PortfolioLineChart } from "./MetaPortfolioChart";
+import useDimensions from "react-use-dimensions";
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
   const [isSyncing, setIsSyncing] = useState(false);
   const [data, setData] = useState<any>();
   const [ref, refSize] = useDimensions();
+
 
   const onSync = () => {
     setIsSyncing(true);
@@ -49,24 +50,39 @@ export const MetaPortfolio = () => {
 
   return (
     <MetaPortfolioWrapper>
-      
-        <PortfolioValueWrapper>
-          {data ? (<React.Fragment>
-          <div style={portfolioValueItemStyler(data.PValue)}>{data.PValue}</div>
-          <div style={portfolioValueItemStyler(data.PLValue)}>
-            {data.PLValue}
-          </div>
-          <div style={portfolioValueItemStyler(data.PLPercent)}>
-            {data.PLPercent}
-          </div></React.Fragment>) : "Loading..."}
-        </PortfolioValueWrapper>
-      
+      <PortfolioValueWrapper>
+        {data ? (
+          <React.Fragment>
+            <div style={portfolioValueItemStyler(data.PValue)}>
+              {data.PValue}
+            </div>
+            <div style={portfolioValueItemStyler(data.PLValue)}>
+              {data.PLValue}
+            </div>
+            <div style={portfolioValueItemStyler(data.PLPercent)}>
+              {data.PLPercent}
+            </div>
+          </React.Fragment>
+        ) : (
+          "Loading..."
+        )}
+        <div onClick={() => onSync()} style={{ width: "40px" }}>
+          Refresh
+          <SyncButton isSyncing={isSyncing} />
+        </div>
+      </PortfolioValueWrapper>
+
+      <MetaPortfolioChartWrapper>
+        <PortfolioLineChart
+          width={200}
+          height={100}
+          id={"MetaportfolioChart"}
+        />
+      </MetaPortfolioChartWrapper>
       <div onClick={() => onSync()} style={{ width: "40px" }}>
+        Sync
         <SyncButton isSyncing={isSyncing} />
       </div>
-      <MetaPortfolioChartWrapper >
-        <PortfolioLineChart width={200} height={100} id={"MetaportfolioChart"}/>
-      </MetaPortfolioChartWrapper>
     </MetaPortfolioWrapper>
   );
 };

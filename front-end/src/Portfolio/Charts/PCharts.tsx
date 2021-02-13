@@ -2,12 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DashboardWrapper } from "./generalStyle";
 import { FlexCard } from "../../_components";
-import { PortfolioLineChart } from "./PortfolioLineChart";
+import { PortfolioLineChart } from "../Charts/PortfolioLineChart";
 import useDimensions from "react-use-dimensions";
 
 export const Charts = () => {
   const dispatch = useDispatch();
-  const [ref, refSize] = useDimensions();
 
   return (
     <DashboardWrapper>

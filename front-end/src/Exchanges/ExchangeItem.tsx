@@ -27,7 +27,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
       }
     )[0];
 
-    setLogoUrl(targetRef.logoUrl);
+    targetRef? setLogoUrl(targetRef.logoUrl):null;
   }, []);
 
   return (

@@ -23,9 +23,9 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
   const [exchangeType, setExchangeType] = useState(
     exchangeAccountData.exchangeType
   );
-  const [apiKey, setApiKey] = useState(exchangeAccountData.apiKey);
-  const [apiSecret, setApiSecret] = useState(exchangeAccountData.apiSecret);
-  const [passphrase, setPassphrase] = useState(exchangeAccountData.passphrase);
+  const [apiKey, setApiKey] = useState(exchangeAccountData.apiInfo.apiKey);
+  const [apiSecret, setApiSecret] = useState(exchangeAccountData.apiInfo.apiSecret);
+  const [passphrase, setPassphrase] = useState(exchangeAccountData.apiInfo.passphrase);
   const [name, setName] = useState(exchangeAccountData.name);
   const [nickname, setNickname] = useState(exchangeAccountData.nickname);
   const [exchange, setExchange] = useState<IExchangeAccountRequest>({

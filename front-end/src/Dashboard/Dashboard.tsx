@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {DashboardWrapper} from"./generalStyle";
 import {FlexCard} from '../_components';
-import { PortfolioLineChart } from "../Portfolio/Charts/PortfolioLineChart";
+import { PortfolioLineChart } from "../Portfolio/MetaPortfolio/MetaPortfolioChart";
 
 
 export const Dashboard = () => {

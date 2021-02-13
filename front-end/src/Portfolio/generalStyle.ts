@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const PortfolioWrapper = styled.div`
+margin-top: 8px;
 display: flex;
 flex-direction: column;
 height: 100%;
