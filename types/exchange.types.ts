@@ -28,7 +28,7 @@ export type exchangeType =
   | "coinbase";
 
 export interface IExchangeReference {
-  id: string;
+  id: exchangeType;
   name: string;
   logoUrl: string;
 }
