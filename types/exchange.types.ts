@@ -10,7 +10,7 @@ export interface IExchangeAccount {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: [IPortfolioItem];
+  portfolioItems: ([IPortfolioItem] | [string]);
 }
 
 export interface IPortfolioItem {

@@ -1,7 +1,8 @@
 import { User } from '../users/user.model';
 import {
   IExchangeAccountRequest,
-  exchangeType
+  exchangeType,
+  IExchangeAccount
 } from "../../../types";
 import { ExchangeAccount } from './exchange.model';
 import ccxt from "ccxt";
@@ -26,20 +27,28 @@ async function getAll(id: string, populatePortfolioItems: boolean) {
   return user.linkedExchanges;
 }
 
-async function getById(exchangeId: string) {
-  const exchange = await ExchangeAccount.findById(exchangeId);
+async function getAssets(exchangeId: string)
+{
+  const exchange:IExchangeAccount = await ExchangeAccount.findById(exchangeId).populate("portfolioItems");
+  if (!exchange) { throw "Exchange not found"; }
+  
+  const Exchange = createExchange(exchange);
 
-  if (!exchange) {
-    throw "Exchange not found";
-  }
-
-  return exchange;
+  const response = await Exchange
+    .fetchBalance()
+    .then((balances: any) => {
+      //console.log(balances);
+    })
+    .catch((err: any) => {
+      return err;
+    });
 }
 
-interface IExchangeRef {
-  id: string;
-  name: string;
-  logoUrl: string;
+async function getById(exchangeId: string) {
+  const exchange = await ExchangeAccount.findById(exchangeId);
+  if (!exchange) { throw "Exchange not found"; }
+
+  return exchange;
 }
 
 async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
@@ -47,14 +56,8 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   const user = await User.findById(userId);
 
   // verify connection to exchange
-  const exchangeClass = ccxt[exchangeParam.exchangeType];
-  const Exchange = new exchangeClass({
-    apiKey: exchangeParam.apiInfo.apiKey,
-    secret: exchangeParam.apiInfo.apiSecret,
-    password: exchangeParam.apiInfo.passphrase,
-    timeout: 30000,
-    enableRateLimit: true,
-  });
+  const Exchange = createExchange(exchangeParam);
+  Exchange.checkRequiredCredentials();
 
   const response = await Exchange
     .fetchBalance()
@@ -156,4 +159,16 @@ async function getUpdatedPortfolioValues(userId: string)
 async function getCoinData(coinId: string)
 {
   /* Get updated coin metadata and price data */
+}
+
+function createExchange(exchangeAccount: IExchangeAccount|IExchangeAccountRequest)
+{
+  const exchangeClass = ccxt[exchangeAccount.exchangeType];
+  return new exchangeClass({
+    //apiKey: exchangeAccount.apiInfo.apiKey,
+    secret: exchangeAccount.apiInfo.apiSecret,
+    password: exchangeAccount.apiInfo.passphrase,
+    timeout: 30000,
+    enableRateLimit: true,
+  });
 }

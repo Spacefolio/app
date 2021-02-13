@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IExchangeAccount, exchangeType } from "../../../types";
+import { IExchangeAccount, exchangeType, IPortfolioItem } from "../../../types";
 
 export interface IExchangeAccountDocument extends mongoose.Document {
   name: string;
@@ -13,7 +13,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: string[];
+  portfolioItems: ([IPortfolioItem] | [string]);
 }
 
 export interface IExchangeAccountModel
