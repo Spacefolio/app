@@ -1,6 +1,6 @@
 import axios from "axios";
 import { authHeader } from "../_helpers";
-import { IUser } from "../types";
+import { IUser } from "../../../types";
 
 export const userService = {
   login,

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { exchangeActions } from "../_actions";
 import "./ExchangesPopup.scss";
 import { AddExchangeForm, ExchangeItem } from "../Exchanges";
-import { IExchangeAccount, IExchangeReference } from "../types";
+import { IExchangeAccount, IExchangeReference } from "../../../types";
 import { Modal } from "../_components";
 import { useDispatch, useSelector } from "react-redux";
 

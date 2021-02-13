@@ -3,7 +3,7 @@ import { DeleteButton, EditButton } from "../_components";
 import {
   IExchangeAccount,
   IExchangeReference,
-} from "../types/exchangeInterface";
+} from "../../../types";
 import { Modal } from "../_components";
 import { EditExchangeForm } from "./EditExchangeForm";
 import { exchangeActions } from "../_actions";

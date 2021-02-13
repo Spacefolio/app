@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {RD} from '../../Application/ResponsiveDesign'
+import { RD } from "../../Application/ResponsiveDesign";
 
 export const MetaPortfolioWrapper = styled.div`
   padding: 20px;
@@ -25,5 +25,9 @@ export const MetaPortfolioWrapper = styled.div`
 `;
 
 export const PortfolioValueWrapper = styled.div`
-  border: 1px solid var(--accent-base)
+
+  border: 1px solid var(--accent-base);
+`;
+export const MetaPortfolioChartWrapper = styled.div`
+
 `;

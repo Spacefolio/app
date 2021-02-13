@@ -1,5 +1,5 @@
 import { exchangeConstants } from "../_constants";
-import { IExchangeAccount } from "../types";
+import { IExchangeAccount } from "../../../types";
 
 interface IExchangeAction {
   type: string;

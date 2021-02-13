@@ -1,41 +1,72 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MetaPortfolioWrapper, PortfolioValueWrapper } from "./generalStyle";
+import {
+  MetaPortfolioWrapper,
+  PortfolioValueWrapper,
+  MetaPortfolioChartWrapper,
+} from "./generalStyle";
 import { FlexCard, SyncButton } from "../../_components";
 import { portfolioService } from "../../_services";
 import { alertActions } from "../../_actions";
+import { PortfolioLineChart } from "../Charts/PortfolioLineChart";
+import useDimensions from 'react-use-dimensions';
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
   const [isSyncing, setIsSyncing] = useState(false);
+  const [data, setData] = useState<any>();
+  const [ref, refSize] = useDimensions();
+
+  const onSync = () => {
+    setIsSyncing(true);
+    portfolioService
+      .syncExchanges()
+      .then(() => {
+        setIsSyncing(false);
+        //dummy return data for testing
+        setData({
+          PValue: 6325.56,
+          PLPercent: -32,
+          PLValue: -2145.67,
+        });
+        dispatch(alertActions.success("Sync Sucessful"));
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(alertActions.error(err));
+      });
+  };
+
+  const portfolioValueItemStyler = (num: number) => {
+    return num < 0
+      ? { color: "var(--error-base)" }
+      : { color: "var(--accent-base}" };
+  };
+
+  useEffect(() => {
+    onSync();
+  }, []);
 
   return (
     <MetaPortfolioWrapper>
-      <PortfolioValueWrapper>
-        <div>Total Profit/Loss</div>
-        <div>Profit/Loss %</div>
-        <div>Current Portfolio Value</div>
-        <div
-          onClick={() => {
-            setIsSyncing(true);
-            portfolioService
-              .syncExchanges()
-              .then(() => {
-                setIsSyncing(false);
-                dispatch(alertActions.success("Sync Sucessful"));
-              })
-              .catch((err) => {
-                console.log(err);
-                dispatch(alertActions.error(err));
-              });
-          }}
-          style={{ width: "1.5em" }}
-        >
-          <SyncButton isSyncing={isSyncing} />
-          <div>{isSyncing ? "Syncing..." : null}</div>
-        </div>
-      </PortfolioValueWrapper>
-      <div>Portfolio Chart</div>
+      
+        <PortfolioValueWrapper>
+          {data ? (<React.Fragment>
+          <div style={portfolioValueItemStyler(data.PValue)}>{data.PValue}</div>
+          <div style={portfolioValueItemStyler(data.PLValue)}>
+            {data.PLValue}
+          </div>
+          <div style={portfolioValueItemStyler(data.PLPercent)}>
+            {data.PLPercent}
+          </div></React.Fragment>) : "Loading..."}
+        </PortfolioValueWrapper>
+      
+      <div onClick={() => onSync()} style={{ width: "40px" }}>
+        <SyncButton isSyncing={isSyncing} />
+      </div>
+      <MetaPortfolioChartWrapper >
+        <PortfolioLineChart width={200} height={100} id={"MetaportfolioChart"}/>
+      </MetaPortfolioChartWrapper>
     </MetaPortfolioWrapper>
   );
 };

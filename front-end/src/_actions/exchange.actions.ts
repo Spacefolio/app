@@ -2,10 +2,7 @@ import { exchangeConstants } from "../_constants";
 import { exchangeService } from "../_services";
 import { alertActions } from "./alert.actions";
 import { history } from "../_helpers";
-import {
-  IExchangeAccount,
-  IExchangeAccountRequest,
-} from "../types/exchangeInterface";
+import { IExchangeAccount, IExchangeAccountRequest } from "../../../types";
 import { exchanges } from "../_reducers/exchange.reducer";
 
 export const exchangeActions = {
@@ -119,12 +116,12 @@ function _delete(id: string) {
   return (dispatch: any) => {
     dispatch(request(id));
 
-    exchangeService
-      .delete(id)
-      .then((res) => {
-        dispatch(success(id))})
-        dispatch(alertActions.success("Deleted"))
-      .catch((error: any) => dispatch(failure(id, error.toString())));
+    exchangeService.delete(id).then((res) => {
+      dispatch(success(id));
+    });
+    dispatch(alertActions.success("Deleted")).catch((error: any) =>
+      dispatch(failure(id, error.toString()))
+    );
   };
 
   function request(id: string) {

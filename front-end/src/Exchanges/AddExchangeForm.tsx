@@ -5,7 +5,7 @@ import {
   IExchangeAccountRequest,
   IExchangeAccount,
   IExchangeReference,
-} from "../types";
+} from "../../../types";
 import { useDispatch, useSelector } from "react-redux";
 
 interface ExchangeFormProps {
@@ -26,7 +26,7 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
   const [passphrase, setPassphrase] = useState("");
   const [name, setName] = useState(exchangeRefInfo.name);
   const [nickname, setNickname] = useState(exchangeRefInfo.name);
-  const [exchange, setExchange] = useState({
+  const [exchange, setExchange] = useState<IExchangeAccountRequest>({
     exchangeType,
     apiKey,
     apiSecret,

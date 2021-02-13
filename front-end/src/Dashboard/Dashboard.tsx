@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {DashboardWrapper} from"./generalStyle";
 import {FlexCard} from '../_components';
+import { PortfolioLineChart } from "../Portfolio/Charts/PortfolioLineChart";
 
 
 export const Dashboard = () => {
@@ -9,7 +10,7 @@ export const Dashboard = () => {
 
   return (
       <DashboardWrapper>
-        <FlexCard gridName={"one"} children={<div>{"Portfolio summary card"}</div>} />
+        <FlexCard gridName={"one"} children={<PortfolioLineChart width={300} height={150} id={'dashboardSummaryChart'} />} />
         <FlexCard gridName={"two"} children={<div>{"My Exchanges card"}</div>} />
         <FlexCard gridName={"three"} children={<div>{"another one"}</div>} />
         <FlexCard gridName={"four"} children={<div>{"another one"}</div>} />

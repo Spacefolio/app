@@ -10,10 +10,16 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { history } from "../_helpers";
 import "./Portfolio.scss";
-import { PrivateRoute } from "../_components";
+import { FlexCard, PrivateRoute } from "../_components";
 import { PortfolioWrapper, TabWrapper, TabItem } from "./generalStyle";
 import { userActions } from "../_actions";
-import { MetaPortfolio, Transactions, OpenOrders, Holdings, Charts } from "../Portfolio";
+import {
+  MetaPortfolio,
+  Transactions,
+  OpenOrders,
+  Holdings,
+  Charts,
+} from "../Portfolio";
 
 export const Portfolio = () => {
   const dispatch = useDispatch();
@@ -23,19 +29,32 @@ export const Portfolio = () => {
 
   return (
     <PortfolioWrapper>
-      <MetaPortfolio/>
+      <FlexCard>
+        <MetaPortfolio />
+      </FlexCard>
       <TabWrapper>
         <TabItem>
-          <NavLink activeClassName='active-page-btn' to={`${path}/charts`}>Charts</NavLink>
+          <NavLink activeClassName="active-page-btn" to={`${path}/charts`}>
+            Charts
+          </NavLink>
         </TabItem>
         <TabItem>
-          <NavLink activeClassName='active-page-btn' to={`${path}/holdings`}>Holdings</NavLink>
+          <NavLink activeClassName="active-page-btn" to={`${path}/holdings`}>
+            Holdings
+          </NavLink>
         </TabItem>
         <TabItem>
-          <NavLink activeClassName='active-page-btn' to={`${path}/transactions`}>Transactions</NavLink>
+          <NavLink
+            activeClassName="active-page-btn"
+            to={`${path}/transactions`}
+          >
+            Transactions
+          </NavLink>
         </TabItem>
         <TabItem>
-          <NavLink activeClassName='active-page-btn' to={`${path}/orders`}>Orders</NavLink>
+          <NavLink activeClassName="active-page-btn" to={`${path}/orders`}>
+            Orders
+          </NavLink>
         </TabItem>
       </TabWrapper>
       <Switch>

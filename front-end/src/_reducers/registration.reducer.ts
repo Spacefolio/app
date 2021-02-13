@@ -1,7 +1,8 @@
 import { userConstants } from '../_constants';
 
 interface IRegistrationAction{
-  type: string
+  type: string;
+  value: any;
 }
 
 export function registration(state = {}, action: IRegistrationAction) {

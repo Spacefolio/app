@@ -2,29 +2,40 @@ import React, { useEffect, useState } from "react";
 import "./ExchangeForm.scss";
 import { exchangeActions } from "../_actions";
 import {
-  IExchangeAccount, IExchangeAccountRequest,
-} from "../types";
+  exchangeType,
+  IExchangeAccount,
+  IExchangeAccountRequest,
+} from "../../../types";
 import { useDispatch, useSelector } from "react-redux";
 
 interface ExchangeFormProps {
- exchangeAccountData: IExchangeAccount;
+  exchangeAccountData: IExchangeAccount;
 }
 
 export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
-  exchangeAccountData
+  exchangeAccountData,
 }) => {
   const addingExchange = useSelector(
     (state: any) => state.exchanges.addingExchange
   );
   const dispatch = useDispatch();
 
-  const [exchangeType, setExchangeType] = useState(exchangeAccountData.exchangeType);
+  const [exchangeType, setExchangeType] = useState(
+    exchangeAccountData.exchangeType
+  );
   const [apiKey, setApiKey] = useState(exchangeAccountData.apiKey);
   const [apiSecret, setApiSecret] = useState(exchangeAccountData.apiSecret);
   const [passphrase, setPassphrase] = useState(exchangeAccountData.passphrase);
   const [name, setName] = useState(exchangeAccountData.name);
   const [nickname, setNickname] = useState(exchangeAccountData.nickname);
-  const [exchange, setExchange] = useState<IExchangeAccountRequest>({exchangeType, apiKey, apiSecret, passphrase, name, nickname});
+  const [exchange, setExchange] = useState<IExchangeAccountRequest>({
+    exchangeType,
+    apiKey,
+    apiSecret,
+    passphrase,
+    name,
+    nickname,
+  });
 
   useEffect(() => {
     setExchange({
@@ -104,8 +115,9 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
             color: "white",
           }}
         >
-          <div style={{ cursor: "pointer" }}>{addingExchange ? "Updating...": "Update"}</div>
-          
+          <div style={{ cursor: "pointer" }}>
+            {addingExchange ? "Updating..." : "Update"}
+          </div>
         </div>
       </div>
     </form>

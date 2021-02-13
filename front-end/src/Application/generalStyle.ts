@@ -6,6 +6,7 @@ export const ApplicationContainer = styled.div`
   justify-content: center;
   min-height: 100%;
   width: 100%;
+  padding: 0 8px;
   background-color: var(--primary-light3);
 `;
 
