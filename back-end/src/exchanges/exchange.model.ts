@@ -1,25 +1,5 @@
 import mongoose from 'mongoose';
-
-export interface IExchangeAccount {
-    apiKey: string;
-    apiSecret: string;
-    passphrase: string;
-    name: string;
-    nickname: string;
-    exchangeType: string;
-    addedDate: Date;
-}
-
-export interface IExchangeAccountRequest {
-    apiKey: string;
-    apiSecret: string;
-    passphrase: string;
-    name: string;
-    nickname?: string;
-    exchangeType: exchangeType;
-}
-
-export type exchangeType = ('coinbasepro'|'binance'|'kucoin'|'binanceus'|'hitbtc'|'coinbase');
+import { IExchangeAccount } from '../../../types';
 
 export interface IExchangeAccountDocument extends mongoose.Document {
     apiKey: string;

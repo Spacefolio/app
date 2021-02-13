@@ -1,12 +1,11 @@
-import { IUser, User } from "../users/user.model";
+import { IUser, User } from '../users/user.model';
 import {
   IExchangeAccount,
   IExchangeAccountRequest,
-  ExchangeAccount,
   exchangeType
-} from "./exchange.model";
+} from "../../../types";
+import { ExchangeAccount } from './exchange.model';
 import ccxt from "ccxt";
-import axios from "axios";
 
 export const exchangeService = {
   getAll,
@@ -138,6 +137,9 @@ async function getRequiredCredentials(exchangeType: exchangeType)
 
 async function syncExchangeData(userId: string)
 {
+
+  // check all exchanges to see if there is new data
+  // update the database with new information
   const snooze = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
   const sleep = async () => {
@@ -147,4 +149,9 @@ async function syncExchangeData(userId: string)
   }
 
   await sleep();
+}
+
+async function getUpdatedPortfolioValues(userId: string)
+{
+  return
 }

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IExchangeAccount } from '../exchanges/exchange.model';
+import { IExchangeAccount } from '../../../types';
 
 export interface IUser {
     username: string;
