@@ -24,15 +24,21 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
     exchangeAccountData.exchangeType
   );
   const [apiKey, setApiKey] = useState(exchangeAccountData.apiInfo.apiKey);
-  const [apiSecret, setApiSecret] = useState(exchangeAccountData.apiInfo.apiSecret);
-  const [passphrase, setPassphrase] = useState(exchangeAccountData.apiInfo.passphrase);
+  const [apiSecret, setApiSecret] = useState(
+    exchangeAccountData.apiInfo.apiSecret
+  );
+  const [passphrase, setPassphrase] = useState(
+    exchangeAccountData.apiInfo.passphrase
+  );
   const [name, setName] = useState(exchangeAccountData.name);
   const [nickname, setNickname] = useState(exchangeAccountData.nickname);
   const [exchange, setExchange] = useState<IExchangeAccountRequest>({
     exchangeType,
-    apiKey,
-    apiSecret,
-    passphrase,
+    apiInfo: {
+      apiKey,
+      apiSecret,
+      passphrase,
+    },
     name,
     nickname,
   });
@@ -40,9 +46,11 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
   useEffect(() => {
     setExchange({
       exchangeType,
-      apiKey,
-      apiSecret,
-      passphrase,
+      apiInfo: {
+        apiKey,
+        apiSecret,
+        passphrase,
+      },
       name,
       nickname,
     });

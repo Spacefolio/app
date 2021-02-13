@@ -64,8 +64,6 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
     .catch((err: any) => {
       return err;
     });
-  
-  console.log(Exchange.requiredCredentials);
 
   if (response) {
     throw response.message;

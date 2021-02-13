@@ -28,9 +28,11 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
   const [nickname, setNickname] = useState(exchangeRefInfo.name);
   const [exchange, setExchange] = useState<IExchangeAccountRequest>({
     exchangeType,
-    apiKey,
-    apiSecret,
-    passphrase,
+    apiInfo: {
+      apiKey,
+      apiSecret,
+      passphrase,
+    },
     name,
     nickname,
   });
@@ -38,9 +40,11 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
   useEffect(() => {
     setExchange({
       exchangeType,
-      apiKey,
-      apiSecret,
-      passphrase,
+      apiInfo: {
+        apiKey,
+        apiSecret,
+        passphrase,
+      },
       name,
       nickname,
     });
