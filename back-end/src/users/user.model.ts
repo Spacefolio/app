@@ -6,7 +6,7 @@ export interface IUser {
     hash: string;
     firstName: string;
     lastName: string;
-    linkedExchanges: IExchangeAccount[];
+    linkedExchanges: string[];
 }
 
 export interface ILoginRequest {
