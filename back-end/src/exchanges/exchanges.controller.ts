@@ -4,12 +4,12 @@ const router = Router();
 import { exchangeService } from "./exchange.service";
 
 // routes
-router.post("/", create);
-router.get("/", getAll);
-router.get("/:id", getById);
-router.put("/:id", update);
-router.delete("/:id", _delete);
-router.post("/sync", sync);
+router.post('/', create);
+router.get('/', getAll);
+router.get('/:id', getById);
+router.put('/:id', update);
+router.delete('/:id', _delete);
+router.post('/sync', sync);
 
 router.get("/requiredCredentials/:exchangeType", getRequiredCredentials);
 
@@ -25,10 +25,9 @@ function create(req: any, res: Response, next: NextFunction) {
 }
 
 function getAll(req: any, res: Response, next: NextFunction) {
-  exchangeService
-    .getAll(req.user.sub, req.params.populatePortfolioItems)
-    .then((linkedExchanges) => res.json(linkedExchanges))
-    .catch((err) => next(err));
+    exchangeService.getAll(req.user.sub)
+        .then(linkedExchanges => res.json(linkedExchanges))
+        .catch(err => next(err));
 }
 
 function getById(req: any, res: Response, next: NextFunction) {
