@@ -10,21 +10,23 @@ export interface IExchangeAccount {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: ([IPortfolioItem] | [string]);
+  portfolioItems: [IPortfolioItem] | [string];
 }
 
 export interface IPortfolioItem {
   id: string;
   asset: IAsset;
+  balance: { used: number; free: number; total: number };
+  profitTotal: { All: number; "24H": number; lastTrade: number };
+  currentPrice: number;
+  profitPercentage: { All: number; "24H": number; lastTrade: number };
 }
 
 export interface IAsset {
-    id: string;
-    amount: number;
-    //balance: Balance;
-}
-
-export interface ICoin extends IAsset {
+  id: string;
+  name: string;
+  symbol: string;
+  logo: string;
 }
 
 export interface IExchangeAccountRequest {
@@ -32,7 +34,7 @@ export interface IExchangeAccountRequest {
     apiKey: string;
     apiSecret: string;
     passphrase: string;
-  } 
+  };
   name: string;
   nickname?: string;
   exchangeType: exchangeType;

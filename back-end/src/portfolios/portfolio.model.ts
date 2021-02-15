@@ -1,9 +1,10 @@
+import { Balance } from "ccxt";
 import mongoose from "mongoose";
 import { IPortfolioItem } from "../../../types";
 
 export interface IPortfolioItemDocument extends mongoose.Document {
     assetId: string;
-    amount: number;
+    balance: Balance;
   }
   
   const portfolioItemSchema = new mongoose.Schema({
