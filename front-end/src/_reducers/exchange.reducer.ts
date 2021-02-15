@@ -91,7 +91,7 @@ export function exchanges(
         exchanges: [...state.exchanges, action.exchangeAccount],
       };
     case exchangeConstants.ADDNEW_FAILURE:
-      return { ...state };
+      return { ...state, addingExchange: false };
 
     case exchangeConstants.UPDATE_REQUEST:
       return { ...state, addingExchange: true };

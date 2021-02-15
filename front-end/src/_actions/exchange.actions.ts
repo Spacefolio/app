@@ -16,7 +16,7 @@ export const exchangeActions = {
 function addNew(exchange: IExchangeAccountRequest) {
   return (dispatch: any) => {
     dispatch(request(exchange));
-
+    console.log("action", exchange);
     exchangeService
       .addNew(exchange)
       .then((res: any) => {
@@ -44,16 +44,16 @@ function update(exchange: IExchangeAccountRequest, id: string) {
   return (dispatch: any) => {
     dispatch(request(exchange));
 
-    exchangeService.update(id, exchange).then(
-      (res: any) => {
+    exchangeService
+      .update(id, exchange)
+      .then((res: any) => {
         dispatch(success(res));
         dispatch(alertActions.success("update successful"));
-      },
-      (error) => {
+      })
+      .catch((error) => {
         dispatch(failure(error.toString()));
         dispatch(alertActions.error(error.toString()));
-      }
-    );
+      });
   };
 
   function request(exchange: any) {
