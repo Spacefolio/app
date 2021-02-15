@@ -5,7 +5,7 @@ import { exchangeService } from './exchange.service';
 
 // routes
 router.post('/', create);
-router.get('/:populatePortfolioItems?', getAll);
+router.get('/', getAll);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
@@ -23,7 +23,7 @@ function create(req: any, res: Response, next: NextFunction) {
 }
 
 function getAll(req: any, res: Response, next: NextFunction) {
-    exchangeService.getAll(req.user.sub, req.params.populatePortfolioItems)
+    exchangeService.getAll(req.user.sub)
         .then(linkedExchanges => res.json(linkedExchanges))
         .catch(err => next(err));
 }

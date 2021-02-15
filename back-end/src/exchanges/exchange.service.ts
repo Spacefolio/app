@@ -17,7 +17,7 @@ export const exchangeService = {
   syncExchangeData
 };
 
-async function getAll(id: string, populatePortfolioItems: boolean) {
+async function getAll(id: string) {
   const user = await User.findById(id).populate("linkedExchanges");
 
   if (!user) {
@@ -68,7 +68,9 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
       return err;
     });
   
-  console.log(Exchange.requiredCredentials);
+  console.log(Exchange);
+  return Exchange;
+  //console.log(Exchange.requiredCredentials);
 
   if (response) {
     throw response.message;
@@ -142,6 +144,9 @@ async function syncExchangeData(userId: string)
   // updateTransactions
   // check all exchanges to see if there is new data for the user's 
   // update the database with new information
+ 
+  
+
   const snooze = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
   const sleep = async () => {
@@ -167,7 +172,7 @@ function createExchange(exchangeAccount: IExchangeAccount|IExchangeAccountReques
 {
   const exchangeClass = ccxt[exchangeAccount.exchangeType];
   return new exchangeClass({
-    //apiKey: exchangeAccount.apiInfo.apiKey,
+    apiKey: exchangeAccount.apiInfo.apiKey,
     secret: exchangeAccount.apiInfo.apiSecret,
     password: exchangeAccount.apiInfo.passphrase,
     timeout: 30000,

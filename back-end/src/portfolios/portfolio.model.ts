@@ -8,7 +8,11 @@ export interface IPortfolioItemDocument extends mongoose.Document {
   
   const portfolioItemSchema = new mongoose.Schema({
     assetId: { type: String, required: true },
-    amount: { type: Number, required: true },
+    balance: {
+      free: {type: Number, required: }
+      used: {type: Number, required: true },
+
+    },
   });
   
   export interface IPortfolioItemModel
