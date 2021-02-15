@@ -1,18 +1,21 @@
-export interface IMetaportfolioChart {
-  
+import { IExchangeAccount } from "../types";
+
+export type IPortfolioData = {
+  data: [IExchangeAccount]
 }
 
-export interface IExchangeExtraData {
-  name: string;
+export interface IPortfolioItem {
   id: string;
-  nickname: string;
-  exchangeType: exchangeType;
-  addedDate: Date;
-  logoUrl?: string;
-  apiInfo: {
-    apiKey: string;
-    apiSecret: string;
-    passphrase: string;
-  };
-  portfolioItems: ([IPortfolioItem]);
+  asset: IAsset;
+  balance: { used: number; free: number; total: number };
+  profitTotal: { All: number; "24H": number; lastTrade: number };
+  currentPrice: number;
+  profitPercentage: { All: number; "24H": number; lastTrade: number };
+}
+
+export interface IAsset {
+  id: string;
+  name: string;
+  symbol: string;
+  logo: string;
 }

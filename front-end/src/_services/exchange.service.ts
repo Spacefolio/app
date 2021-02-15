@@ -35,7 +35,7 @@ async function getInfo() {
     })
     .catch((err) => {
       console.log("err", err);
-      return err;
+      throw err;
     });
 }
 

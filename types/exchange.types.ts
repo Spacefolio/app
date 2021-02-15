@@ -1,3 +1,5 @@
+import { IPortfolioItem } from "../types";
+
 export interface IExchangeAccount {
   name: string;
   id: string;
@@ -11,22 +13,6 @@ export interface IExchangeAccount {
     passphrase: string;
   };
   portfolioItems: [IPortfolioItem] | [string];
-}
-
-export interface IPortfolioItem {
-  id: string;
-  asset: IAsset;
-  balance: { used: number; free: number; total: number };
-  profitTotal: { All: number; "24H": number; lastTrade: number };
-  currentPrice: number;
-  profitPercentage: { All: number; "24H": number; lastTrade: number };
-}
-
-export interface IAsset {
-  id: string;
-  name: string;
-  symbol: string;
-  logo: string;
 }
 
 export interface IExchangeAccountRequest {
