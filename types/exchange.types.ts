@@ -1,5 +1,3 @@
-import { Balance } from "ccxt";
-
 export interface IExchangeAccount {
   name: string;
   id: string;
@@ -22,7 +20,8 @@ export interface IPortfolioItem {
 
 export interface IAsset {
     id: string;
-    balance: Balance;
+    amount: number;
+    //balance: Balance;
 }
 
 export interface ICoin extends IAsset {

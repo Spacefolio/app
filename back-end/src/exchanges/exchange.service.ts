@@ -58,6 +58,7 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
 
   // verify connection to exchange
   const Exchange = createExchange(exchangeParam);
+  /*
   const response = await Exchange
     .fetchBalance()
     .then((balances: any) => {
@@ -66,14 +67,23 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
     .catch((err: any) => {
       return err;
     });
+  */
+
+  // TODO: If account is valid, call sync
+
+  console.log(Exchange.balance);
+  Exchange.balance = await Exchange.fetchBalance();
+  console.log(await Exchange.fetchTransactions());
+  console.log(await Exchange.fetchOrders());
+  console.log(await Exchange.fetchMyTrades());
   
   console.log(Exchange);
   return Exchange;
   //console.log(Exchange.requiredCredentials);
 
-  if (response) {
-    throw response.message;
-  }
+  // if (response) {
+  //   throw response.message;
+  // }
    
   const exchangeObject = new ExchangeAccount(exchangeParam);
    console.log("exchangeParam",exchangeParam);
