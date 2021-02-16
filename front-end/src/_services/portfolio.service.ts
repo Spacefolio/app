@@ -3,17 +3,17 @@ import { IExchangeAccountRequest, IExchangeAccount } from "../../../types";
 import axios from "axios";
 
 export const portfolioService = {
-  getPortoflio,
+  syncPortfolio
 };
 
-async function getPortoflio() {
+async function syncPortfolio(sync: boolean) {
   const Authorization = authHeader().Authorization;
   const requestOptions = {
     Authorization: Authorization,
   };
 
   return await axios
-    .get(`http://localhost:4000/portfolio/`, { headers: requestOptions })
+    .get(`http://localhost:4000/portfolio/${sync}`, { headers: requestOptions })
     .then((response) => {
       console.log(response);
       return response;

@@ -44,10 +44,10 @@ export const MetaPortfolio = () => {
             </div>
           </React.Fragment>
         ) : (
-          "Loading..."
+          "Placeholder"
         )}
         <div
-          onClick={() => dispatch(portfolioActions.refresh())}
+          onClick={() => dispatch(portfolioActions.sync(false))}
           style={{ width: "40px" }}
         >
           Refresh
@@ -63,7 +63,7 @@ export const MetaPortfolio = () => {
         />
       </MetaPortfolioChartWrapper>
       <div
-        onClick={() => dispatch(portfolioActions.sync())}
+        onClick={() => dispatch(portfolioActions.sync(true))}
         style={{ width: "40px" }}
       >
         Sync
