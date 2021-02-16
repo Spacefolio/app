@@ -1,15 +1,17 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import { IPortfolioData } from '../../../types';
 const router = Router();
 import { exchangeService } from '../exchanges/exchange.service';
+import { portfolioService } from './portfolios.service';
 
 // routes
-router.get('/', );
+router.get('/:sync?', getPortfolio);
 
 export { router as portfolioRouter };
 
-function create(req: any, res: Response, next: NextFunction) {
-  console.log(req.body, req.user.sub);
-    exchangeService.create(req.user.sub, req.body)
-        .then((linkedExchange) => linkedExchange ? res.json(linkedExchange) : res.sendStatus(404))
-        .catch(err => next(err));
+function getPortfolio(req: any, res: Response, next: NextFunction)
+{
+  portfolioService.get(req.user.sub, req.params.sync)
+    .then((portfolioData: IPortfolioData) => portfolioData ? res.json(portfolioData) : res.sendStatus(404))
+    .catch(err => next(err));
 }
