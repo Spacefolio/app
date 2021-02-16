@@ -47,7 +47,7 @@ export const MetaPortfolio = () => {
           "Placeholder"
         )}
         <div
-          onClick={() => dispatch(portfolioActions.sync(false))}
+          onClick={() => dispatch(portfolioActions.refresh())}
           style={{ width: "40px" }}
         >
           Refresh
@@ -63,7 +63,7 @@ export const MetaPortfolio = () => {
         />
       </MetaPortfolioChartWrapper>
       <div
-        onClick={() => dispatch(portfolioActions.sync(true))}
+        onClick={() => dispatch(portfolioActions.sync())}
         style={{ width: "40px" }}
       >
         Sync

@@ -23,16 +23,16 @@ export const mockPortfolioCalculations: IPortfolioData[] = [
           logoUrl: "https://static.coinstats.app/flags/USD_r.png",
         },
         currentPrice: 1,
-        profitTotal: {
-          all: { USD: 0, BTC: 0, ETH: 0 },
-          h24: { USD: 0, BTC: 2.480016397, ETH: 2.092904543 },
-          lt: { USD: 0, BTC: 0, ETH: 0 },
-        },
-        balance: 0.00944004,
-        profitTotals: {
+        profitPercentage: {
           all: 0,
           h24: 0,
-          lt: 0,
+          lastTrade: 0,
+        },
+        balance: 0.00944004,
+        profitTotal: {
+          all: 0,
+          h24: 0,
+          lastTrade: 0,
         },
       },
       {
@@ -42,7 +42,6 @@ export const mockPortfolioCalculations: IPortfolioData[] = [
           name: "USD",
           symbol: "USD",
           logoUrl: "https://static.coinstats.app/flags/USD_r.png",
-          ift: true,
         },
         currentPrice: 1,
         profitTotal: {

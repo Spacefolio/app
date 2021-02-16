@@ -1,5 +1,6 @@
 import { User } from "../users/user.model";
 import { exchangeService } from "../exchanges/exchange.service";
+import { mockPortfolioCalculations } from "../../../front-end/exchangeDataDetailed";
 import {
   IExchangeAccountRequest,
   exchangeType,
@@ -8,7 +9,7 @@ import {
 import ccxt, { Exchange, exchanges } from "ccxt";
 
 export const portfolioService = {
-  get
+  get,
 };
 
 async function get(userId: string, sync: boolean) {
@@ -18,8 +19,11 @@ async function get(userId: string, sync: boolean) {
     throw "User not Found";
   }
 
-  if (sync) { exchangeService.syncExchangeData(userId); }
+  return sync
+    ? await exchangeService
+        .syncExchangeData(userId)
+        .then(() => mockPortfolioCalculations)
+    : {};
 
   // TODO: calculate the portfolio data and return it
-  return {};
 }
