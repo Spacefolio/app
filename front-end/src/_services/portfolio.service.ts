@@ -15,7 +15,7 @@ async function syncPortfolio(sync: boolean) {
   return await axios
     .get(`http://localhost:4000/portfolio/${sync}`, { headers: requestOptions })
     .then((response) => {
-      return response.data.mockPortfolioCalculations;
+      return response.data;
     })
     .catch((err) => {
       throw err;

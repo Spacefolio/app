@@ -14,7 +14,6 @@ function sync() {
     portfolioService
       .syncPortfolio(true)
       .then((res: any) => {
-        console.log('sync', res)
         dispatch(success(res));
         dispatch(alertActions.success("Sync Complete"));
       })
@@ -27,7 +26,7 @@ function sync() {
   function request() {
     return { type: portfolioConstants.SYNC_REQUEST};
   }
-  function success(portfolioData: IPortfolioData) {
+  function success(portfolioData: IPortfolioData[]) {
     return { type: portfolioConstants.SYNC_SUCCESS,  portfolioData};
   }
   function failure(error: any) {
@@ -41,9 +40,7 @@ function refresh() {
     portfolioService
       .syncPortfolio(false)
       .then((res: any) => {
-        console.log('refresh', res)
         dispatch(success(res));
-        dispatch(alertActions.success("Refresh Complete"));
       })
       .catch((error) => {
         dispatch(failure(error.toString()));
@@ -54,7 +51,7 @@ function refresh() {
   function request() {
     return { type: portfolioConstants.REFRESH_REQUEST};
   }
-  function success(portfolioData: IPortfolioData) {
+  function success(portfolioData: IPortfolioData[]) {
     return { type: portfolioConstants.REFRESH_SUCCESS, portfolioData };
   }
   function failure(error: any) {

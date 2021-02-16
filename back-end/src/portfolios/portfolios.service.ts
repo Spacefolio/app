@@ -1,6 +1,6 @@
 import { User } from "../users/user.model";
 import { exchangeService } from "../exchanges/exchange.service";
-import { mockPortfolioCalculations } from "../../../front-end/exchangeDataDetailed";
+import { mockPortfolioCalculations } from "../../exchangeDataDetailed";
 import {
   IExchangeAccountRequest,
   exchangeType,
@@ -12,18 +12,18 @@ export const portfolioService = {
   get,
 };
 
-async function get(userId: string, sync: boolean) {
+async function get(userId: string, sync: string) {
   const user = await User.findById(userId).populate("linkedExchanges");
 
   if (!user) {
     throw "User not Found";
   }
 
-  return sync
+  return sync == "true"
     ? await exchangeService
         .syncAllExchangesData(userId)
-        .then(() => mockPortfolioCalculations)
-    : {};
+        .then(() => mockPortfolioCalculations())
+    : mockPortfolioCalculations();
 
   // TODO: calculate the portfolio data and return it
 }
