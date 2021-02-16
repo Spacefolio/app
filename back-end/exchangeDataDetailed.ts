@@ -1,3 +1,4 @@
+import { IPortfolioItem } from "./src/portfolios/portfolio.model";
 import { IPortfolioData } from "../types";
 
 const randNum = (min: number = 0, max: number = 500) => {
@@ -7,7 +8,7 @@ const randNum = (min: number = 0, max: number = 500) => {
     return result.toFixed(2);
 };
 
-export const mockPortfolioCalculations = () => {
+export const mockPortfolioCalculations = (portfolioItems:IPortfolioItem[]) => {
   return [
     {
       name: "Coinbase",
@@ -24,19 +25,14 @@ export const mockPortfolioCalculations = () => {
       portfolioItems: [
         {
           id: "IQIAGlLxeF1612115491316",
-          asset: {
-            assetId: "USD",
-            name: "USD",
-            symbol: "USD",
-            logoUrl: "https://static.coinstats.app/flags/USD_r.png",
-          },
+          asset: portfolioItems[1].asset,
           currentPrice: 1,
           profitPercentage: {
             all: randNum(),
             h24: randNum(),
             lastTrade: randNum(),
           },
-          balance: randNum(),
+          balance: portfolioItems[1].balance.total,
           profitTotal: {
             all: randNum(),
             h24: randNum(),
@@ -45,19 +41,14 @@ export const mockPortfolioCalculations = () => {
         },
         {
           id: "IQIAGlLxeF1612115491316",
-          asset: {
-            assetId: "BTC",
-            name: "BTC",
-            symbol: "BTC",
-            logoUrl: "https://static.coinstats.app/flags/USD_r.png",
-          },
+          asset: portfolioItems[0].asset,
           currentPrice: 481524,
           profitTotal: {
             all: randNum(),
             h24: randNum(),
             lastTrade: randNum(),
           },
-          balance: randNum(),
+          balance: portfolioItems[0].balance.total,
           profitPercentage: {
             all: randNum(),
             h24: randNum(),

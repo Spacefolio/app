@@ -1,4 +1,4 @@
-import { User } from "../users/user.model";
+import { IUserDocument, User } from "../users/user.model";
 import {
   IExchangeAccountRequest,
   exchangeType,
@@ -6,9 +6,10 @@ import {
 } from "../../../types";
 import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
 import ccxt, { Balance, Balances, Currency, Exchange } from "ccxt";
-import { IPortfolioItem, PortfolioItem } from "../portfolios/portfolio.model";
+import { IPortfolioItem, PortfolioItem, portfolioItemSchema } from "../portfolios/portfolio.model";
 import { stringify } from "querystring";
 import { createTextChangeRange } from "typescript";
+import { ObjectID } from "mongodb";
 
 export const exchangeService = {
   getAll,
@@ -50,7 +51,7 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   const exchangeObject = new ExchangeAccount(exchangeParam);
   const savedExchange = await exchangeObject.save();
 
-  syncExchangeData(savedExchange.id, Exchange);
+  await syncExchangeData(savedExchange.id, Exchange).catch((err) => { throw err; });
 
   user.linkedExchanges.push(savedExchange.id);
 
@@ -69,9 +70,10 @@ async function updateExchangeAccountPortfolioItems(
   exchange: Exchange,
   exchangeAccountDocument: IExchangeAccountDocument
 ) {
-  const balances = await exchange.fetchBalance();
+  const balances = await exchange.fetchBalance().catch((err) => { throw err; });
   const portfolioItems = await getExchangeAccountPortfolioItems(balances);
   exchangeAccountDocument.portfolioItems = portfolioItems;
+  return portfolioItems;
 }
 
 async function getExchangeAccountPortfolioItems(
@@ -154,27 +156,35 @@ async function syncAllExchangesData(userId: string) {
   // validate
   if (!user) throw "User not found";
 
-  for (const exchangeId in user.linkedExchanges) {
-    const exchangeDocument = await exchangeService.getById(exchangeId);
+  let portfolioItems: IPortfolioItem[] = [];
+
+  for (var i = 0; i < user.linkedExchanges.length; i++) {
+    const exchangeDocument = await ExchangeAccount.findById(user.linkedExchanges[i]);
 
     if (!exchangeDocument)
       throw "No exchange account was found with the specified id";
 
     const exchange = loadExchange(exchangeDocument);
-    syncExchangeData(exchangeId, exchange);
+    portfolioItems = await syncExchangeData(exchangeDocument.id, exchange).catch((err) => { throw err; });
   }
+
+  return portfolioItems;
 }
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {
   const exchangeAccountDocument = await exchangeService.getById(exchangeId);
 
+  let portfolioItems: IPortfolioItem[] = [];
+
   if (!exchangeAccountDocument) {
     throw "Exchange account not found";
   }
 
-  updateExchangeAccountPortfolioItems(exchange, exchangeAccountDocument);
+  portfolioItems = await updateExchangeAccountPortfolioItems(exchange, exchangeAccountDocument);
 
-  const savedExchangeAccount = await exchangeAccountDocument.save();
+  const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => { throw err; });
+
+  return portfolioItems;
 }
 
 function loadExchange(
@@ -197,5 +207,5 @@ function loadExchange(
 
 async function verifyConnectionToExchange(exchange: Exchange) {
   exchange.checkRequiredCredentials();
-  await exchange.fetchBalance();
+  //await exchange.fetchBalance();
 }

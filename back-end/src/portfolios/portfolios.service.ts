@@ -7,6 +7,9 @@ import {
   IExchangeAccount,
 } from "../../../types";
 import ccxt, { Exchange, exchanges } from "ccxt";
+import { IPortfolioItem } from "./portfolio.model";
+import { response } from "express";
+import { json } from "body-parser";
 
 export const portfolioService = {
   get,
@@ -22,8 +25,11 @@ async function get(userId: string, sync: string) {
   return sync == "true"
     ? await exchangeService
         .syncAllExchangesData(userId)
-        .then(() => mockPortfolioCalculations())
-    : mockPortfolioCalculations();
+        .then((portfolioItems) => {
+          //console.log(res)
+          return mockPortfolioCalculations(portfolioItems);
+        }).catch((err) => { throw err; })
+    : mockPortfolioCalculations([]);
 
   // TODO: calculate the portfolio data and return it
 }
