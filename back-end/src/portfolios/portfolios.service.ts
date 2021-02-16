@@ -6,7 +6,7 @@ import {
   exchangeType,
   IExchangeAccount,
 } from "../../../types";
-import ccxt, { Exchange } from "ccxt";
+import ccxt, { Exchange, exchanges } from "ccxt";
 
 export const portfolioService = {
   get,
@@ -21,7 +21,7 @@ async function get(userId: string, sync: string) {
 
   return sync == "true"
     ? await exchangeService
-        .syncExchangeData(userId)
+        .syncAllExchangesData(userId)
         .then(() => mockPortfolioCalculations())
     : mockPortfolioCalculations();
 
