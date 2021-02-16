@@ -17,7 +17,7 @@ export interface IPortfolioData {
 }
 
 export interface IPortfolioItem {
-  id: string;
+  id?: string;
   asset: IAsset;
   balance: { used: number; free: number; total: number };
   profitTotal: { all: number; h24: number; lastTrade: number };
@@ -26,8 +26,8 @@ export interface IPortfolioItem {
 }
 
 export interface IAsset {
-  id: string;
-  name: string;
+  assetId: string;
+  name?: string;
   symbol: string;
-  logoUrl: string;
+  logoUrl?: string;
 }

@@ -5,7 +5,7 @@ import {
   exchangeType,
   IExchangeAccount,
 } from "../../../types";
-import ccxt, { Exchange } from "ccxt";
+import ccxt, { Exchange, exchanges } from "ccxt";
 
 export const portfolioService = {
   get

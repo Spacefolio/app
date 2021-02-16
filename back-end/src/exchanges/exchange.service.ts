@@ -4,8 +4,10 @@ import {
   exchangeType,
   IExchangeAccount,
 } from "../../../types";
-import { ExchangeAccount } from "./exchange.model";
-import ccxt, { Balance, Balances } from "ccxt";
+import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
+import ccxt, { Balance, Balances, Currency } from "ccxt";
+import { PortfolioItem } from "../portfolios/portfolio.model";
+import { stringify } from "querystring";
 
 export const exchangeService = {
   getAll,
@@ -28,7 +30,7 @@ async function getAll(id: string) {
 }
 
 async function getAssets(exchangeId: string) {
-  const exchange: IExchangeAccount = await ExchangeAccount.findById(
+  const exchange: IExchangeAccountDocument = await ExchangeAccount.findById(
     exchangeId
   ).populate("portfolioItems");
   if (!exchange) {
@@ -75,32 +77,31 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
 
   // TODO: If account is valid, call sync
 
-  const thingsToRemove = ["info", "free", "used", "total"];
-  Exchange.balance = await Exchange.fetchBalance().then((balances: Balances) =>
-    Object.assign(
-      {},
-      Object.entries(balances)
-        .filter(
-          ([k, v]: [string, Balance]) =>
-            thingsToRemove.includes(k) == false && v.total > 0
-        )
-        .map(([k, v]: [string, Balance]) => ({ [k]: v }))
-    )
-  );
-
-  console.log(Exchange.balance);
-
-  Exchange.balances["BTC"];
-
-  return Exchange;
-  //console.log(Exchange.requiredCredentials);
-
-  // if (response) {
-  //   throw response.message;
-  // }
+  const balances = await Exchange.fetchBalance();
+  Exchange.currencies = await Exchange.fetchCurrencies();
 
   const exchangeObject = new ExchangeAccount(exchangeParam);
-  console.log("exchangeParam", exchangeParam);
+
+  const thingsToRemove = ["info", "free", "used", "total"];
+
+  for (var [key, value] of Object.entries(balances)) {
+    if (thingsToRemove.includes(key)) continue;
+    if (value.total <= 0) continue;
+
+    const currency: Currency = Exchange.currencies[key];
+
+    exchangeObject.portfolioItems.push({
+      asset: {
+        assetId: currency.id,
+        symbol: currency.code,
+        name: key,
+        logoUrl:
+          "https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png",
+      },
+      balance: value,
+    });
+  }
+
   const savedExchange = await exchangeObject.save();
 
   user.linkedExchanges.push(savedExchange.id);

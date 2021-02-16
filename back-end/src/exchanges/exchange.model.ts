@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
-import { IExchangeAccount, exchangeType, IPortfolioItem } from "../../../types";
+import { IPortfolioItem, PortfolioItem, portfolioItemSchema } from "../portfolios/portfolio.model";
+import { IExchangeAccount, exchangeType } from "../../../types";
 
 export interface IExchangeAccountDocument extends mongoose.Document {
   name: string;
@@ -13,7 +14,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: ([IPortfolioItem] | [string]);
+  portfolioItems: [IPortfolioItem];
 }
 
 export interface IExchangeAccountModel
@@ -31,7 +32,7 @@ const exchangeAccountSchema = new mongoose.Schema({
   nickname: { type: String },
   exchangeType: { type: String, required: true },
   addedDate: { type: Date, default: Date.now },
-  portfolioItems: [{ type: Schema.Types.ObjectId, ref: "PortfolioItem" }],
+  portfolioItems: [portfolioItemSchema],
 });
 
 exchangeAccountSchema.set("toJSON", {
