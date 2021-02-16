@@ -1,9 +1,10 @@
 import { IPortfolioData } from "../types";
 
 const randNum = (min: number = 0, max: number = 500) => {
-  return Math.random() > 0.5
+  var result = Math.random() > 0.5
     ? -1 * (Math.random() * (max - min)) + min
     : 1 * (Math.random() * (max - min)) + min;
+    return result.toFixed(2);
 };
 
 export const mockPortfolioCalculations = () => {
