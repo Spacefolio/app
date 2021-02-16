@@ -12,14 +12,14 @@ export const portfolioService = {
   get,
 };
 
-async function get(userId: string, sync: boolean) {
+async function get(userId: string, sync: string) {
   const user = await User.findById(userId).populate("linkedExchanges");
 
   if (!user) {
     throw "User not Found";
   }
 
-  return sync
+  return (sync == "true")
     ? await exchangeService
         .syncExchangeData(userId)
         .then(() => mockPortfolioCalculations)
