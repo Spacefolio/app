@@ -1,18 +1,16 @@
 import styled from "styled-components";
-import {RD} from '../../Application/ResponsiveDesign' 
 
-export const DashboardWrapper = styled.div`
+export const HoldingsWrapper = styled.div`
   width: 100%;
-  display: grid;
-  gap: 8px;
-  margin-top: 8px;
-  @media screen and (min-width: ${RD.breakpointtablet}) {
-    grid-template-areas:
-      "one";
-  }
+`;
 
-  @media screen and (max-width: ${RD.breakpointtablet}) {
-    grid-template-areas:
-      "one";
-  }
+export const DataLabelsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 30px;
+  color: darkgrey;
+  border-bottom: 1px solid black;
+  border-top:  1px solid black;
 `;

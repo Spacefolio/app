@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {DashboardWrapper} from"./generalStyle";
+import {HoldingsWrapper, DataLabelsContainer} from"./generalStyle";
 import {FlexCard} from '../../_components';
-import {HoldingItem} from './HoldingItem'
+import {HoldingItem} from './HoldingItem/HoldingItem'
 import { IPortfolioData, IPortfolioItem } from "../../../../types";
 
 export const Holdings = () => {
@@ -11,11 +11,19 @@ export const Holdings = () => {
   const portfolioData: IPortfolioData = useSelector((state: any) => state.portfolio.portfolioData[0])
 
   return (
-      <DashboardWrapper>
+      <HoldingsWrapper>
+        <DataLabelsContainer>
+          <div>Name</div>
+          <div>Amount</div>
+          <div>Price</div>
+          <div>Value</div>
+          <div>P/L</div>
+          
+        </DataLabelsContainer>
         {portfolioData? portfolioData.portfolioItems.map((pItem: IPortfolioItem) => {  
-          return(<HoldingItem portfolioItem={pItem}/>)
+          return(<FlexCard children={<HoldingItem portfolioItem={pItem}/>}/>)
         }): <div>loading...</div>}
         
-      </DashboardWrapper>
+      </HoldingsWrapper>
   );
 };

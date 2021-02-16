@@ -53,7 +53,7 @@ export const MetaPortfolio = () => {
           onClick={() => dispatch(portfolioActions.refresh())}
           style={{ width: "40px" }}
         >
-          Refresh
+
           <SyncButton isSyncing={isRefreshing} />
         </div>
       </PortfolioValueWrapper>
@@ -69,7 +69,7 @@ export const MetaPortfolio = () => {
         onClick={() => dispatch(portfolioActions.sync())}
         style={{ width: "40px" }}
       >
-        Sync
+
         <SyncButton isSyncing={isSyncing} />
       </div>
     </MetaPortfolioWrapper>
