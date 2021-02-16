@@ -19,11 +19,11 @@ async function get(userId: string, sync: boolean) {
     throw "User not Found";
   }
 
-  if (sync) {
-    return await exchangeService
-      .syncExchangeData(userId)
-      .then(() => mockPortfolioCalculations);
-  } else return;
+  return sync
+    ? await exchangeService
+        .syncExchangeData(userId)
+        .then(() => mockPortfolioCalculations)
+    : {};
 
   // TODO: calculate the portfolio data and return it
 }
