@@ -20,12 +20,17 @@ import {
   Holdings,
   Charts,
 } from "../Portfolio";
+import {portfolioActions} from '../_actions'
 
 export const Portfolio = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authentication.user);
 
   const { path } = useRouteMatch("/portfolio");
+
+  useEffect(() => {
+    dispatch(portfolioActions.refresh())
+  },[])
 
   return (
     <PortfolioWrapper>

@@ -1,5 +1,9 @@
 import { IPortfolioData } from "../types";
 
+const randNum = () => {
+  return Math.random() * 100000;
+}
+
 export const mockPortfolioCalculations: IPortfolioData[] = [
   {
     name: "Coinbase",
@@ -24,21 +28,21 @@ export const mockPortfolioCalculations: IPortfolioData[] = [
         },
         currentPrice: 1,
         profitPercentage: {
-          all: 0,
-          h24: 0,
-          lastTrade: 0,
+          all: randNum(),
+          h24: randNum(),
+          lastTrade: randNum(),
         },
-        balance: 0.00944004,
+        balance: randNum(),
         profitTotal: {
-          all: 0,
-          h24: 0,
-          lastTrade: 0,
+          all: randNum(),
+          h24: randNum(),
+          lastTrade: randNum(),
         },
       },
       {
         id: "IQIAGlLxeF1612115491316",
         asset: {
-          id: "FiatCoinUSD",
+          id: "bitcoin",
           name: "USD",
           symbol: "USD",
           logoUrl: "https://static.coinstats.app/flags/USD_r.png",

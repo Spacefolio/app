@@ -9,6 +9,7 @@ import { FlexCard, SyncButton } from "../../_components";
 import { PortfolioLineChart } from "./MetaPortfolioChart";
 import useDimensions from "react-use-dimensions";
 import { portfolioActions } from "../../_actions";
+import { IPortfolioData } from "../../../../types";
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,9 @@ export const MetaPortfolio = () => {
   const isRefreshing = useSelector(
     (state: any) => state.portfolio.recalculatingPortfolio
   );
-  const data = useSelector((state: any) => state.portfolio.portfolioData);
+  const data: IPortfolioData = useSelector(
+    (state: any) => state.portfolio.portfolioData[0]
+  );
 
   const portfolioValueItemStyler = (num: number) => {
     return num < 0
@@ -33,18 +36,18 @@ export const MetaPortfolio = () => {
       <PortfolioValueWrapper>
         {data ? (
           <React.Fragment>
-            <div style={portfolioValueItemStyler(data.PValue)}>
-              {data.PValue}
+            <div style={portfolioValueItemStyler(data.portfolioTotal)}>
+              {data.portfolioTotal}
             </div>
-            <div style={portfolioValueItemStyler(data.PLValue)}>
-              {data.PLValue}
+            <div style={portfolioValueItemStyler(data.profitPercentage)}>
+              {data.profitPercentage}
             </div>
-            <div style={portfolioValueItemStyler(data.PLPercent)}>
-              {data.PLPercent}
+            <div style={portfolioValueItemStyler(data.profitTotal)}>
+              {data.profitTotal}
             </div>
           </React.Fragment>
         ) : (
-          "Placeholder"
+          "loading..."
         )}
         <div
           onClick={() => dispatch(portfolioActions.refresh())}
