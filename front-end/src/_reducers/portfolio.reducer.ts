@@ -3,15 +3,14 @@ import { IPortfolioData } from "../../../types";
 
 interface IPortfolioAction {
   type: string;
-  porfolioData: IPortfolioData;
+  portfolioData: IPortfolioData[];
 }
 
 export function portfolio(
   state: any = {
-    exchanges: [],
-    exchangeRef: [],
     syncingPortfolio: false,
     recalculatingPortfolio: false,
+    portfolioData: [],
   },
   action: IPortfolioAction
 ) {
@@ -24,7 +23,7 @@ export function portfolio(
     case portfolioConstants.SYNC_SUCCESS:
       return {
         ...state,
-        portfolioData: action.porfolioData,
+        portfolioData: action.portfolioData,
         syncingPortfolio: false,
       };
     case portfolioConstants.SYNC_FAILURE:
@@ -41,7 +40,7 @@ export function portfolio(
     case portfolioConstants.REFRESH_SUCCESS:
       return {
         ...state,
-        portfolioData: action.porfolioData,
+        portfolioData: action.portfolioData,
         recalculatingPortfolio: false,
       };
     case portfolioConstants.REFRESH_FAILURE:
