@@ -14,7 +14,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: [IPortfolioItem];
+  portfolioItems: IPortfolioItem[];
 }
 
 export interface IExchangeAccountModel

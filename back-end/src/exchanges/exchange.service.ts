@@ -5,9 +5,10 @@ import {
   IExchangeAccount,
 } from "../../../types";
 import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
-import ccxt, { Balance, Balances, Currency } from "ccxt";
-import { PortfolioItem } from "../portfolios/portfolio.model";
+import ccxt, { Balance, Balances, Currency, Exchange } from "ccxt";
+import { IPortfolioItem, PortfolioItem } from "../portfolios/portfolio.model";
 import { stringify } from "querystring";
+import { createTextChangeRange } from "typescript";
 
 export const exchangeService = {
   getAll,
@@ -16,6 +17,7 @@ export const exchangeService = {
   update,
   delete: _delete,
   getRequiredCredentials,
+  syncAllExchangesData,
   syncExchangeData,
 };
 
@@ -29,25 +31,6 @@ async function getAll(id: string) {
   return user.linkedExchanges;
 }
 
-async function getAssets(exchangeId: string) {
-  const exchange: IExchangeAccountDocument = await ExchangeAccount.findById(
-    exchangeId
-  ).populate("portfolioItems");
-  if (!exchange) {
-    throw "Exchange not found";
-  }
-
-  const Exchange = createExchange(exchange);
-
-  const response = await Exchange.fetchBalance()
-    .then((balances: any) => {
-      //console.log(balances);
-    })
-    .catch((err: any) => {
-      return err;
-    });
-}
-
 async function getById(exchangeId: string) {
   const exchange = await ExchangeAccount.findById(exchangeId);
   if (!exchange) {
@@ -58,53 +41,19 @@ async function getById(exchangeId: string) {
 }
 
 async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
-  // validate
-
   const user = await User.findById(userId);
 
   // verify connection to exchange
-  const Exchange = createExchange(exchangeParam);
-  /*
-  const response = await Exchange
-    .fetchBalance()
-    .then((balances: any) => {
-      console.log(balances);
-    })
-    .catch((err: any) => {
-      return err;
-    });
-  */
-
-  // TODO: If account is valid, call sync
-
-  const balances = await Exchange.fetchBalance();
-  Exchange.currencies = await Exchange.fetchCurrencies();
+  const Exchange = loadExchange(exchangeParam);
+  await verifyConnectionToExchange(Exchange);
 
   const exchangeObject = new ExchangeAccount(exchangeParam);
-
-  const thingsToRemove = ["info", "free", "used", "total"];
-
-  for (var [key, value] of Object.entries(balances)) {
-    if (thingsToRemove.includes(key)) continue;
-    if (value.total <= 0) continue;
-
-    const currency: Currency = Exchange.currencies[key];
-
-    exchangeObject.portfolioItems.push({
-      asset: {
-        assetId: currency.id,
-        symbol: currency.code,
-        name: key,
-        logoUrl:
-          "https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png",
-      },
-      balance: value,
-    });
-  }
-
   const savedExchange = await exchangeObject.save();
 
+  syncExchangeData(savedExchange.id, Exchange);
+
   user.linkedExchanges.push(savedExchange.id);
+
   // save user
   user.save(function (err: any, user: any) {
     if (err) {
@@ -114,6 +63,40 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   });
 
   return savedExchange;
+}
+
+async function updateExchangeAccountPortfolioItems(
+  exchange: Exchange,
+  exchangeAccountDocument: IExchangeAccountDocument
+) {
+  const balances = await exchange.fetchBalance();
+  const portfolioItems = await getExchangeAccountPortfolioItems(balances);
+  exchangeAccountDocument.portfolioItems = portfolioItems;
+}
+
+async function getExchangeAccountPortfolioItems(
+  balances: Balances
+): Promise<IPortfolioItem[]> {
+  const portfolioItems: IPortfolioItem[] = [];
+  const thingsToRemove = ["info", "free", "used", "total"];
+
+  for (var [key, value] of Object.entries(balances)) {
+    if (thingsToRemove.includes(key)) continue;
+    if (value.total <= 0) continue;
+
+    portfolioItems.push({
+      asset: {
+        assetId: key,
+        symbol: key,
+        name: key,
+        logoUrl:
+          "https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png",
+      },
+      balance: value,
+    });
+  }
+
+  return portfolioItems;
 }
 
 async function update(
@@ -161,41 +144,58 @@ async function getRequiredCredentials(exchangeType: exchangeType) {
   return Exchange.requiredCredentials;
 }
 
-async function syncExchangeData(userId: string) {
+async function syncAllExchangesData(userId: string) {
   // updateOrders
   // updateTransactions
   // check all exchanges to see if there is new data for the user's
   // update the database with new information
 
-  const snooze = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
+  const user = await User.findById(userId);
+  // validate
+  if (!user) throw "User not found";
 
-  const sleep = async () => {
-    console.log("About to snooze without halting the event loop");
-    await snooze(3000);
-    console.log("done!");
-  };
+  for (const exchangeId in user.linkedExchanges) {
+    const exchangeDocument = await exchangeService.getById(exchangeId);
 
-  await sleep();
+    if (!exchangeDocument)
+      throw "No exchange account was found with the specified id";
+
+    const exchange = loadExchange(exchangeDocument);
+    syncExchangeData(exchangeId, exchange);
+  }
 }
 
-async function getUpdatedPortfolioValues(userId: string) {
-  return;
+async function syncExchangeData(exchangeId: string, exchange: Exchange) {
+  const exchangeAccountDocument = await exchangeService.getById(exchangeId);
+
+  if (!exchangeAccountDocument) {
+    throw "Exchange account not found";
+  }
+
+  updateExchangeAccountPortfolioItems(exchange, exchangeAccountDocument);
+
+  const savedExchangeAccount = await exchangeAccountDocument.save();
 }
 
-async function getCoinData(coinId: string) {
-  /* Get updated coin metadata and price data */
-}
-
-function createExchange(
-  exchangeAccount: IExchangeAccount | IExchangeAccountRequest
+function loadExchange(
+  exchangeAccount:
+    | IExchangeAccount
+    | IExchangeAccountRequest
+    | IExchangeAccountDocument
 ) {
   const exchangeClass = ccxt[exchangeAccount.exchangeType];
-  return new exchangeClass({
+  const exchange = new exchangeClass({
     apiKey: exchangeAccount.apiInfo.apiKey,
     secret: exchangeAccount.apiInfo.apiSecret,
     password: exchangeAccount.apiInfo.passphrase,
     timeout: 30000,
     enableRateLimit: true,
   });
+
+  return exchange;
+}
+
+async function verifyConnectionToExchange(exchange: Exchange) {
+  exchange.checkRequiredCredentials();
+  await exchange.fetchBalance();
 }

@@ -17,7 +17,7 @@ export const mockPortfolioCalculations: IPortfolioData[] = [
       {
         id: "IQIAGlLxeF1612115491316",
         asset: {
-          id: "FiatCoinUSD",
+          assetId: "FiatCoinUSD",
           name: "USD",
           symbol: "USD",
           logoUrl: "https://static.coinstats.app/flags/USD_r.png",
@@ -38,7 +38,7 @@ export const mockPortfolioCalculations: IPortfolioData[] = [
       {
         id: "IQIAGlLxeF1612115491316",
         asset: {
-          id: "FiatCoinUSD",
+          assetId: "FiatCoinUSD",
           name: "USD",
           symbol: "USD",
           logoUrl: "https://static.coinstats.app/flags/USD_r.png",

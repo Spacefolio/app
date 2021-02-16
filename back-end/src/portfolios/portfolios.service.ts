@@ -21,7 +21,7 @@ async function get(userId: string, sync: boolean) {
 
   return sync
     ? await exchangeService
-        .syncExchangeData(userId)
+        .syncAllExchangesData(userId)
         .then(() => mockPortfolioCalculations)
     : {};
 

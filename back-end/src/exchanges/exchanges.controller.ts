@@ -60,7 +60,7 @@ function getRequiredCredentials(req: any, res: Response, next: NextFunction) {
 
 function sync(req: any, res: Response, next: NextFunction) {
   exchangeService
-    .syncExchangeData(req.user.sub)
+    .syncAllExchangesData(req.user.sub)
     .then((response) => res.json({ response }))
     .catch((err) => next(err));
 }
