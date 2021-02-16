@@ -1,6 +1,6 @@
 import { User } from "../users/user.model";
 import { exchangeService } from "../exchanges/exchange.service";
-import { mockPortfolioCalculations } from "../../exchangeDataDetailed";
+import { mockPortfolioCalculations, mockPortfolioCalculationsFake } from "../../exchangeDataDetailed";
 import {
   IExchangeAccountRequest,
   exchangeType,
@@ -29,7 +29,7 @@ async function get(userId: string, sync: string) {
           //console.log(res)
           return mockPortfolioCalculations(portfolioItems);
         }).catch((err) => { throw err; })
-    : mockPortfolioCalculations([]);
+    : mockPortfolioCalculationsFake();
 
   // TODO: calculate the portfolio data and return it
 }

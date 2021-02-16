@@ -62,3 +62,68 @@ export const mockPortfolioCalculations = (portfolioItems:IPortfolioItem[]) => {
     },
   ];
 };
+
+export const mockPortfolioCalculationsFake = () => {
+  return [
+    {
+      name: "Coinbase",
+      id: "AxwSp4JXTHSekhKT",
+      nickname: "Coinbase",
+      addedDate: "2021-02-06T14:42:23.110Z",
+      apiInfo: {
+        passphrase: "i318j5931n9",
+        apiSecret:
+          "7Irfgjkhqasdflajnsd;flkajsd;lfkjqa;slkdfj;alskdjf;laskdjf;alskdfjz;lkj",
+        apiKey: "2cdb30cb750552e6ca7afaaf2b9bf414",
+      },
+      exchangeType: "coinbase",
+      portfolioItems: [
+        {
+          id: "IQIAGlLxeF1612115491316",
+          asset: {
+            assetId: 'asdf',
+            name: 'BTC',
+            logoUrl: '',
+            symbol: 'BTC'
+          },
+          currentPrice: 1,
+          profitPercentage: {
+            all: randNum(),
+            h24: randNum(),
+            lastTrade: randNum(),
+          },
+          balance: randNum(),
+          profitTotal: {
+            all: randNum(),
+            h24: randNum(),
+            lastTrade: randNum(),
+          },
+        },
+        {
+          id: "IQIAGlLxeF1612115491316",
+          asset: {
+            assetId: 'hjkl',
+            name: 'USD',
+            logoUrl: '',
+            symbol: 'USD'
+          },
+          currentPrice: 481524,
+          profitTotal: {
+            all: randNum(),
+            h24: randNum(),
+            lastTrade: randNum(),
+          },
+          balance: randNum(),
+          profitPercentage: {
+            all: randNum(),
+            h24: randNum(),
+            lastTrade: randNum(),
+          },
+        },
+      ],
+      profitPercentage: randNum(),
+      portfolioTotal: randNum(),
+      profitTotal: randNum(),
+    },
+  ];
+};
