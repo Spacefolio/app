@@ -1,6 +1,16 @@
-import { IExchangeAccount } from "../types";
+import { exchangeType } from "../types";
 
-export interface IPortfolioData extends IExchangeAccount {
+export interface IPortfolioData {
+  name: string;
+  id: string;
+  nickname: string;
+  exchangeType: exchangeType;
+  apiInfo: {
+    apiKey: string;
+    apiSecret: string;
+    passphrase: string;
+  };
+  portfolioItems: [IPortfolioItem] | [string];
   profitPercentage: number;
   portfolioTotal: number;
   profitTotal: number;

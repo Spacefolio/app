@@ -1,8 +1,6 @@
-import { IPortfolioItem } from "../types";
-
 import { IPortfolioData } from "../types";
 
-export const mockPortfolioCalculations: IPortfolioData = [
+export const mockPortfolioCalculations: IPortfolioData[] = [
   {
     name: "Coinbase",
     id: "AxwSp4JXTHSekhKT",
@@ -23,7 +21,6 @@ export const mockPortfolioCalculations: IPortfolioData = [
           name: "USD",
           symbol: "USD",
           logoUrl: "https://static.coinstats.app/flags/USD_r.png",
-          ift: true,
         },
         currentPrice: 1,
         profitTotal: {
