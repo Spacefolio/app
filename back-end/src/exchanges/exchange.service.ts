@@ -6,7 +6,7 @@ import {
 } from "../../../types";
 import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
 import ccxt, { Balance, Balances, Currency, Exchange } from "ccxt";
-import { IPortfolioItem, PortfolioItem } from "../portfolios/portfolio.model";
+import { IPortfolioItem, PortfolioItem, portfolioItemSchema } from "../portfolios/portfolio.model";
 import { stringify } from "querystring";
 import { createTextChangeRange } from "typescript";
 import { ObjectID } from "mongodb";
@@ -73,6 +73,7 @@ async function updateExchangeAccountPortfolioItems(
   const balances = await exchange.fetchBalance().catch((err) => { throw err; });
   const portfolioItems = await getExchangeAccountPortfolioItems(balances);
   exchangeAccountDocument.portfolioItems = portfolioItems;
+  return portfolioItems;
 }
 
 async function getExchangeAccountPortfolioItems(
@@ -155,6 +156,8 @@ async function syncAllExchangesData(userId: string) {
   // validate
   if (!user) throw "User not found";
 
+  let portfolioItems: IPortfolioItem[] = [];
+
   for (var i = 0; i < user.linkedExchanges.length; i++) {
     const exchangeDocument = await ExchangeAccount.findById(user.linkedExchanges[i]);
 
@@ -162,23 +165,26 @@ async function syncAllExchangesData(userId: string) {
       throw "No exchange account was found with the specified id";
 
     const exchange = loadExchange(exchangeDocument);
-    await syncExchangeData(exchangeDocument.id, exchange).catch((err) => { throw err; });
+    portfolioItems = await syncExchangeData(exchangeDocument.id, exchange).catch((err) => { throw err; });
   }
 
-  const populatedUser = await user.populate("linkedExchanges").execPopulate();
-  return populatedUser.linkedExchanges;
+  return portfolioItems;
 }
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {
   const exchangeAccountDocument = await exchangeService.getById(exchangeId);
 
+  let portfolioItems: IPortfolioItem[] = [];
+
   if (!exchangeAccountDocument) {
     throw "Exchange account not found";
   }
 
-  await updateExchangeAccountPortfolioItems(exchange, exchangeAccountDocument).then(() => exchangeAccountDocument.save()).catch((err) => { throw err; });
+  portfolioItems = await updateExchangeAccountPortfolioItems(exchange, exchangeAccountDocument);
 
-  const savedExchangeAccount = await exchangeAccountDocument.save();
+  const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => { throw err; });
+
+  return portfolioItems;
 }
 
 function loadExchange(

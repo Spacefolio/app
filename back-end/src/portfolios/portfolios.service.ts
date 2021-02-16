@@ -25,11 +25,11 @@ async function get(userId: string, sync: string) {
   return sync == "true"
     ? await exchangeService
         .syncAllExchangesData(userId)
-        .then(() => {
+        .then((portfolioItems) => {
           //console.log(res)
-          return mockPortfolioCalculations();
+          return mockPortfolioCalculations(portfolioItems);
         }).catch((err) => { throw err; })
-    : mockPortfolioCalculations();
+    : mockPortfolioCalculations([]);
 
   // TODO: calculate the portfolio data and return it
 }
