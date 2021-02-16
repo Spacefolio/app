@@ -37,13 +37,13 @@ export const MetaPortfolio = () => {
         {data ? (
           <React.Fragment>
             <div style={portfolioValueItemStyler(data.portfolioTotal)}>
-              {data.portfolioTotal}
+              ${data.portfolioTotal}
             </div>
             <div style={portfolioValueItemStyler(data.profitPercentage)}>
-              {data.profitPercentage}
+              {data.profitPercentage}%
             </div>
             <div style={portfolioValueItemStyler(data.profitTotal)}>
-              {data.profitTotal}
+              ${data.profitTotal}
             </div>
           </React.Fragment>
         ) : (

@@ -27,7 +27,7 @@ export interface IPortfolioItem {
 }
 
 export interface IAsset {
-  id: string;
+  assetId: string;
   name: string;
   symbol: string;
   logoUrl: string;

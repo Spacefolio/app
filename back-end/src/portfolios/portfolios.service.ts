@@ -1,6 +1,6 @@
 import { User } from "../users/user.model";
 import { exchangeService } from "../exchanges/exchange.service";
-import { mockPortfolioCalculations } from "../../../front-end/exchangeDataDetailed";
+import { mockPortfolioCalculations } from "../../exchangeDataDetailed";
 import {
   IExchangeAccountRequest,
   exchangeType,
@@ -22,8 +22,8 @@ async function get(userId: string, sync: string) {
   return sync == "true"
     ? await exchangeService
         .syncExchangeData(userId)
-        .then(() => mockPortfolioCalculations)
-    : mockPortfolioCalculations;
+        .then(() => mockPortfolioCalculations())
+    : mockPortfolioCalculations();
 
   // TODO: calculate the portfolio data and return it
 }

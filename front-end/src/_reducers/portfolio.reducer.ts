@@ -18,6 +18,7 @@ export function portfolio(
     case portfolioConstants.SYNC_REQUEST:
       return {
         ...state,
+
         syncingPortfolio: true,
       };
     case portfolioConstants.SYNC_SUCCESS:
@@ -35,6 +36,7 @@ export function portfolio(
     case portfolioConstants.REFRESH_REQUEST:
       return {
         ...state,
+
         recalculatingPortfolio: true,
       };
     case portfolioConstants.REFRESH_SUCCESS:
