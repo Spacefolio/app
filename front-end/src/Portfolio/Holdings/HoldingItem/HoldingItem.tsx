@@ -16,15 +16,26 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
     profitPercentage,
   } = portfolioItem;
 
+  const portfolioValueItemStyler = (num: number) => {
+    return num < 0 ? "var(--error-base)" : "var(--accent-base)";
+  };
+
   return (
     <HoldingItemWrapper>
-      <HoldingAttrWrapper>{asset.name}</HoldingAttrWrapper>
-      <HoldingAttrWrapper>{balance}</HoldingAttrWrapper>
-      <HoldingAttrWrapper>{currentPrice}</HoldingAttrWrapper>
-      <HoldingAttrWrapper>{balance * currentPrice}</HoldingAttrWrapper>
       <HoldingAttrWrapper>
-        {profitTotal.all}
-        {profitPercentage.all}
+        <img width={"30px"} src={asset.logoUrl} />
+        <div>{asset.name}</div>
+      </HoldingAttrWrapper>
+      <HoldingAttrWrapper>${balance}</HoldingAttrWrapper>
+      <HoldingAttrWrapper>${currentPrice}</HoldingAttrWrapper>
+      <HoldingAttrWrapper>${balance * currentPrice}</HoldingAttrWrapper>
+      <HoldingAttrWrapper style={{ flexDirection: "column" }}>
+        <div style={{ color: portfolioValueItemStyler(profitTotal.all) }}>
+          ${profitTotal.all}
+        </div>
+        <div style={{ color: portfolioValueItemStyler(profitPercentage.all) }}>
+          {profitPercentage.all}%
+        </div>
       </HoldingAttrWrapper>
     </HoldingItemWrapper>
   );

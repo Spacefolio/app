@@ -42,7 +42,7 @@ export const mockPortfolioCalculations = (portfolioItems:IPortfolioItemInterface
         {
           id: "IQIAGlLxeF1612115491316",
           asset: portfolioItems[0].asset,
-          currentPrice: 481524,
+          currentPrice: 48124,
           profitTotal: {
             all: randNum(),
             h24: randNum(),
@@ -107,7 +107,7 @@ export const mockPortfolioCalculationsFake = () => {
             logoUrl: '',
             symbol: 'USD'
           },
-          currentPrice: 481524,
+          currentPrice: 48124,
           profitTotal: {
             all: randNum(),
             h24: randNum(),

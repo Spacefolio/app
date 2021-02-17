@@ -21,7 +21,7 @@ export const Holdings = () => {
           
         </DataLabelsContainer>
         {portfolioData? portfolioData.portfolioItems.map((pItem: IPortfolioItem) => {  
-          return(<FlexCard children={<HoldingItem portfolioItem={pItem}/>}/>)
+          return(<HoldingItem portfolioItem={pItem}/>)
         }): <div>loading...</div>}
         
       </HoldingsWrapper>
