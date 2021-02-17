@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { history } from "../_helpers";
 import "./Portfolio.scss";
 import { FlexCard, PrivateRoute } from "../_components";
-import { PortfolioWrapper, TabWrapper, TabItem } from "./generalStyle";
+import { PortfolioWrapper, TabWrapper, TabItem } from "./portfolioStyles";
 import { userActions } from "../_actions";
 import {
   MetaPortfolio,

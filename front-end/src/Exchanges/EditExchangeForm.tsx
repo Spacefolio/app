@@ -3,13 +3,13 @@ import "./ExchangeForm.scss";
 import { exchangeActions } from "../_actions";
 import {
   exchangeType,
-  IExchangeAccount,
+  IExchangeAccountView,
   IExchangeAccountRequest,
 } from "../../../types";
 import { useDispatch, useSelector } from "react-redux";
 
 interface ExchangeFormProps {
-  exchangeAccountData: IExchangeAccount;
+  exchangeAccountData: IExchangeAccountView;
 }
 
 export const EditExchangeForm: React.FC<ExchangeFormProps> = ({

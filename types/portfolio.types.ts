@@ -1,6 +1,6 @@
 import { exchangeType } from "../types";
 
-export interface IPortfolioData {
+export interface IPortfolioDataView {
   name: string;
   id: string;
   nickname: string;
@@ -31,4 +31,21 @@ export interface IAsset {
   name?: string;
   symbol: string;
   logoUrl?: string;
+}
+
+export interface ITransactionItemView {
+  timestamp: number,
+  datetime: string,
+  address: string,
+  type: ('deposit' | 'withdrawal'),
+  amount: number,
+  currency: string,
+  status: ('pending' | 'ok'),
+  updated: number,
+  fee: { 
+    type: ('taker' | 'maker'),
+    currency: string,
+    rate: number,
+    cost: number
+  }
 }

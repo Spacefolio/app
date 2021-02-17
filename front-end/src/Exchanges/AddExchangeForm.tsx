@@ -3,7 +3,7 @@ import "./ExchangeForm.scss";
 import { exchangeActions } from "../_actions";
 import {
   IExchangeAccountRequest,
-  IExchangeAccount,
+  IExchangeAccountView,
   IExchangeReference,
 } from "../../../types";
 import { useDispatch, useSelector } from "react-redux";

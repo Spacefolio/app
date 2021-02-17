@@ -4,7 +4,7 @@ import { mockPortfolioCalculations, mockPortfolioCalculationsFake } from "../../
 import {
   IExchangeAccountRequest,
   exchangeType,
-  IExchangeAccount,
+  IExchangeAccountView,
 } from "../../../types";
 import ccxt, { Exchange, exchanges } from "ccxt";
 import { IPortfolioItemInterface } from "./models/portfolio.model";

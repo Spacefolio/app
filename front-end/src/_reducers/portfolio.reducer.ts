@@ -1,9 +1,9 @@
 import { portfolioConstants } from "../_constants";
-import { IPortfolioData } from "../../../types";
+import { IPortfolioDataView } from "../../../types";
 
 interface IPortfolioAction {
   type: string;
-  portfolioData: IPortfolioData[];
+  portfolioData: IPortfolioDataView[];
 }
 
 export function portfolio(

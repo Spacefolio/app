@@ -2,9 +2,9 @@ import { IUserDocument, User } from "../users/user.model";
 import {
   IExchangeAccountRequest,
   exchangeType,
-  IExchangeAccount,
-  IPortfolioData,
-  IPortfolioItem
+  IExchangeAccountView,
+  IPortfolioDataView,
+  IPortfolioItem,
 } from "../../../types";
 import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
 import ccxt, { Balances, Exchange } from "ccxt";
@@ -190,7 +190,7 @@ async function syncAllExchangesData(userId: string) {
   // validate
   if (!user) throw "User not found";
 
-  let portfolioData: IPortfolioData[] = [];
+  let portfolioData: IPortfolioDataView[] = [];
 
   for (var i = 0; i < user.linkedExchanges.length; i++) {
     const exchangeDocument = await ExchangeAccount.findById(
@@ -208,7 +208,7 @@ async function syncAllExchangesData(userId: string) {
       throw err;
     });
 
-    portfolioData.push(portfolioDataItem)
+    portfolioData.push(portfolioDataItem);
   }
 
   return portfolioData;
@@ -257,7 +257,7 @@ function createPortfolioData(
     currentPrice: randNum(),
     profitPercentage: { all: randNum(), h24: randNum(), lastTrade: randNum() },
   }));
-  let portfolioData: IPortfolioData = {
+  let portfolioData: IPortfolioDataView = {
     ...exchangeAccount,
     portfolioItems: formattedPortfolioItems,
     profitPercentage: randNum(),
@@ -270,7 +270,7 @@ function createPortfolioData(
 
 function loadExchange(
   exchangeAccount:
-    | IExchangeAccount
+    | IExchangeAccountView
     | IExchangeAccountRequest
     | IExchangeAccountDocument
 ) {

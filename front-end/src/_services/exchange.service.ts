@@ -1,5 +1,5 @@
 import { authHeader } from "../_helpers";
-import { IExchangeAccountRequest, IExchangeAccount } from "../../../types";
+import { IExchangeAccountRequest, IExchangeAccountView } from "../../../types";
 import axios from "axios";
 
 export const exchangeService = {

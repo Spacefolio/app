@@ -1,7 +1,7 @@
 import { IPortfolioItemInterface } from "../back-end/src/portfolios/models/portfolio.model";
 import { ITransaction } from "../back-end/src/portfolios/models/transaction.model";
 
-export interface IExchangeAccount {
+export interface IExchangeAccountView {
   name: string;
   id: string;
   nickname: string;

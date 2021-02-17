@@ -18,3 +18,20 @@ padding: 15px;
 justify-content: center;
 align-items: center;
 `;
+
+export const TableLineItemWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  padding: 5px 10px;
+  background-color: white;
+  border-bottom: 1px solid black;
+`;
+
+export const LineItemAttrWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+`;
