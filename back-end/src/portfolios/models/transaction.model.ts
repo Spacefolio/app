@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { JsonOptions } from "../../_helpers/db";
 
 export interface IFee {
   type: "taker" | "maker";
@@ -45,28 +44,45 @@ export interface ITransactionModel
 }
 
 export interface ITransaction {
-  timestamp: number,
-  datetime: string,
-  address: string,
-  type: ('deposit' | 'withdrawal'),
-  amount: number,
-  currency: string,
-  status: ('pending' | 'ok'),
-  updated: number,
-  fee: { 
-    type: ('taker' | 'maker'),
-    currency: string,
-    rate: number,
-    cost: number
-  }
+  timestamp: number;
+  datetime: string;
+  address: string;
+  type: "deposit" | "withdrawal";
+  amount: number;
+  currency: string;
+  status: "pending" | "ok";
+  updated: number;
+  fee: {
+    type: "taker" | "maker";
+    currency: string;
+    rate: number;
+    cost: number;
+  };
 }
 
-transactionSchema.set("toJSON", JsonOptions);
-feeSchema.set("toJSON", JsonOptions);
+/* #region   */
+transactionSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc: ITransactionDocument, ret) {
+    delete ret._id;
+    delete ret.hash;
+  },
+});
 
-const Transaction = mongoose.model<
-  ITransactionDocument,
-  ITransactionModel
->("Transaction", transactionSchema);
+feeSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (ret) {
+    delete ret._id;
+    delete ret.hash;
+  },
+});
+/* #endregion */
+
+const Transaction = mongoose.model<ITransactionDocument, ITransactionModel>(
+  "Transaction",
+  transactionSchema
+);
 
 export { transactionSchema, Transaction };

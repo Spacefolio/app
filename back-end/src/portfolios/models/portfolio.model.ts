@@ -1,6 +1,5 @@
 import { Balance } from "ccxt";
 import mongoose from "mongoose";
-import { JsonOptions } from "../../_helpers/db";
 import { IAsset } from "../../../../types";
 
 /* #region Balance Schema */
@@ -41,9 +40,32 @@ export interface IPortfolioItemInterface {
 }
 
 /* #region JSON overrides */
-portfolioItemSchema.set("toJSON", JsonOptions);
-assetSchema.set("toJSON", JsonOptions);
-balanceSchema.set("toJSON", JsonOptions);
+portfolioItemSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (ret) {
+    delete ret._id;
+    delete ret.hash;
+  },
+});
+
+assetSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (ret) {
+    delete ret._id;
+    delete ret.hash;
+  },
+});
+
+balanceSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (ret) {
+    delete ret._id;
+    delete ret.hash;
+  },
+});
 /* #endregion */
 
 const PortfolioItem = mongoose.model<

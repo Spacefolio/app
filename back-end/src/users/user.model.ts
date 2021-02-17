@@ -25,10 +25,10 @@ const userSchema = new mongoose.Schema({
 userSchema.set("toJSON", {
     virtuals: true,
     versionKey: false,
-    transform: function (doc, ret) {
-        delete ret._id;
-        delete ret.hash;
-    }
+    transform: function (doc: IUserDocument, ret) {
+      delete ret._id;
+      delete ret.hash;
+    },
 });
 
 const User = mongoose.model<IUserDocument, IUserModel>('User', userSchema);

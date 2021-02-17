@@ -1,4 +1,4 @@
-import { IExchangeAccount } from './exchange.types';
+import { IExchangeAccountView } from './exchange.types';
 
 export interface IUser {
     id: string;
@@ -6,7 +6,7 @@ export interface IUser {
     hash: string;
     firstName: string;
     lastName: string;
-    linkedExchanges: IExchangeAccount[];
+    linkedExchanges: IExchangeAccountView[];
 }
 
 export interface ILoginRequest {

@@ -2,19 +2,17 @@ import { IUserDocument, User } from "../users/user.model";
 import {
   IExchangeAccountRequest,
   exchangeType,
-  IExchangeAccount,
-  IPortfolioData,
-  IPortfolioItem
+  IPortfolioData
 } from "../../../types";
-import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
+import { ExchangeAccount, IExchangeAccountDocument, IExchangeAccount } from "./exchange.model";
 import ccxt, { Balances, Exchange } from "ccxt";
 import { IPortfolioItemInterface } from "../portfolios/models/portfolio.model";
 import {
   ITransaction,
   Transaction,
 } from "../portfolios/models/transaction.model";
-import { isTemplateExpression } from "typescript";
 import { randNum } from "../../exchangeDataDetailed";
+import { json } from "express";
 
 export const exchangeService = {
   getAll,
@@ -237,7 +235,7 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
     });
 
   const portfolioData = createPortfolioData(
-    exchangeAccountDocument,
+    savedExchangeAccount,
     portfolioItems,
     transactions
   );
@@ -250,6 +248,7 @@ function createPortfolioData(
   transanction: ITransaction[]
 ) {
   delete exchangeAccount.portfolioItems;
+  const jsonExchangeAccount = exchangeAccount.toJSON();
   const formattedPortfolioItems = portfolioItems.map((item) => ({
     ...item,
     balance: item.balance.total,
@@ -258,7 +257,7 @@ function createPortfolioData(
     profitPercentage: { all: randNum(), h24: randNum(), lastTrade: randNum() },
   }));
   let portfolioData: IPortfolioData = {
-    ...exchangeAccount,
+    ...jsonExchangeAccount,
     portfolioItems: formattedPortfolioItems,
     profitPercentage: randNum(),
     portfolioTotal: randNum(),
