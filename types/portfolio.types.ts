@@ -11,13 +11,13 @@ export interface IPortfolioDataView {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: IPortfolioItem[];
+  portfolioItems: IPortfolioItemView[];
   profitPercentage: number;
   portfolioTotal: number;
   profitTotal: number;
 }
 
-export interface IPortfolioItem {
+export interface IPortfolioItemView {
   id?: string;
   asset: IAsset;
   balance: number;

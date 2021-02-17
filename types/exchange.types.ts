@@ -13,8 +13,8 @@ export interface IExchangeAccountView {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: [IPortfolioItemInterface];
-  transactions: [ITransaction]
+  portfolioItems?: [IPortfolioItemInterface];
+  transactions?: [ITransaction]
 }
 
 export interface IExchangeAccountRequest {
