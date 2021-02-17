@@ -9,15 +9,13 @@ export const MetaPortfolioWrapper = styled.div`
   justify-content: center;
 `;
 
+export const MetaPortfolioChartWrapper = styled.div``;
 
-export const MetaPortfolioChartWrapper = styled.div`
-
-`;
 export const SyncAreaContainer = styled.div`
- display: flex;
+  display: flex;
 `;
- 
-export const SyncButtonContainer = styled.div `
+
+export const SyncButtonContainer = styled.div`
   border-radius: 5px;
   padding: 5px;
   cursor: pointer;
@@ -27,22 +25,22 @@ export const SyncButtonContainer = styled.div `
 `;
 
 export const PortfolioValueWrapper = styled.div`
-width: 100%;
-height: 100%;
-display: flex;
-flex-direction: column;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
-export const PortfolioValueChangeContainer = styled.div `
+export const PortfolioValueChangeContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-export const PortfolioValueItem = styled.div `
+export const PortfolioValueItem = styled.div`
   padding: 5px 10px;
 `;
 
-export const PortfolioValueContainer = styled.div `
+export const PortfolioValueContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
