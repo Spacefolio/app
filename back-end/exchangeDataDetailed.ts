@@ -1,4 +1,4 @@
-import { IPortfolioItem } from "./src/portfolios/portfolio.model";
+import { IPortfolioItem } from "./src/portfolios/models/portfolio.model";
 import { IPortfolioData } from "../types";
 
 const randNum = (min: number = 0, max: number = 500) => {

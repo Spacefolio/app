@@ -1,4 +1,5 @@
-import { IPortfolioItem } from "../types";
+import { IPortfolioItem } from "../back-end/src/portfolios/models/portfolio.model";
+import { ITransaction } from "../back-end/src/portfolios/models/transaction.model";
 
 export interface IExchangeAccount {
   name: string;
@@ -13,6 +14,7 @@ export interface IExchangeAccount {
     passphrase: string;
   };
   portfolioItems: [IPortfolioItem];
+  transactions: [ITransaction]
 }
 
 export interface IExchangeAccountRequest {

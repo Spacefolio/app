@@ -5,11 +5,8 @@ import {
   IExchangeAccount,
 } from "../../../types";
 import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
-import ccxt, { Balance, Balances, Currency, Exchange } from "ccxt";
-import { IPortfolioItem, PortfolioItem, portfolioItemSchema } from "../portfolios/portfolio.model";
-import { stringify } from "querystring";
-import { createTextChangeRange } from "typescript";
-import { ObjectID } from "mongodb";
+import ccxt, { Balances, Exchange } from "ccxt";
+import { IPortfolioItem } from "../portfolios/models/portfolio.model";
 
 export const exchangeService = {
   getAll,
