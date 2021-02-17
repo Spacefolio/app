@@ -20,7 +20,7 @@ import {
   Holdings,
   Charts,
 } from "../Portfolio";
-import {portfolioActions} from '../_actions'
+import { portfolioActions } from "../_actions";
 
 export const Portfolio = () => {
   const dispatch = useDispatch();
@@ -29,8 +29,8 @@ export const Portfolio = () => {
   const { path } = useRouteMatch("/portfolio");
 
   useEffect(() => {
-    dispatch(portfolioActions.refresh())
-  },[])
+    dispatch(portfolioActions.refresh());
+  }, []);
 
   return (
     <PortfolioWrapper>
@@ -38,29 +38,24 @@ export const Portfolio = () => {
         <MetaPortfolio />
       </FlexCard>
       <TabWrapper>
-        <TabItem>
-          <NavLink activeClassName="active-page-btn" to={`${path}/charts`}>
-            Charts
-          </NavLink>
-        </TabItem>
-        <TabItem>
-          <NavLink activeClassName="active-page-btn" to={`${path}/holdings`}>
-            Holdings
-          </NavLink>
-        </TabItem>
-        <TabItem>
-          <NavLink
-            activeClassName="active-page-btn"
-            to={`${path}/transactions`}
-          >
-            Transactions
-          </NavLink>
-        </TabItem>
-        <TabItem>
-          <NavLink activeClassName="active-page-btn" to={`${path}/orders`}>
-            Orders
-          </NavLink>
-        </TabItem>
+        <NavLink activeClassName="active-porfolio-tab" to={`${path}/charts`}>
+          <TabItem>Charts</TabItem>
+        </NavLink>
+
+        <NavLink activeClassName="active-porfolio-tab" to={`${path}/holdings`}>
+          <TabItem>Holdings</TabItem>
+        </NavLink>
+
+        <NavLink
+          activeClassName="active-porfolio-tab"
+          to={`${path}/transactions`}
+        >
+          <TabItem>Transactions</TabItem>
+        </NavLink>
+
+        <NavLink activeClassName="active-porfolio-tab" to={`${path}/orders`}>
+          <TabItem>Orders</TabItem>
+        </NavLink>
       </TabWrapper>
       <Switch>
         <Route exact path={`${path}/charts`} component={Charts} />

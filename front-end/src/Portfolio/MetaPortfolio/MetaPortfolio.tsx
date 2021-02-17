@@ -4,10 +4,14 @@ import {
   MetaPortfolioWrapper,
   PortfolioValueWrapper,
   MetaPortfolioChartWrapper,
+  SyncAreaContainer,
+  SyncButtonContainer,
+  PortfolioValueChangeContainer,
+  PortfolioValueContainer,
+  PortfolioValueItem as PortfolioValueItem,
 } from "./generalStyle";
 import { FlexCard, SyncButton } from "../../_components";
 import { PortfolioLineChart } from "./MetaPortfolioChart";
-import useDimensions from "react-use-dimensions";
 import { portfolioActions } from "../../_actions";
 import { IPortfolioData } from "../../../../types";
 
@@ -26,7 +30,7 @@ export const MetaPortfolio = () => {
   const portfolioValueItemStyler = (num: number) => {
     return num < 0
       ? { color: "var(--error-base)" }
-      : { color: "var(--accent-base}" };
+      : { color: "var(--accent-base)" };
   };
 
   useEffect(() => {}, []);
@@ -34,28 +38,31 @@ export const MetaPortfolio = () => {
   return (
     <MetaPortfolioWrapper>
       <PortfolioValueWrapper>
-        {data ? (
-          <React.Fragment>
-            <div style={portfolioValueItemStyler(data.portfolioTotal)}>
-              ${data.portfolioTotal}
-            </div>
-            <div style={portfolioValueItemStyler(data.profitPercentage)}>
-              {data.profitPercentage}%
-            </div>
-            <div style={portfolioValueItemStyler(data.profitTotal)}>
-              ${data.profitTotal}
-            </div>
-          </React.Fragment>
-        ) : (
-          "loading..."
-        )}
-        <div
-          onClick={() => dispatch(portfolioActions.refresh())}
-          style={{ width: "40px" }}
-        >
-
-          <SyncButton isSyncing={isRefreshing} />
-        </div>
+        <PortfolioValueContainer>
+          <PortfolioValueItem style={{fontSize: "1.5em"}}>
+            {data ? "$" + data.portfolioTotal : "loading..."}
+          </PortfolioValueItem>
+          <div
+            onClick={() => dispatch(portfolioActions.refresh())}
+            style={{ width: "30px" }}
+          >
+            <SyncButton isSyncing={isRefreshing} />
+          </div>
+        </PortfolioValueContainer>
+        <PortfolioValueChangeContainer>
+          <PortfolioValueItem
+            style={
+              data ? portfolioValueItemStyler(data.profitPercentage) : null
+            }
+          >
+            {data ? data.profitPercentage + "%" : "loading..."}
+          </PortfolioValueItem>
+          <PortfolioValueItem
+            style={data ? portfolioValueItemStyler(data.profitTotal) : null}
+          >
+            {data ? "$" + data.profitTotal : "loading..."}
+          </PortfolioValueItem>
+        </PortfolioValueChangeContainer>
       </PortfolioValueWrapper>
 
       <MetaPortfolioChartWrapper>
@@ -65,13 +72,12 @@ export const MetaPortfolio = () => {
           id={"MetaportfolioChart"}
         />
       </MetaPortfolioChartWrapper>
-      <div
-        onClick={() => dispatch(portfolioActions.sync())}
-        style={{ width: "40px" }}
-      >
-
-        <SyncButton isSyncing={isSyncing} />
-      </div>
+      <SyncAreaContainer>
+        <SyncButtonContainer onClick={() => dispatch(portfolioActions.sync())}>
+          <SyncButton isSyncing={isSyncing}></SyncButton>
+          <div>Sync</div>
+        </SyncButtonContainer>
+      </SyncAreaContainer>
     </MetaPortfolioWrapper>
   );
 };
