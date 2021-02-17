@@ -1,4 +1,4 @@
-import { IPortfolioItem } from "../back-end/src/portfolios/models/portfolio.model";
+import { IPortfolioItemInterface } from "../back-end/src/portfolios/models/portfolio.model";
 import { ITransaction } from "../back-end/src/portfolios/models/transaction.model";
 
 export interface IExchangeAccount {
@@ -13,7 +13,7 @@ export interface IExchangeAccount {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: [IPortfolioItem];
+  portfolioItems: [IPortfolioItemInterface];
   transactions: [ITransaction]
 }
 

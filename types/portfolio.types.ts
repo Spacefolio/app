@@ -4,7 +4,7 @@ export interface IPortfolioData {
   name: string;
   id: string;
   nickname: string;
-  addedDate: string
+  addedDate: Date | string
   exchangeType: exchangeType;
   apiInfo: {
     apiKey: string;

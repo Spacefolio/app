@@ -7,7 +7,7 @@ import {
   IExchangeAccount,
 } from "../../../types";
 import ccxt, { Exchange, exchanges } from "ccxt";
-import { IPortfolioItem } from "./models/portfolio.model";
+import { IPortfolioItemInterface } from "./models/portfolio.model";
 import { response } from "express";
 import { json } from "body-parser";
 
@@ -25,9 +25,9 @@ async function get(userId: string, sync: string) {
   return sync == "true"
     ? await exchangeService
         .syncAllExchangesData(userId)
-        .then((portfolioItems) => {
+        .then((portfolioData) => {
           //console.log(res)
-          return mockPortfolioCalculations(portfolioItems);
+          return portfolioData;
         }).catch((err) => { throw err; })
     : mockPortfolioCalculationsFake();
 

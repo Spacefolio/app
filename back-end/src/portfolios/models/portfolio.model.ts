@@ -32,10 +32,10 @@ const portfolioItemSchema = new mongoose.Schema({
 
 export interface IPortfolioItemModel
   extends mongoose.Model<IPortfolioItemDocument> {
-  build(attr: IPortfolioItem): IPortfolioItemDocument;
+  build(attr: IPortfolioItemInterface): IPortfolioItemDocument;
 }
 
-export interface IPortfolioItem {
+export interface IPortfolioItemInterface {
   asset: IAsset;
   balance: { used: number; free: number; total: number };
 }

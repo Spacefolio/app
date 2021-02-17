@@ -17,7 +17,7 @@ const feeSchema = new mongoose.Schema({
 
 export interface ITransactionDocument extends mongoose.Document {
   timestamp: number;
-  datatime: string;
+  datetime: string;
   address: string;
   type: "deposit" | "withdrawal";
   amount: number;
@@ -46,7 +46,7 @@ export interface ITransactionModel
 
 export interface ITransaction {
   timestamp: number,
-  datetime: number,
+  datetime: string,
   address: string,
   type: ('deposit' | 'withdrawal'),
   amount: number,

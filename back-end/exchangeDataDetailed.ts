@@ -1,14 +1,14 @@
-import { IPortfolioItem } from "./src/portfolios/models/portfolio.model";
+import { IPortfolioItemInterface } from "./src/portfolios/models/portfolio.model";
 import { IPortfolioData } from "../types";
 
-const randNum = (min: number = 0, max: number = 500) => {
+export const randNum = (min: number = 0, max: number = 500): number => {
   var result = Math.random() > 0.5
     ? -1 * (Math.random() * (max - min)) + min
     : 1 * (Math.random() * (max - min)) + min;
-    return result.toFixed(2);
+    return Math.round(result);
 };
 
-export const mockPortfolioCalculations = (portfolioItems:IPortfolioItem[]) => {
+export const mockPortfolioCalculations = (portfolioItems:IPortfolioItemInterface[]) => {
   return [
     {
       name: "Coinbase",

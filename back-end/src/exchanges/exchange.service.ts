@@ -3,10 +3,18 @@ import {
   IExchangeAccountRequest,
   exchangeType,
   IExchangeAccount,
+  IPortfolioData,
+  IPortfolioItem
 } from "../../../types";
 import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
 import ccxt, { Balances, Exchange } from "ccxt";
-import { IPortfolioItem } from "../portfolios/models/portfolio.model";
+import { IPortfolioItemInterface } from "../portfolios/models/portfolio.model";
+import {
+  ITransaction,
+  Transaction,
+} from "../portfolios/models/transaction.model";
+import { isTemplateExpression } from "typescript";
+import { randNum } from "../../exchangeDataDetailed";
 
 export const exchangeService = {
   getAll,
@@ -48,7 +56,9 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   const exchangeObject = new ExchangeAccount(exchangeParam);
   const savedExchange = await exchangeObject.save();
 
-  await syncExchangeData(savedExchange.id, Exchange).catch((err) => { throw err; });
+  await syncExchangeData(savedExchange.id, Exchange).catch((err) => {
+    throw err;
+  });
 
   user.linkedExchanges.push(savedExchange.id);
 
@@ -63,20 +73,35 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   return savedExchange;
 }
 
-async function updateExchangeAccountPortfolioItems(
+async function updatePortfolioItems(
   exchange: Exchange,
   exchangeAccountDocument: IExchangeAccountDocument
 ) {
-  const balances = await exchange.fetchBalance().catch((err) => { throw err; });
-  const portfolioItems = await getExchangeAccountPortfolioItems(balances);
+  const balances = await exchange.fetchBalance().catch((err) => {
+    throw err;
+  });
+  const portfolioItems = await createPortfolioItems(balances);
   exchangeAccountDocument.portfolioItems = portfolioItems;
   return portfolioItems;
 }
 
-async function getExchangeAccountPortfolioItems(
+async function updateTransactions(
+  exchange: Exchange,
+  exchangeAccountDocument: IExchangeAccountDocument
+) {
+  const ccxtTransactions = await exchange.fetchTransactions().catch((err) => {
+    throw err;
+  });
+  const transactions = await createTransactions(ccxtTransactions);
+  exchangeAccountDocument.transactions = transactions;
+
+  return transactions;
+}
+
+async function createPortfolioItems(
   balances: Balances
-): Promise<IPortfolioItem[]> {
-  const portfolioItems: IPortfolioItem[] = [];
+): Promise<IPortfolioItemInterface[]> {
+  const portfolioItems: IPortfolioItemInterface[] = [];
   const thingsToRemove = ["info", "free", "used", "total"];
 
   for (var [key, value] of Object.entries(balances)) {
@@ -96,6 +121,18 @@ async function getExchangeAccountPortfolioItems(
   }
 
   return portfolioItems;
+}
+
+async function createTransactions(
+  ccxtTransactions: ccxt.Transaction[]
+): Promise<ITransaction[]> {
+  let transactions: ITransaction[] = [];
+
+  transactions = ccxtTransactions.map((ccxtTx) => {
+    return new Transaction(ccxtTx);
+  });
+
+  return transactions;
 }
 
 async function update(
@@ -153,35 +190,82 @@ async function syncAllExchangesData(userId: string) {
   // validate
   if (!user) throw "User not found";
 
-  let portfolioItems: IPortfolioItem[] = [];
+  let portfolioData: IPortfolioData[] = [];
 
   for (var i = 0; i < user.linkedExchanges.length; i++) {
-    const exchangeDocument = await ExchangeAccount.findById(user.linkedExchanges[i]);
+    const exchangeDocument = await ExchangeAccount.findById(
+      user.linkedExchanges[i]
+    );
 
     if (!exchangeDocument)
       throw "No exchange account was found with the specified id";
 
     const exchange = loadExchange(exchangeDocument);
-    portfolioItems = await syncExchangeData(exchangeDocument.id, exchange).catch((err) => { throw err; });
+    const portfolioDataItem = await syncExchangeData(
+      exchangeDocument.id,
+      exchange
+    ).catch((err) => {
+      throw err;
+    });
+
+    portfolioData.push(portfolioDataItem)
   }
 
-  return portfolioItems;
+  return portfolioData;
 }
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {
   const exchangeAccountDocument = await exchangeService.getById(exchangeId);
 
-  let portfolioItems: IPortfolioItem[] = [];
-
   if (!exchangeAccountDocument) {
     throw "Exchange account not found";
   }
 
-  portfolioItems = await updateExchangeAccountPortfolioItems(exchange, exchangeAccountDocument);
+  const portfolioItems: IPortfolioItemInterface[] = await updatePortfolioItems(
+    exchange,
+    exchangeAccountDocument
+  );
+  const transactions: ITransaction[] = await updateTransactions(
+    exchange,
+    exchangeAccountDocument
+  );
 
-  const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => { throw err; });
+  const savedExchangeAccount = await exchangeAccountDocument
+    .save()
+    .catch((err) => {
+      throw err;
+    });
 
-  return portfolioItems;
+  const portfolioData = createPortfolioData(
+    exchangeAccountDocument,
+    portfolioItems,
+    transactions
+  );
+  return portfolioData;
+}
+
+function createPortfolioData(
+  exchangeAccount: IExchangeAccountDocument,
+  portfolioItems: IPortfolioItemInterface[],
+  transanction: ITransaction[]
+) {
+  delete exchangeAccount.portfolioItems;
+  const formattedPortfolioItems = portfolioItems.map((item) => ({
+    ...item,
+    balance: item.balance.total,
+    profitTotal: { all: randNum(), h24: randNum(), lastTrade: randNum() },
+    currentPrice: randNum(),
+    profitPercentage: { all: randNum(), h24: randNum(), lastTrade: randNum() },
+  }));
+  let portfolioData: IPortfolioData = {
+    ...exchangeAccount,
+    portfolioItems: formattedPortfolioItems,
+    profitPercentage: randNum(),
+    portfolioTotal: randNum(),
+    profitTotal: randNum(),
+  };
+
+  return portfolioData;
 }
 
 function loadExchange(
