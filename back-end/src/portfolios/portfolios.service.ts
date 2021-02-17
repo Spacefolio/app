@@ -7,7 +7,7 @@ import {
   IExchangeAccount,
 } from "../../../types";
 import ccxt, { Exchange, exchanges } from "ccxt";
-import { IPortfolioItem } from "./portfolio.model";
+import { IPortfolioItem } from "./models/portfolio.model";
 import { response } from "express";
 import { json } from "body-parser";
 

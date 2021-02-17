@@ -10,6 +10,16 @@ const connectionOptions = {
   useUnifiedTopology: true,
   useFindAndModify: false,
 };
+
+export const JsonOptions = {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc: any, ret: any) {
+    delete ret._id;
+    delete ret.hash;
+  },
+}
+
 console.log(process.env.MONGODB_URI);
 mongoose.connect(process.env.MONGODB_URI || config.connectionString, connectionOptions, () => {});
 var db = mongoose.connection;
