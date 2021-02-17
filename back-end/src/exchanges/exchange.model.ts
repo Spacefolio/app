@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { IPortfolioItem, portfolioItemSchema } from "../portfolios/models/portfolio.model";
 import { IExchangeAccount, exchangeType } from "../../../types";
 import { JsonOptions } from "../_helpers/db";
-import { transactionSchema } from "../portfolios/models/transaction.model";
+import { ITransaction, transactionSchema } from "../portfolios/models/transaction.model";
 
 export interface IExchangeAccountDocument extends mongoose.Document {
   name: string;
@@ -17,6 +17,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
     passphrase: string;
   };
   portfolioItems: IPortfolioItem[];
+  transactions: ITransaction[];
 }
 
 export interface IExchangeAccountModel
