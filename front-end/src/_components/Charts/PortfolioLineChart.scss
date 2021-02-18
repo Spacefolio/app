@@ -1,0 +1,17 @@
+.line {
+  fill: none;
+  stroke: black;
+  stroke-width: 4;
+}
+.focus-circle {
+  fill: black;
+}
+.tooltip {
+  opacity: 0;
+  display: flex;
+  position: absolute;
+  background-color: white;
+  border: solid 2px;
+  border-radius: 5px;
+  padding: 5px;
+}
