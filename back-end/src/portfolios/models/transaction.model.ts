@@ -1,16 +1,14 @@
 import mongoose from "mongoose";
 
 export interface IFee {
-  type: "taker" | "maker";
   currency: string;
-  rate: number;
+  rate?: number;
   cost: number;
 }
 
 const feeSchema = new mongoose.Schema({
-  type: { type: String, enum: ["taker", "maker"] },
   currency: { type: String },
-  rate: { type: Number },
+  rate: { type: Number, required: false },
   cost: { type: Number },
 });
 
@@ -18,11 +16,10 @@ export interface ITransactionDocument extends mongoose.Document {
   timestamp: number;
   datetime: string;
   address: string;
-  type: "deposit" | "withdrawal";
+  type: "deposit" | "withdrawal" | "buy" | "sell";
   amount: number;
   currency: string;
-  status: "pending" | "ok";
-  updated: number;
+  status: "pending" | "ok" | "open" | "closed" | "canceled";
   fee: IFee;
 }
 
@@ -34,7 +31,6 @@ const transactionSchema = new mongoose.Schema({
   amount: { type: Number },
   currency: { type: String },
   status: { type: String, enum: ["pending", "ok"] },
-  updated: { type: Number },
   fee: { type: feeSchema },
 });
 
@@ -47,17 +43,11 @@ export interface ITransaction {
   timestamp: number;
   datetime: string;
   address: string;
-  type: "deposit" | "withdrawal";
+  type: "deposit" | "withdrawal" | "buy" | "sell";
   amount: number;
   currency: string;
-  status: "pending" | "ok";
-  updated: number;
-  fee: {
-    type: "taker" | "maker";
-    currency: string;
-    rate: number;
-    cost: number;
-  };
+  status: "pending" | "ok" | "open" | "closed" | "canceled";
+  fee: IFee
 }
 
 /* #region   */

@@ -12,7 +12,6 @@ import {
   Transaction,
 } from "../portfolios/models/transaction.model";
 import { randNum } from "../../exchangeDataDetailed";
-import { json } from "express";
 
 export const exchangeService = {
   getAll,
@@ -50,6 +49,8 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   // verify connection to exchange
   const Exchange = loadExchange(exchangeParam);
   await verifyConnectionToExchange(Exchange);
+
+  console.log(await Exchange.fetchOrders());
 
   const exchangeObject = new ExchangeAccount(exchangeParam);
   const savedExchange = await exchangeObject.save();

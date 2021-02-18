@@ -13,6 +13,7 @@ import { json } from "body-parser";
 
 export const portfolioService = {
   get,
+  getTransactions
 };
 
 async function get(userId: string, sync: string) {
@@ -32,4 +33,10 @@ async function get(userId: string, sync: string) {
     : mockPortfolioCalculationsFake();
 
   // TODO: calculate the portfolio data and return it
+}
+
+async function getTransactions(exchangeId: string)
+{
+  const exchange = await exchangeService.getById(exchangeId);
+  return exchange.transactions;
 }
