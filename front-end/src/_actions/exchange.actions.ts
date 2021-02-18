@@ -2,7 +2,7 @@ import { exchangeConstants } from "../_constants";
 import { exchangeService } from "../_services";
 import { alertActions } from "./alert.actions";
 import { history } from "../_helpers";
-import { IExchangeAccount, IExchangeAccountRequest } from "../../../types";
+import { IExchangeAccountView, IExchangeAccountRequest } from "../../../types";
 import { exchanges } from "../_reducers/exchange.reducer";
 
 export const exchangeActions = {
@@ -32,7 +32,7 @@ function addNew(exchange: IExchangeAccountRequest) {
   function request(exchange: IExchangeAccountRequest) {
     return { type: exchangeConstants.ADDNEW_REQUEST, exchange };
   }
-  function success(exchangeAccount: IExchangeAccount) {
+  function success(exchangeAccount: IExchangeAccountView) {
     return { type: exchangeConstants.ADDNEW_SUCCESS, exchangeAccount };
   }
   function failure(error: any) {
@@ -59,7 +59,7 @@ function update(exchange: IExchangeAccountRequest, id: string) {
   function request(exchange: any) {
     return { type: exchangeConstants.UPDATE_REQUEST, exchange };
   }
-  function success(exchangeAccount: IExchangeAccount) {
+  function success(exchangeAccount: IExchangeAccountView) {
     return { type: exchangeConstants.UPDATE_SUCCESS, exchangeAccount };
   }
   function failure(error: any) {

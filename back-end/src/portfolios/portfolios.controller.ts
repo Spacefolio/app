@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { IPortfolioData } from "../../../types";
+import { IPortfolioDataView } from "../../../types";
 const router = Router();
 import { exchangeService } from "../exchanges/exchange.service";
 import { portfolioItemSchema } from "./models/portfolio.model";

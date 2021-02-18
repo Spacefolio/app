@@ -2,15 +2,17 @@ import { IUserDocument, User } from "../users/user.model";
 import {
   IExchangeAccountRequest,
   exchangeType,
-  IPortfolioData
+  IExchangeAccountView,
+  IPortfolioDataView,
 } from "../../../types";
-import { ExchangeAccount, IExchangeAccountDocument, IExchangeAccount } from "./exchange.model";
+import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
 import ccxt, { Balances, Exchange } from "ccxt";
 import { IPortfolioItemInterface } from "../portfolios/models/portfolio.model";
 import {
   ITransaction,
   Transaction,
 } from "../portfolios/models/transaction.model";
+import { isTemplateExpression } from "typescript";
 import { randNum } from "../../exchangeDataDetailed";
 
 export const exchangeService = {
@@ -189,7 +191,7 @@ async function syncAllExchangesData(userId: string) {
   // validate
   if (!user) throw "User not found";
 
-  let portfolioData: IPortfolioData[] = [];
+  let portfolioData: IPortfolioDataView[] = [];
 
   for (var i = 0; i < user.linkedExchanges.length; i++) {
     const exchangeDocument = await ExchangeAccount.findById(
@@ -207,7 +209,7 @@ async function syncAllExchangesData(userId: string) {
       throw err;
     });
 
-    portfolioData.push(portfolioDataItem)
+    portfolioData.push(portfolioDataItem);
   }
 
   return portfolioData;
@@ -236,7 +238,7 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
     });
 
   const portfolioData = createPortfolioData(
-    savedExchangeAccount,
+    exchangeAccountDocument,
     portfolioItems,
     transactions
   );
@@ -249,7 +251,6 @@ function createPortfolioData(
   transanction: ITransaction[]
 ) {
   delete exchangeAccount.portfolioItems;
-  const jsonExchangeAccount = exchangeAccount.toJSON();
   const formattedPortfolioItems = portfolioItems.map((item) => ({
     ...item,
     balance: item.balance.total,
@@ -257,8 +258,8 @@ function createPortfolioData(
     currentPrice: randNum(),
     profitPercentage: { all: randNum(), h24: randNum(), lastTrade: randNum() },
   }));
-  let portfolioData: IPortfolioData = {
-    ...jsonExchangeAccount,
+  let portfolioData: IPortfolioDataView = {
+    ...exchangeAccount,
     portfolioItems: formattedPortfolioItems,
     profitPercentage: randNum(),
     portfolioTotal: randNum(),
@@ -270,7 +271,7 @@ function createPortfolioData(
 
 function loadExchange(
   exchangeAccount:
-    | IExchangeAccount
+    | IExchangeAccountView
     | IExchangeAccountRequest
     | IExchangeAccountDocument
 ) {

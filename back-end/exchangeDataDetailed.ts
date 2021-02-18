@@ -1,5 +1,5 @@
 import { IPortfolioItemInterface } from "./src/portfolios/models/portfolio.model";
-import { IPortfolioData } from "../types";
+import { IPortfolioDataView } from "../types";
 
 export const randNum = (min: number = 0, max: number = 500): number => {
   var result = Math.random() > 0.5

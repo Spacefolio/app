@@ -1,13 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import {
-  IPortfolioItemInterface,
-  portfolioItemSchema,
-} from "../portfolios/models/portfolio.model";
-import { exchangeType } from "../../../types";
-import {
-  ITransaction,
-  transactionSchema,
-} from "../portfolios/models/transaction.model";
+import { IPortfolioItemInterface, portfolioItemSchema } from "../portfolios/models/portfolio.model";
+import { IExchangeAccountView, exchangeType } from "../../../types";
+import { ITransaction, transactionSchema } from "../portfolios/models/transaction.model";
 
 export interface IExchangeAccountDocument extends mongoose.Document {
   name: string;
@@ -27,7 +21,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
 
 export interface IExchangeAccountModel
   extends mongoose.Model<IExchangeAccountDocument> {
-  build(attr: IExchangeAccount): IExchangeAccountDocument;
+  build(attr: IExchangeAccountView): IExchangeAccountDocument;
 }
 
 const exchangeAccountSchema = new mongoose.Schema({

@@ -1,15 +1,35 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {DashboardWrapper} from"./generalStyle";
-import {FlexCard} from '../../_components';
-
+import { DashboardWrapper } from "./generalStyle";
+import { DataLabelsContainer } from "../portfolioStyles";
+import { ITransactionItemView } from "../../../../types";
+import {TransactionItem} from './TransactionItem/TransactionItem';
 
 export const Transactions = () => {
   const dispatch = useDispatch();
 
+  const transactionData: ITransactionItemView[] = useSelector(
+    (state: any) => state.portfolio.transactionData
+  );
+
   return (
-      <DashboardWrapper>
-        <FlexCard gridName={"one"} children={<div>{"All of my transactions and their information"}</div>} />
-      </DashboardWrapper>
+    <DashboardWrapper>
+      <DataLabelsContainer>
+        <div>Type-Date</div>
+        <div></div>
+        <div>Amount</div>
+        <div>Price</div>
+        <div>Value</div>
+        <div>Exchange-Pair</div>
+        <div>Fees</div>
+      </DataLabelsContainer>
+      {transactionData ? (
+        transactionData.map((pItem: ITransactionItemView) => {
+          return <TransactionItem transactionItem={pItem} />;
+        })
+      ) : (
+        <div>loading...</div>
+      )}
+    </DashboardWrapper>
   );
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { exchangeActions } from "../_actions";
 import "./ExchangesPopup.scss";
 import { AddExchangeForm, ExchangeItem } from "../Exchanges";
-import { IExchangeAccount, IExchangeReference } from "../../../types";
+import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { Modal } from "../_components";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -37,7 +37,7 @@ export const ExchangesPopup: React.FC<ExchangesPopupProps> = ({}) => {
           </div>
           <div className="my-exchanges-list-container">
             {userLinkedExchanges.length != 0
-              ? userLinkedExchanges.map((item: IExchangeAccount) => {
+              ? userLinkedExchanges.map((item: IExchangeAccountView) => {
                   return <ExchangeItem data={item} />;
                 })
               : "You have no linked accounts... Add one below"}

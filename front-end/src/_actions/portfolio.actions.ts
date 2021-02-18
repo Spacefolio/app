@@ -1,7 +1,7 @@
 import { portfolioConstants } from "../_constants";
 import { portfolioService } from "../_services";
 import { alertActions } from "./alert.actions";
-import { IPortfolioData } from "../../../types";
+import { IPortfolioDataView } from "../../../types";
 
 export const portfolioActions = {
   sync,
@@ -26,7 +26,7 @@ function sync() {
   function request() {
     return { type: portfolioConstants.SYNC_REQUEST};
   }
-  function success(portfolioData: IPortfolioData[]) {
+  function success(portfolioData: IPortfolioDataView[]) {
     return { type: portfolioConstants.SYNC_SUCCESS,  portfolioData};
   }
   function failure(error: any) {
@@ -51,7 +51,7 @@ function refresh() {
   function request() {
     return { type: portfolioConstants.REFRESH_REQUEST};
   }
-  function success(portfolioData: IPortfolioData[]) {
+  function success(portfolioData: IPortfolioDataView[]) {
     return { type: portfolioConstants.REFRESH_SUCCESS, portfolioData };
   }
   function failure(error: any) {

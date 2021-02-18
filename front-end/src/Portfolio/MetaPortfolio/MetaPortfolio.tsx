@@ -13,7 +13,7 @@ import {
 import { FlexCard, SyncButton } from "../../_components";
 import { PortfolioLineChart } from "./MetaPortfolioChart";
 import { portfolioActions } from "../../_actions";
-import { IPortfolioData } from "../../../../types";
+import { IPortfolioDataView } from "../../../../types";
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ export const MetaPortfolio = () => {
   const isRefreshing = useSelector(
     (state: any) => state.portfolio.recalculatingPortfolio
   );
-  const data: IPortfolioData = useSelector(
+  const data: IPortfolioDataView = useSelector(
     (state: any) => state.portfolio.portfolioData[0]
   );
 
@@ -52,13 +52,13 @@ export const MetaPortfolio = () => {
         <PortfolioValueChangeContainer>
           <PortfolioValueItem
             style={
-              data ? portfolioValueItemStyler(data.profitPercentage) : null
+              data ? portfolioValueItemStyler(data.profitPercentage.USD) : null
             }
           >
             {data ? data.profitPercentage + "%" : "loading..."}
           </PortfolioValueItem>
           <PortfolioValueItem
-            style={data ? portfolioValueItemStyler(data.profitTotal) : null}
+            style={data ? portfolioValueItemStyler(data.profitTotal.USD) : null}
           >
             {data ? "$" + data.profitTotal : "loading..."}
           </PortfolioValueItem>

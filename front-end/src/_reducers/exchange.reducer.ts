@@ -1,16 +1,16 @@
 import { exchangeConstants } from "../_constants";
-import { IExchangeAccount } from "../../../types";
+import { IExchangeAccountView } from "../../../types";
 
 interface IExchangeAction {
   type: string;
-  exchanges?: IExchangeAccount[];
+  exchanges?: IExchangeAccountView[];
 
   id?: string;
   error?: string;
   exchangeAccount?: any;
 }
 
-interface IExchangeAccountState extends IExchangeAccount {
+interface IExchangeAccountState extends IExchangeAccountView {
   deleting?: string;
 }
 
@@ -57,7 +57,7 @@ export function exchanges(
       return {
         ...state,
         exchanges: state.exchanges.filter(
-          (item: IExchangeAccount) => {
+          (item: IExchangeAccountView) => {
             console.log(item.id)
             return item.id !== action.id
           }
@@ -99,7 +99,7 @@ export function exchanges(
       return {
         ...state,
         addingExchange: false,
-        exchanges: state.exchanges.map((item: IExchangeAccount) => {
+        exchanges: state.exchanges.map((item: IExchangeAccountView) => {
           if (item.id == action.exchangeAccount.id) {
             return action.exchangeAccount;
           } else {

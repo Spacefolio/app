@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DeleteButton, EditButton } from "../_components";
 import {
-  IExchangeAccount,
+  IExchangeAccountView,
   IExchangeReference,
 } from "../../../types";
 import { Modal } from "../_components";
@@ -10,7 +10,7 @@ import { exchangeActions } from "../_actions";
 import { useDispatch, useSelector } from "react-redux";
 
 interface ExchangeItemProps {
-  data: IExchangeAccount;
+  data: IExchangeAccountView;
 }
 
 export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
