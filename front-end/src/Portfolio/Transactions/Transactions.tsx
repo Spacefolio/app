@@ -9,7 +9,7 @@ export const Transactions = () => {
   const dispatch = useDispatch();
 
   const transactionData: ITransactionItemView[] = useSelector(
-    (state: any) => state.portfolio.
+    (state: any) => state.portfolio.transactionData
   );
 
   return (
