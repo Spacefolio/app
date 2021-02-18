@@ -4,7 +4,7 @@ export interface IPortfolioDataView {
   name: string;
   id: string;
   nickname: string;
-  addedDate: Date | string
+  addedDate: Date | string;
   exchangeType: exchangeType;
   apiInfo: {
     apiKey: string;
@@ -12,15 +12,15 @@ export interface IPortfolioDataView {
     passphrase: string;
   };
   portfolioItems: IPortfolioItemView[];
-  profitPercentage: number;
-  portfolioTotal: number;
-  profitTotal: number;
+  profitPercentage: { USD: number };
+  portfolioTotal: { USD: number };
+  profitTotal: { USD: number };
 }
 
 export interface IPortfolioItemView {
   id?: string;
   asset: IAsset;
-  balance: number;
+  balance: { USD: number };
   profitTotal: { all: number; h24: number; lastTrade: number };
   currentPrice: number;
   profitPercentage: { all: number; h24: number; lastTrade: number };
@@ -34,18 +34,16 @@ export interface IAsset {
 }
 
 export interface ITransactionItemView {
-  timestamp: number,
-  datetime: string,
-  address: string,
-  type: ('deposit' | 'withdrawal'),
-  amount: number,
-  currency: string,
-  status: ('pending' | 'ok'),
-  updated: number,
-  fee: { 
-    type: ('taker' | 'maker'),
-    currency: string,
-    rate: number,
-    cost: number
-  }
+  id: string; //mongo ID
+  exchangeName: string;
+  symbol: string; //example 'BTC'
+  quoteSymbol: string; //example 'USD'
+  logoUrl: string;
+  type: "widthrawl" | "deposit" | "sell" | "buy";
+  date: number;
+  amount: number;
+  quoteAmount: number;
+  price: number;
+  value: number;
+  fee: { cost: number; currency: number; rate: number };
 }

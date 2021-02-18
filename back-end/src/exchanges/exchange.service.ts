@@ -4,7 +4,6 @@ import {
   exchangeType,
   IExchangeAccountView,
   IPortfolioDataView,
-  IPortfolioItem,
 } from "../../../types";
 import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
 import ccxt, { Balances, Exchange } from "ccxt";

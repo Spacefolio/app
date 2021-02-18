@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IPortfolioItemInterface, portfolioItemSchema } from "../portfolios/models/portfolio.model";
 import { IExchangeAccountView, exchangeType } from "../../../types";
-import { JsonOptions } from "../_helpers/db";
 import { ITransaction, transactionSchema } from "../portfolios/models/transaction.model";
 
 export interface IExchangeAccountDocument extends mongoose.Document {

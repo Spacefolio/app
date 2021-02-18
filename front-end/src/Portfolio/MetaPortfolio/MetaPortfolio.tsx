@@ -52,13 +52,13 @@ export const MetaPortfolio = () => {
         <PortfolioValueChangeContainer>
           <PortfolioValueItem
             style={
-              data ? portfolioValueItemStyler(data.profitPercentage) : null
+              data ? portfolioValueItemStyler(data.profitPercentage.USD) : null
             }
           >
             {data ? data.profitPercentage + "%" : "loading..."}
           </PortfolioValueItem>
           <PortfolioValueItem
-            style={data ? portfolioValueItemStyler(data.profitTotal) : null}
+            style={data ? portfolioValueItemStyler(data.profitTotal.USD) : null}
           >
             {data ? "$" + data.profitTotal : "loading..."}
           </PortfolioValueItem>

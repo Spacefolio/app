@@ -1,10 +1,13 @@
 import React from "react";
-import { IPortfolioDataView, IPortfolioItem } from "../../../../../types";
+import { IPortfolioDataView, IPortfolioItemView } from "../../../../../types";
 import { portfolioActions } from "../../../_actions";
-import { TableLineItemWrapper, LineItemAttrWrapper } from "../../portfolioStyles";
+import {
+  TableLineItemWrapper,
+  LineItemAttrWrapper,
+} from "../../portfolioStyles";
 
 interface HoldingItemProps {
-  portfolioItem: IPortfolioItem;
+  portfolioItem: IPortfolioItemView;
 }
 
 export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
@@ -26,9 +29,9 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
         <img width={"30px"} src={asset.logoUrl} />
         <div>{asset.name}</div>
       </LineItemAttrWrapper>
-      <LineItemAttrWrapper>${balance}</LineItemAttrWrapper>
+      <LineItemAttrWrapper>${balance.USD}</LineItemAttrWrapper>
       <LineItemAttrWrapper>${currentPrice}</LineItemAttrWrapper>
-      <LineItemAttrWrapper>${balance * currentPrice}</LineItemAttrWrapper>
+      <LineItemAttrWrapper>${balance.USD * currentPrice}</LineItemAttrWrapper>
       <LineItemAttrWrapper style={{ flexDirection: "column" }}>
         <div style={{ color: portfolioValueItemStyler(profitTotal.all) }}>
           ${profitTotal.all}
