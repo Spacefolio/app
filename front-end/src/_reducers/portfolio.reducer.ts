@@ -1,9 +1,11 @@
 import { portfolioConstants } from "../_constants";
-import { IPortfolioDataView } from "../../../types";
+import { IPortfolioDataView, ITransactionItemView } from "../../../types";
+import { ITransaction } from "../../../back-end/src/portfolios/models/transaction.model";
 
 interface IPortfolioAction {
   type: string;
   portfolioData: IPortfolioDataView[];
+  transactionData: ITransactionItemView[];
 }
 
 export function portfolio(
@@ -11,6 +13,7 @@ export function portfolio(
     syncingPortfolio: false,
     recalculatingPortfolio: false,
     portfolioData: [],
+    transactionData: [],
   },
   action: IPortfolioAction
 ) {
@@ -32,6 +35,23 @@ export function portfolio(
         ...state,
         syncingPortfolio: false,
       };
+
+
+      case portfolioConstants.TRANSACTIONS_REQUEST:
+      return {
+        ...state,
+      };
+    case portfolioConstants.TRANSACTIONS_SUCCESS:
+      return {
+        ...state,
+        transactionData: action.transactionData,
+      };
+    case portfolioConstants.TRANSACTIONS_FAILURE:
+      return {
+        ...state,
+      };
+
+
 
     case portfolioConstants.REFRESH_REQUEST:
       return {

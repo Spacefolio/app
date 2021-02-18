@@ -45,5 +45,5 @@ export interface ITransactionItemView {
   quoteAmount: number;
   price: number;
   value: number;
-  fee: { cost: number; currency: number; rate: number };
+  fee: { cost: number; currency: string; rate: number };
 }

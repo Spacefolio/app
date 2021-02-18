@@ -32,30 +32,35 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
     amount,
     value,
     price,
+    fee,
   } = transactionItem;
+
+  const dateString = new Date(date*1000).toDateString();
 
   return (
     <TableLineItemWrapper>
       <LineItemAttrWrapper>
-        <div>{type}</div>
-        <div>{date}</div>
+        <div style={{fontSize: '1.1em', color: type=='buy'? 'red': 'green'}}>{type.toUpperCase()}</div>
+        <div>{dateString}</div>
       </LineItemAttrWrapper>
       <LineItemAttrWrapper>
         <img width={"30px"} src={logoUrl} />
       </LineItemAttrWrapper>
       <LineItemAttrWrapper>
-        <div>{amount}</div>
-        <div>{symbol}</div>
-        <div>{quoteAmount}</div>
-        <div>{quoteSymbol}</div>
+        <div style={{fontSize: '1.15em'}}>{amount} {symbol}</div>
+        <div style={{fontSize: '.7em'}}>{quoteAmount} {quoteSymbol}</div>
       </LineItemAttrWrapper>
-      <LineItemAttrWrapper>{price}</LineItemAttrWrapper>
-      <LineItemAttrWrapper>{value}</LineItemAttrWrapper>
+      <LineItemAttrWrapper>${price}</LineItemAttrWrapper>
+      <LineItemAttrWrapper>${value}</LineItemAttrWrapper>
       <LineItemAttrWrapper>
         <div>
           {symbol}/{quoteSymbol}
         </div>
         <div>{exchangeName}</div>
+      </LineItemAttrWrapper>
+      <LineItemAttrWrapper>
+        <div>{fee.cost}{fee.currency}</div>
+        <div>{fee.rate}%</div>
       </LineItemAttrWrapper>
     </TableLineItemWrapper>
   );

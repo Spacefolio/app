@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { HoldingsWrapper } from "./generalStyle";
-import { DataLabelsContainer } from "../portfolioStyles";
+import { DataLabelItemWrapper, DataLabelsContainer } from "../portfolioStyles";
 import { FlexCard } from "../../_components";
 import { HoldingItem } from "./HoldingItem/HoldingItem";
 import { IPortfolioDataView, IPortfolioItemView } from "../../../../types";
@@ -16,11 +16,11 @@ export const Holdings = () => {
   return (
     <HoldingsWrapper>
       <DataLabelsContainer>
-        <div>Name</div>
-        <div>Amount</div>
-        <div>Price</div>
-        <div>Value</div>
-        <div>P/L</div>
+        <DataLabelItemWrapper>Name</DataLabelItemWrapper>
+        <DataLabelItemWrapper>Amount</DataLabelItemWrapper>
+        <DataLabelItemWrapper>Price</DataLabelItemWrapper>
+        <DataLabelItemWrapper>Value</DataLabelItemWrapper>
+        <DataLabelItemWrapper>P/L</DataLabelItemWrapper>
       </DataLabelsContainer>
       {portfolioData ? (
         portfolioData.portfolioItems.map((pItem: IPortfolioItemView) => {
