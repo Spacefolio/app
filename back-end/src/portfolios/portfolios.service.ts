@@ -1,19 +1,9 @@
 import { User } from "../users/user.model";
 import { exchangeService } from "../exchanges/exchange.service";
-import { mockPortfolioCalculations, mockPortfolioCalculationsFake } from "../../exchangeDataDetailed";
-import {
-  IExchangeAccountRequest,
-  exchangeType,
-  IExchangeAccountView,
-} from "../../../types";
-import ccxt, { Exchange, exchanges } from "ccxt";
-import { IPortfolioItemInterface } from "./models/portfolio.model";
-import { response } from "express";
-import { json } from "body-parser";
+import { mockPortfolioCalculationsFake } from "../../exchangeDataDetailed";
 
 export const portfolioService = {
   get,
-  getTransactions
 };
 
 async function get(userId: string, sync: string) {
@@ -33,10 +23,4 @@ async function get(userId: string, sync: string) {
     : mockPortfolioCalculationsFake();
 
   // TODO: calculate the portfolio data and return it
-}
-
-async function getTransactions(exchangeId: string)
-{
-  const exchange = await exchangeService.getById(exchangeId);
-  return exchange.transactions;
 }

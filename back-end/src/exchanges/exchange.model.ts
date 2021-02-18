@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose";
-import { IPortfolioItemInterface, portfolioItemSchema } from "../portfolios/models/portfolio.model";
+import { IPortfolioItem, portfolioItemSchema } from "../portfolios/portfolio.model";
 import { IExchangeAccountView, exchangeType } from "../../../types";
-import { ITransaction, transactionSchema } from "../portfolios/models/transaction.model";
-import { IOrder, orderSchema } from "../portfolios/models/order.model";
+import { ITransaction, ITransactionDocument, transactionSchema } from "../transactions/transaction.model";
+import { IOrder, IOrderDocument, orderSchema } from "../transactions/order.model";
 
 export interface IExchangeAccountDocument extends mongoose.Document {
   name: string;
@@ -16,8 +16,9 @@ export interface IExchangeAccountDocument extends mongoose.Document {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: IPortfolioItemInterface[];
-  transactions: ITransaction[];
+  portfolioItems: IPortfolioItem[];
+  transactions: ITransactionDocument[];
+  orders: IOrderDocument[];
 }
 
 export interface IExchangeAccountModel
@@ -52,7 +53,7 @@ export interface IExchangeAccount {
     apiSecret: string;
     passphrase: string;
   };
-  portfolioItems: [IPortfolioItemInterface];
+  portfolioItems: [IPortfolioItem];
   transactions: [ITransaction];
   orders: [IOrder];
 }

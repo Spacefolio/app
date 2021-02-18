@@ -1,5 +1,4 @@
-import { IPortfolioItemInterface } from "./src/portfolios/models/portfolio.model";
-import { IPortfolioDataView } from "../types";
+import { IPortfolioItemView } from "../types";
 
 export const randNum = (min: number = 0, max: number = 500): number => {
   var result = Math.random() > 0.5
@@ -8,7 +7,7 @@ export const randNum = (min: number = 0, max: number = 500): number => {
     return Math.round(result);
 };
 
-export const mockPortfolioCalculations = (portfolioItems:IPortfolioItemInterface[]) => {
+export const mockPortfolioCalculations = (portfolioItems:IPortfolioItemView[]) => {
   return [
     {
       name: "Coinbase",
@@ -32,7 +31,7 @@ export const mockPortfolioCalculations = (portfolioItems:IPortfolioItemInterface
             h24: randNum(),
             lastTrade: randNum(),
           },
-          balance: portfolioItems[1].balance.total,
+          balance: portfolioItems[1].balance.USD,
           profitTotal: {
             all: randNum(),
             h24: randNum(),
@@ -48,7 +47,7 @@ export const mockPortfolioCalculations = (portfolioItems:IPortfolioItemInterface
             h24: randNum(),
             lastTrade: randNum(),
           },
-          balance: portfolioItems[0].balance.total,
+          balance: portfolioItems[0].balance.USD,
           profitPercentage: {
             all: randNum(),
             h24: randNum(),

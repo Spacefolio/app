@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 export interface IFee {
   currency: string;
-  rate?: number;
+  rate: number;
   cost: number;
 }
 
 const feeSchema = new mongoose.Schema({
   currency: { type: String },
-  rate: { type: Number, required: false },
+  rate: { type: Number },
   cost: { type: Number },
 });
 

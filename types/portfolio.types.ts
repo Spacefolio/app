@@ -39,7 +39,7 @@ export interface ITransactionItemView {
   symbol: string; //example 'BTC'
   quoteSymbol: string; //example 'USD'
   logoUrl: string;
-  type: "widthrawl" | "deposit" | "sell" | "buy";
+  type: "withdrawal" | "deposit" | "sell" | "buy";
   date: number;
   amount: number;
   quoteAmount: number;

@@ -7,13 +7,13 @@ import {
 } from "../../../types";
 import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
 import ccxt, { Balances, Exchange } from "ccxt";
-import { IPortfolioItemInterface } from "../portfolios/models/portfolio.model";
+import { IPortfolioItem } from "../portfolios/portfolio.model";
 import {
   ITransaction,
   Transaction,
-} from "../portfolios/models/transaction.model";
-import { isTemplateExpression } from "typescript";
+} from "../transactions/transaction.model";
 import { randNum } from "../../exchangeDataDetailed";
+import { ccxtService } from "../_helpers/ccxt.service";
 
 export const exchangeService = {
   getAll,
@@ -49,8 +49,8 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
   const user = await User.findById(userId);
 
   // verify connection to exchange
-  const Exchange = loadExchange(exchangeParam);
-  await verifyConnectionToExchange(Exchange);
+  const Exchange = ccxtService.loadExchange(exchangeParam);
+  await ccxtService.verifyConnectionToExchange(Exchange);
 
   console.log(await Exchange.fetchOrders());
 
@@ -93,7 +93,7 @@ async function updateTransactions(
   const ccxtTransactions = await exchange.fetchTransactions().catch((err) => {
     throw err;
   });
-  const transactions = await createTransactions(ccxtTransactions);
+  const transactions = await ccxtService.createTransactions(ccxtTransactions);
   exchangeAccountDocument.transactions = transactions;
 
   return transactions;
@@ -101,8 +101,8 @@ async function updateTransactions(
 
 async function createPortfolioItems(
   balances: Balances
-): Promise<IPortfolioItemInterface[]> {
-  const portfolioItems: IPortfolioItemInterface[] = [];
+): Promise<IPortfolioItem[]> {
+  const portfolioItems: IPortfolioItem[] = [];
   const thingsToRemove = ["info", "free", "used", "total"];
 
   for (var [key, value] of Object.entries(balances)) {
@@ -122,18 +122,6 @@ async function createPortfolioItems(
   }
 
   return portfolioItems;
-}
-
-async function createTransactions(
-  ccxtTransactions: ccxt.Transaction[]
-): Promise<ITransaction[]> {
-  let transactions: ITransaction[] = [];
-
-  transactions = ccxtTransactions.map((ccxtTx) => {
-    return new Transaction(ccxtTx);
-  });
-
-  return transactions;
 }
 
 async function update(
@@ -174,11 +162,7 @@ async function _delete(userId: string, exchangeId: string) {
 }
 
 async function getRequiredCredentials(exchangeType: exchangeType) {
-  // verify connection to exchange
-  const exchangeClass = ccxt[exchangeType];
-  const Exchange = new exchangeClass();
-
-  return Exchange.requiredCredentials;
+  return ccxtService.getRequiredCredentials(exchangeType);
 }
 
 async function syncAllExchangesData(userId: string) {
@@ -201,7 +185,7 @@ async function syncAllExchangesData(userId: string) {
     if (!exchangeDocument)
       throw "No exchange account was found with the specified id";
 
-    const exchange = loadExchange(exchangeDocument);
+    const exchange = ccxtService.loadExchange(exchangeDocument);
     const portfolioDataItem = await syncExchangeData(
       exchangeDocument.id,
       exchange
@@ -222,7 +206,7 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
     throw "Exchange account not found";
   }
 
-  const portfolioItems: IPortfolioItemInterface[] = await updatePortfolioItems(
+  const portfolioItems: IPortfolioItem[] = await updatePortfolioItems(
     exchange,
     exchangeAccountDocument
   );
@@ -247,7 +231,7 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 
 function createPortfolioData(
   exchangeAccount: IExchangeAccountDocument,
-  portfolioItems: IPortfolioItemInterface[],
+  portfolioItems: IPortfolioItem[],
   transanction: ITransaction[]
 ) {
   delete exchangeAccount.portfolioItems;
@@ -269,25 +253,3 @@ function createPortfolioData(
   return portfolioData;
 }
 
-function loadExchange(
-  exchangeAccount:
-    | IExchangeAccountView
-    | IExchangeAccountRequest
-    | IExchangeAccountDocument
-) {
-  const exchangeClass = ccxt[exchangeAccount.exchangeType];
-  const exchange = new exchangeClass({
-    apiKey: exchangeAccount.apiInfo.apiKey,
-    secret: exchangeAccount.apiInfo.apiSecret,
-    password: exchangeAccount.apiInfo.passphrase,
-    timeout: 30000,
-    enableRateLimit: true,
-  });
-
-  return exchange;
-}
-
-async function verifyConnectionToExchange(exchange: Exchange) {
-  exchange.checkRequiredCredentials();
-  //await exchange.fetchBalance();
-}
