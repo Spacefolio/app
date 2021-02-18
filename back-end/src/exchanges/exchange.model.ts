@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { IPortfolioItemInterface, portfolioItemSchema } from "../portfolios/models/portfolio.model";
 import { IExchangeAccountView, exchangeType } from "../../../types";
 import { ITransaction, transactionSchema } from "../portfolios/models/transaction.model";
+import { IOrder, orderSchema } from "../portfolios/models/order.model";
 
 export interface IExchangeAccountDocument extends mongoose.Document {
   name: string;
@@ -36,6 +37,7 @@ const exchangeAccountSchema = new mongoose.Schema({
   addedDate: { type: Date, default: Date.now },
   portfolioItems: [portfolioItemSchema],
   transactions: [transactionSchema],
+  orders: [orderSchema]
 });
 
 export interface IExchangeAccount {
@@ -52,6 +54,7 @@ export interface IExchangeAccount {
   };
   portfolioItems: [IPortfolioItemInterface];
   transactions: [ITransaction];
+  orders: [IOrder];
 }
 
 exchangeAccountSchema.set("toJSON", {

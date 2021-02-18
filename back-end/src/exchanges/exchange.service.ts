@@ -253,7 +253,7 @@ function createPortfolioData(
   delete exchangeAccount.portfolioItems;
   const formattedPortfolioItems = portfolioItems.map((item) => ({
     ...item,
-    balance: item.balance.total,
+    balance: { USD: item.balance.total },
     profitTotal: { all: randNum(), h24: randNum(), lastTrade: randNum() },
     currentPrice: randNum(),
     profitPercentage: { all: randNum(), h24: randNum(), lastTrade: randNum() },
@@ -261,9 +261,9 @@ function createPortfolioData(
   let portfolioData: IPortfolioDataView = {
     ...exchangeAccount,
     portfolioItems: formattedPortfolioItems,
-    profitPercentage: randNum(),
-    portfolioTotal: randNum(),
-    profitTotal: randNum(),
+    profitPercentage: { USD: randNum() },
+    portfolioTotal: { USD: randNum() },
+    profitTotal: { USD: randNum() },
   };
 
   return portfolioData;

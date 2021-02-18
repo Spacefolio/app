@@ -16,10 +16,10 @@ export interface ITransactionDocument extends mongoose.Document {
   timestamp: number;
   datetime: string;
   address: string;
-  type: "deposit" | "withdrawal" | "buy" | "sell";
+  type: "deposit" | "withdrawal";
   amount: number;
   currency: string;
-  status: "pending" | "ok" | "open" | "closed" | "canceled";
+  status: "pending" | "ok";
   fee: IFee;
 }
 
@@ -43,10 +43,10 @@ export interface ITransaction {
   timestamp: number;
   datetime: string;
   address: string;
-  type: "deposit" | "withdrawal" | "buy" | "sell";
+  type: "deposit" | "withdrawal";
   amount: number;
   currency: string;
-  status: "pending" | "ok" | "open" | "closed" | "canceled";
+  status: "pending" | "ok";
   fee: IFee
 }
 
@@ -75,4 +75,4 @@ const Transaction = mongoose.model<ITransactionDocument, ITransactionModel>(
   transactionSchema
 );
 
-export { transactionSchema, Transaction };
+export { transactionSchema, feeSchema, Transaction };
