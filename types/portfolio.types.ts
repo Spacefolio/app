@@ -47,3 +47,11 @@ export interface ITransactionItemView {
   value: number;
   fee: { cost: number; currency: string; rate: number };
 }
+
+export type timeframe = "h24" | "1w" | "1m" | "3m" | "6m" | "1y" | "all";
+
+export interface IPortfolioLineChartItem {
+  T: number; //UNIX timestamp of the plot point to be use as the x axis
+  USD: number; //value in usd of the plot point on the y axis
+  BTC?: number;
+}

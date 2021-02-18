@@ -11,9 +11,10 @@ import {
   PortfolioValueItem as PortfolioValueItem,
 } from "./generalStyle";
 import { FlexCard, SyncButton } from "../../_components";
-import { PortfolioLineChart } from "./MetaPortfolioChart";
-import { portfolioActions } from "../../_actions";
+import { PortfolioLineChart } from "../../_components";
+import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView } from "../../../../types";
+import { portfolioService } from "../../_services";
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
@@ -33,7 +34,16 @@ export const MetaPortfolio = () => {
       : { color: "var(--accent-base)" };
   };
 
-  useEffect(() => {}, []);
+  const [metaPortfolioChartData, setMetaPortfolioChartData] = useState([])
+
+  useEffect(() => {
+    portfolioService.getPortfolioChartData('all').then((res) => {
+      setMetaPortfolioChartData(res);
+    }).catch((err) => {
+      console.log(err);
+      dispatch(alertActions.error(err));
+    })
+  }, []);
 
   return (
     <MetaPortfolioWrapper>
@@ -67,6 +77,7 @@ export const MetaPortfolio = () => {
 
       <MetaPortfolioChartWrapper>
         <PortfolioLineChart
+          data={metaPortfolioChartData}
           width={200}
           height={100}
           id={"MetaportfolioChart"}
