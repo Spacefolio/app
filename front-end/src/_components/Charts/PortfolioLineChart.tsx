@@ -1,98 +1,36 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import * as d3 from "d3";
+import { IPortfolioLineChartItem } from "../../../../types";
+import { FlexCard } from "../Cards/FlexCard";
 
 interface PortfolioLineChartProps {
-  width: number,
-  height: number,
+  width: number;
+  height: number;
   id: string;
+  yAxis?: boolean;
+  xAxis?: boolean;
+  data: IPortfolioLineChartItem[];
 }
 
-export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({height, width,
+export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
+  height,
+  width,
   id,
+  xAxis = false,
+  yAxis = false,
+  data,
 }) => {
   const chartRef: any = useRef();
 
-  const data = [
-    {
-      T: 1613062879467,
-      USD: 0.009846720826306745,
-    },
-    {
-      T: 1613070070115,
-      USD: 0.009846781245782145,
-    },
-    {
-      T: 1613073670731,
-      USD: 0.009847888833915368,
-    },
-    {
-      T: 1613080870980,
-      USD: 0.00984026980064918,
-    },
-    {
-      T: 1613084470413,
-      USD: 0.00984679191945057,
-    },
-    {
-      T: 1613091672948,
-      USD: 0.009849576703648178,
-    },
-    {
-      T: 1613095271906,
-      USD: 0.009853247520986376,
-    },
-    {
-      T: 1613098872938,
-      USD: 0.00984905036074519,
-    },
-    {
-      T: 1613102473181,
-      USD: 0.00984633907747548,
-    },
-    {
-      T: 1613106071313,
-      USD: 0.009843953204669315,
-    },
-    {
-      T: 1613109669958,
-      USD: 0.009843581921861121,
-    },
-    {
-      T: 1613113268128,
-      USD: 0.009844625826653162,
-    },
-    {
-      T: 1613120467911,
-      USD: 0.009842429688847654,
-    },
-    {
-      T: 1613124069720,
-      USD: 0.009844408575809658,
-    },
-    {
-      T: 1613127671443,
-      USD: 0.009844729150953939,
-    },
-    {
-      T: 1613134869060,
-      USD: 0.009848669078241425,
-    },
-    {
-      T: 1613138472806,
-      USD: 0.009848669078241425,
-    },
-  ];
-
   useEffect(() => {
-    drawChart();
-  }, []);
+    data.length > 0 ? drawBasicChart() : null;
+  }, [data]);
 
-  const drawChart = () => {
+  const drawBasicChart = () => {
     const yMinValue = d3.min(data, (d: any) => d.USD);
     const yMaxValue = d3.max(data, (d: any) => d.USD);
     const xMinValue = d3.min(data, (d: any) => d.T);
     const xMaxValue = d3.max(data, (d: any) => d.T);
-
 
     const svg = d3
       .select(`#${id}`)
@@ -170,17 +108,21 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({height, w
       .on("mousemove", mousemove);
   };
 
-  //   window.addEventListener("resize", () => {
-
-  //         redrawChart();
-
-  // });
-
-  // const redrawChart = () => {
-  //   console.log(width, height);
-  //   d3.select(`#${id}`).selectAll("*").remove();
-  //   drawChart();
-  // };
-
-  return <div id={`${id}`}></div>;
+  return (
+    <div id={`${id}`}>
+      {data.length < 0 ? (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width,
+            height,
+          }}
+        >
+          LOADING CHART...
+        </div>
+      ) : null}
+    </div>
+  );
 };

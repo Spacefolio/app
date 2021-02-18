@@ -54,7 +54,7 @@ export const Portfolio = () => {
         </NavLink>
 
         <NavLink activeClassName="active-porfolio-tab" to={`${path}/orders`}>
-          <TabItem>Orders</TabItem>
+          <TabItem>Open Orders</TabItem>
         </NavLink>
       </TabWrapper>
       <Switch>
