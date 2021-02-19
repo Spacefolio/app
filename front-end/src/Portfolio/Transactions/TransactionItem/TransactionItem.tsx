@@ -72,11 +72,16 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
         </div>
       </LineItemAttrWrapper>
       <LineItemAttrWrapper>
-        {fee?(<><div>
-          fee.cost
-          fee.currency
-        </div>
-          <div> fee.rate %</div></>):"-"}
+        {fee ? (
+          <>
+            <div>
+              ${fee.cost}${fee.currency}
+            </div>
+            <div>`${fee.rate}%`</div>
+          </>
+        ) : (
+          "-"
+        )}
       </LineItemAttrWrapper>
     </TableLineItemWrapper>
   );
