@@ -14,6 +14,7 @@ import {
 } from "../transactions/transaction.model";
 import { randNum } from "../../exchangeDataDetailed";
 import { ccxtService } from "../_helpers/ccxt.service";
+import { IOrder } from "../transactions/order.model";
 
 export const exchangeService = {
   getAll,
@@ -97,6 +98,20 @@ async function updateTransactions(
   exchangeAccountDocument.transactions = transactions;
 
   return transactions;
+}
+
+async function updateOrders(
+  exchange: Exchange,
+  exchangeAccountDocument: IExchangeAccountDocument
+) {
+  const ccxtOrders = await exchange.fetchOrders().catch((err) => {
+    throw err;
+  });
+
+  const orders = await ccxtService.createOrders(ccxtOrders);
+  exchangeAccountDocument.orders = orders;
+
+  return orders;
 }
 
 async function createPortfolioItems(
@@ -214,6 +229,7 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
     exchange,
     exchangeAccountDocument
   );
+  const orders: IOrder[] = await updateOrders(exchange, exchangeAccountDocument);
 
   const savedExchangeAccount = await exchangeAccountDocument
     .save()

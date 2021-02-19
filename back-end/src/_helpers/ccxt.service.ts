@@ -10,12 +10,15 @@ import {
   Transaction,
   ITransactionDocument
 } from "../transactions/transaction.model";
+import { Order } from "../transactions/order.model";
+import { IOrderDocument } from "../transactions/order.model";
 
 export const ccxtService = {
   loadExchange,
   getExchangeRate,
   verifyConnectionToExchange,
   createTransactions,
+  createOrders,
   getRequiredCredentials,
 };
 
@@ -52,6 +55,18 @@ async function createTransactions(
   });
 
   return transactions;
+}
+
+async function createOrders(
+  ccxtOrders: ccxt.Order[]
+): Promise<IOrderDocument[]> {
+  let orders: IOrderDocument[] = [];
+
+  orders = ccxtOrders.map((ccxtOrder) => {
+    return new Order(ccxtOrder);
+  });
+
+  return orders;
 }
 
 function getRequiredCredentials(exchangeType: exchangeType) {
