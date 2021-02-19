@@ -35,32 +35,48 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
     fee,
   } = transactionItem;
 
-  const dateString = new Date(date*1000).toDateString();
+  const dateString = new Date(date).toDateString();
+
+  const isTrade = () =>
+    type == "withdrawal" || type == "deposit" ? false : true;
 
   return (
     <TableLineItemWrapper>
       <LineItemAttrWrapper>
-        <div style={{fontSize: '1.1em', color: type=='buy'? 'red': 'green'}}>{type.toUpperCase()}</div>
+        <div
+          style={{ fontSize: "1.1em", color: type == "buy" ? "red" : "green" }}
+        >
+          {type.toUpperCase()}
+        </div>
         <div>{dateString}</div>
       </LineItemAttrWrapper>
       <LineItemAttrWrapper>
         <img width={"30px"} src={logoUrl} />
       </LineItemAttrWrapper>
       <LineItemAttrWrapper>
-        <div style={{fontSize: '1.15em'}}>{amount} {symbol}</div>
-        <div style={{fontSize: '.7em'}}>{quoteAmount} {quoteSymbol}</div>
+        <div style={{ fontSize: "1.15em" }}>
+          {amount} {symbol}
+        </div>
+        {isTrade() ? (
+          <div style={{ fontSize: ".7em" }}>
+            {quoteAmount} {quoteSymbol}
+          </div>
+        ) : null}
       </LineItemAttrWrapper>
       <LineItemAttrWrapper>${price}</LineItemAttrWrapper>
       <LineItemAttrWrapper>${value}</LineItemAttrWrapper>
       <LineItemAttrWrapper>
+        <div>{exchangeName} -</div>
         <div>
           {symbol}/{quoteSymbol}
         </div>
-        <div>{exchangeName}</div>
       </LineItemAttrWrapper>
       <LineItemAttrWrapper>
-        <div>{fee?fee.cost:"-"}{fee?fee.currency:"-"}</div>
-        <div>{fee?fee.rate:"-"}%</div>
+        {fee?(<><div>
+          fee.cost
+          fee.currency
+        </div>
+          <div> fee.rate %</div></>):"-"}
       </LineItemAttrWrapper>
     </TableLineItemWrapper>
   );

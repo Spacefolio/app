@@ -50,7 +50,7 @@ export const MetaPortfolio = () => {
       <PortfolioValueWrapper>
         <PortfolioValueContainer>
           <PortfolioValueItem style={{fontSize: "1.5em"}}>
-            {data ? "$" + data.portfolioTotal : "loading..."}
+            {data ? "$" + data.portfolioTotal.USD : "loading..."}
           </PortfolioValueItem>
           <div
             onClick={() => dispatch(portfolioActions.refresh())}
@@ -65,12 +65,12 @@ export const MetaPortfolio = () => {
               data ? portfolioValueItemStyler(data.profitPercentage.USD) : null
             }
           >
-            {data ? data.profitPercentage + "%" : "loading..."}
+            {data ? data.profitPercentage.USD + "%" : "loading..."}
           </PortfolioValueItem>
           <PortfolioValueItem
             style={data ? portfolioValueItemStyler(data.profitTotal.USD) : null}
           >
-            {data ? "$" + data.profitTotal : "loading..."}
+            {data ? "$" + data.profitTotal.USD : "loading..."}
           </PortfolioValueItem>
         </PortfolioValueChangeContainer>
       </PortfolioValueWrapper>

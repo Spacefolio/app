@@ -130,7 +130,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
             height,
           }}
         >
-          LOADING CHART...
+          <div>LOADING CHART...</div>
         </div>
       ) : null}
     </div>
