@@ -59,8 +59,8 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
         <div>{exchangeName}</div>
       </LineItemAttrWrapper>
       <LineItemAttrWrapper>
-        <div>{fee.cost}{fee.currency}</div>
-        <div>{fee.rate}%</div>
+        <div>{fee?fee.cost:"-"}{fee?fee.currency:"-"}</div>
+        <div>{fee?fee.rate:"-"}%</div>
       </LineItemAttrWrapper>
     </TableLineItemWrapper>
   );
