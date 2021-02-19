@@ -1,6 +1,5 @@
 import { portfolioConstants } from "../_constants";
 import { IPortfolioDataView, ITransactionItemView } from "../../../types";
-import { ITransaction } from "../../../back-end/src/portfolios/models/transaction.model";
 
 interface IPortfolioAction {
   type: string;

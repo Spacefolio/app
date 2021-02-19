@@ -1,14 +1,12 @@
 import mongoose from "mongoose";
 
 export interface IFee {
-  type: "taker" | "maker";
   currency: string;
   rate: number;
   cost: number;
 }
 
 const feeSchema = new mongoose.Schema({
-  type: { type: String, enum: ["taker", "maker"] },
   currency: { type: String },
   rate: { type: Number },
   cost: { type: Number },
@@ -22,7 +20,6 @@ export interface ITransactionDocument extends mongoose.Document {
   amount: number;
   currency: string;
   status: "pending" | "ok";
-  updated: number;
   fee: IFee;
 }
 
@@ -34,7 +31,6 @@ const transactionSchema = new mongoose.Schema({
   amount: { type: Number },
   currency: { type: String },
   status: { type: String, enum: ["pending", "ok"] },
-  updated: { type: Number },
   fee: { type: feeSchema },
 });
 
@@ -51,13 +47,7 @@ export interface ITransaction {
   amount: number;
   currency: string;
   status: "pending" | "ok";
-  updated: number;
-  fee: {
-    type: "taker" | "maker";
-    currency: string;
-    rate: number;
-    cost: number;
-  };
+  fee: IFee
 }
 
 /* #region   */
@@ -85,4 +75,4 @@ const Transaction = mongoose.model<ITransactionDocument, ITransactionModel>(
   transactionSchema
 );
 
-export { transactionSchema, Transaction };
+export { transactionSchema, feeSchema, Transaction };

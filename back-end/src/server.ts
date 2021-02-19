@@ -9,6 +9,7 @@ import { errorHandler } from './_helpers/error-handler';
 import { usersRouter } from './users/users.controller';
 import { exchangesRouter } from './exchanges/exchanges.controller';
 import { portfolioRouter } from './portfolios/portfolios.controller';
+import { transactionsRouter } from './transactions/transactions.controller';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -21,6 +22,7 @@ app.use(jwt());
 app.use('/users', usersRouter);
 app.use('/exchanges', exchangesRouter);
 app.use('/portfolio', portfolioRouter);
+app.use('/transactions', transactionsRouter);
 
 // global error handler
 app.use(errorHandler);

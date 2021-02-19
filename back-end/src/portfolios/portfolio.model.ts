@@ -1,6 +1,6 @@
 import { Balance } from "ccxt";
 import mongoose from "mongoose";
-import { IAsset } from "../../../../types";
+import { IAsset } from "../../../types";
 
 /* #region Balance Schema */
 const balanceSchema = new mongoose.Schema({
@@ -31,10 +31,10 @@ const portfolioItemSchema = new mongoose.Schema({
 
 export interface IPortfolioItemModel
   extends mongoose.Model<IPortfolioItemDocument> {
-  build(attr: IPortfolioItemInterface): IPortfolioItemDocument;
+  build(attr: IPortfolioItem): IPortfolioItemDocument;
 }
 
-export interface IPortfolioItemInterface {
+export interface IPortfolioItem {
   asset: IAsset;
   balance: { used: number; free: number; total: number };
 }

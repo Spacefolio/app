@@ -1,15 +1,6 @@
 import { User } from "../users/user.model";
 import { exchangeService } from "../exchanges/exchange.service";
-import { mockPortfolioCalculations, mockPortfolioCalculationsFake } from "../../exchangeDataDetailed";
-import {
-  IExchangeAccountRequest,
-  exchangeType,
-  IExchangeAccountView,
-} from "../../../types";
-import ccxt, { Exchange, exchanges } from "ccxt";
-import { IPortfolioItemInterface } from "./models/portfolio.model";
-import { response } from "express";
-import { json } from "body-parser";
+import { mockPortfolioCalculationsFake } from "../../exchangeDataDetailed";
 
 export const portfolioService = {
   get,
