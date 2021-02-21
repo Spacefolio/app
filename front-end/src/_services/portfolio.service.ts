@@ -21,7 +21,7 @@ async function syncPortfolio() {
   };
 
   return await axios
-    .post(`http://localhost:4000/portfolios/sync`, { headers: requestOptions })
+    .post(`http://localhost:4000/portfolios/sync`, {},{ headers: requestOptions })
     .then((response) => {
       return response.data;
     })
