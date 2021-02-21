@@ -14,7 +14,7 @@ import {
 } from "../transactions/transaction.model";
 import { randNum } from "../../exchangeDataDetailed";
 import { ccxtService } from "../_helpers/ccxt.service";
-import { IOrder } from "../transactions/order.model";
+import { IOrder, IOrderDocument } from "../transactions/order.model";
 
 export const exchangeService = {
   getAll,
@@ -23,6 +23,8 @@ export const exchangeService = {
   update,
   delete: _delete,
   getRequiredCredentials,
+  getExchangesData,
+  getExchangeData,
   syncAllExchangesData,
   syncExchangeData,
 };
@@ -104,12 +106,29 @@ async function updateOrders(
   exchange: Exchange,
   exchangeAccountDocument: IExchangeAccountDocument
 ) {
+  var closedOrders: IOrderDocument[] = [];
+  var openOrders: IOrderDocument[] = [];
+
   const ccxtOrders = await exchange.fetchOrders().catch((err) => {
     throw err;
   });
 
   const orders = await ccxtService.createOrders(ccxtOrders);
-  exchangeAccountDocument.orders = orders;
+
+  for (var i = 0; i < orders.length; i++)
+  {
+    if (orders[i].status == "open")
+    {
+      openOrders.push(orders[i]);
+    }
+    else if (orders[i].status == "closed")
+    {
+      closedOrders.push(orders[i]);
+    }
+  }
+
+  exchangeAccountDocument.orders = closedOrders;
+  exchangeAccountDocument.openOrders = openOrders;
 
   return orders;
 }
@@ -180,6 +199,50 @@ async function getRequiredCredentials(exchangeType: exchangeType) {
   return ccxtService.getRequiredCredentials(exchangeType);
 }
 
+async function getExchangesData(userId: string)
+{
+  const user = await User.findById(userId);
+  // validate
+  if (!user) throw "User not found";
+
+  let portfolioData: IPortfolioDataView[] = [];
+
+  for (var i = 0; i < user.linkedExchanges.length; i++) {
+    const exchangeDocument = await ExchangeAccount.findById(
+      user.linkedExchanges[i]
+    );
+
+    if (!exchangeDocument)
+      throw "No exchange account was found with the specified id";
+
+    const portfolioDataItem = createPortfolioData(exchangeDocument);
+
+    portfolioData.push(portfolioDataItem);
+  }
+
+  return portfolioData;
+}
+
+async function getExchangeData(userId: string, exchangeId: string)
+{
+  const user = await User.findById(userId);
+  if (!user) throw "User not found";
+
+  if (!user.linkedExchanges.includes(exchangeId))
+  { 
+    throw "The specified exchange account was not found for this user";
+  }
+
+  const exchangeDocument = await ExchangeAccount.findById(
+    exchangeId
+  );
+
+  if (!exchangeDocument)
+    throw "No exchange account was found with the specified id";
+
+  return createPortfolioData(exchangeDocument);
+}
+
 async function syncAllExchangesData(userId: string) {
   // updateOrders
   // updateTransactions
@@ -216,7 +279,7 @@ async function syncAllExchangesData(userId: string) {
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {
   const exchangeAccountDocument = await exchangeService.getById(exchangeId);
-
+ 
   if (!exchangeAccountDocument) {
     throw "Exchange account not found";
   }
@@ -238,22 +301,19 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
     });
 
   const portfolioData = createPortfolioData(
-    exchangeAccountDocument,
-    portfolioItems,
-    transactions
+    exchangeAccountDocument
   );
   return portfolioData;
 }
 
 function createPortfolioData(
-  exchangeAccount: IExchangeAccountDocument,
-  portfolioItems: IPortfolioItem[],
-  transanction: ITransaction[]
+  exchangeAccount: IExchangeAccountDocument
 ) {
   delete exchangeAccount.portfolioItems;
-  const formattedPortfolioItems = portfolioItems.map((item) => ({
+  const formattedPortfolioItems = exchangeAccount.portfolioItems.map((item) => ({
     ...item,
-    balance: { USD: item.balance.total },
+    amount: item.balance.total,
+    value: { USD: item.balance.total * randNum() },
     profitTotal: { all: randNum(), h24: randNum(), lastTrade: randNum() },
     currentPrice: randNum(),
     profitPercentage: { all: randNum(), h24: randNum(), lastTrade: randNum() },

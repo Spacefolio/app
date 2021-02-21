@@ -1,4 +1,4 @@
-import { IExchangeAccountDocument } from "../exchanges/exchange.model";
+import { IExchangeAccount, IExchangeAccountDocument } from "../exchanges/exchange.model";
 import { ITransactionItemView } from "../../../types";
 import { IOrderDocument } from "./order.model";
 import { ITransactionDocument } from "./transaction.model";
@@ -17,6 +17,20 @@ export function createTransactionViewItems(exchange: IExchangeAccountDocument) :
   for (var i = 0; i < exchange.orders.length; i++)
   {
     var order: IOrderDocument = exchange.orders[i];
+    var transactionItem: ITransactionItemView = convertOrderToTransactionView(exchange, order);
+    transactionViewItems.push(transactionItem);
+  }
+
+  return transactionViewItems;
+}
+
+export function createTransactionViewItemsForOpenOrders(exchange: IExchangeAccountDocument) : ITransactionItemView[]
+{
+  const transactionViewItems: ITransactionItemView[] = [];
+
+  for (var i = 0; i < exchange.openOrders.length; i++)
+  {
+    var order: IOrderDocument = exchange.openOrders[i];
     var transactionItem: ITransactionItemView = convertOrderToTransactionView(exchange, order);
     transactionViewItems.push(transactionItem);
   }

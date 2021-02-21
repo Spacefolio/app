@@ -19,6 +19,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
   portfolioItems: IPortfolioItem[];
   transactions: ITransactionDocument[];
   orders: IOrderDocument[];
+  openOrders: IOrderDocument[];
 }
 
 export interface IExchangeAccountModel
@@ -38,7 +39,8 @@ const exchangeAccountSchema = new mongoose.Schema({
   addedDate: { type: Date, default: Date.now },
   portfolioItems: [portfolioItemSchema],
   transactions: [transactionSchema],
-  orders: [orderSchema]
+  orders: [orderSchema],
+  openOrders: [orderSchema]
 });
 
 export interface IExchangeAccount {
@@ -56,6 +58,7 @@ export interface IExchangeAccount {
   portfolioItems: [IPortfolioItem];
   transactions: [ITransaction];
   orders: [IOrder];
+  openOrders: [IOrder]
 }
 
 exchangeAccountSchema.set("toJSON", {

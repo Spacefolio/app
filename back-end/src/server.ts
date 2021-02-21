@@ -21,7 +21,7 @@ app.use(jwt());
 // api routes
 app.use('/users', usersRouter);
 app.use('/exchanges', exchangesRouter);
-app.use('/portfolio', portfolioRouter);
+app.use('/portfolios', portfolioRouter);
 app.use('/transactions', transactionsRouter);
 
 // global error handler
