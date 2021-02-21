@@ -5,7 +5,7 @@ import {
   IExchangeAccountView,
   IPortfolioDataView,
 } from "../../../types";
-import { ExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
+import { ExchangeAccount, IExchangeAccount, IExchangeAccountDocument } from "./exchange.model";
 import ccxt, { Balances, Exchange } from "ccxt";
 import { IPortfolioItem } from "../portfolios/portfolio.model";
 import {
@@ -309,9 +309,14 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 function createPortfolioData(
   exchangeAccount: IExchangeAccountDocument
 ) {
-  delete exchangeAccount.portfolioItems;
+  var exchangeAccountJson = exchangeAccount.toJSON(); 
+  delete exchangeAccountJson.portfolioItems;
+  delete exchangeAccountJson.orders;
+  delete exchangeAccountJson.transactions;
+  delete exchangeAccountJson.openOrders;
+
   const formattedPortfolioItems = exchangeAccount.portfolioItems.map((item) => ({
-    ...item,
+    asset: item.asset,
     amount: item.balance.total,
     value: { USD: item.balance.total * randNum() },
     profitTotal: { all: randNum(), h24: randNum(), lastTrade: randNum() },
@@ -319,7 +324,7 @@ function createPortfolioData(
     profitPercentage: { all: randNum(), h24: randNum(), lastTrade: randNum() },
   }));
   let portfolioData: IPortfolioDataView = {
-    ...exchangeAccount,
+    ...exchangeAccountJson,
     portfolioItems: formattedPortfolioItems,
     profitPercentage: { USD: randNum() },
     portfolioTotal: { USD: randNum() },
