@@ -8,6 +8,7 @@ import {
 import { IExchangeAccountDocument } from "../exchanges/exchange.model";
 import { ITransactionItemView, IUser } from "../../../types";
 import { exchanges } from "ccxt";
+import { create } from "domain";
 
 export const transactionService = {
   getTransactions,
@@ -29,22 +30,25 @@ async function getTransactions(userId: string, exchangeId: string) {
 async function getAllTransactions(userId: string) {
   const user: IUserDocument = await userService.getById(userId);
   if (!user) throw "User not found";
-  const exchangeAccount: IExchangeAccountDocument = await exchangeService.getById(
-    user.linkedExchanges[0]
-  );
+  var viewItems: ITransactionItemView[] = [];
 
-  return createTransactionViewItems(exchangeAccount);
+  for (let i = 0; i < user.linkedExchanges.length; i++)
+  {
+    let exchangeAccount: IExchangeAccountDocument = await exchangeService.getById(user.linkedExchanges[i]);
+    let transactions: ITransactionItemView[] = await createTransactionViewItems(exchangeAccount);
+    viewItems.push(...transactions);
+  }
+
+  return viewItems;
 }
 
 async function getOpenOrders(userId: string, exchangeId: string) {
   const user: IUserDocument = await userService.getById(userId);
   if (!user) throw "User not found";
-  if (!user.linkedExchanges.includes(exchangeId))
-    throw "The specified exchange not found for this user";
+  if (!user.linkedExchanges.includes(exchangeId)) throw "The specified exchange not found for this user";
+  
+  const exchangeAccount: IExchangeAccountDocument = await exchangeService.getById(exchangeId);
 
-  const exchangeAccount: IExchangeAccountDocument = await exchangeService.getById(
-    exchangeId
-  );
   return createTransactionViewItemsForOpenOrders(exchangeAccount);
 }
 
@@ -52,12 +56,13 @@ async function getAllOpenOrders(userId: string) {
   const user: IUserDocument = await userService.getById(userId);
   var exchangeAccount: IExchangeAccountDocument;
   if (!user) throw "User not found";
-
   var viewItems: ITransactionItemView[] = [];
 
-  for (let i = 0; i < user.linkedExchanges.length; i++) {
-    exchangeAccount = await exchangeService.getById(user.linkedExchanges[i]);
-    viewItems.push(...await createTransactionViewItemsForOpenOrders(exchangeAccount));
+  for (let i = 0; i < user.linkedExchanges.length; i++)
+  {
+    let exchangeAccount = await exchangeService.getById(user.linkedExchanges[i]);
+    let openOrders = await createTransactionViewItemsForOpenOrders(exchangeAccount);
+    viewItems.push(...openOrders);
   }
 
   return viewItems;
