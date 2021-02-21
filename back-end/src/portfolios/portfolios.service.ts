@@ -3,24 +3,34 @@ import { exchangeService } from "../exchanges/exchange.service";
 import { mockPortfolioCalculationsFake } from "../../exchangeDataDetailed";
 
 export const portfolioService = {
+  getAll,
   get,
+  sync
 };
 
-async function get(userId: string, sync: string) {
-  const user = await User.findById(userId).populate("linkedExchanges");
-
-  if (!user) {
-    throw "User not Found";
-  }
-
-  return sync == "true"
-    ? await exchangeService
+async function sync(userId: string) {
+  return await exchangeService
         .syncAllExchangesData(userId)
         .then((portfolioData) => {
           //console.log(res)
           return portfolioData;
-        }).catch((err) => { throw err; })
-    : mockPortfolioCalculationsFake();
+        }).catch((err) => { throw err; });
+}
 
-  // TODO: calculate the portfolio data and return it
+async function getAll(userId: string) {
+  return await exchangeService
+        .getExchangesData(userId)
+        .then((portfolioData) => {
+          //console.log(res)
+          return portfolioData;
+        }).catch((err) => { throw err; });
+}
+
+async function get(userId: string, exchangeId: string) {
+  return await exchangeService
+        .getExchangeData(userId, exchangeId)
+        .then((portfolioData) => {
+          //console.log(res)
+          return portfolioData;
+        }).catch((err) => { throw err; });
 }

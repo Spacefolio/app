@@ -10,21 +10,21 @@ router.get("/", getAllTransactions);
 
 export { router as transactionsRouter };
 
-function getTransactions(req: any, res: Response, next: NextFunction)
-{
-  transactionService.getTransactions(req.params.exchangeId)
-  .then((transactions: any) =>
-  transactions ? res.json(transactions) : res.sendStatus(404)
+function getTransactions(req: any, res: Response, next: NextFunction) {
+  transactionService
+    .getTransactions(req.user.sub, req.params.exchangeId)
+    .then((transactions: any) =>
+      transactions ? res.json(transactions) : res.sendStatus(404)
     )
     .catch((err: any) => next(err));
 }
 
-function getAllTransactions(req: any, res: Response, next: NextFunction)
-{
+function getAllTransactions(req: any, res: Response, next: NextFunction) {
   var userId = req.user.sub;
-  transactionService.getAllTransactions(userId)
-  .then((transactions: any) =>
-  transactions ? res.json(transactions) : res.sendStatus(404)
+  transactionService
+    .getAllTransactions(userId)
+    .then((transactions: any) =>
+      transactions ? res.json(transactions) : res.sendStatus(404)
     )
-    .catch((err: any) => next(err));  
+    .catch((err: any) => next(err));
 }

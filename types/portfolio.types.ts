@@ -20,7 +20,8 @@ export interface IPortfolioDataView {
 export interface IPortfolioItemView {
   id?: string;
   asset: IAsset;
-  balance: { USD: number };
+  amount: number,
+  value: { USD: number };
   profitTotal: { all: number; h24: number; lastTrade: number };
   currentPrice: number;
   profitPercentage: { all: number; h24: number; lastTrade: number };
