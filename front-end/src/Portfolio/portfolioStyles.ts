@@ -22,7 +22,7 @@ export const TabItem = styled.div`
 export const TableLineItemWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
   width: 100%;
   padding: 5px 10px;
   background-color: white;
@@ -32,6 +32,7 @@ export const TableLineItemWrapper = styled.div`
 export const LineItemAttrWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  text-align: right;
   width: 100%;
 `;
 
@@ -39,6 +40,7 @@ export const DataLabelsContainer = styled.div`
   padding: 5px 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 30px;
   color: darkgrey;
@@ -49,5 +51,6 @@ export const DataLabelsContainer = styled.div`
 export const DataLabelItemWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  text-align: right;
   width: 100%;
 `;

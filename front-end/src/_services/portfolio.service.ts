@@ -29,6 +29,22 @@ async function syncPortfolio(sync: boolean) {
     });
 }
 
+async function getPortfolioData(timeframe: string, exchangeId: string = "") {
+  const Authorization = authHeader().Authorization;
+  const requestOptions = {
+    Authorization: Authorization,
+  };
+
+  return await axios
+    .get(`http://localhost:4000/portfolios/${exchangeId}`, { headers: requestOptions, params:{timeframe}})
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      throw err;
+    });
+}
+
 async function getTransactionData(exchangeID: string = "") {
   const Authorization = authHeader().Authorization;
   const requestOptions = {

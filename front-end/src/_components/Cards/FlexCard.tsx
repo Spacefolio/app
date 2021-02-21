@@ -8,7 +8,7 @@ interface FlexCardProps {
 
 export const FlexCard: React.FC<FlexCardProps> = ({ children, gridName}) => {
     return (
-    <CardWrapper style={gridName?{gridArea: gridName}:null}>
+    <CardWrapper style={{gridArea: gridName}}>
       {children}
     </CardWrapper>
     );

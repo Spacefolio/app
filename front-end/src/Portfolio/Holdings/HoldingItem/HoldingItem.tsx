@@ -1,10 +1,6 @@
 import React from "react";
 import { IPortfolioDataView, IPortfolioItemView } from "../../../../../types";
-import { portfolioActions } from "../../../_actions";
-import {
-  TableLineItemWrapper,
-  LineItemAttrWrapper,
-} from "../../portfolioStyles";
+import "../../Portfolio.scss";
 
 interface HoldingItemProps {
   portfolioItem: IPortfolioItemView;
@@ -24,22 +20,24 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   };
 
   return (
-    <TableLineItemWrapper>
-      <LineItemAttrWrapper>
-        <img width={"30px"} src={asset.logoUrl} />
-        <div>{asset.name}</div>
-      </LineItemAttrWrapper>
-      <LineItemAttrWrapper>${balance.USD}</LineItemAttrWrapper>
-      <LineItemAttrWrapper>${currentPrice}</LineItemAttrWrapper>
-      <LineItemAttrWrapper>${balance.USD * currentPrice}</LineItemAttrWrapper>
-      <LineItemAttrWrapper style={{ flexDirection: "column" }}>
+    <tr>
+      <td>
+        <div style={{display: "flex"}}>
+          <img width={"30px"} src={asset.logoUrl} />
+          <div>{asset.name}</div>
+        </div>
+      </td>
+      <td className="table-right-align">${balance.USD}</td>
+      <td className="table-right-align">${currentPrice}</td>
+      <td className="table-right-align">${balance.USD * currentPrice}</td>
+      <td className="table-right-align">
         <div style={{ color: portfolioValueItemStyler(profitTotal.all) }}>
           ${profitTotal.all}
         </div>
         <div style={{ color: portfolioValueItemStyler(profitPercentage.all) }}>
           {profitPercentage.all}%
         </div>
-      </LineItemAttrWrapper>
-    </TableLineItemWrapper>
+      </td>
+    </tr>
   );
 };

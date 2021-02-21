@@ -68,7 +68,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .line()
       .x((d: any) => xScale(d.T))
       .y((d: any) => yScale(d.USD))
-      .curve(d3.curveNatural);
+      .curve(d3.curveMonotoneX);
 
     //append line inside the svg component
     svg.append("path").datum(data).attr("class", "line").attr("d", line);
