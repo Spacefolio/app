@@ -48,7 +48,6 @@ async function getOpenOrders(userId: string, exchangeId: string)
   
   const exchangeAccount: IExchangeAccountDocument = await exchangeService.getById(exchangeId);
 
-  createTransactionViewItemsForOpenOrders(exchangeAccount);
   return createTransactionViewItemsForOpenOrders(exchangeAccount);
 }
 
