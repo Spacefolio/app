@@ -229,7 +229,7 @@ async function getExchangeData(userId: string, exchangeId: string)
   if (!user) throw "User not found";
 
   if (!user.linkedExchanges.includes(exchangeId))
-  { 
+  {
     throw "The specified exchange account was not found for this user";
   }
 
@@ -314,7 +314,7 @@ function createPortfolioData(
   delete exchangeAccountJson.orders;
   delete exchangeAccountJson.transactions;
   delete exchangeAccountJson.openOrders;
-
+  
   const formattedPortfolioItems = exchangeAccount.portfolioItems.map((item) => ({
     asset: item.asset,
     amount: item.balance.total,

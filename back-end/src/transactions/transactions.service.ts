@@ -57,7 +57,7 @@ async function getAllOpenOrders(userId: string) {
 
   for (let i = 0; i < user.linkedExchanges.length; i++) {
     exchangeAccount = await exchangeService.getById(user.linkedExchanges[i]);
-    viewItems.push(...createTransactionViewItemsForOpenOrders(exchangeAccount));
+    viewItems.push(...await createTransactionViewItemsForOpenOrders(exchangeAccount));
   }
 
   return viewItems;

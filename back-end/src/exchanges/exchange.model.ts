@@ -75,4 +75,4 @@ const ExchangeAccount = mongoose.model<
   IExchangeAccountModel
 >("ExchangeAccount", exchangeAccountSchema);
 
-export { ExchangeAccount };      
+export { ExchangeAccount };
