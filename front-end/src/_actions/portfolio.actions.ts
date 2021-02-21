@@ -13,7 +13,7 @@ function sync() {
   return (dispatch: any) => {
     dispatch(request());
     portfolioService
-      .syncPortfolio(true)
+      .syncPortfolio()
       .then((res: any) => {
         dispatch(success(res));
         dispatch(alertActions.success("Sync Complete"));
@@ -39,7 +39,7 @@ function refresh() {
   return (dispatch: any) => {
     dispatch(request());
     portfolioService
-      .syncPortfolio(false)
+      .refreshPortfolio()
       .then((res: any) => {
         dispatch(success(res));
       })

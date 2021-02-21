@@ -11,16 +11,32 @@ export const portfolioService = {
   syncPortfolio,
   getTransactionData,
   getPortfolioChartData,
+  refreshPortfolio
 };
 
-async function syncPortfolio(sync: boolean) {
+async function syncPortfolio() {
   const Authorization = authHeader().Authorization;
   const requestOptions = {
     Authorization: Authorization,
   };
 
   return await axios
-    .get(`http://localhost:4000/portfolio/${sync}`, { headers: requestOptions })
+    .post(`http://localhost:4000/portfolios/sync`, { headers: requestOptions })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      throw err;
+    });
+}
+async function refreshPortfolio() {
+  const Authorization = authHeader().Authorization;
+  const requestOptions = {
+    Authorization: Authorization,
+  };
+
+  return await axios
+    .get(`http://localhost:4000/portfolios`, { headers: requestOptions })
     .then((response) => {
       return response.data;
     })
@@ -143,12 +159,13 @@ async function getPortfolioChartData(
     Authorization: Authorization,
   };
 
-  return await axios
-    .get(`http://localhost:4000/portfolio/${exchangeID}/${timeframe}`, { headers: requestOptions })
-    .then((response) => {
-      return data;
-    })
-    .catch((err) => {
-      throw err;
-    });
+  return data;
+  // return await axios
+  //   .get(`http://localhost:4000/portfolios/${timeframe}`, { headers: requestOptions, params: {} })
+  //   .then((response) => {
+  //     return data;
+  //   })
+  //   .catch((err) => {
+  //     throw err;
+  //   });
 }

@@ -54,8 +54,7 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
             </div>
           </FixedInline>
         </DataWrapper>
-        <DataWrapper className="table-right-align">
-          <LabelWrapper className="table-right-align">Amount</LabelWrapper>
+        <DataWrapper>
           <div style={{ fontSize: "1.15em" }}>
             {amount} {symbol}
           </div>
@@ -65,23 +64,19 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
             </div>
           ) : null}
         </DataWrapper>
-        <DataWrapper className="table-right-align">
+        <DataWrapper>
           <FixedInline>${price}</FixedInline>
         </DataWrapper>
-        <DataWrapper className="table-right-align">
-          <LabelWrapper className="table-right-align">Value</LabelWrapper>$
-          <FixedInline>{value.toFixed(2)}</FixedInline>
+        <DataWrapper>
+          <FixedInline>${value.toFixed(2)}</FixedInline>
         </DataWrapper>
-        <DataWrapper className="table-right-align">
-          <LabelWrapper className="table-right-align">
-            Exchange-Pairs
-          </LabelWrapper>
+        <DataWrapper>
           <div>{exchangeName} -</div>
           <div>
             {symbol}/{quoteSymbol}
           </div>
         </DataWrapper>
-        <DataWrapper className="table-right-align">
+        <DataWrapper>
           {fee ? (
             <>
               <div>
@@ -108,7 +103,7 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
             </div>
           </FixedInline>
         </DataWrapper>
-        <DataWrapper className="table-right-align">
+        <DataWrapper>
           <div style={{ fontSize: "1.15em" }}>
             {amount} {symbol}
           </div>
@@ -118,12 +113,10 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
             </div>
           ) : null}
         </DataWrapper>
-        <DataWrapper className="table-right-align">
+        <DataWrapper>
           <FixedInline>${price}</FixedInline>
         </DataWrapper>
-        <DataWrapper className="table-right-align">
-          {value.toFixed(2)}
-        </DataWrapper>
+        <DataWrapper>{value.toFixed(2)}</DataWrapper>
       </MobileWrapper>
     </React.Fragment>
   );

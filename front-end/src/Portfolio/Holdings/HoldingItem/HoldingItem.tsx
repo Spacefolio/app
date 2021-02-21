@@ -9,7 +9,8 @@ interface HoldingItemProps {
 export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   const {
     asset,
-    balance,
+    amount,
+    value,
     profitTotal,
     currentPrice,
     profitPercentage,
@@ -27,9 +28,9 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
           <div>{asset.name}</div>
         </div>
       </td>
-      <td className="table-right-align">${balance.USD}</td>
+      <td className="table-right-align">${amount}</td>
       <td className="table-right-align">${currentPrice}</td>
-      <td className="table-right-align">${balance.USD * currentPrice}</td>
+      <td className="table-right-align">${value.USD}</td>
       <td className="table-right-align">
         <div style={{ color: portfolioValueItemStyler(profitTotal.all) }}>
           ${profitTotal.all}

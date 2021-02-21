@@ -104,3 +104,4 @@ function getOpenOrdersForAPortfolio(req: any, res: Response, next: NextFunction)
     )
     .catch((err: any) => next(err));
 }
+
