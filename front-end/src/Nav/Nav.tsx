@@ -3,10 +3,11 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import "./Nav.scss";
-import {NavContainer} from './generalStyle'
+import { NavContainer } from "./generalStyle";
 import { userActions } from "../_actions";
-import { Dropdown, Modal } from "../_components";
+import { Dropdown, DropdownItem, Modal } from "../_components";
 import { ExchangesPopup } from "../Exchanges";
+import { DDListItem } from "../_components/Dropdown/generalStyle";
 
 export const Nav = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ export const Nav = () => {
 
   const container = useRef();
 
-  const ddownItems = [
+  const ddownItems: DropdownItem[] = [
     {
       id: 1,
       title: "Profile",
@@ -57,10 +58,26 @@ export const Nav = () => {
     },
   ];
 
+  const createDropdownItems = () => {
+    return ddownItems.map((item: DropdownItem) => {
+      return (
+        <DDListItem
+          key={item.key}
+          onClick={() => item.onClickHandler()}
+          className="dd-list-item"
+        >
+          {item.title}
+        </DDListItem>
+      );
+    });
+  };
+
   return (
     <NavContainer>
       <div className="nav-branding-area-container center-my-children">
-        <div style={{color: "var(--primary-dark3)"}}><Link to="/dashboard">Algonex</Link></div>
+        <div style={{ color: "var(--primary-dark3)" }}>
+          <Link to="/dashboard">Algonex</Link>
+        </div>
       </div>
       <div className="nav-flex-spacer"></div>
       <div className="account-links-container">
@@ -87,8 +104,8 @@ export const Nav = () => {
           {accountDropdownVisible ? (
             <Dropdown
               isVisible={accountDropdownVisible}
+              children={createDropdownItems()}
               setVisiblity={setAccountDropdownVisible}
-              items={ddownItems}
               containerRef={container}
             />
           ) : null}

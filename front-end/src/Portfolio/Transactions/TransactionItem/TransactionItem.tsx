@@ -1,6 +1,10 @@
 import React from "react";
 import { ITransactionItemView } from "../../../../../types";
 import {
+  decideTransactionIcon,
+  SellTransactionIcon,
+} from "../../../_components";
+import {
   DataWrapper,
   DesktopWrapper,
   FixedInline,
@@ -38,85 +42,108 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
   const isTrade = () =>
     type == "withdrawal" || type == "deposit" ? false : true;
 
+  const renameTradeType = () => {
+    switch (type) {
+      case "buy":
+        return "Bought";
+      case "sell":
+        return "Sold";
+      case "withdrawal":
+        return "Withdrew";
+      case "deposit":
+        return "Deposited";
+    }
+  };
+
+  const TypeSection = () => {
+    return (
+      <DataWrapper>
+        <FixedInline>
+          {decideTransactionIcon(type)}
+          <FixedInline>
+            <div>{renameTradeType()}</div>
+            <div>{symbol}</div>
+          </FixedInline>
+        </FixedInline>
+      </DataWrapper>
+    );
+  };
+
+  const AmountSection = () => {
+    return (
+      <DataWrapper>
+        <div className="table-right-align" style={{ fontSize: "1.15em" }}>
+          {amount} {symbol}
+        </div>
+        {isTrade() ? (
+          <div className="table-right-align" style={{ fontSize: ".7em" }}>
+            {type == "buy" ? "With" : "For"} {quoteAmount} {quoteSymbol}
+          </div>
+        ) : null}
+      </DataWrapper>
+    );
+  };
+
+  const PriceSection = () => {
+    return (
+      <DataWrapper>
+        <div className="table-right-align">${price}</div>
+      </DataWrapper>
+    );
+  };
+
+  const ValueSection = () => {
+    return (
+      <DataWrapper>
+        <div className="table-right-align">${value.toFixed(2)}</div>
+      </DataWrapper>
+    );
+  };
+
+  const ExchangeNameSection = () => {
+    return (
+      <DataWrapper>
+        <div className="table-right-align">{exchangeName} -</div>
+        <div className="table-right-align">
+          {symbol}/{quoteSymbol}
+        </div>
+      </DataWrapper>
+    );
+  };
+
+  const FeeSection = () => {
+    return (
+      <DataWrapper>
+        {fee ? (
+          <>
+            <div className="table-right-align">
+              {fee.cost.toFixed(8)} {fee.currency}
+            </div>
+            {fee.rate ? (
+              <div className="table-right-align">{fee.rate}%</div>
+            ) : null}
+          </>
+        ) : (
+          <div className="table-right-align">-</div>
+        )}
+      </DataWrapper>
+    );
+  };
+
   return (
     <React.Fragment>
       <DesktopWrapper>
-        <DataWrapper>
-          <FixedInline>
-            <img width={"30px"} src={logoUrl} />
-            <div
-              style={{
-                fontSize: "1.1em",
-                color: type == "buy" ? "var(--)" : "green",
-              }}
-            >
-              {type.toUpperCase()}
-            </div>
-          </FixedInline>
-        </DataWrapper>
-        <DataWrapper>
-          <div style={{ fontSize: "1.15em" }}>
-            {amount} {symbol}
-          </div>
-          {isTrade() ? (
-            <div style={{ fontSize: ".7em" }}>
-              {type == "buy" ? "With" : "For"} {quoteAmount} {quoteSymbol}
-            </div>
-          ) : null}
-        </DataWrapper>
-        <DataWrapper>
-          <FixedInline>${price}</FixedInline>
-        </DataWrapper>
-        <DataWrapper>
-          <FixedInline>${value.toFixed(2)}</FixedInline>
-        </DataWrapper>
-        <DataWrapper>
-          <div>{exchangeName} -</div>
-          <div>
-            {symbol}/{quoteSymbol}
-          </div>
-        </DataWrapper>
-        <DataWrapper>
-          {fee ? (
-            <>
-              <div>
-                {fee.cost.toFixed(8)} {fee.currency}
-              </div>
-              {fee.rate ? <div>{fee.rate}%</div> : null}
-            </>
-          ) : (
-            "-"
-          )}
-        </DataWrapper>
+        {TypeSection()}
+        {AmountSection()}
+        {PriceSection()}
+        {ValueSection()}
+        {ExchangeNameSection()}
+        {FeeSection()}
       </DesktopWrapper>
       <MobileWrapper>
-        <DataWrapper>
-          <FixedInline>
-            <img width={"30px"} src={logoUrl} />
-            <div
-              style={{
-                fontSize: "1.1em",
-                color: type == "buy" ? "red" : "green",
-              }}
-            >
-              {type.toUpperCase()}
-            </div>
-          </FixedInline>
-        </DataWrapper>
-        <DataWrapper>
-          <div style={{ fontSize: "1.15em" }}>
-            {amount} {symbol}
-          </div>
-          {isTrade() ? (
-            <div style={{ fontSize: ".7em" }}>
-              {type == "buy" ? "With" : "For"} {quoteAmount} {quoteSymbol}
-            </div>
-          ) : null}
-        </DataWrapper>
-        <DataWrapper>
-          <FixedInline>${price}</FixedInline>
-        </DataWrapper>
-        <DataWrapper>{value.toFixed(2)}</DataWrapper>
+        {TypeSection()}
+        {AmountSection()}
+        {ValueSection()}
       </MobileWrapper>
     </React.Fragment>
   );

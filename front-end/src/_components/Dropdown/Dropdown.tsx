@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DDList, DDListItem, DDWrapper } from "./generalStyle";
 
-interface DropdownItem {
+export interface DropdownItem {
   id: number;
   title: string;
   onClickHandler?(): void;
@@ -9,23 +9,21 @@ interface DropdownItem {
   key: string;
 }
 interface DropdownProps {
-  items: DropdownItem[];
   setVisiblity: any;
   isVisible: boolean;
   alignment?: "below" | "above" | "center";
+  children: any;
   //this is the ref to the dropdown toggle button
   containerRef: any;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
-  items,
   setVisiblity,
+  children,
   isVisible,
   alignment,
   containerRef,
 }) => {
-  const [dItems, setdItems] = useState(items);
-
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
     return () => {
@@ -44,17 +42,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   return (
     <DDWrapper>
       <DDList>
-        {dItems.map((item: DropdownItem) => {
-          return (
-            <DDListItem
-              key={item.key}
-              onClick={() => item.onClickHandler()}
-              className="dd-list-item"
-            >
-              {item.title}
-            </DDListItem>
-          );
-        })}
+       { children}
       </DDList>
     </DDWrapper>
   );

@@ -18,7 +18,7 @@ async function getAll() {
   };
 
   return await axios
-    .get(`http://localhost:4000/exchanges`, { headers: requestOptions })
+    .get(`${API_DOMAIN}/exchanges`, { headers: requestOptions })
     .then((response) => {
       console.log(response)
       return response.data;
@@ -47,7 +47,7 @@ async function addNew(exchange: IExchangeAccountRequest) {
   };
   console.log("front end service", exchange);
   return await axios
-    .post(`http://localhost:4000/exchanges`, exchange, {
+    .post(`${API_DOMAIN}/exchanges`, exchange, {
       headers: requestOptions,
     })
     .then((response) => {
@@ -65,7 +65,7 @@ async function update(id: string, data: IExchangeAccountRequest) {
     "Content-Type": "application/json",
   };
   return await axios
-    .put(`http://localhost:4000/exchanges/${id}`, data, {
+    .put(`${API_DOMAIN}/exchanges/${id}`, data, {
       headers: requestOptions,
     })
     .then((response) => {
@@ -87,7 +87,7 @@ async function _delete(id: string) {
   };
   
   return await axios
-    .delete(`http://localhost:4000/exchanges/${id}`, {
+    .delete(`${API_DOMAIN}/exchanges/${id}`, {
       headers: requestOptions,
     })
     .then((response) => {

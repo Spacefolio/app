@@ -20,12 +20,14 @@ export const MobileWrapper = styled.div`
   @media (min-width: ${RD.breakpointtablet}) {
     display: none;
   }
+  align-items: center;
 `;
 
 export const DesktopWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: start;
+  align-items: center;
   @media (max-width: ${RD.breakpointtablet}) {
     display: none;
   }
@@ -34,4 +36,6 @@ export const DesktopWrapper = styled.div`
 export const FixedInline = styled.div`
   width: 100%;
   display: flex;
+  align-items: center;
+  flex-wrap: none;
 `;

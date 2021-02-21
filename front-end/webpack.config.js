@@ -1,13 +1,14 @@
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 require("dotenv").config();
+var webpack = require('webpack');
 
 module.exports = {
   mode: "development",
   entry: ["@babel/polyfill", "./src/index.jsx"],
   output: {
     path: path.resolve(__dirname, "dist"),
-    publicPath: '/',
+    publicPath: "/",
     filename: "bundle.js",
   },
   resolve: {
@@ -51,17 +52,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./src/index.html",
     }),
+    new webpack.DefinePlugin({
+      API_DOMAIN: JSON.stringify(process.env.NODE_ENV == "DEVELOPMENT" ? "http://localhost:4000" : "/api"
+      ),
+    }),
   ],
   devServer: {
     historyApiFallback: true,
   },
-  externals: {
-    // global app config object
-    config: JSON.stringify({
-      apiUrl:
-        process.env.NODE_ENV == "DEVELOPMENT"
-          ? "http://localhost:4000"
-          : "/api",
-    }),
-  },
+  externals: {},
 };

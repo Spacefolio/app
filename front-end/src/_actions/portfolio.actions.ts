@@ -6,7 +6,8 @@ import { IPortfolioDataView, ITransactionItemView } from "../../../types";
 export const portfolioActions = {
   sync,
   refresh,
-  getTransactions
+  getTransactions,
+  getOpenOrders,
 };
 
 function sync() {
@@ -82,5 +83,30 @@ function getTransactions(exchangeID?: string) {
   }
   function failure(error: any) {
     return { type: portfolioConstants.TRANSACTIONS_FAILURE, error };
+  }
+}
+
+function getOpenOrders(exchangeID?: string) {
+  return (dispatch: any) => {
+    dispatch(request());
+    portfolioService
+      .getTransactionData(exchangeID)
+      .then((res: any) => {
+        dispatch(success(res));
+      })
+      .catch((error) => {
+        dispatch(failure(error.toString()));
+        dispatch(alertActions.error(error.toString()));
+      });
+  };
+
+  function request() {
+    return { type: portfolioConstants.OPENORDERS_REQUEST};
+  }
+  function success(openOrderData: ITransactionItemView[]) {
+    return { type: portfolioConstants.OPENORDERS_SUCCESS, openOrderData };
+  }
+  function failure(error: any) {
+    return { type: portfolioConstants.OPENORDERS_FAILURE, error };
   }
 }

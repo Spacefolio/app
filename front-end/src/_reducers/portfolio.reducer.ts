@@ -1,10 +1,11 @@
 import { portfolioConstants } from "../_constants";
-import { IPortfolioDataView, ITransactionItemView } from "../../../types";
+import { IOpenOrderItemView, IPortfolioDataView, ITransactionItemView } from "../../../types";
 
 interface IPortfolioAction {
   type: string;
   portfolioData: IPortfolioDataView[];
   transactionData: ITransactionItemView[];
+  OpenOrdersData: IOpenOrderItemView[];
 }
 
 export function portfolio(
@@ -13,6 +14,7 @@ export function portfolio(
     recalculatingPortfolio: false,
     portfolioData: [],
     transactionData: [],
+    OpenOrdersData: [],
   },
   action: IPortfolioAction
 ) {
@@ -46,6 +48,21 @@ export function portfolio(
         transactionData: action.transactionData,
       };
     case portfolioConstants.TRANSACTIONS_FAILURE:
+      return {
+        ...state,
+      };
+
+
+      case portfolioConstants.OPENORDERS_REQUEST:
+      return {
+        ...state,
+      };
+    case portfolioConstants.OPENORDERS_SUCCESS:
+      return {
+        ...state,
+        OpenOrdersData: action.OpenOrdersData,
+      };
+    case portfolioConstants.OPENORDERS_FAILURE:
       return {
         ...state,
       };

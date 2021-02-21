@@ -2,16 +2,19 @@ import { authHeader } from "../_helpers";
 import {
   IExchangeAccountRequest,
   IExchangeAccountView,
+  IPortfolioDataView,
   IPortfolioLineChartItem,
 } from "../../../types";
 import axios from "axios";
 import { timeframe } from "../../../types";
+import { plugins } from "../../webpack.config";
 
 export const portfolioService = {
   syncPortfolio,
   getTransactionData,
   getPortfolioChartData,
-  refreshPortfolio
+  refreshPortfolio,
+  getOpenOrdersData,
 };
 
 async function syncPortfolio() {
@@ -21,7 +24,11 @@ async function syncPortfolio() {
   };
 
   return await axios
-    .post(`http://localhost:4000/portfolios/sync`, {},{ headers: requestOptions })
+    .post<IPortfolioDataView>(
+      `${API_DOMAIN}/portfolios/sync`,
+      {},
+      { headers: requestOptions }
+    )
     .then((response) => {
       return response.data;
     })
@@ -36,7 +43,7 @@ async function refreshPortfolio() {
   };
 
   return await axios
-    .get(`http://localhost:4000/portfolios`, { headers: requestOptions })
+    .get(`${API_DOMAIN}/portfolios`, { headers: requestOptions })
     .then((response) => {
       return response.data;
     })
@@ -52,7 +59,10 @@ async function getPortfolioData(timeframe: string, exchangeId: string = "") {
   };
 
   return await axios
-    .get(`http://localhost:4000/portfolios/${exchangeId}`, { headers: requestOptions, params:{timeframe}})
+    .get(`${API_DOMAIN}/portfolios/${exchangeId}`, {
+      headers: requestOptions,
+      params: { timeframe },
+    })
     .then((response) => {
       return response.data;
     })
@@ -61,16 +71,44 @@ async function getPortfolioData(timeframe: string, exchangeId: string = "") {
     });
 }
 
-async function getTransactionData(exchangeID: string = "") {
+async function getTransactionData(exchangeID?: string) {
   const Authorization = authHeader().Authorization;
   const requestOptions = {
     Authorization: Authorization,
   };
 
   return await axios
-    .get(`http://localhost:4000/transactions/${exchangeID}`, {
-      headers: requestOptions,
+    .get(
+      `${API_DOMAIN}/portfolios${
+        exchangeID != undefined ? "/" + exchangeID : "/"
+      }transactions`,
+      {
+        headers: requestOptions,
+      }
+    )
+    .then((response) => {
+      return response.data;
     })
+    .catch((err) => {
+      throw err;
+    });
+}
+
+async function getOpenOrdersData(exchangeID?: string) {
+  const Authorization = authHeader().Authorization;
+  const requestOptions = {
+    Authorization: Authorization,
+  };
+
+  return await axios
+    .get(
+      `${API_DOMAIN}/portfolios${
+        exchangeID != undefined ? "/" + exchangeID : "/"
+      }open-orders/`,
+      {
+        headers: requestOptions,
+      }
+    )
     .then((response) => {
       return response.data;
     })
@@ -161,7 +199,7 @@ async function getPortfolioChartData(
 
   return data;
   // return await axios
-  //   .get(`http://localhost:4000/portfolios/${timeframe}`, { headers: requestOptions, params: {} })
+  //   .get(`${API_DOMAIN}/portfolios/${timeframe}`, { headers: requestOptions, params: {} })
   //   .then((response) => {
   //     return data;
   //   })

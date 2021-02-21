@@ -49,6 +49,21 @@ export interface ITransactionItemView {
   fee: { cost: number; currency: string; rate: number };
 }
 
+export interface IOpenOrderItemView {
+  id: string; //mongo ID
+  exchangeName: string;
+  symbol: string; //example 'BTC'
+  quoteSymbol: string; //example 'USD'
+  logoUrl: string;
+  type: "withdrawal" | "deposit" | "sell" | "buy";
+  date: number;
+  amount: number;
+  quoteAmount: number;
+  price: number;
+  value: number;
+  fee: { cost: number; currency: string; rate: number };
+}
+
 export type timeframe = "h24" | "1w" | "1m" | "3m" | "6m" | "1y" | "all";
 
 export interface IPortfolioLineChartItem {

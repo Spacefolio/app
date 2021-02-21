@@ -20,7 +20,7 @@ async function login(username: string, password: string) {
   };
 
   const response = await fetch(
-    `${"http://localhost:4000"}/users/authenticate`,
+    `${"${API_DOMAIN}"}/users/authenticate`,
     requestOptions
   );
   const user = await handleResponse(response);
@@ -40,7 +40,7 @@ async function getById(id: string) {
   };
 
   const response = await fetch(
-    `${"http://localhost:4000"}/users/${id}`,
+    `${"${API_DOMAIN}"}/users/${id}`,
     requestOptions
   );
   return handleResponse(response);
@@ -54,7 +54,7 @@ async function register(user: IUser) {
   };
 
   const response = await fetch(
-    `${"http://localhost:4000"}/users/register`,
+    `${"${API_DOMAIN}"}/users/register`,
     requestOptions
   );
   return handleResponse(response);
@@ -68,7 +68,7 @@ async function update(user: IUser) {
   };
 
   const response = await fetch(
-    `${"http://localhost:4000"}/users/${user.id}`,
+    `${"${API_DOMAIN}"}/users/${user.id}`,
     requestOptions
   );
   return handleResponse(response);

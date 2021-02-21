@@ -7,8 +7,6 @@ export const DDWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 100%;
   position: absolute;
   background-color: var(--primary-light4);
 `;
