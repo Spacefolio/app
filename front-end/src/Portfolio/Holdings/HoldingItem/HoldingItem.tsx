@@ -27,7 +27,7 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 
   const NameSection = () => {
     return (
-      <DataWrapper style={{flexDirection: "row", alignItems: 'center'}}>
+      <DataWrapper style={{ flexDirection: "row", alignItems: "center" }}>
         <img width={"50px"} src={asset.logoUrl} />
         <div>{asset.name}</div>
       </DataWrapper>
@@ -37,7 +37,7 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   const AmountSection = () => {
     return (
       <DataWrapper>
-        <td className="table-right-align">${amount}</td>
+        <div className="table-right-align">${amount}</div>
       </DataWrapper>
     );
   };
@@ -45,14 +45,14 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   const CurrentPriceSection = () => {
     return (
       <DataWrapper>
-        <td className="table-right-align">${currentPrice}</td>
+        <div className="table-right-align">${currentPrice}</div>
       </DataWrapper>
     );
   };
   const ValueSection = () => {
     return (
       <DataWrapper>
-        <td className="table-right-align">${value.USD}</td>
+        <div className="table-right-align">${value.USD}</div>
       </DataWrapper>
     );
   };
@@ -77,14 +77,14 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 
   return (
     <React.Fragment>
-      <DesktopWrapper>
+      <DesktopWrapper key={portfolioItem.id}>
         {NameSection()}
         {AmountSection()}
         {CurrentPriceSection()}
         {ValueSection()}
         {ProfitSection()}
       </DesktopWrapper>
-      <MobileWrapper>
+      <MobileWrapper key={portfolioItem.id+"mobile"}>
         {NameSection()}
         {AmountSection()}
         {ProfitSection()}

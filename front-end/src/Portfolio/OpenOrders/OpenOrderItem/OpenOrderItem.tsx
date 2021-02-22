@@ -44,13 +44,13 @@ export const OpenOrderItem: React.FC<TreansactionItemProps> = ({
   const renameTradeType = () => {
     switch (type) {
       case "buy":
-        return "Bought";
+        return "Buying";
       case "sell":
-        return "Sold";
+        return "Selling";
       case "withdrawal":
-        return "Withdrew";
+        return "Withdrawing";
       case "deposit":
-        return "Deposited";
+        return "Depositing";
     }
   };
 
@@ -94,7 +94,7 @@ export const OpenOrderItem: React.FC<TreansactionItemProps> = ({
   const ValueSection = () => {
     return (
       <DataWrapper>
-        <div className="table-right-align">${"In Development..."}</div>
+        <div className="table-right-align">${value}</div>
       </DataWrapper>
     );
   };
