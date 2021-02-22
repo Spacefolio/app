@@ -2,11 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 export interface IHistoricalDataDocument extends mongoose.Document {
   symbol: string;
-  dailyCandles: [IDailyCandleDocument]
+  dailyCandles: [IDailyCandle];
 }
 
 export interface IDailyCandleDocument extends mongoose.Document {
-  id: string;
+  day: number;
   date: string;
   open: number;
   high: number;
@@ -22,8 +22,8 @@ export interface IDailyCandleDocument extends mongoose.Document {
   changeOverTime: number;
 }
 
-export interface IDailyCandle 
-{
+export interface IDailyCandle {
+  day: number;
   date: string;
   open: number;
   high: number;
@@ -39,8 +39,7 @@ export interface IDailyCandle
   changeOverTime: number;
 }
 
-export interface IHistoricalData
-{
+export interface IHistoricalData {
   symbol: string;
   dailyCandles: [IDailyCandle];
 }
@@ -50,26 +49,34 @@ export interface IHistoricalDataModel
   build(attr: IHistoricalData): IHistoricalDataDocument;
 }
 
-export const dailyCandleSchema = new mongoose.Schema({
-  date: { type: String },
-  day: { type: Number, index: true },
-  open: { type: Number },
-  high: { type: Number },
-  low: { type: Number },
-  close: { type: Number },
-  adjClose: { type: Number },
-  volume: { type: Number },
-  unadjustedVolume: { type: Number },
-  change: { type: Number },
-  changePercent: { type: Number },
-  vwap: { type: Number },
-  label: { type: String },
-  changeOverTime: { type: Number },
-}, { autoIndex: false });
+export interface IDailyCandleModel
+  extends mongoose.Model<IDailyCandleDocument> {
+  build(attr: IDailyCandle): IDailyCandleDocument;
+}
+
+export const dailyCandleSchema = new mongoose.Schema(
+  {
+    date: { type: String },
+    day: { type: Number, index: true },
+    open: { type: Number },
+    high: { type: Number },
+    low: { type: Number },
+    close: { type: Number },
+    adjClose: { type: Number },
+    volume: { type: Number },
+    unadjustedVolume: { type: Number },
+    change: { type: Number },
+    changePercent: { type: Number },
+    vwap: { type: Number },
+    label: { type: String },
+    changeOverTime: { type: Number },
+  },
+  { autoIndex: false }
+);
 
 const historicalDataSchema = new mongoose.Schema({
   symbol: { type: String, required: true },
-  dailyCandles: { type: dailyCandleSchema, required: true },
+  dailyCandles: [dailyCandleSchema],
 });
 
 historicalDataSchema.set("toJSON", {
@@ -84,6 +91,6 @@ historicalDataSchema.set("toJSON", {
 const HistoricalData = mongoose.model<
   IHistoricalDataDocument,
   IHistoricalDataModel
->("historical-data", historicalDataSchema);
+>("historical-value", historicalDataSchema);
 
 export { HistoricalData };
