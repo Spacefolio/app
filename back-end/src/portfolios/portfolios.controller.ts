@@ -8,12 +8,12 @@ import { portfolioService } from "./portfolios.service";
 
 // routes
 router.get("/", getPortfolios);
-router.get("/:portfolioId", getPortfolio);
 router.post("/sync", syncPortfolios);
-router.put("/:portfolioId", updatePortfolio);
-router.delete("/:portfolioId", deletePortfolio);
 router.get("/transactions", getTransactionsAcrossAllPortfolios);
 router.get("/:portfolioId/transactions", getTransactionsForAPortfolio);
+router.get("/:portfolioId", getPortfolio);
+router.put("/:portfolioId", updatePortfolio);
+router.delete("/:portfolioId", deletePortfolio);
 router.get("/open-orders", getOpenOrdersAcrossAllPortfolios);
 router.get("/:portfolioId/open-orders", getOpenOrdersForAPortfolio);
 
