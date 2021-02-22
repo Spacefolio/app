@@ -103,8 +103,8 @@ function getOpenOrders(exchangeID?: string) {
   function request() {
     return { type: portfolioConstants.OPENORDERS_REQUEST };
   }
-  function success(openOrderData: ITransactionItemView[]) {
-    return { type: portfolioConstants.OPENORDERS_SUCCESS, openOrderData };
+  function success(openOrdersData: ITransactionItemView[]) {
+    return { type: portfolioConstants.OPENORDERS_SUCCESS, openOrdersData };
   }
   function failure(error: any) {
     return { type: portfolioConstants.OPENORDERS_FAILURE, error };

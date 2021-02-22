@@ -5,7 +5,7 @@ interface IPortfolioAction {
   type: string;
   portfolioData: IPortfolioDataView[];
   transactionData: ITransactionItemView[];
-  OpenOrdersData: IOpenOrderItemView[];
+  openOrdersData: IOpenOrderItemView[];
 }
 
 export function portfolio(
@@ -14,7 +14,7 @@ export function portfolio(
     recalculatingPortfolio: false,
     portfolioData: [],
     transactionData: [],
-    OpenOrdersData: [],
+    openOrdersData: [],
   },
   action: IPortfolioAction
 ) {
@@ -60,7 +60,7 @@ export function portfolio(
     case portfolioConstants.OPENORDERS_SUCCESS:
       return {
         ...state,
-        OpenOrdersData: action.OpenOrdersData,
+        openOrdersData: action.openOrdersData,
       };
     case portfolioConstants.OPENORDERS_FAILURE:
       return {

@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { DDList, DDListItem, DDWrapper } from "./generalStyle";
 
-export interface DropdownItem {
-  id: number;
-  title: string;
+export interface IDropdownItem {
+  text: string;
   onClickHandler?(): void;
-  selected: boolean;
-  key: string;
+  selected?: boolean;
 }
 interface DropdownProps {
+  dropdownItemList: IDropdownItem[];
   setVisiblity: any;
   isVisible: boolean;
   alignment?: "below" | "above" | "center";
-  children: any;
   //this is the ref to the dropdown toggle button
   containerRef: any;
+  defaultItemClickHandler?: any;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
+  dropdownItemList,
   setVisiblity,
-  children,
   isVisible,
   alignment,
   containerRef,
+  defaultItemClickHandler,
 }) => {
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
@@ -30,6 +30,24 @@ export const Dropdown: React.FC<DropdownProps> = ({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  const DecideClickAction = (item: IDropdownItem) => {
+    if (item.onClickHandler != undefined) {
+      return item.onClickHandler();
+    } else if (defaultItemClickHandler != undefined) {
+      return defaultItemClickHandler(item.text);
+    } else return () => {};
+  };
+
+  const createDropdownItems = () => {
+    return dropdownItemList.map((item: IDropdownItem) => {
+      return (
+        <DDListItem key={item.text} onClick={() => DecideClickAction(item)}>
+          {item.text}
+        </DDListItem>
+      );
+    });
+  };
 
   const handleClickOutside = (e: any) => {
     if (containerRef.current.contains(e.target)) {
@@ -41,9 +59,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <DDWrapper>
-      <DDList>
-       { children}
-      </DDList>
+      <DDList>{createDropdownItems()}</DDList>
     </DDWrapper>
   );
 };

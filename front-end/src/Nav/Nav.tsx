@@ -5,7 +5,7 @@ import { Link, NavLink } from "react-router-dom";
 import "./Nav.scss";
 import { NavContainer } from "./generalStyle";
 import { userActions } from "../_actions";
-import { Dropdown, DropdownItem, Modal } from "../_components";
+import { Dropdown, IDropdownItem, Modal } from "../_components";
 import { ExchangesPopup } from "../Exchanges";
 import { DDListItem } from "../_components/Dropdown/generalStyle";
 
@@ -19,58 +19,36 @@ export const Nav = () => {
 
   const container = useRef();
 
-  const ddownItems: DropdownItem[] = [
+  const ddownItems: IDropdownItem[] = [
     {
-      id: 1,
-      title: "Profile",
+      text: "Profile",
       onClickHandler: () => {
         console.log(user);
       },
       selected: false,
-      key: "kgjh",
     },
     {
-      id: 2,
-      title: "My Exchanges",
+      text: "My Exchanges",
       onClickHandler: () => {
         setExchangesPopupVisible(true);
         setAccountDropdownVisible(false);
       },
       selected: false,
-      key: "subs",
     },
     {
-      id: 3,
-      title: "Subscription",
+      text: "Subscription",
       onClickHandler: () => {},
       selected: false,
-      key: "hi",
     },
     {
-      id: 4,
-      title: "Logout",
+      text: "Logout",
       onClickHandler: () => {
         dispatch(logout());
         location.reload();
       },
       selected: false,
-      key: "yo",
     },
   ];
-
-  const createDropdownItems = () => {
-    return ddownItems.map((item: DropdownItem) => {
-      return (
-        <DDListItem
-          key={item.key}
-          onClick={() => item.onClickHandler()}
-          className="dd-list-item"
-        >
-          {item.title}
-        </DDListItem>
-      );
-    });
-  };
 
   return (
     <NavContainer>
@@ -81,11 +59,7 @@ export const Nav = () => {
       </div>
       <div className="nav-flex-spacer"></div>
       <div className="account-links-container">
-        <NavLink
-          to="/portfolio"
-          activeClassName="active-page-btn"
-          className="nav-button portfolio-btn"
-        >
+        <NavLink to="/portfolio" activeClassName="active-page-btn" className="nav-button portfolio-btn">
           <div>Portfolio</div>
         </NavLink>
         <div style={{ position: "relative" }} ref={container}>
@@ -104,7 +78,7 @@ export const Nav = () => {
           {accountDropdownVisible ? (
             <Dropdown
               isVisible={accountDropdownVisible}
-              children={createDropdownItems()}
+              dropdownItemList={ddownItems}
               setVisiblity={setAccountDropdownVisible}
               containerRef={container}
             />
