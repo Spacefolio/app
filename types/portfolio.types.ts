@@ -22,9 +22,9 @@ export interface IPortfolioItemView {
   asset: IAsset;
   amount: number,
   value: { USD: number };
-  profitTotal: { all: number; h24: number; lastTrade: number };
+  profitTotal: { all: number; h24: number; };
   currentPrice: number;
-  profitPercentage: { all: number; h24: number; lastTrade: number };
+  profitPercentage: { all: number; h24: number; };
 }
 
 export interface IAsset {

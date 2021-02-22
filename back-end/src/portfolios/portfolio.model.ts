@@ -37,6 +37,10 @@ export interface IPortfolioItemModel
 export interface IPortfolioItem {
   asset: IAsset;
   balance: { used: number; free: number; total: number };
+  averageBuyPrice: { USD: number };
+  averageSellPrice: { USD: number };
+  amountSold: number;
+  amountBought: number;
 }
 
 /* #region JSON overrides */
