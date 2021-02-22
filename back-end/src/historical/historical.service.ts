@@ -25,8 +25,6 @@ interface IHistoricalDataResponse {
 }
 
 export async function loadHistoricalDataToDb(symbol: string) {
-  var symbol = 'XRP';
-  var dailyCandles: IDailyCandle[] = [];
 
   var historicalDataJson = await axios.get<IHistoricalDataResponse>(`https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}USD?apikey=77c0e8deb5f1500de6679057af187bef`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
 
@@ -47,9 +45,11 @@ export async function loadHistoricalDataToDb(symbol: string) {
 
 export async function getHistoricalData(symbol: string, timestamp: number) : Promise<number>
 {
+  if (symbol == 'USD/USD') return 1;
   var historicalData = await HistoricalData.findOne({ symbol });
   if (!historicalData) {
-    historicalData = await loadHistoricalDataToDb(symbol);
+    var symbols = symbol.split('/');
+    historicalData = await loadHistoricalDataToDb(symbols[0]);
     if (!historicalData) {
       return 1;
     }

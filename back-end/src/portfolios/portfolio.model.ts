@@ -22,11 +22,19 @@ const assetSchema = new mongoose.Schema({
 export interface IPortfolioItemDocument extends mongoose.Document {
   assetId: string;
   balance: Balance;
+  averageBuyPrice: { USD: number };
+  averageSellPrice: { USD: number };
+  amountSold: number;
+  amountBought: number;
 }
 
 const portfolioItemSchema = new mongoose.Schema({
   asset: assetSchema,
   balance: balanceSchema,
+  averageBuyPrice: { type: { USD: Number } },
+  averageSellPrice: { type: { USD: Number } },
+  amountSold: { type: Number },
+  amountBought: { type: Number },
 });
 
 export interface IPortfolioItemModel
