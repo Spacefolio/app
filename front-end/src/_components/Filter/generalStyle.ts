@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const FilterWrapper = styled.div`
-margin: 10px;
+  margin: 10px 0;
   width: 100%;
   display: flex;
   align-items: center;
@@ -18,7 +18,7 @@ export const FilterInput = styled.div`
 `;
 
 export const FilterSection = styled.div`
-padding: 10px;
+  padding: 10px;
   display: flex;
   justify-content: center;
   align-content: center
