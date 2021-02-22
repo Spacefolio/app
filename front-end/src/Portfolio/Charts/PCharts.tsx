@@ -7,6 +7,8 @@ import useDimensions from "react-use-dimensions";
 import { useDefaultedState } from "beautiful-react-hooks";
 import { alertActions } from "../../_actions";
 import { portfolioService } from "../../_services";
+import { RD } from "../../Application/ResponsiveDesign";
+import { timeframe } from "../../../../types";
 
 export const Charts = () => {
   const dispatch = useDispatch();
@@ -25,17 +27,42 @@ export const Charts = () => {
       });
   }, []);
 
+  const timeFrameSelectors = [
+    { name: "24H"},
+    { name: "1W" },
+    { name: "1M" },
+    { name: "3M" },
+    { name: "6M" },
+    { name: "1Y" },
+    { name: "ALL" },
+  ];
+
+  const TimeFrameSelector = () => {
+    return(
+      <div style={{display: "flex", justifyContent: 'center', alignItems: 'center'}}>
+        {timeFrameSelectors.map((item) => {
+          return <div className="center-my-children" style={{width: "100%", padding: "10px"}}>{item.name}</div>
+        })}
+      </div>
+    );
+  };
+
   return (
     <DashboardWrapper>
       <FlexCard
         gridName={"one"}
         children={
-          <PortfolioLineChart
-            data={metaPortfolioChartData}
-            width={450}
-            height={250}
-            id={"PCardChart"}
-          />
+          <div>
+            <PortfolioLineChart
+              data={metaPortfolioChartData}
+              width={parseInt(RD.widthtablet)}
+              xAxis={true}
+              yAxis={true}
+              height={500}
+              id={"PCardChart"}
+            />
+            {TimeFrameSelector()}
+          </div>
         }
       />
       <FlexCard

@@ -21,9 +21,11 @@ interface ILineItemArraySorter {
 export const RenderLineItems = (
   GetItemsAtDate: any,
   data: any,
-  sortAscending: boolean
+  sortAscending: boolean,
+  filterField?: string,
 ) => {
   const sortedShit = SortLineItems(data, sortAscending);
+  
   if (data) {
     return Object.keys(sortedShit).map((key) => {
       return (
@@ -67,7 +69,6 @@ export const SortLineItems = (
       }
       dateItems[dateString].push(item);
     });
-  console.log(dateItems);
   return dateItems;
 };
 

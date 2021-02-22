@@ -5,6 +5,7 @@ import { IPortfolioDataView, IPortfolioItemView } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
 import { ILabelObject, LabelSorter } from "../Transactions/LabelSorter";
 import { portfolioActions } from "../../_actions";
+import { FlexCard } from "../../_components";
 
 export const Holdings = () => {
   const dispatch = useDispatch();
@@ -28,38 +29,39 @@ export const Holdings = () => {
     },
     {
       label: "Amount",
-      filterName: 'amount',
-      classname: 'table-right-align',
+      filterName: "amount",
+      classname: "table-right-align",
     },
     {
       label: "Price",
-      filterName: 'price',
-      classname: 'table-right-align',
+      filterName: "price",
+      classname: "table-right-align",
     },
     {
       label: "Value",
-      filterName: 'value',
-      classname: 'table-right-align',
+      filterName: "value",
+      classname: "table-right-align",
     },
     {
       label: "P/L",
       filterName: "profitTotal.all",
-      classname: 'table-right-align',
-
+      classname: "table-right-align",
     },
   ];
 
   return (
-    <div>
-      <tbody>
-        {portfolioData ? (
-          sortHoldings(filterField, sortAscending).map((pItem: IPortfolioItemView) => {
-            return <HoldingItem portfolioItem={pItem} />;
-          })
-        ) : (
-          <div>loading...</div>
-        )}
-      </tbody>
+    <div style={{display: "grid", gap: '8px'}}>
+      {portfolioData ? (
+        sortHoldings(filterField, sortAscending).map(
+          (pItem: IPortfolioItemView) => {
+            return (
+              <FlexCard children={<HoldingItem portfolioItem={pItem} />} />
+            );
+          }
+        )
+      ) : (
+        <div>loading...</div>
+      )}
     </div>
   );
 };

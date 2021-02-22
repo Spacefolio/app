@@ -26,10 +26,10 @@ function sync() {
   };
 
   function request() {
-    return { type: portfolioConstants.SYNC_REQUEST};
+    return { type: portfolioConstants.SYNC_REQUEST };
   }
   function success(portfolioData: IPortfolioDataView[]) {
-    return { type: portfolioConstants.SYNC_SUCCESS,  portfolioData};
+    return { type: portfolioConstants.SYNC_SUCCESS, portfolioData };
   }
   function failure(error: any) {
     return { type: portfolioConstants.SYNC_FAILURE, error };
@@ -51,7 +51,7 @@ function refresh() {
   };
 
   function request() {
-    return { type: portfolioConstants.REFRESH_REQUEST};
+    return { type: portfolioConstants.REFRESH_REQUEST };
   }
   function success(portfolioData: IPortfolioDataView[]) {
     return { type: portfolioConstants.REFRESH_SUCCESS, portfolioData };
@@ -76,7 +76,7 @@ function getTransactions(exchangeID?: string) {
   };
 
   function request() {
-    return { type: portfolioConstants.TRANSACTIONS_REQUEST};
+    return { type: portfolioConstants.TRANSACTIONS_REQUEST };
   }
   function success(transactionData: ITransactionItemView[]) {
     return { type: portfolioConstants.TRANSACTIONS_SUCCESS, transactionData };
@@ -90,7 +90,7 @@ function getOpenOrders(exchangeID?: string) {
   return (dispatch: any) => {
     dispatch(request());
     portfolioService
-      .getTransactionData(exchangeID)
+      .getOpenOrdersData(exchangeID)
       .then((res: any) => {
         dispatch(success(res));
       })
@@ -101,7 +101,7 @@ function getOpenOrders(exchangeID?: string) {
   };
 
   function request() {
-    return { type: portfolioConstants.OPENORDERS_REQUEST};
+    return { type: portfolioConstants.OPENORDERS_REQUEST };
   }
   function success(openOrderData: ITransactionItemView[]) {
     return { type: portfolioConstants.OPENORDERS_SUCCESS, openOrderData };
