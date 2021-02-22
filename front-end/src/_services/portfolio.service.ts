@@ -79,9 +79,7 @@ async function getTransactionData(exchangeID?: string) {
 
   return await axios
     .get(
-      `${API_DOMAIN}/portfolios${
-        exchangeID != undefined ? "/" + exchangeID : "/"
-      }transactions`,
+      `${API_DOMAIN}/portfolios${exchangeID != undefined ? "/" + exchangeID + "/" : "/"}transactions`,
       {
         headers: requestOptions,
       }

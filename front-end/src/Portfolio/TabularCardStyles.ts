@@ -28,6 +28,7 @@ export const DesktopWrapper = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
+
   @media (max-width: ${RD.breakpointtablet}) {
     display: none;
   }

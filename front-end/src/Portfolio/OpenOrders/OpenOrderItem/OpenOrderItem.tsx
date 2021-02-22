@@ -1,5 +1,6 @@
 import React from "react";
 import { ITransactionItemView } from "../../../../../types";
+import { IOpenOrderItemView } from "../../../../../types";
 import {
   decideTransactionIcon,
   SellTransactionIcon,
@@ -13,11 +14,11 @@ import {
 } from "../../TabularCardStyles";
 
 interface TreansactionItemProps {
-  transactionItem: ITransactionItemView;
+  openOrderItem: IOpenOrderItemView;
 }
 
-export const TransactionItem: React.FC<TreansactionItemProps> = ({
-  transactionItem,
+export const OpenOrderItem: React.FC<TreansactionItemProps> = ({
+  openOrderItem,
 }) => {
   const portfolioValueItemStyler = (num: number) => {
     return num < 0 ? "var(--error-base)" : "var(--accent-base)";
@@ -35,9 +36,7 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
     value,
     price,
     fee,
-  } = transactionItem;
-
-  const dateString = new Date(date).toDateString();
+  } = openOrderItem;
 
   const isTrade = () =>
     type == "withdrawal" || type == "deposit" ? false : true;

@@ -22,8 +22,8 @@ export const SellTransactionIcon = () => {
       viewBox="0 0 40 40"
       role="img"
       aria-labelledby="transactionTypeTrade"
-      height="32"
-      width="32"
+      height="60"
+      width="60"
     >
       <circle cx="20" cy="20" fill="#E4EAF2" r="20"></circle>
       <path
@@ -40,8 +40,8 @@ export const BuyTransactionIcon = () => {
       viewBox="0 0 40 40"
       role="img"
       aria-labelledby="transactionTypeTrade"
-      height="32"
-      width="32"
+      height="60"
+      width="60"
     >
       <circle cx="20" cy="20" fill="#E4EAF2" r="20"></circle>
       <path
@@ -58,8 +58,8 @@ export const DepositTransactionIcon = () => {
       viewBox="0 0 40 40"
       role="img"
       aria-labelledby="transactionTypeDeposit"
-      height="32"
-      width="32"
+      height="60"
+      width="60"
     >
       <circle cx="20" cy="20" fill="#E4EAF2" r="20"></circle>
       <path
@@ -76,8 +76,8 @@ export const WithdrawTransactionIcon = () => {
       viewBox="0 0 40 40"
       role="img"
       aria-labelledby="transactionTypeWithdraw"
-      height="32"
-      width="32"
+      height="60"
+      width="60"
     >
       <circle cx="20" cy="20" fill="#E4EAF2" r="20"></circle>
       <path

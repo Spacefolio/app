@@ -65,12 +65,13 @@ export async function convertOrderToTransactionView(
   var valueInUsd = order.cost;
 
   if (quoteSymbol != "USD") {
-    const conversionRate = await getConversionRateAtTime(
-      ccxtExchange,
-      order.timestamp,
-      quoteSymbol,
-      "USD"
-    );
+    const conversionRate = 1
+    //  await getConversionRateAtTime(
+    //   ccxtExchange,
+    //   order.timestamp,
+    //   quoteSymbol,
+    //   "USD"
+    // );
     priceInUsd = 1 / (conversionRate * priceInUsd);
     valueInUsd = order.amount * priceInUsd;
   }
@@ -101,13 +102,13 @@ export async function convertTransactionToTransactionView(
   var priceInUsd = 1;
   if (transaction.currency != "USD") {
     priceInUsd =
-      1 /
-      await getConversionRateAtTime(
-        ccxtExchange,
-        transaction.timestamp,
-        transaction.currency,
-        "USD"
-      );
+      1 
+      // await getConversionRateAtTime(
+      //   ccxtExchange,
+      //   transaction.timestamp,
+      //   transaction.currency,
+      //   "USD"
+      // );
   }
   //const quoteAmount = getQuoteAmountAtTime(ccxtExchange, transaction.timestamp, transaction.currency, transaction.amount, "USD");
 

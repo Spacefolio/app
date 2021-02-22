@@ -10,8 +10,21 @@
   opacity: 0;
   display: flex;
   position: absolute;
+  flex-direction: column;
   background-color: white;
   border: solid 2px;
   border-radius: 5px;
   padding: 5px;
+}
+.x-axis{
+
+}
+.y-axis{
+  
+}
+.tooltip-value{
+
+}
+.tooltip-date{
+
 }

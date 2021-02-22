@@ -15,29 +15,12 @@ export const Transactions = () => {
     (state: any) => state.portfolio.transactionData
   );
 
-  const [sortField, setSortField] = useState("date");
-  const [sortAscending, setSortAscending] = useState(true);
+  const [filterField, setfilterField] = useState("date");
+  const [sortAscending, setSortAscending] = useState(false);
 
   useEffect(() => {
     dispatch(portfolioActions.getTransactions());
   }, []);
-
-  const sortTransactions = (field: string, ascending: boolean) => {
-    var dateItems: any = {};
-    const sortedTransactions = transactionData
-      .sort((a: any, b: any) =>
-        ascending ? a[field] - b[field] : b[field] - a[field]
-      )
-      .map((transaction) => {
-        let dateString = new Date(transaction.date).toDateString();
-        if (dateItems[dateString] == undefined) {
-          dateItems[dateString] = [];
-        }
-        dateItems[dateString].push(transaction);
-      });
-    console.log(dateItems);
-    return dateItems;
-  };
 
   const GetItemsAtDate = (transactions: any, date: string) => {
     return transactions[date].map((pItem: ITransactionItemView) => (
@@ -77,7 +60,16 @@ export const Transactions = () => {
   return (
     <div>
       <Filter />
-      <div style={{ display: "grid", gap: "8px" }}>{RenderLineItems(GetItemsAtDate, transactionData, sortAscending)}</div>
+      {transactionData ? (
+        <div style={{ display: "grid", gap: "8px" }}>
+          {RenderLineItems(
+            GetItemsAtDate,
+            transactionData,
+            sortAscending,
+            filterField
+          )}
+        </div>
+      ) : null}
     </div>
   );
 };

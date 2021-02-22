@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import * as d3 from "d3";
-import { IPortfolioLineChartItem } from "../../../../types";
+import { IPortfolioLineChartItem, timeframe } from "../../../../types";
 import { FlexCard } from "../Cards/FlexCard";
 import "./PortfolioLineChart.scss";
+import moment from "moment";
 
 interface PortfolioLineChartProps {
   width: number;
@@ -10,6 +11,7 @@ interface PortfolioLineChartProps {
   id: string;
   yAxis?: boolean;
   xAxis?: boolean;
+  timeframe?: timeframe;
   data: IPortfolioLineChartItem[];
 }
 
@@ -29,7 +31,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
     const margin = {
       top: 50,
       bottom: 50,
-      left: 50,
+      left: 80,
       right: 50,
     };
 
@@ -53,7 +55,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 
     //scale x axis time values according to width provided
     const xScale = d3
-      .scaleLinear()
+      .scaleTime()
       .domain([xMinValue, xMaxValue])
       .range([0, width]);
 
@@ -63,12 +65,30 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .range([height, 0])
       .domain([yMinValue, yMaxValue]);
 
+    //create xAxis component
+    const styledXAxis = d3.axisBottom(xScale);
+
+    //create yAxis component
+    const styledYAxis = d3.axisLeft(yScale);
+
+    //append x axis
+    xAxis
+      ? svg
+          .append("g")
+          .attr("class", "x-axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(styledXAxis)
+      : null;
+
+    //append y axis
+    yAxis ? svg.append("g").attr("class", "y-axis").call(styledYAxis) : null;
+
     //create line object that draws the actual chart path
     const line: any = d3
       .line()
       .x((d: any) => xScale(d.T))
       .y((d: any) => yScale(d.USD))
-      .curve(d3.curveMonotoneX);
+      .curve(d3.curveLinear);
 
     //append line inside the svg component
     svg.append("path").datum(data).attr("class", "line").attr("d", line);
@@ -80,12 +100,14 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .style("display", "none");
     focus.append("circle").attr("r", 5).attr("class", "focus-circle");
 
-
     //initialize tooltip
-    const tooltip = d3
-      .select(`#${id}`)
-      .append("div")
-      .attr("class", "tooltip")
+    const tooltip = d3.select(`#${id}`).append("div").attr("class", "tooltip");
+
+    //create sub component of the tooltip to render the portfolio value in
+    const tooltipValue = tooltip.append("div").attr("class", "tooltip-value");
+
+    //create sub component of the tooltip to render the date in
+    const tooltipDate = tooltip.append("div").attr("class", "tooltip-date");
 
     //move tooltip and change values on mousemove
     function mousemove(event: any) {
@@ -96,8 +118,9 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       focus.attr("transform", `translate(${xScale(d0.T)},${yScale(d0.USD)})`);
       tooltip.style("opacity", "0.9");
       let dateString = new Date(d0.T);
+      tooltipValue.html(`USD ${d0.USD.toFixed(2)}`);
+      tooltipDate.html(`${moment().format("ll")}`);
       tooltip
-        .html(`USD ${d0.USD.toFixed(2)}\n ${dateString.toLocaleDateString()}`)
         .style("left", xScale(d0.T) + 70 + "px")
         .style("top", yScale(d0.USD) + "px");
     }
