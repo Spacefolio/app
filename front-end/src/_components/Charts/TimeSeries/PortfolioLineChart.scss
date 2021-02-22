@@ -1,0 +1,30 @@
+.line {
+  fill: none;
+  stroke: black;
+  stroke-width: 4;
+}
+.focus-circle {
+  fill: black;
+}
+.tooltip {
+  opacity: 0;
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  background-color: white;
+  border: solid 2px;
+  border-radius: 5px;
+  padding: 5px;
+}
+.x-axis{
+  font-size: 12px;
+}
+.y-axis{
+  font-size: 15px;
+}
+.tooltip-value{
+
+}
+.tooltip-date{
+
+}

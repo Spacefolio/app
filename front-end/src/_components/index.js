@@ -5,6 +5,6 @@ export * from './Buttons/Buttons';
 export * from './GeneralIcons/GeneralIcons';
 export * from './Cards/FlexCard';
 export * from './Alert/Alert';
-export * from './Charts/PortfolioLineChart';
+export * from './Charts/TimeSeries/PortfolioLineChart';
 export * from './Filter/Filter';
 export * from './ErrorBoundary';

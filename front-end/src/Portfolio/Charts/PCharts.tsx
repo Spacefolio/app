@@ -2,22 +2,22 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DashboardWrapper } from "./generalStyle";
 import { FlexCard } from "../../_components";
-import { PortfolioLineChart } from "../../_components/Charts/PortfolioLineChart";
-import useDimensions from "react-use-dimensions";
-import { useDefaultedState } from "beautiful-react-hooks";
+import { PortfolioLineChart } from "../../_components/Charts/TimeSeries/PortfolioLineChart";
 import { alertActions } from "../../_actions";
 import { portfolioService } from "../../_services";
 import { RD } from "../../Application/ResponsiveDesign";
 import { timeframe } from "../../../../types";
+import { PortfolioPieChart } from "../../_components/Charts/Pie/PieChart";
 
 export const Charts = () => {
   const dispatch = useDispatch();
 
   const [metaPortfolioChartData, setMetaPortfolioChartData] = useState([]);
+  const [timeframe, setTimeframe] = useState<timeframe>("ALL");
 
   useEffect(() => {
     portfolioService
-      .getPortfolioChartData("all")
+      .getPortfolioChartData(timeframe)
       .then((res) => {
         setMetaPortfolioChartData(res);
       })
@@ -27,21 +27,41 @@ export const Charts = () => {
       });
   }, []);
 
-  const timeFrameSelectors = [
-    { name: "24H"},
-    { name: "1W" },
-    { name: "1M" },
-    { name: "3M" },
-    { name: "6M" },
-    { name: "1Y" },
-    { name: "ALL" },
-  ];
-
   const TimeFrameSelector = () => {
-    return(
-      <div style={{display: "flex", justifyContent: 'center', alignItems: 'center'}}>
+    const timeFrameSelectors: timeframe[] = [
+      "24H",
+      "1W",
+      "1M",
+      "3M",
+      "6M",
+      "1Y",
+      "ALL",
+    ];
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         {timeFrameSelectors.map((item) => {
-          return <div className="center-my-children" style={{width: "100%", padding: "10px"}}>{item.name}</div>
+          return (
+            <div
+              onClick={(e) => {
+                setTimeframe(item);
+              }}
+              className="center-my-children"
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "solid 1px black",
+                cursor: "pointer",
+              }}
+            >
+              {item}
+            </div>
+          );
         })}
       </div>
     );
@@ -55,10 +75,11 @@ export const Charts = () => {
           <div>
             <PortfolioLineChart
               data={metaPortfolioChartData}
-              width={parseInt(RD.widthtablet)}
+              width={parseInt(RD.widthsmartphone)}
               xAxis={true}
+              timeframe={timeframe}
               yAxis={true}
-              height={500}
+              height={parseInt(RD.widthsmartphone) * 0.6}
               id={"PCardChart"}
             />
             {TimeFrameSelector()}
@@ -67,7 +88,7 @@ export const Charts = () => {
       />
       <FlexCard
         gridName={"two"}
-        children={<div>{"asset allocation pie chart"}</div>}
+        children={<PortfolioPieChart width={450} height={450} id="portfolio-pie-chart"/>}
       />
       <FlexCard
         gridName={"three"}

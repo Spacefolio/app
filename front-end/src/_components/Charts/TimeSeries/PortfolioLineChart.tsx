@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import * as d3 from "d3";
-import { IPortfolioLineChartItem, timeframe } from "../../../../types";
-import { FlexCard } from "../Cards/FlexCard";
+import { IPortfolioLineChartItem, timeframe } from "../../../../../types";
+import { FlexCard } from "../../Cards/FlexCard";
 import "./PortfolioLineChart.scss";
 import moment from "moment";
 
@@ -17,6 +17,7 @@ interface PortfolioLineChartProps {
 
 export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
   height,
+  timeframe,
   width,
   id,
   xAxis = false,
@@ -38,10 +39,10 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
     const realwidth = width - margin.left - margin.right;
     const realheight = height - margin.top - margin.bottom;
 
-    const yMinValue = d3.min(data, (d: any) => d.USD);
-    const yMaxValue = d3.max(data, (d: any) => d.USD);
-    const xMinValue = d3.min(data, (d: any) => d.T);
-    const xMaxValue = d3.max(data, (d: any) => d.T);
+    const yMinValue: number = d3.min(data, (d: any) => d.USD);
+    const yMaxValue: number = d3.max(data, (d: any) => d.USD);
+    const xMinValue: number = d3.min(data, (d: any) => d.T);
+    const xMaxValue: number = d3.max(data, (d: any) => d.T);
 
     //create main svg component
     const svg = d3
@@ -66,10 +67,19 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .domain([yMinValue, yMaxValue]);
 
     //create xAxis component
-    const styledXAxis = d3.axisBottom(xScale);
+    const styledXAxis = d3
+      .axisBottom(xScale)
+      .ticks(d3.timeHour.every(4))
+      .tickSizeOuter(0)
+      .tickSizeInner(0);
 
     //create yAxis component
-    const styledYAxis = d3.axisLeft(yScale);
+    const styledYAxis = d3
+      .axisLeft(yScale)
+      .ticks(6)
+      .tickFormat((d) => "$" + d)
+      .tickSizeOuter(0)
+      .tickSizeInner(0);
 
     //append x axis
     xAxis
@@ -78,10 +88,17 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
           .attr("class", "x-axis")
           .attr("transform", "translate(0," + height + ")")
           .call(styledXAxis)
+          .call((g) => g.select(".domain").remove())
       : null;
 
     //append y axis
-    yAxis ? svg.append("g").attr("class", "y-axis").call(styledYAxis) : null;
+    yAxis
+      ? svg
+          .append("g")
+          .attr("class", "y-axis")
+          .call(styledYAxis)
+          .call((g) => g.select(".domain").remove())
+      : null;
 
     //create line object that draws the actual chart path
     const line: any = d3
@@ -143,6 +160,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 
   return (
     <div style={{ position: "relative" }} id={`${id}`}>
+      {timeframe}
       {data.length < 0 ? (
         <div
           style={{

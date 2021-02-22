@@ -64,7 +64,7 @@ export interface IOpenOrderItemView {
   fee: { cost: number; currency: string; rate: number };
 }
 
-export type timeframe = "24h" | "1w" | "1m" | "3m" | "6m" | "1y" | "all";
+export type timeframe = "24H" | "1W" | "1M" | "3M" | "6M" | "1Y" | "ALL";
 
 export interface IPortfolioLineChartItem {
   T: number; //UNIX timestamp of the plot point to be use as the x axis

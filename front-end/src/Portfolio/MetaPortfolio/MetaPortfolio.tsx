@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MetaPortfolioWrapper,
@@ -10,10 +10,10 @@ import {
   PortfolioValueContainer,
   PortfolioValueItem as PortfolioValueItem,
 } from "./generalStyle";
-import { FlexCard, SyncButton } from "../../_components";
+import { Dropdown, FlexCard, SyncButton } from "../../_components";
 import { PortfolioLineChart } from "../../_components";
 import { alertActions, portfolioActions } from "../../_actions";
-import { IPortfolioDataView } from "../../../../types";
+import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
 
 export const MetaPortfolio = () => {
@@ -34,22 +34,66 @@ export const MetaPortfolio = () => {
       : { color: "var(--accent-base)" };
   };
 
-  const [metaPortfolioChartData, setMetaPortfolioChartData] = useState([])
+  const container = useRef();
+
+  const [metaPortfolioChartData, setMetaPortfolioChartData] = useState([]);
+  const [timeframeDropdownVisible, setTimeframeDropdownVisible] = useState(
+    false
+  );
+  const [timeframe, setTimeframe] = useState<timeframe>("ALL");
 
   useEffect(() => {
-    portfolioService.getPortfolioChartData('all').then((res) => {
-      setMetaPortfolioChartData(res);
-    }).catch((err) => {
-      console.log(err);
-      dispatch(alertActions.error(err));
-    })
+    portfolioService
+      .getPortfolioChartData(timeframe)
+      .then((res) => {
+        setMetaPortfolioChartData(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(alertActions.error(err));
+      });
   }, []);
+
+  const TimeFrameSelector = () => {
+    const timeFrameSelectors: timeframe[] = [
+      "24H",
+      "1W",
+      "1M",
+      "3M",
+      "6M",
+      "1Y",
+      "ALL",
+    ];
+    return (
+      <>
+        <div onClick={() => setTimeframeDropdownVisible(!timeframeDropdownVisible)} ref={container}>
+          {timeframe}
+        </div>
+        {timeframeDropdownVisible ? (
+          <Dropdown
+            setVisiblity={setTimeframeDropdownVisible}
+            isVisible={timeframeDropdownVisible}
+            containerRef={container}
+            children={timeFrameSelectors.map((item) => {
+              return (
+                <div
+                  onClick={() => {
+                    setTimeframe(item);
+                  }}
+                >{item}</div>
+              );
+            })}
+          />
+        ) : null}
+      </>
+    );
+  };
 
   return (
     <MetaPortfolioWrapper>
       <PortfolioValueWrapper>
         <PortfolioValueContainer>
-          <PortfolioValueItem style={{fontSize: "1.5em"}}>
+          <PortfolioValueItem style={{ fontSize: "1.5em" }}>
             {data ? "$" + data.portfolioTotal.USD : "loading..."}
           </PortfolioValueItem>
           <div
@@ -58,6 +102,7 @@ export const MetaPortfolio = () => {
           >
             <SyncButton isSyncing={isRefreshing} />
           </div>
+          {TimeFrameSelector()}
         </PortfolioValueContainer>
         <PortfolioValueChangeContainer>
           <PortfolioValueItem
@@ -79,6 +124,7 @@ export const MetaPortfolio = () => {
         <PortfolioLineChart
           data={metaPortfolioChartData}
           width={200}
+          timeframe={timeframe}
           height={100}
           id={"MetaportfolioChart"}
         />

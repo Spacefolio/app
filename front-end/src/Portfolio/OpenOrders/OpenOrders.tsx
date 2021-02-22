@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DashboardWrapper } from "./generalStyle";
 import { Filter, FlexCard, RenderLineItems } from "../../_components";
 import { IOpenOrderItemView, ITransactionItemView } from "../../../../types";
-import { portfolioActions } from "../../_actions";
+import { alertActions, portfolioActions } from "../../_actions";
 import { TransactionItem } from "../Transactions/TransactionItem/TransactionItem";
 import { OpenOrderItem } from "./OpenOrderItem/OpenOrderItem";
 
@@ -29,16 +29,18 @@ export const OpenOrders = () => {
 
   return (
     <div>
-      <Filter />
       {openOrders ? (
-        <div style={{ display: "grid", gap: "8px" }}>
-          {RenderLineItems(
-            GetItemsAtDate,
-            openOrders,
-            sortAscending,
-            filterField
-          )}
-        </div>
+        <>
+          <Filter />
+          <div style={{ display: "grid", gap: "8px" }}>
+            {RenderLineItems(
+              GetItemsAtDate,
+              openOrders,
+              sortAscending,
+              filterField
+            )}
+          </div>
+        </>
       ) : null}
     </div>
   );

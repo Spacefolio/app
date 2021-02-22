@@ -13,7 +13,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     portfolioService
-      .getPortfolioChartData("all")
+      .getPortfolioChartData("ALL")
       .then((res) => {
         setMetaPortfolioChartData(res);
       })

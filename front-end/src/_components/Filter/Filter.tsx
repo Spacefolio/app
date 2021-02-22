@@ -2,11 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { FilterInput, FilterSection, FilterWrapper } from "./generalStyle";
 import { useState } from "react";
 import { Dropdown, DropdownItem } from "../Dropdown/Dropdown";
-import { dispatch } from "d3";
+import DatePicker from "react-datepicker";
 import { DDListItem } from "../Dropdown/generalStyle";
 import { FlexCard } from "..";
-import { ITransactionItemView } from "../../../../types";
-import { TransactionItem } from "../../Portfolio/Transactions/TransactionItem/TransactionItem";
 
 export interface ILabelObject {
   label: string;
@@ -22,10 +20,10 @@ export const RenderLineItems = (
   GetItemsAtDate: any,
   data: any,
   sortAscending: boolean,
-  filterField?: string,
+  filterField?: string
 ) => {
   const sortedShit = SortLineItems(data, sortAscending);
-  
+
   if (data) {
     return Object.keys(sortedShit).map((key) => {
       return (
@@ -76,8 +74,9 @@ interface IFilterProps {}
 
 export const Filter: React.FC<IFilterProps> = ({}) => {
   const container = useRef();
-
   const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
+  const [fromDate, setFromDate] = useState(new Date("2014"));
+  const [toDate, setToDate] = useState(new Date("2014"));
 
   const ddownItems: DropdownItem[] = [
     {
@@ -109,8 +108,14 @@ export const Filter: React.FC<IFilterProps> = ({}) => {
     <FilterWrapper>
       <FilterSection>
         <FilterInput>
-          <input type="date" />
-          <input type="date" />
+          <DatePicker
+            selected={fromDate}
+            onChange={(date: any) => setFromDate(date)}
+          />
+          <DatePicker
+            selected={toDate}
+            onChange={(date: any) => setToDate(date)}
+          />
           <div>icon</div>
         </FilterInput>
       </FilterSection>
