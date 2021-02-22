@@ -4,6 +4,7 @@ import {
   decideTransactionIcon,
   SellTransactionIcon,
 } from "../../../_components";
+import { TabItem } from "../../portfolioStyles";
 import {
   DataWrapper,
   DesktopWrapper,
@@ -95,7 +96,7 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
   const ValueSection = () => {
     return (
       <DataWrapper>
-        <div className="table-right-align">${"In Development..."}</div>
+        <div className="table-right-align">${value}</div>
       </DataWrapper>
     );
   };

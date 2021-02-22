@@ -2,7 +2,6 @@ import * as config from "../../config.json";
 import mongoose from "mongoose";
 import { User } from '../users/user.model';
 import { ExchangeAccount } from '../exchanges/exchange.model';
-import { loadHistoricalDataToDb } from "../historical/historical.service";
 require("dotenv").config();
 
 const connectionOptions = {

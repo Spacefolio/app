@@ -35,7 +35,8 @@ export async function loadHistoricalDataToDb(symbol: string) {
   for (let i = 0; i < historicalDataJson.historical.length; i++)
   {
     let dateString: string = historicalDataJson.historical[i].date;
-    let day: number = moment(dateString, "YYYY-MM-DD").valueOf();
+    let date: Date = new Date(dateString);
+    let day: number = date.getTime();
     
     historicalData.dailyCandles.push({...historicalDataJson.historical[i], day});
   }
@@ -44,7 +45,17 @@ export async function loadHistoricalDataToDb(symbol: string) {
   return savedData;
 }
 
-export async function getHistoricalData(symbol: string, )
+export async function getHistoricalData(symbol: string, timestamp: number) : Promise<number>
 {
-  const historicalData = await HistoricalData.findOne({ symbol });
+  var historicalData = await HistoricalData.findOne({ symbol });
+  if (!historicalData) {
+    historicalData = await loadHistoricalDataToDb(symbol);
+    if (!historicalData) {
+      return 1;
+    }
+  }
+  const date = (timestamp - (timestamp % 86400000));
+  const candle = historicalData.dailyCandles.find((candle) => candle.day == date );
+  if (!candle) return 1;
+  return ((candle.low + candle.high) / 2);
 }

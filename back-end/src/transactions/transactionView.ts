@@ -7,6 +7,8 @@ import { IOrderDocument } from "./order.model";
 import { ITransactionDocument } from "./transaction.model";
 import { ccxtService } from "../_helpers/ccxt.service";
 import ccxt from "ccxt";
+import { Db } from "mongodb";
+import { getHistoricalData } from "../historical/historical.service";
 
 export async function createTransactionViewItems(
   exchange: IExchangeAccountDocument
@@ -61,18 +63,17 @@ export async function convertOrderToTransactionView(
 ): Promise<ITransactionItemView> {
   var baseSymbol = getBaseSymbol(order.symbol);
   var quoteSymbol = getQuoteSymbol(order.symbol);
-  var priceInUsd = order.price;
+  var priceInUsd = order.price ? order.price : order.cost / order.amount;
   var valueInUsd = order.cost;
 
   if (quoteSymbol != "USD") {
-    const conversionRate = 1
-    //  await getConversionRateAtTime(
-    //   ccxtExchange,
-    //   order.timestamp,
-    //   quoteSymbol,
-    //   "USD"
-    // );
-    priceInUsd = 1 / (conversionRate * priceInUsd);
+    const conversionRate = await getConversionRate(
+      ccxtExchange,
+      quoteSymbol,
+      "USD",
+      order.timestamp
+    );
+    priceInUsd = conversionRate * priceInUsd;
     valueInUsd = order.amount * priceInUsd;
   }
 
@@ -101,14 +102,12 @@ export async function convertTransactionToTransactionView(
 ): Promise<ITransactionItemView> {
   var priceInUsd = 1;
   if (transaction.currency != "USD") {
-    priceInUsd =
-      1 
-      // await getConversionRateAtTime(
-      //   ccxtExchange,
-      //   transaction.timestamp,
-      //   transaction.currency,
-      //   "USD"
-      // );
+    priceInUsd = await getConversionRate(
+      ccxtExchange,
+      transaction.currency,
+      "USD",
+      transaction.timestamp
+    );
   }
   //const quoteAmount = getQuoteAmountAtTime(ccxtExchange, transaction.timestamp, transaction.currency, transaction.amount, "USD");
 
@@ -177,28 +176,37 @@ export async function getQuoteAmountAtTime(
   baseAmount: number,
   quoteCurrency: string
 ): Promise<number> {
-  const rate = await getConversionRateAtTime(
+  const rate = await getConversionRate(
     exchange,
-    timestamp,
     quoteCurrency,
-    baseCurrency
+    baseCurrency,
+    timestamp
   );
 
   return rate * baseAmount;
 }
 
-export async function getConversionRateAtTime(
+export async function getConversionRate(
   exchange: ccxt.Exchange,
-  timestamp: number,
+
   baseCurrency: string,
-  quoteCurrency: string
+  quoteCurrency: string,
+  timestamp: number = Date.now() - 120000
 ): Promise<number> {
   let sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
   if (!exchange.has.fetchOHLCV) throw "Exchange does not have fetchOHLCV";
 
-    return sleep(exchange.rateLimit).then(() => exchange
-      .fetchOHLCV(baseCurrency + "/" + quoteCurrency, "1hr", timestamp, 1)
+  return sleep(exchange.rateLimit).then(() =>
+    exchange
+      .fetchOHLCV(baseCurrency + "/" + quoteCurrency, "1m", timestamp)
       .then((ohlcv: ccxt.OHLCV[]) => {
-        return ((ohlcv[0][1] + ohlcv[0][4]) / 2);
-    }).catch((err) => { console.log(err); return 1; }));
+        return (ohlcv[0][1] + ohlcv[0][4]) / 2;
+      })
+      .catch(async (err) => {
+        return await getHistoricalData(
+          baseCurrency + "/" + quoteCurrency,
+          timestamp
+        );
+      })
+  );
 }
