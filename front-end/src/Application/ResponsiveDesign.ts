@@ -5,7 +5,7 @@ export const RD = {
   breakpointmonitor: "1975px",
   widthsmartphone: "768px",
   widthtablet: "1024px",
-  widthlaptop: "1366px",
+  widthlaptop: "1485px",
   widthmonitor: "1920px",
 };
 export const COLORS = {

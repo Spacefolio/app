@@ -32,9 +32,9 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
   const drawBasicChart = () => {
     const margin = {
       top: 0,
-      bottom: 20,
-      left: 80,
-      right: 0,
+      bottom:  xAxis?20:0,
+      left: yAxis?80:8,
+      right: 8,
     };
 
     const realwidth = width - margin.left - margin.right;

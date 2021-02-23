@@ -155,9 +155,9 @@ export const Filter: React.FC<IFilterProps> = ({ data, sortAscending, lineItemTy
   return (
     <React.Fragment>
       <FilterWrapper>
-        {DatePickerSection()}
+        {/* {DatePickerSection()} */}
         {/* {AssetSearchSection()} */}
-        {TransactionTypeSelector()}
+        {/* {TransactionTypeSelector()} */}
       </FilterWrapper>
       {RenderLineItems()}
     </React.Fragment>

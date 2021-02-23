@@ -9,6 +9,7 @@ import {
   PortfolioValueChangeContainer,
   PortfolioValueContainer,
   PortfolioValueItem as PortfolioValueItem,
+  MetaPortfolioTimeframeSelector,
 } from "./generalStyle";
 import {
   Dropdown,
@@ -38,12 +39,14 @@ export const MetaPortfolio = () => {
 
   function CalculateMainChartSize() {
     if (window.innerWidth > parseInt(RD.breakpointmonitor)) {
-      return 300;
+      return 600;
     } else if (window.innerWidth > parseInt(RD.breakpointlaptop)) {
-      return 200;
+      return 400;
     } else if (window.innerWidth > parseInt(RD.breakpointtablet)) {
-      return 200;
+      return 300;
     } else if (window.innerWidth > parseInt(RD.breakpointsmartphone)) {
+      return 250;
+    } else if (window.innerWidth < parseInt(RD.breakpointsmartphone)) {
       return 200;
     }
   }
@@ -87,7 +90,9 @@ export const MetaPortfolio = () => {
           ref={container}
           style={{ position: "relative" }}
         >
-          <div>{timeframe}</div>
+          <MetaPortfolioTimeframeSelector>
+            {timeframe}
+          </MetaPortfolioTimeframeSelector>
 
           {timeframeDropdownVisible ? (
             <Dropdown
@@ -109,7 +114,7 @@ export const MetaPortfolio = () => {
         data={metaPortfolioChartData}
         width={chartWidth}
         timeframe={timeframe}
-        height={chartWidth * 0.6}
+        height={chartWidth * 0.3}
         id={"MetaportfolioChart"}
       />
     </MetaPortfolioChartWrapper>

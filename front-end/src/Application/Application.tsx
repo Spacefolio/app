@@ -20,8 +20,9 @@ import {
 import useDimensions from "react-use-dimensions";
 
 export const Application = () => {
-
   const dispatch = useDispatch();
+
+  const [ref, { width }] = useDimensions();
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -37,10 +38,12 @@ export const Application = () => {
           isSidebarCollapsed={isSidebarCollapsed}
         />
 
-        <ApplicationContainer>
+        <ApplicationContainer ref={ref}>
           <ApplicationFlexContainer>
             <Switch>
-              <Route path={`/portfolio`} component={Portfolio} />
+              <Route path={`/portfolio`}>
+                <Portfolio width={width} />
+              </Route>
               <Route exact path={`/dashboard`} component={Dashboard} />
               <Redirect to="/" />
             </Switch>

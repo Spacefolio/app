@@ -188,20 +188,19 @@ const data: IPortfolioLineChartItem[] = [
 
 async function getPortfolioChartData(
   timeframe: timeframe,
-  exchangeID: string = ""
+  exchangeID?: string,
 ) {
   const Authorization = authHeader().Authorization;
   const requestOptions = {
     Authorization: Authorization,
   };
 
-  return data;
-  // return await axios
-  //   .get(`${API_DOMAIN}/portfolios/${timeframe}`, { headers: requestOptions, params: {} })
-  //   .then((response) => {
-  //     return data;
-  //   })
-  //   .catch((err) => {
-  //     throw err;
-  //   });
+  return await axios
+    .get(`${API_DOMAIN}/portfolios/${timeframe}`, { headers: requestOptions, params: {exchangeID} })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      return data;
+    });
 }

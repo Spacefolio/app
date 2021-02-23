@@ -62,7 +62,6 @@ export const Charts = () => {
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
           alignItems: "center",
         }}
       >
@@ -72,11 +71,10 @@ export const Charts = () => {
               onClick={(e) => {
                 setTimeframe(item);
               }}
-              className={
-                "center-my-children" + item == timeframe
-                  ? " selected-field"
-                  : null
-              }
+              className={`
+                center-my-children ${
+                  item == timeframe ? "selected-field" : null
+                }`}
               style={{
                 padding: "10px",
                 cursor: "pointer",
@@ -93,7 +91,7 @@ export const Charts = () => {
   return (
     <DashboardWrapper>
       <FlexCard
-        styles={{gridArea: "one",}}
+        styles={{ gridArea: "one" }}
         children={
           <div>
             <PortfolioLineChart
@@ -109,20 +107,12 @@ export const Charts = () => {
           </div>
         }
       />
-      <FlexCard
-        styles={{gridArea: "two",}}
-        children={
-          <PortfolioPieChart
-            width={450}
-            height={450}
-            id="portfolio-pie-chart"
-          />
-        }
-      />
-      <FlexCard
-        styles={{gridArea: "three",}}
-        children={<div>{"exchange allocation pie chart"}</div>}
-      />
+      <FlexCard styles={{ gridArea: "two" }}>
+        <PortfolioPieChart size={450} id="portfolio-pie-chart" />
+      </FlexCard>
+      <FlexCard styles={{ gridArea: "three" }}>
+        <div>{"exchange allocation pie chart"}</div>
+      </FlexCard>
     </DashboardWrapper>
   );
 };

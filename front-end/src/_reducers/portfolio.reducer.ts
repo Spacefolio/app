@@ -10,6 +10,7 @@ interface IPortfolioAction {
   portfolioData: IPortfolioDataView[];
   transactionData: ITransactionItemView[];
   openOrdersData: IOpenOrderItemView[];
+  exchangeID: string;
 }
 export interface IPortfolioState {
   syncingPortfolio: boolean;
@@ -17,6 +18,7 @@ export interface IPortfolioState {
   portfolioData: IPortfolioDataView[];
   transactionData: ITransactionItemView[];
   openOrdersData: IOpenOrderItemView[];
+  filterPortfolio: string;
 }
 
 export function portfolio(
@@ -26,6 +28,7 @@ export function portfolio(
     portfolioData: [],
     transactionData: [],
     openOrdersData: [],
+    filterPortfolio: 'ALL',
   },
   action: IPortfolioAction
 ) {
@@ -92,6 +95,11 @@ export function portfolio(
       return {
         ...state,
         recalculatingPortfolio: false,
+      };
+      case portfolioConstants.FILTER_PORTFOLIOS:
+      return {
+        ...state,
+        filterPortfolio: action.exchangeID,
       };
 
     default:

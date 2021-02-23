@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { exchangeActions } from "../_actions";
+import { exchangeActions, portfolioActions } from "../_actions";
 import "./ExchangesPopup.scss";
-import { AddExchangeForm, ExchangeItem } from "../Exchanges";
+import { AddExchangeForm, EditExchangeForm, ExchangeItem } from "../Exchanges";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { Modal } from "../_components";
 import { useDispatch, useSelector } from "react-redux";
+import { IRootState } from "../_reducers";
+import { data } from "jquery";
+import { PortfolioIcon } from "../_components/Icons";
 
 interface ExchangesPopupProps {
-  headerText: string;
+  headerText?: string;
   myExchanges: boolean;
   addExchange: boolean;
 }
 
 export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
-  headerText,
   myExchanges,
   addExchange,
+  headerText,
 }) => {
   const dispatch = useDispatch();
 
@@ -29,6 +32,9 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
   const [addExchangeVisible, setAddExchangeVisible] = useState(false);
   const [addExchangeData, setAddExchangeData] = useState<IExchangeReference>(
     null
+  );
+  const portfolioFilterID = useSelector(
+    (state: IRootState) => state.portfolio.filterPortfolio
   );
 
   useEffect(() => {
@@ -84,6 +90,37 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
     </div>
   );
 
+  const AllAssets = (
+    <div
+      key={"AllAssets"}
+      style={{
+        width: "100%",
+        padding: "10px 0px",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderLeft:
+          portfolioFilterID == "ALL"
+            ? "3px solid var(--primary-base)"
+            : "",
+      }}
+      onClick={() => dispatch(portfolioActions.FilterPortfolio("ALL"))}
+    >
+      <div
+        style={{
+          padding: "10px 0px",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <PortfolioIcon width={25} height={25} />
+        <div>All Assets</div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="exchange-popup-wrapper">
       <div className="exchange-popup-inner-wrapper">
@@ -92,6 +129,7 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
             <h1 className="my-exchanges-label">{headerText}</h1>
           </div>
         </div>
+        {AllAssets}
         {myExchanges ? RenderExchangeItems : null}
         <Modal
           dismiss={() => {

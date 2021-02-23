@@ -22,6 +22,7 @@
     "d3-dsv": "^2.0.0",
     "d3-scale": "^3.2.3",
     "d3-selection": "^2.0.0",
+    "d3-selection-multi": "^1.0.1",
     "d3-time": "^2.0.0",
     "d3-time-format": "^3.0.0",
     "dotenv": "^8.2.0",
@@ -50,6 +51,7 @@
     "sass-loader": "^10.1.0",
     "style-loader": "^2.0.0",
     "styled-components": "^5.2.1",
+    "types": "^0.1.1",
     "url-loader": "^4.1.1"
   },
   "devDependencies": {

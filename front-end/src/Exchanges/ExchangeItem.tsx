@@ -3,8 +3,11 @@ import { DeleteButton, EditButton } from "../_components";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { Modal } from "../_components";
 import { EditExchangeForm } from "./Forms";
-import { exchangeActions } from "../_actions";
+import { exchangeActions, portfolioActions } from "../_actions";
 import { useDispatch, useSelector } from "react-redux";
+import { STATES } from "mongoose";
+import { IRootState } from "../_reducers";
+import { TabItem } from "../Portfolio/portfolioStyles";
 
 interface ExchangeItemProps {
   data: IExchangeAccountView;
@@ -15,7 +18,9 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
 
   const [logoUrl, setLogoUrl] = useState("");
   const [editExchangeVisible, setEditExchangeVisible] = useState(false);
-  const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef);
+  const exchangeRef = useSelector((state: IRootState) => state.exchanges.exchangeRef);
+  const [hoverShowEdit, setHoverShowEdit] = useState(false);
+  const portfolioFilterID = useSelector((state: IRootState) => state.portfolio.filterPortfolio)
 
   useEffect(() => {
     const targetRef: IExchangeReference = exchangeRef.filter(
@@ -58,22 +63,37 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
         position: "relative",
         display: "flex",
         alignItems: "center",
-        justifyContent: "start",
+        justifyContent: "space-between",
+        borderLeft: (portfolioFilterID == data.id? '3px solid var(--primary-base)': '')
       }}
+      onPointerEnter={() => setHoverShowEdit(true)}
+      onPointerLeave={() => setHoverShowEdit(false)}
+      onClick={() => dispatch(portfolioActions.FilterPortfolio(data.id))}
     >
-      <img height="25px" width="25px" src={logoUrl}></img>
-      <div>{data.nickname}</div>
-
       <div
         style={{
+          padding: "10px 0px",
+          position: "relative",
           display: "flex",
-          padding: "5px",
-          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        {EditButtonSection}
-        {DeleteButtonSection}
+        <img height="25px" width="25px" src={logoUrl}></img>
+        <div>{data.nickname}</div>
       </div>
+
+      {hoverShowEdit ? (
+        <div
+          style={{
+            display: "flex",
+            padding: "5px",
+            justifyContent: "space-evenly",
+          }}
+        >
+          {EditButtonSection}
+          {DeleteButtonSection}
+        </div>
+      ) : null}
 
       <Modal
         visible={editExchangeVisible}

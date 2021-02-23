@@ -37,3 +37,7 @@
 .table-right-align{
   text-align: right;
 }
+.selected-field{
+  border: solid 3px var(--accent-base);
+  border-radius: 5px;
+}

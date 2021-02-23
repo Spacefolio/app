@@ -24,11 +24,13 @@ import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter/ExchangeSidebarFi
 import useDimensions from "react-use-dimensions";
 import { RD } from "../Application/ResponsiveDesign";
 
-export const Portfolio = () => {
+interface IPortfolioProps {
+  width: number;
+}
+
+export const Portfolio: React.FC<IPortfolioProps> = ({ width }) => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.authentication.user);
-
-  const [ref, { x, y, width }] = useDimensions();
 
   const { path } = useRouteMatch("/portfolio");
 
@@ -60,10 +62,10 @@ export const Portfolio = () => {
   );
 
   return (
-    <PortfolioWrapper ref={ref}>
+    <PortfolioWrapper>
       {width > parseInt(RD.breakpointtablet) ? (
         <PortfolioSidebarWrapper>
-          <FlexCard styles={{ height: "100%", alignItems: "start" }}>
+          <FlexCard styles={{ alignItems: "start" }}>
             <ExchangeSidebarFilter />
           </FlexCard>
         </PortfolioSidebarWrapper>
@@ -71,7 +73,13 @@ export const Portfolio = () => {
       <Scrollbox>
         <PortfolioSectionWrapper>
           {width < parseInt(RD.breakpointtablet) ? (
-            <FlexCard styles={{marginBottom: "8px", width: "100%", alignItems: "center" }}>
+            <FlexCard
+              styles={{
+                marginBottom: "8px",
+                width: "100%",
+                alignItems: "center",
+              }}
+            >
               <ExchangeSidebarFilter />
             </FlexCard>
           ) : null}

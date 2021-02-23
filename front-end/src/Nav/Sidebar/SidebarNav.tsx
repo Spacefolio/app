@@ -6,6 +6,7 @@ import {
   LinkWrapper,
   MobileBlurWrapper,
   MobileContainer,
+  LinkText,
 } from "./SidebarStyle";
 import { ModalBg, ModalWrapper } from "../../_components/Modal/generalStyle";
 import { BotHead, PortfolioIcon, Speedometer } from "../../_components/Icons";
@@ -26,8 +27,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
       activeClassName="active-sidebar-tab"
     >
       <LinkWrapper>
-        <Speedometer />
-        Portfolio
+        <PortfolioIcon />
+        {!isSidebarCollapsed ? <LinkText>Portfolio</LinkText> : null}
       </LinkWrapper>
     </NavLink>
   );
@@ -40,7 +41,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
     >
       <LinkWrapper>
         <BotHead />
-        Bots
+        {!isSidebarCollapsed ? <LinkText>Bots</LinkText> : null}
       </LinkWrapper>
     </NavLink>
   );
@@ -52,8 +53,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
       activeClassName="active-sidebar-tab"
     >
       <LinkWrapper>
-        <PortfolioIcon />
-        Dashboard
+        <Speedometer />
+        {!isSidebarCollapsed ? <LinkText>Dashboard</LinkText> : null}
       </LinkWrapper>
     </NavLink>
   );
@@ -64,6 +65,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         style={{
           marginRight: "8px",
           width: isSidebarCollapsed ? "50px" : "300px",
+          alignItems: isSidebarCollapsed ? "center" : "start",
         }}
       >
         {Dashboard}
@@ -71,14 +73,14 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {Bots}
       </DesktopContainer>
 
-      {isSidebarCollapsed ? (
-        <MobileBlurWrapper>
+      {!isSidebarCollapsed ? (
+        <MobileBlurWrapper onClick={() => CollapseSidebar(true)} >
           <MobileContainer>
             {Dashboard}
             {Portfolio}
             {Bots}
           </MobileContainer>
-          <ModalBg onClick={() => CollapseSidebar(false)} />
+          <ModalBg/>
         </MobileBlurWrapper>
       ) : null}
     </React.Fragment>

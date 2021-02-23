@@ -8,6 +8,7 @@ export const portfolioActions = {
   refresh,
   getTransactions,
   getOpenOrders,
+  FilterPortfolio,
 };
 
 function sync() {
@@ -109,4 +110,8 @@ function getOpenOrders(exchangeID?: string) {
   function failure(error: any) {
     return { type: portfolioConstants.OPENORDERS_FAILURE, error };
   }
+}
+
+function FilterPortfolio(exchangeID: string) {
+  return { type: portfolioConstants.FILTER_PORTFOLIOS, exchangeID };
 }
