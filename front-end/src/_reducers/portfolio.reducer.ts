@@ -1,5 +1,9 @@
 import { portfolioConstants } from "../_constants";
-import { IOpenOrderItemView, IPortfolioDataView, ITransactionItemView } from "../../../types";
+import {
+  IOpenOrderItemView,
+  IPortfolioDataView,
+  ITransactionItemView,
+} from "../../../types";
 
 interface IPortfolioAction {
   type: string;
@@ -7,9 +11,16 @@ interface IPortfolioAction {
   transactionData: ITransactionItemView[];
   openOrdersData: IOpenOrderItemView[];
 }
+export interface IPortfolioState {
+  syncingPortfolio: boolean;
+  recalculatingPortfolio: boolean;
+  portfolioData: IPortfolioDataView[];
+  transactionData: ITransactionItemView[];
+  openOrdersData: IOpenOrderItemView[];
+}
 
 export function portfolio(
-  state: any = {
+  state: IPortfolioState = {
     syncingPortfolio: false,
     recalculatingPortfolio: false,
     portfolioData: [],
@@ -37,8 +48,7 @@ export function portfolio(
         syncingPortfolio: false,
       };
 
-
-      case portfolioConstants.TRANSACTIONS_REQUEST:
+    case portfolioConstants.TRANSACTIONS_REQUEST:
       return {
         ...state,
       };
@@ -52,8 +62,7 @@ export function portfolio(
         ...state,
       };
 
-
-      case portfolioConstants.OPENORDERS_REQUEST:
+    case portfolioConstants.OPENORDERS_REQUEST:
       return {
         ...state,
       };
@@ -66,8 +75,6 @@ export function portfolio(
       return {
         ...state,
       };
-
-
 
     case portfolioConstants.REFRESH_REQUEST:
       return {

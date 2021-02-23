@@ -5,6 +5,10 @@ interface IRegistrationAction{
   value: any;
 }
 
+export interface IRegistrationState{
+  
+}
+
 export function registration(state = {}, action: IRegistrationAction) {
   switch (action.type) {
     case userConstants.REGISTER_REQUEST:

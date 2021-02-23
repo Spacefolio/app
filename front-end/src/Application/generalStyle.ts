@@ -3,22 +3,27 @@ import { RD } from "./ResponsiveDesign";
 
 export const ApplicationContainer = styled.div`
   display: flex;
+  height: calc(100vh - 57px);
   justify-content: center;
-  min-height: 100%;
   width: 100%;
-  padding: 0 8px;
-  background-color: var(--primary-light3);
+  padding: 10px;
 `;
 
 export const ApplicationFlexContainer = styled.div`
-width: 1920px;
+  width: 100%;
+  max-width: 1920px;
   @media screen and (max-width: ${RD.breakpointmonitor}) {
-    width: ${RD.breakpointlaptop};
+    max-width: ${RD.widthlaptop};
   }
   @media screen and (max-width: ${RD.breakpointlaptop}) {
-    width: ${RD.widthtablet};
+    max-width: ${RD.widthtablet};
   }
   @media screen and (max-width: ${RD.breakpointtablet}) {
-    width: ${RD.widthsmartphone};
+    max-width: ${RD.widthsmartphone};
   }
+`;
+export const BodyWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  height: calc(100vh-57px);
 `;

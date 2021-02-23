@@ -5,7 +5,7 @@ export const DashboardWrapper = styled.div`
   width: 100%;
   display: grid;
   gap: 8px;
-  margin-top: 8px;
+  padding-top: 8px;
   @media screen and (min-width: ${RD.breakpointtablet}) {
     grid-template-areas:
       "one one"

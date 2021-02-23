@@ -1,11 +1,28 @@
 import styled from "styled-components";
+import { RD } from "../Application/ResponsiveDesign";
 
 export const PortfolioWrapper = styled.div`
-  margin-top: 8px;
+  padding: 8px 0px;
+  height: 100%;
+  display: flex;
+  width: 100%;
+`;
+export const PortfolioSectionWrapper = styled.div`
+  grid-area: mainContent;
   display: flex;
   flex-direction: column;
-  height: 100%;
   width: 100%;
+`;
+export const PortfolioSidebarWrapper = styled.div`
+  display: block;
+  width: 300px;
+  height: 100%;
+  grid-area: sidebar;
+  flex-direction: column;
+  margin-right: 10px;
+  @media (max-width: ${RD.breakpointtablet}){
+    display: none;
+  }
 `;
 export const TabWrapper = styled.div`
   display: flex;

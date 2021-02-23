@@ -1,11 +1,11 @@
 export const RD = {
   breakpointsmartphone: "768px",
   breakpointtablet: "1024px",
-  breakpointlaptop: "1366px",
-  breakpointmonitor: "1920px",
+  breakpointlaptop: "1485px",
+  breakpointmonitor: "1975px",
   widthsmartphone: "768px",
   widthtablet: "1024px",
-  widthlaptop: "1366x",
+  widthlaptop: "1366px",
   widthmonitor: "1920px",
 };
 export const COLORS = {

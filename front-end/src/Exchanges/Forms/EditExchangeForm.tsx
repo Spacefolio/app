@@ -1,31 +1,37 @@
 import React, { useEffect, useState } from "react";
 import "./ExchangeForm.scss";
-import { exchangeActions } from "../_actions";
+import { exchangeActions } from "../../_actions";
 import {
-  IExchangeAccountRequest,
+  exchangeType,
   IExchangeAccountView,
-  IExchangeReference,
-} from "../../../types";
+  IExchangeAccountRequest,
+} from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
 
 interface ExchangeFormProps {
-  exchangeRefInfo: IExchangeReference;
+  exchangeAccountData: IExchangeAccountView;
 }
 
-export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
-  exchangeRefInfo,
+export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
+  exchangeAccountData,
 }) => {
   const addingExchange = useSelector(
     (state: any) => state.exchanges.addingExchange
   );
   const dispatch = useDispatch();
 
-  const [exchangeType, setExchangeType] = useState(exchangeRefInfo.id);
-  const [apiKey, setApiKey] = useState("");
-  const [apiSecret, setApiSecret] = useState("");
-  const [passphrase, setPassphrase] = useState("");
-  const [name, setName] = useState(exchangeRefInfo.name);
-  const [nickname, setNickname] = useState(exchangeRefInfo.name);
+  const [exchangeType, setExchangeType] = useState(
+    exchangeAccountData.exchangeType
+  );
+  const [apiKey, setApiKey] = useState(exchangeAccountData.apiInfo.apiKey);
+  const [apiSecret, setApiSecret] = useState(
+    exchangeAccountData.apiInfo.apiSecret
+  );
+  const [passphrase, setPassphrase] = useState(
+    exchangeAccountData.apiInfo.passphrase
+  );
+  const [name, setName] = useState(exchangeAccountData.name);
+  const [nickname, setNickname] = useState(exchangeAccountData.nickname);
   const [exchange, setExchange] = useState<IExchangeAccountRequest>({
     exchangeType,
     apiInfo: {
@@ -50,19 +56,19 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
     });
   }, [exchangeType, apiKey, apiSecret, passphrase, name, nickname]);
 
-  const handleSubmit = () => {
-    dispatch(exchangeActions.addNew(exchange));
+  const handleUpdate = () => {
+    dispatch(exchangeActions.update(exchange, exchangeAccountData.id));
   };
 
   return (
     <form className="add-exchange-form">
       <div>
-        <h1>Add New Exchange</h1>
+        <h1>Edit Exchange Info</h1>
       </div>
       <div className="add-exchange-data-row">
         <div>
           {name}
-          <img src={exchangeRefInfo.logoUrl} />
+          <img src={exchangeAccountData.logoUrl} />
         </div>
       </div>
       <div className="add-exchange-data-row">
@@ -107,7 +113,7 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
       </div>
       <div>
         <div
-          onClick={() => handleSubmit()}
+          onClick={() => handleUpdate()}
           className="center-my-children"
           style={{
             borderRadius: "3px",
@@ -118,7 +124,7 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
           }}
         >
           <div style={{ cursor: "pointer" }}>
-            {addingExchange ? "Submitting..." : "Submit"}
+            {addingExchange ? "Updating..." : "Update"}
           </div>
         </div>
       </div>

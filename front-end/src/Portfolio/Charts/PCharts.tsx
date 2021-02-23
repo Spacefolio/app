@@ -8,18 +8,39 @@ import { portfolioService } from "../../_services";
 import { RD } from "../../Application/ResponsiveDesign";
 import { timeframe } from "../../../../types";
 import { PortfolioPieChart } from "../../_components/Charts/Pie/PieChart";
+import { time } from "console";
+
+function CalculateMainChartSize() {
+  if (window.innerWidth > parseInt(RD.breakpointmonitor)) {
+    return 1000;
+  } else if (window.innerWidth > parseInt(RD.breakpointlaptop)) {
+    return 700;
+  } else if (window.innerWidth > parseInt(RD.breakpointtablet)) {
+    return 530;
+  } else if (window.innerWidth > parseInt(RD.breakpointsmartphone)) {
+    return 630;
+  } else if (window.innerWidth < parseInt(RD.breakpointsmartphone)) {
+    return window.innerWidth - 140;
+  }
+}
 
 export const Charts = () => {
   const dispatch = useDispatch();
 
-  const [metaPortfolioChartData, setMetaPortfolioChartData] = useState([]);
+  const [PortfolioChartData, setPortfolioChartData] = useState([]);
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
+  const [chartWidth, setChartWidth] = useState(CalculateMainChartSize());
 
   useEffect(() => {
+    window.addEventListener("resize", () =>
+      setTimeout(function () {
+        setChartWidth(CalculateMainChartSize());
+      }, 100)
+    );
     portfolioService
       .getPortfolioChartData(timeframe)
       .then((res) => {
-        setMetaPortfolioChartData(res);
+        setPortfolioChartData(res);
       })
       .catch((err) => {
         console.log(err);
@@ -45,17 +66,19 @@ export const Charts = () => {
           alignItems: "center",
         }}
       >
-        {timeFrameSelectors.map((item) => {
+        {timeFrameSelectors.map((item: timeframe) => {
           return (
             <div
               onClick={(e) => {
                 setTimeframe(item);
               }}
-              className="center-my-children"
+              className={
+                "center-my-children" + item == timeframe
+                  ? " selected-field"
+                  : null
+              }
               style={{
-                width: "100%",
                 padding: "10px",
-                border: "solid 1px black",
                 cursor: "pointer",
               }}
             >
@@ -70,16 +93,16 @@ export const Charts = () => {
   return (
     <DashboardWrapper>
       <FlexCard
-        gridName={"one"}
+        styles={{gridArea: "one",}}
         children={
           <div>
             <PortfolioLineChart
-              data={metaPortfolioChartData}
-              width={parseInt(RD.widthsmartphone)}
+              data={PortfolioChartData}
+              width={chartWidth}
               xAxis={true}
               timeframe={timeframe}
               yAxis={true}
-              height={parseInt(RD.widthsmartphone) * 0.6}
+              height={chartWidth * 0.6}
               id={"PCardChart"}
             />
             {TimeFrameSelector()}
@@ -87,11 +110,17 @@ export const Charts = () => {
         }
       />
       <FlexCard
-        gridName={"two"}
-        children={<PortfolioPieChart width={450} height={450} id="portfolio-pie-chart"/>}
+        styles={{gridArea: "two",}}
+        children={
+          <PortfolioPieChart
+            width={450}
+            height={450}
+            id="portfolio-pie-chart"
+          />
+        }
       />
       <FlexCard
-        gridName={"three"}
+        styles={{gridArea: "three",}}
         children={<div>{"exchange allocation pie chart"}</div>}
       />
     </DashboardWrapper>

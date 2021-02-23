@@ -10,29 +10,55 @@ import {
   PortfolioValueContainer,
   PortfolioValueItem as PortfolioValueItem,
 } from "./generalStyle";
-import { Dropdown, FlexCard, IDropdownItem, SyncButton } from "../../_components";
+import {
+  Dropdown,
+  FlexCard,
+  IDropdownItem,
+  SyncButton,
+} from "../../_components";
 import { PortfolioLineChart } from "../../_components";
 import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
+import { RD } from "../../Application/ResponsiveDesign";
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
-  const isSyncing = useSelector((state: any) => state.portfolio.syncingPortfolio);
-  const isRefreshing = useSelector((state: any) => state.portfolio.recalculatingPortfolio);
-  const data: IPortfolioDataView = useSelector((state: any) => state.portfolio.portfolioData[0]);
-
-  const portfolioValueItemStyler = (num: number) => {
-    return num < 0 ? { color: "var(--error-base)" } : { color: "var(--accent-base)" };
-  };
+  const isSyncing = useSelector(
+    (state: any) => state.portfolio.syncingPortfolio
+  );
+  const isRefreshing = useSelector(
+    (state: any) => state.portfolio.recalculatingPortfolio
+  );
+  const data: IPortfolioDataView = useSelector(
+    (state: any) => state.portfolio.portfolioData[0]
+  );
 
   const container = useRef();
 
+  function CalculateMainChartSize() {
+    if (window.innerWidth > parseInt(RD.breakpointmonitor)) {
+      return 300;
+    } else if (window.innerWidth > parseInt(RD.breakpointlaptop)) {
+      return 200;
+    } else if (window.innerWidth > parseInt(RD.breakpointtablet)) {
+      return 200;
+    } else if (window.innerWidth > parseInt(RD.breakpointsmartphone)) {
+      return 200;
+    }
+  }
+
   const [metaPortfolioChartData, setMetaPortfolioChartData] = useState([]);
-  const [timeframeDropdownVisible, setTimeframeDropdownVisible] = useState(false);
+  const [timeframeDropdownVisible, setTimeframeDropdownVisible] = useState(
+    false
+  );
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
+  const [chartWidth, setChartWidth] = useState(CalculateMainChartSize());
 
   useEffect(() => {
+    window.addEventListener("resize", () =>
+      setChartWidth(CalculateMainChartSize())
+    );
     portfolioService
       .getPortfolioChartData(timeframe)
       .then((res) => {
@@ -56,7 +82,11 @@ export const MetaPortfolio = () => {
     ];
     return (
       <>
-        <div onClick={() => setTimeframeDropdownVisible(!timeframeDropdownVisible)} ref={container}>
+        <div
+          onClick={() => setTimeframeDropdownVisible(!timeframeDropdownVisible)}
+          ref={container}
+          style={{ position: "relative" }}
+        >
           <div>{timeframe}</div>
 
           {timeframeDropdownVisible ? (
@@ -73,35 +103,57 @@ export const MetaPortfolio = () => {
     );
   };
 
+  const MetaportfolioChart = (
+    <MetaPortfolioChartWrapper>
+      <PortfolioLineChart
+        data={metaPortfolioChartData}
+        width={chartWidth}
+        timeframe={timeframe}
+        height={chartWidth * 0.6}
+        id={"MetaportfolioChart"}
+      />
+    </MetaPortfolioChartWrapper>
+  );
+
+  const SyncButtonSection = (
+    <SyncAreaContainer>
+      <SyncButtonContainer onClick={() => dispatch(portfolioActions.sync())}>
+        <SyncButton isSyncing={isSyncing}></SyncButton>
+        <div>Sync</div>
+      </SyncButtonContainer>
+    </SyncAreaContainer>
+  );
+
+  const PortfolioValueSection = (
+    <PortfolioValueWrapper>
+      <PortfolioValueContainer>
+        <PortfolioValueItem style={{ fontSize: "1.5em" }}>
+          {data ? "$" + data.portfolioTotal.USD : "loading..."}
+        </PortfolioValueItem>
+        <div
+          onClick={() => dispatch(portfolioActions.refresh())}
+          style={{ width: "30px" }}
+        >
+          <SyncButton isSyncing={isRefreshing} />
+        </div>
+        {TimeFrameSelector()}
+      </PortfolioValueContainer>
+      <PortfolioValueChangeContainer>
+        <PortfolioValueItem>
+          {data ? data.profitPercentage.USD + "%" : "loading..."}
+        </PortfolioValueItem>
+        <PortfolioValueItem>
+          {data ? "$" + data.profitTotal.USD : "loading..."}
+        </PortfolioValueItem>
+      </PortfolioValueChangeContainer>
+    </PortfolioValueWrapper>
+  );
+
   return (
     <MetaPortfolioWrapper>
-      <PortfolioValueWrapper>
-        <PortfolioValueContainer>
-          <PortfolioValueItem style={{ fontSize: "1.5em" }}>{data ? "$" + data.portfolioTotal.USD : "loading..."}</PortfolioValueItem>
-          <div onClick={() => dispatch(portfolioActions.refresh())} style={{ width: "30px" }}>
-            <SyncButton isSyncing={isRefreshing} />
-          </div>
-          {TimeFrameSelector()}
-        </PortfolioValueContainer>
-        <PortfolioValueChangeContainer>
-          <PortfolioValueItem style={data ? portfolioValueItemStyler(data.profitPercentage.USD) : null}>
-            {data ? data.profitPercentage.USD + "%" : "loading..."}
-          </PortfolioValueItem>
-          <PortfolioValueItem style={data ? portfolioValueItemStyler(data.profitTotal.USD) : null}>
-            {data ? "$" + data.profitTotal.USD : "loading..."}
-          </PortfolioValueItem>
-        </PortfolioValueChangeContainer>
-      </PortfolioValueWrapper>
-
-      <MetaPortfolioChartWrapper>
-        <PortfolioLineChart data={metaPortfolioChartData} width={200} timeframe={timeframe} height={100} id={"MetaportfolioChart"} />
-      </MetaPortfolioChartWrapper>
-      <SyncAreaContainer>
-        <SyncButtonContainer onClick={() => dispatch(portfolioActions.sync())}>
-          <SyncButton isSyncing={isSyncing}></SyncButton>
-          <div>Sync</div>
-        </SyncButtonContainer>
-      </SyncAreaContainer>
+      {PortfolioValueSection}
+      {MetaportfolioChart}
+      {SyncButtonSection}
     </MetaPortfolioWrapper>
   );
 };

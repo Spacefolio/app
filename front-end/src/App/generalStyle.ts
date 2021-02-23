@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const AppContainer = styled.div`
 height: 100%;
+
 `;
 export const CardBoxSetup = styled.div`
 position: absolute;

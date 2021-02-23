@@ -26,7 +26,7 @@ export const Dashboard = () => {
   return (
     <DashboardWrapper>
       <FlexCard
-        gridName={"one"}
+        styles={{gridArea: "one"}}
         children={
           <PortfolioLineChart
             data={metaPortfolioChartData}
@@ -36,10 +36,10 @@ export const Dashboard = () => {
           />
         }
       />
-      <FlexCard gridName={"two"} children={<div>{"My Exchanges card"}</div>} />
-      <FlexCard gridName={"three"} children={<div>{"another one"}</div>} />
-      <FlexCard gridName={"four"} children={<div>{"another one"}</div>} />
-      <FlexCard gridName={"five"} children={<div>{"another one"}</div>} />
+      <FlexCard styles={{gridArea: "two"}} children={<div>{"My Exchanges card"}</div>} />
+      <FlexCard styles={{gridArea: "three"}} children={<div>{"another one"}</div>} />
+      <FlexCard styles={{gridArea: "four"}} children={<div>{"another one"}</div>} />
+      <FlexCard styles={{gridArea: "five"}} children={<div>{"another one"}</div>} />
     </DashboardWrapper>
   );
 };

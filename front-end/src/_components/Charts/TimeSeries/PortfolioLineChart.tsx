@@ -26,14 +26,15 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 }) => {
   useEffect(() => {
     data.length > 0 ? drawBasicChart() : null;
-  }, [data]);
+
+  }, [data, width, height]);
 
   const drawBasicChart = () => {
     const margin = {
-      top: 50,
-      bottom: 50,
+      top: 0,
+      bottom: 20,
       left: 80,
-      right: 50,
+      right: 0,
     };
 
     const realwidth = width - margin.left - margin.right;
@@ -43,6 +44,9 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
     const yMaxValue: number = d3.max(data, (d: any) => d.USD);
     const xMinValue: number = d3.min(data, (d: any) => d.T);
     const xMaxValue: number = d3.max(data, (d: any) => d.T);
+
+    d3.select(`#${id}1`)
+      .remove()
 
     //create main svg component
     const svg = d3
@@ -160,7 +164,6 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 
   return (
     <div style={{ position: "relative" }} id={`${id}`}>
-      {timeframe}
       {data.length < 0 ? (
         <div
           style={{

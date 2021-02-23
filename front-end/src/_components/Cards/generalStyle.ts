@@ -6,6 +6,6 @@ export const CardWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background: white;
-  border-radius: 15px;
+  border-radius: 30px;
   padding: 20px;
 `;

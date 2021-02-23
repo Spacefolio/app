@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { ModalBg, ModalBoxSetup, ModalWrapper } from "./generalStyle";
 import { CloseButton } from "../../_components";
 
-interface DropdownProps {
+interface ModalProps {
   visible: boolean;
-  dismiss(): void;
+  dismiss: any;
   children: any;
   clickOutsidedismiss?: boolean;
 }
 
-export const Modal: React.FC<DropdownProps> = ({
+export const Modal: React.FC<ModalProps> = ({
   visible,
   dismiss,
   children,

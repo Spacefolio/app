@@ -7,13 +7,18 @@
 }
 body,
 html {
+  overflow: hidden;
+  height: 100vh;
   font-size: 17px;
-  height: 100%;
   font-family: Metropolis;
+  background-color: var(--primary-light3);
 }
-#app-wrapper,
-#app {
-  height: 100%;
+::-webkit-scrollbar {
+  width: 4px; /* width of the entire scrollbar */
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-base); /* color of the scroll thumb */
+  border-radius: 50px; /* roundness of the scroll thumb */
 }
 .center-my-children {
   display: flex;
@@ -37,4 +42,7 @@ input {
   &:focus {
     outline: none;
   }
+}
+.selected-field{
+  color: red;
 }

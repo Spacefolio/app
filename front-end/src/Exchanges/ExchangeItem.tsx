@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { DeleteButton, EditButton } from "../_components";
-import {
-  IExchangeAccountView,
-  IExchangeReference,
-} from "../../../types";
+import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { Modal } from "../_components";
-import { EditExchangeForm } from "./EditExchangeForm";
+import { EditExchangeForm } from "./Forms";
 import { exchangeActions } from "../_actions";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -27,42 +24,62 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
       }
     )[0];
 
-    targetRef? setLogoUrl(targetRef.logoUrl):null;
+    targetRef ? setLogoUrl(targetRef.logoUrl) : null;
   }, []);
+
+  const DeleteButtonSection = (
+    <div
+      onClick={() => {
+        dispatch(exchangeActions.delete(data.id));
+      }}
+      style={{ width: "1.2em" }}
+    >
+      <DeleteButton />
+    </div>
+  );
+
+  const EditButtonSection = (
+    <div
+      onClick={() => {
+        setEditExchangeVisible(true);
+      }}
+      style={{ width: "1.2em" }}
+    >
+      <EditButton />
+    </div>
+  );
 
   return (
     <div
       key={data.id}
       style={{
+        width: "100%",
         padding: "10px 0px",
         position: "relative",
         display: "flex",
         alignItems: "center",
+        justifyContent: "start",
       }}
     >
       <img height="25px" width="25px" src={logoUrl}></img>
       <div>{data.nickname}</div>
+
       <div
-        onClick={() => {
-          dispatch(exchangeActions.delete(data.id));
+        style={{
+          display: "flex",
+          padding: "5px",
+          justifyContent: "space-between",
         }}
-        style={{width: "1.5em",position: "absolute", right: "0px" }}
       >
-        <DeleteButton />
+        {EditButtonSection}
+        {DeleteButtonSection}
       </div>
+
       <Modal
         visible={editExchangeVisible}
         dismiss={() => setEditExchangeVisible(false)}
         children={<EditExchangeForm exchangeAccountData={data} />}
       />
-      <div
-        onClick={() => {
-          setEditExchangeVisible(true);
-        }}
-        style={{width: "1.5em",position: "absolute", right: "30px" }}
-      >
-        <EditButton />
-      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { exchangeConstants } from "../_constants";
-import { IExchangeAccountView } from "../../../types";
+import { IExchangeAccountView, IExchangeReference } from "../../../types";
 
 interface IExchangeAction {
   type: string;
@@ -8,6 +8,12 @@ interface IExchangeAction {
   id?: string;
   error?: string;
   exchangeAccount?: any;
+}
+
+export interface IExchangesState {
+  exchanges: IExchangeAccountView[];
+  exchangeRef: IExchangeReference[];
+  addingExchange: boolean;
 }
 
 interface IExchangeAccountState extends IExchangeAccountView {
@@ -49,36 +55,32 @@ export function exchanges(
 
     case exchangeConstants.DELETE_REQUEST:
       return {
-        ...state
+        ...state,
       };
     case exchangeConstants.DELETE_SUCCESS:
       // remove deleted user from state
-      console.log("reducer", action.id)
+      console.log("reducer", action.id);
       return {
         ...state,
-        exchanges: state.exchanges.filter(
-          (item: IExchangeAccountView) => {
-            console.log(item.id)
-            return item.id !== action.id
-          }
-        ),
+        exchanges: state.exchanges.filter((item: IExchangeAccountView) => {
+          console.log(item.id);
+          return item.id !== action.id;
+        }),
       };
     case exchangeConstants.DELETE_FAILURE:
       // remove 'deleting:true' property and add 'deleteError:[error]' property to user
       return {
         ...state,
-        items: state.exchanges.map(
-          (exchange: IExchangeAccountState) => {
-            if (exchange.id === action.id) {
-              // make copy of user without 'deleting:true' property
-              const { deleting, ...exchangeCopy } = exchange;
-              // return copy of user with 'deleteError:[error]' property
-              return { ...exchangeCopy, deleteError: action.error };
-            }
-
-            return exchange;
+        items: state.exchanges.map((exchange: IExchangeAccountState) => {
+          if (exchange.id === action.id) {
+            // make copy of user without 'deleting:true' property
+            const { deleting, ...exchangeCopy } = exchange;
+            // return copy of user with 'deleteError:[error]' property
+            return { ...exchangeCopy, deleteError: action.error };
           }
-        ),
+
+          return exchange;
+        }),
       };
 
     case exchangeConstants.ADDNEW_REQUEST:

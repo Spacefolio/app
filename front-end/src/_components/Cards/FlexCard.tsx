@@ -2,13 +2,13 @@ import React from 'react';
 import { CardWrapper } from "./generalStyle";
 
 interface FlexCardProps {
-  gridName?: string;
   children: any;
+  styles?: object;
 }
 
-export const FlexCard: React.FC<FlexCardProps> = ({ children, gridName}) => {
+export const FlexCard: React.FC<FlexCardProps> = ({ children, styles}) => {
     return (
-    <CardWrapper style={{gridArea: gridName}}>
+    <CardWrapper style={styles}>
       {children}
     </CardWrapper>
     );
