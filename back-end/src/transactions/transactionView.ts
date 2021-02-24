@@ -160,32 +160,24 @@ export async function getConversionRate(
 	timestamp?: number
 ): Promise<number> {
   if (baseCurrency == 'USD' && quoteCurrency == 'USD') return 1;
+  
+  let sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  
   if (timestamp == undefined)
   {
-    let sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-    if (!exchange.has.fetchTicker) throw 'Exchange does not have fetchTicker';
-
-    return sleep(exchange.rateLimit).then(() =>
-      exchange.fetchTicker(baseCurrency + '/' + quoteCurrency).then((ticker: ccxt.Ticker) => {
+    return await getTicker(baseCurrency).catch(async (err) => {
+      if (!exchange.has.fetchTicker) throw 'Exchange does not have fetchTicker';
+      return sleep(exchange.rateLimit).then(() => exchange.fetchTicker(baseCurrency + '/' + quoteCurrency))
+      .then((ticker: ccxt.Ticker) => {
         return (ticker.last ? ticker.last : ((ticker.high + ticker.low) / 2));
       })
-      .catch(async (err) => {
-        return await getTicker(baseCurrency);
-      })
-    );
+    });
   }
 
-	let sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-	if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
-
-	return sleep(exchange.rateLimit).then(() =>
-		exchange
-			.fetchOHLCV(baseCurrency + '/' + quoteCurrency, '1m', timestamp)
-			.then((ohlcv: ccxt.OHLCV[]) => {
-				return (ohlcv[0][1] + ohlcv[0][4]) / 2;
-			})
-			.catch(async (err) => {
-				return await getHistoricalData(baseCurrency + '/' + quoteCurrency, timestamp);
-			})
-	);
+  return await getHistoricalData(baseCurrency + '/' + quoteCurrency, timestamp).catch(async () => {
+    if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
+    return sleep(exchange.rateLimit).then((ohlcv: ccxt.OHLCV[]) => {
+      return (ohlcv[0][1] + ohlcv[0][4]) / 2;
+    })
+  });
 }
