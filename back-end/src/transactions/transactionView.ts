@@ -5,7 +5,7 @@ import { ITransactionDocument } from './transaction.model';
 import { ccxtService } from '../_helpers/ccxt.service';
 import ccxt from 'ccxt';
 import { Db } from 'mongodb';
-import { getHistoricalData } from '../historical/historical.service';
+import { getHistoricalData, getTicker } from '../historical/historical.service';
 
 export async function createTransactionViewItems(exchange: IExchangeAccountDocument): Promise<ITransactionItemView[]> {
 	const transactionViewItems: ITransactionItemView[] = [];
@@ -157,10 +157,24 @@ export async function getConversionRate(
 	exchange: ccxt.Exchange,
 	baseCurrency: string,
 	quoteCurrency: string,
-	timestamp: number = Date.now() - 120000
+	timestamp?: number
 ): Promise<number> {
-
   if (baseCurrency == 'USD' && quoteCurrency == 'USD') return 1;
+  if (timestamp == undefined)
+  {
+    let sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    if (!exchange.has.fetchTicker) throw 'Exchange does not have fetchTicker';
+
+    return sleep(exchange.rateLimit).then(() =>
+      exchange.fetchTicker(baseCurrency + '/' + quoteCurrency).then((ticker: ccxt.Ticker) => {
+        return (ticker.last ? ticker.last : ((ticker.high + ticker.low) / 2));
+      })
+      .catch(async (err) => {
+        return await getTicker(baseCurrency);
+      })
+    );
+  }
+
 	let sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 	if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
 

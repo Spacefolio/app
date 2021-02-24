@@ -24,6 +24,28 @@ interface IHistoricalDataResponse {
   historical: [IHistoricalCandleResponse];
 }
 
+interface ITickerResponse {
+  symbol: string;
+  name: string;
+  price: number;
+  changesPercentage: number;
+  change: number;
+  dayLow: number;
+  dayHigh: number;
+  yearhHigh: number;
+  yearLow: number;
+  marketCap: number;
+  priceAvg50: number;
+  priceAvg200: number;
+  volume: number;
+  avgVolume: number;
+  exchange: string;
+  open: number;
+  previousClose: number;
+  sharesOutstanding: number;
+  timestamp: number;
+}
+
 export async function loadHistoricalDataToDb(symbol: string) {
 
   var historicalDataJson = await axios.get<IHistoricalDataResponse>(`https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}USD?apikey=77c0e8deb5f1500de6679057af187bef`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
@@ -41,6 +63,13 @@ export async function loadHistoricalDataToDb(symbol: string) {
 
   const savedData = await historicalData.save().then((res) => res.toJSON()).catch((err) => { console.log(err); });
   return savedData;
+}
+
+export async function getTicker(symbol: string) : Promise<number>
+{
+  var tickerJson = await axios.get<ITickerResponse[]>(`https://financialmodelingprep.com/api/v3/quote/${symbol}USD?apikey=77c0e8deb5f1500de6679057af187bef`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
+  if (!tickerJson) { return 1; }
+  return tickerJson.length > 0 ? tickerJson[0].price : 1;
 }
 
 export async function getHistoricalData(symbol: string, timestamp: number) : Promise<number>

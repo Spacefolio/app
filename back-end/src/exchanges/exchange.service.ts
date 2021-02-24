@@ -1,5 +1,5 @@
 import { IUserDocument, User } from '../users/user.model';
-import { IExchangeAccountRequest, exchangeType, IExchangeAccountView, IPortfolioDataView } from '../../../types';
+import { IExchangeAccountRequest, exchangeType, IExchangeAccountView, IPortfolioDataView, IPortfolioItemView } from '../../../types';
 import { ExchangeAccount, IExchangeAccount, IExchangeAccountDocument } from './exchange.model';
 import ccxt, { Balances, Exchange } from 'ccxt';
 import { IPortfolioItem } from '../portfolios/portfolio.model';
@@ -93,20 +93,53 @@ async function updatePortfolioItems(exchange: Exchange, exchangeAccountDocument:
 	return portfolioItems;
 }
 
+export interface holdingInfo
+{
+  [key: string]: {
+    amountBought: number;
+    amountSold: number;
+    totalValueReceived: number;
+    totalValueInvested: number;
+  }
+}
+
 function getAllAssetsEverHeld(orders: IOrderDocument[], transactions: ITransactionDocument[]) {
-	var allAssetsEverHeld = new Set<string>();
+	//var holdings: holdingInfo = {};
+  var holdings = new Set<string>();
 
 	for (let i = 0; i < orders.length; i++) {
 		var symbols = orders[i].symbol.split('/');
-		allAssetsEverHeld.add(symbols[0]);
-		allAssetsEverHeld.add(symbols[1]);
+    var baseCurrency = symbols[0];
+    var quoteCurrency = symbols[1];
+    /*
+    if (!holdings[baseCurrency])
+    {
+      holdings[baseCurrency] = {
+        amountBought: 0,
+        amountSold: 0,
+        totalValueReceived: 0,
+        totalValueInvested: 0
+      };
+    }
+
+    if (orders[i].side == 'buy')
+    {
+      if (quoteCurrency == 'USD')
+      {
+        holdings[baseCurrency].amountBought += orders[i].amount;
+        holdings[baseCurrency].totalValueInvested += orders[i].amount
+      }
+    }
+    */
+    holdings.add(baseCurrency);
+    holdings.add(quoteCurrency);
 	}
 
 	for (let i = 0; i < transactions.length; i++) {
-		allAssetsEverHeld.add(transactions[i].currency);
+		holdings.add(transactions[i].currency);
 	}
 
-	return allAssetsEverHeld;
+	return holdings;
 }
 
 async function updateTransactions(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument) {
@@ -292,20 +325,22 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 	var exchangeAccountJson = exchangeAccount.toJSON();
 	delete exchangeAccountJson.portfolioItems;
 
-	const formattedPortfolioItems = await Promise.all(
+	const formattedPortfolioItems: IPortfolioItemView[] = await Promise.all(
 		exchangeAccount.portfolioItems.map(async (item) => {
-			const rate = await getConversionRate(exchange, item.asset.symbol, 'USD');
-
+			const currentPrice = await getConversionRate(exchange, item.asset.symbol, 'USD');
+      var currentValue = item.balance.total * currentPrice;
+      const profitAllTime = (item.amountSold * item.averageSellPrice.USD) - (item.amountBought * item.averageBuyPrice.USD) + currentValue;
+      //const profit24Hour = (amountSoldInTheLast24Hours * averageSellInTheLast24Hours) - (value24HoursAgo * howMuchIHad24HoursAgo) + currentValue
+      const profit24Hour = randNum();
 			return {
 				asset: item.asset,
 				amount: item.balance.total,
-				value: { USD: item.balance.total * rate },
-				profitTotal: { all: randNum(), h24: randNum(), lastTrade: randNum() },
-				currentPrice: rate,
+				value: { USD: currentValue },
+				profitTotal: { all: profitAllTime, h24: profit24Hour},
+				currentPrice: currentPrice,
 				profitPercentage: {
 					all: randNum(),
-					h24: randNum(),
-					lastTrade: randNum(),
+					h24: randNum()
 				},
 			};
 		})
