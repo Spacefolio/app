@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { IPortfolioItem, portfolioItemSchema } from "../portfolios/portfolio.model";
-import { IExchangeAccountView, exchangeType } from "../../../types";
-import { ITransaction, ITransactionDocument, transactionSchema } from "../transactions/transaction.model";
+import { IExchangeAccountView, exchangeType, ITransactionItemView } from "../../../types";
+import { ITransaction, ITransactionDocument, transactionItemViewSchema, transactionSchema } from "../transactions/transaction.model";
 import { IOrder, IOrderDocument, orderSchema } from "../transactions/order.model";
 
 export interface IExchangeAccountDocument extends mongoose.Document {
@@ -20,6 +20,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
   transactions: ITransactionDocument[];
   orders: IOrderDocument[];
   openOrders: IOrderDocument[];
+  transactionViewItems: ITransactionItemView[];
 }
 
 export interface IExchangeAccountModel
@@ -40,7 +41,8 @@ const exchangeAccountSchema = new mongoose.Schema({
   portfolioItems: [portfolioItemSchema],
   transactions: [transactionSchema],
   orders: [orderSchema],
-  openOrders: [orderSchema]
+  openOrders: [orderSchema],
+  transactionViewItems: [transactionItemViewSchema]
 });
 
 export interface IExchangeAccount {
@@ -59,6 +61,7 @@ export interface IExchangeAccount {
   transactions: [ITransaction];
   orders: [IOrder];
   openOrders: [IOrder]
+  transactionViewItems: [ITransactionItemView]
 }
 
 exchangeAccountSchema.set("toJSON", {

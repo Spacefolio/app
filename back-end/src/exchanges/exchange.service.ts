@@ -1,5 +1,5 @@
 import { IUserDocument, User } from '../users/user.model';
-import { IExchangeAccountRequest, exchangeType, IExchangeAccountView, IPortfolioDataView, IPortfolioItemView } from '../../../types';
+import { IExchangeAccountRequest, exchangeType, IExchangeAccountView, IPortfolioDataView, IPortfolioItemView, ITransactionItemView } from '../../../types';
 import { ExchangeAccount, IExchangeAccount, IExchangeAccountDocument } from './exchange.model';
 import ccxt, { Balances, Exchange } from 'ccxt';
 import { IPortfolioItem } from '../portfolios/portfolio.model';
@@ -7,7 +7,7 @@ import { ITransaction, ITransactionDocument, Transaction } from '../transactions
 import { randNum } from '../../exchangeDataDetailed';
 import { ccxtService } from '../_helpers/ccxt.service';
 import { IOrder, IOrderDocument, orderSchema } from '../transactions/order.model';
-import { getConversionRate } from '../transactions/transactionView';
+import { createTransactionViewItems, getConversionRate, saveTransactionViewItems } from '../transactions/transactionView';
 
 export const exchangeService = {
 	getAll,
@@ -312,6 +312,8 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 	const transactions: ITransaction[] = await updateTransactions(exchange, exchangeAccountDocument);
 	const orders: IOrder[] = await updateOrders(exchange, exchangeAccountDocument);
 	const portfolioItems: IPortfolioItem[] = await updatePortfolioItems(exchange, exchangeAccountDocument);
+
+  await saveTransactionViewItems(exchange, exchangeAccountDocument);
 
 	const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => {
 		throw err;

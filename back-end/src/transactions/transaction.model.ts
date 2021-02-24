@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ITransactionItemView } from "../../../types";
 
 export interface IFee {
   currency: string;
@@ -23,6 +24,20 @@ export interface ITransactionDocument extends mongoose.Document {
   fee: IFee;
 }
 
+export interface ITransactionItemViewDocument extends mongoose.Document {
+  exchangeName: string;
+  symbol: string;
+  quoteSymbol: string;
+  logoUrl: string;
+  type: "withdrawal" | "deposit" | "sell" | "buy";
+  date: number,
+  amount: number,
+  quoteAmount: number,
+  price: number,
+  value: number,
+  fee: IFee;
+}
+
 const transactionSchema = new mongoose.Schema({
   timestamp: { type: Number },
   datetime: { type: String },
@@ -39,6 +54,11 @@ export interface ITransactionModel
   build(attr: ITransaction): ITransactionDocument;
 }
 
+export interface ITransactionItemViewModel
+  extends mongoose.Model<ITransactionItemViewDocument> {
+    build(attr: ITransactionItemView): ITransactionItemViewDocument
+  }
+
 export interface ITransaction {
   timestamp: number;
   datetime: string;
@@ -49,6 +69,20 @@ export interface ITransaction {
   status: "pending" | "ok";
   fee: IFee
 }
+
+const transactionItemViewSchema = new mongoose.Schema({
+  exchangeName: String,
+  symbol: String,
+  quoteSymbol: String,
+  logoUrl: String,
+  type: { type: String,  enum: ["withdrawal", "deposit", "sell", "buy"] },
+  date: Number,
+  amount: Number,
+  quoteAmount: Number,
+  price: Number,
+  value: Number,
+  fee: { type: feeSchema }
+});
 
 /* #region   */
 transactionSchema.set("toJSON", {
@@ -75,4 +109,4 @@ const Transaction = mongoose.model<ITransactionDocument, ITransactionModel>(
   transactionSchema
 );
 
-export { transactionSchema, feeSchema, Transaction };
+export { transactionSchema, transactionItemViewSchema, feeSchema, Transaction };

@@ -26,6 +26,23 @@ export async function createTransactionViewItems(exchange: IExchangeAccountDocum
 	return transactionViewItems;
 }
 
+export async function saveTransactionViewItems(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument) {
+
+  exchange.transactionViewItems = [];
+
+  for (var i = 0; i < exchange.transactions.length; i++) {
+		let transaction: ITransactionDocument = exchange.transactions[i];
+		let transactionItem: ITransactionItemView = await convertTransactionToTransactionView(ccxtExchange, exchange, transaction);
+		exchange.transactionViewItems.push(transactionItem);
+	}
+
+	for (var i = 0; i < exchange.orders.length; i++) {
+		let order: IOrderDocument = exchange.orders[i];
+		let transactionItem: ITransactionItemView = await convertOrderToTransactionView(ccxtExchange, exchange, order);
+		exchange.transactionViewItems.push(transactionItem);
+	}
+}
+
 export async function createTransactionViewItemsForOpenOrders(exchange: IExchangeAccountDocument): Promise<ITransactionItemView[]> {
 	const transactionViewItems: ITransactionItemView[] = [];
 

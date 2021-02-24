@@ -24,7 +24,7 @@ async function getTransactions(userId: string, exchangeId: string) {
     throw "The specified exchange not found for this user";
 
   const exchange = await exchangeService.getById(exchangeId);
-  return createTransactionViewItems(exchange);
+  return exchange.transactionViewItems;
 }
 
 async function getAllTransactions(userId: string) {
@@ -35,8 +35,7 @@ async function getAllTransactions(userId: string) {
   for (let i = 0; i < user.linkedExchanges.length; i++)
   {
     let exchangeAccount: IExchangeAccountDocument = await exchangeService.getById(user.linkedExchanges[i]);
-    let transactions: ITransactionItemView[] = await createTransactionViewItems(exchangeAccount);
-    viewItems.push(...transactions);
+    viewItems.push(...exchangeAccount.transactionViewItems);
   }
 
   return viewItems;
