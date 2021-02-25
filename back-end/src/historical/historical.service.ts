@@ -76,6 +76,9 @@ export function fiat(symbol: string)
 {
   switch (symbol)
   {
+    case "USD":
+    case "USDC":
+    case "USDT":
     case "USD/USD":
     case "USDC/USD":
     case "USDT/USD":

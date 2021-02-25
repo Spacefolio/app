@@ -122,8 +122,8 @@ export async function convertOpenOrderToTransactionView(
 ): Promise<ITransactionItemView> {
 	var baseSymbol = getBaseSymbol(order.symbol);
 	var quoteSymbol = getQuoteSymbol(order.symbol);
-	var priceInUsd = order.price;
-	var valueInUsd = order.cost;
+
+	var priceInQuote = order.price;
 
 	const transactionView: ITransactionItemView = {
 		id: order.id,
@@ -135,8 +135,8 @@ export async function convertOpenOrderToTransactionView(
 		date: order.timestamp,
 		amount: order.amount,
 		quoteAmount: order.cost,
-		price: priceInUsd,
-		value: valueInUsd,
+		price: priceInQuote,
+		value: 0,
 		fee: order.fee,
 	};
 
