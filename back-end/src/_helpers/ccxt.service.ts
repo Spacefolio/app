@@ -42,7 +42,7 @@ function loadExchange(
 
 async function verifyConnectionToExchange(exchange: Exchange) {
   exchange.checkRequiredCredentials();
-  //await exchange.fetchBalance();
+  await exchange.fetchBalance();
 }
 
 async function createTransactions(

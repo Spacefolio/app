@@ -48,14 +48,8 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
 	const Exchange = ccxtService.loadExchange(exchangeParam);
 	await ccxtService.verifyConnectionToExchange(Exchange);
 
-	console.log(await Exchange.fetchOrders());
-
 	const exchangeObject = new ExchangeAccount(exchangeParam);
 	const savedExchange = await exchangeObject.save();
-
-	await syncExchangeData(savedExchange.id, Exchange).catch((err) => {
-		throw err;
-	});
 
 	user.linkedExchanges.push(savedExchange.id);
 
