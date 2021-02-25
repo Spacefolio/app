@@ -101,7 +101,7 @@ export interface holdingInfo
     totalValueReceived: number;
     totalValueInvested: number;
   }
-}
+ }
 
 function getAllAssetsEverHeld(orders: IOrderDocument[], transactions: ITransactionDocument[]) {
 	//var holdings: holdingInfo = {};

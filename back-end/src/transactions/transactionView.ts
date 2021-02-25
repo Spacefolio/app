@@ -28,8 +28,7 @@ export async function createTransactionViewItems(exchange: IExchangeAccountDocum
 
 export async function saveTransactionViewItems(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument) {
 
-  exchange.transactionViewItems = [];
-
+  exchange.transactionViewItems: ITransactionItemViewDocument[] = [];
   for (var i = 0; i < exchange.transactions.length; i++) {
 		let transaction: ITransactionDocument = exchange.transactions[i];
 		let transactionItem: ITransactionItemView = await convertTransactionToTransactionView(ccxtExchange, exchange, transaction);
@@ -193,8 +192,8 @@ export async function getConversionRate(
 
   return await getHistoricalData(baseCurrency + '/' + quoteCurrency, timestamp).catch(async () => {
     if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
-    return sleep(exchange.rateLimit).then((ohlcv: ccxt.OHLCV[]) => {
+    return sleep(exchange.rateLimit).then(() => exchange.fetchOHLCV(baseCurrency + '/' + quoteCurrency, '1m', timestamp, ).then((ohlcv: ccxt.OHLCV[]) => {
       return (ohlcv[0][1] + ohlcv[0][4]) / 2;
-    })
+    }))
   });
 }
