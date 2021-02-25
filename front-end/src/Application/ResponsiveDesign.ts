@@ -33,3 +33,6 @@ export const COLORS = {
   infoDark1: "#007cd6",
   infoDark2: "#0064ba",
 };
+export const SPACING = {
+  flexCardGap: "15px",
+};

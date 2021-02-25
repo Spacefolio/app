@@ -32,11 +32,11 @@ export const Charts = () => {
   const [chartWidth, setChartWidth] = useState(CalculateMainChartSize());
 
   useEffect(() => {
-    window.addEventListener("resize", () =>
-      setTimeout(function () {
-        setChartWidth(CalculateMainChartSize());
-      }, 100)
-    );
+    // window.addEventListener("resize", () =>
+    //   setTimeout(function () {
+    //     setChartWidth(CalculateMainChartSize());
+    //   }, 100)
+    // );
     portfolioService
       .getPortfolioChartData(timeframe)
       .then((res) => {

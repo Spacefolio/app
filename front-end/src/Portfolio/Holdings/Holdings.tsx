@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ILabelObject, LabelSorter } from "../Transactions/LabelSorter";
 import { portfolioActions } from "../../_actions";
 import { FlexCard } from "../../_components";
+import { SPACING } from "../../Application/ResponsiveDesign";
 
 export const Holdings = () => {
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ export const Holdings = () => {
   ];
 
   return (
-    <div style={{display: "grid", gap: '8px'}}>
+    <div style={{display: "grid", gap: SPACING.flexCardGap}}>
       {portfolioData ? (
         sortHoldings(filterField, sortAscending).map(
           (pItem: IPortfolioItemView) => {

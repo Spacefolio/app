@@ -24,7 +24,7 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
 
   const loadingExchanges = useSelector((state: any) => state.exchanges.loading);
   const userLinkedExchanges = useSelector(
-    (state: any) => state.exchanges.exchanges
+    (state: IRootState) => state.exchanges.exchanges
   );
   const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef);
 

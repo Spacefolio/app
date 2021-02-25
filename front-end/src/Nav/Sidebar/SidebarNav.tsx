@@ -63,7 +63,6 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
     <React.Fragment>
       <DesktopContainer
         style={{
-          marginRight: "8px",
           width: isSidebarCollapsed ? "50px" : "300px",
           alignItems: isSidebarCollapsed ? "center" : "start",
         }}

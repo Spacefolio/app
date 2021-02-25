@@ -19,11 +19,7 @@ export const ExchangeSidebarFilter: React.FC<ExchangeSidebarFilterProps> = ({}) 
     <Scrollbox>
       <Button onClick={() => setAddExchangeVisible(true)}>Add Exchange</Button>
       <hr />
-      <ManageExchanges
-      
-        myExchanges={true}
-        addExchange={false}
-      />
+      <ManageExchanges myExchanges={true} addExchange={false} />
 
       <Modal dismiss={setAddExchangeVisible} visible={addExchangeVisible}>
         <ManageExchanges

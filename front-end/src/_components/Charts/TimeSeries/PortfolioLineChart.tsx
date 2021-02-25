@@ -26,27 +26,25 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 }) => {
   useEffect(() => {
     data.length > 0 ? drawBasicChart() : null;
-
   }, [data, width, height]);
 
+  const margin = {
+    top: 0,
+    bottom: xAxis ? 20 : 0,
+    left: yAxis ? 80 : 8,
+    right: 8,
+  };
+
+  const realWidth = width - margin.left - margin.right;
+  const realHeight = height - margin.top - margin.bottom;
+
   const drawBasicChart = () => {
-    const margin = {
-      top: 0,
-      bottom:  xAxis?20:0,
-      left: yAxis?80:8,
-      right: 8,
-    };
-
-    const realwidth = width - margin.left - margin.right;
-    const realheight = height - margin.top - margin.bottom;
-
     const yMinValue: number = d3.min(data, (d: any) => d.USD);
     const yMaxValue: number = d3.max(data, (d: any) => d.USD);
     const xMinValue: number = d3.min(data, (d: any) => d.T);
     const xMaxValue: number = d3.max(data, (d: any) => d.T);
 
-    d3.select(`#${id}1`)
-      .remove()
+    d3.select(`#${id}1`).remove();
 
     //create main svg component
     const svg = d3
@@ -164,14 +162,14 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 
   return (
     <div style={{ position: "relative" }} id={`${id}`}>
-      {data.length < 0 ? (
+      {!(data.length > 0) ? (
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width,
-            height,
+            width: `${realHeight}px`,
+            height: `${realWidth}px`,
           }}
         >
           <div>LOADING CHART...</div>

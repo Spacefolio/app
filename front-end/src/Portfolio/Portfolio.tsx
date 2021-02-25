@@ -22,7 +22,7 @@ import { portfolioActions } from "../_actions";
 import { Scrollbox } from "../_components/Scrollbox/Scrollbox";
 import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter/ExchangeSidebarFilter";
 import useDimensions from "react-use-dimensions";
-import { RD } from "../Application/ResponsiveDesign";
+import { RD, SPACING } from "../Application/ResponsiveDesign";
 
 interface IPortfolioProps {
   width: number;
@@ -61,28 +61,36 @@ export const Portfolio: React.FC<IPortfolioProps> = ({ width }) => {
     </TabWrapper>
   );
 
+  const FilterByExchangeDesktop =
+    width > parseInt(RD.breakpointtablet) ? (
+      <PortfolioSidebarWrapper>
+        <FlexCard styles={{ alignItems: "start" }}>
+          <ExchangeSidebarFilter />
+        </FlexCard>
+      </PortfolioSidebarWrapper>
+    ) : null;
+
+
+  const FilterByExchangeMobile =
+    width <= parseInt(RD.breakpointtablet) ? (
+      <FlexCard
+        styles={{
+          marginBottom: SPACING.flexCardGap,
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
+        <ExchangeSidebarFilter />
+      </FlexCard>
+    ) : null;
+
+
   return (
     <PortfolioWrapper>
-      {width > parseInt(RD.breakpointtablet) ? (
-        <PortfolioSidebarWrapper>
-          <FlexCard styles={{ alignItems: "start" }}>
-            <ExchangeSidebarFilter />
-          </FlexCard>
-        </PortfolioSidebarWrapper>
-      ) : null}
+      {FilterByExchangeDesktop}
       <Scrollbox>
         <PortfolioSectionWrapper>
-          {width < parseInt(RD.breakpointtablet) ? (
-            <FlexCard
-              styles={{
-                marginBottom: "8px",
-                width: "100%",
-                alignItems: "center",
-              }}
-            >
-              <ExchangeSidebarFilter />
-            </FlexCard>
-          ) : null}
+          {FilterByExchangeMobile}
           <FlexCard>
             <MetaPortfolio />
           </FlexCard>

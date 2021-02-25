@@ -44,8 +44,10 @@ export const Application = () => {
               <Route path={`/portfolio`}>
                 <Portfolio width={width} />
               </Route>
-              <Route exact path={`/dashboard`} component={Dashboard} />
-              <Redirect to="/" />
+              <Route path={`/dashboard`}>
+                <Dashboard />
+              </Route>
+              <Redirect to="/dashboard" />
             </Switch>
           </ApplicationFlexContainer>
         </ApplicationContainer>

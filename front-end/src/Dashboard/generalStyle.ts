@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import {RD} from '../Application/ResponsiveDesign' 
+import {RD, SPACING} from '../Application/ResponsiveDesign' 
 
 export const DashboardWrapper = styled.div`
   width: 100%;
   display: grid;
-  gap: 8px;
+  gap: ${SPACING.flexCardGap};
   margin-top: 8px;
   @media screen and (min-width: ${RD.breakpointtablet}) {
     grid-template-areas:
