@@ -28,7 +28,7 @@ export async function createTransactionViewItems(exchange: IExchangeAccountDocum
 
 export async function saveTransactionViewItems(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument) {
 
-  exchange.transactionViewItems: ITransactionItemViewDocument[] = [];
+  exchange.transactionViewItems = [];
   for (var i = 0; i < exchange.transactions.length; i++) {
 		let transaction: ITransactionDocument = exchange.transactions[i];
 		let transactionItem: ITransactionItemView = await convertTransactionToTransactionView(ccxtExchange, exchange, transaction);
