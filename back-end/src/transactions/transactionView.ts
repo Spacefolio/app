@@ -5,7 +5,7 @@ import { ITransactionDocument } from './transaction.model';
 import { ccxtService } from '../_helpers/ccxt.service';
 import ccxt from 'ccxt';
 import { Db } from 'mongodb';
-import { getHistoricalData, getTicker } from '../historical/historical.service';
+import { fiat, getHistoricalData, getTicker } from '../historical/historical.service';
 
 export async function createTransactionViewItems(exchange: IExchangeAccountDocument): Promise<ITransactionItemView[]> {
 	const transactionViewItems: ITransactionItemView[] = [];
@@ -175,7 +175,9 @@ export async function getConversionRate(
 	quoteCurrency: string,
 	timestamp?: number
 ): Promise<number> {
-  if (baseCurrency == 'USD' && quoteCurrency == 'USD') return 1;
+	let symbol = baseCurrency + '/' + quoteCurrency;
+  let fiatValue = fiat(symbol);
+  if (fiatValue != 0) return fiatValue;
   
   let sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
   
@@ -183,16 +185,16 @@ export async function getConversionRate(
   {
     return await getTicker(baseCurrency).catch(async (err) => {
       if (!exchange.has.fetchTicker) throw 'Exchange does not have fetchTicker';
-      return sleep(exchange.rateLimit).then(() => exchange.fetchTicker(baseCurrency + '/' + quoteCurrency))
+      return sleep(exchange.rateLimit).then(() => exchange.fetchTicker(symbol))
       .then((ticker: ccxt.Ticker) => {
         return (ticker.last ? ticker.last : ((ticker.high + ticker.low) / 2));
       })
     });
   }
 
-  return await getHistoricalData(baseCurrency + '/' + quoteCurrency, timestamp).catch(async () => {
+  return await getHistoricalData(symbol, timestamp).catch(async () => {
     if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
-    return sleep(exchange.rateLimit).then(() => exchange.fetchOHLCV(baseCurrency + '/' + quoteCurrency, '1m', timestamp, ).then((ohlcv: ccxt.OHLCV[]) => {
+    return sleep(exchange.rateLimit).then(() => exchange.fetchOHLCV(symbol, '1m', timestamp, ).then((ohlcv: ccxt.OHLCV[]) => {
       return (ohlcv[0][1] + ohlcv[0][4]) / 2;
     }))
   });

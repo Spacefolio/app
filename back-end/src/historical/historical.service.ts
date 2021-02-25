@@ -72,9 +72,23 @@ export async function getTicker(symbol: string) : Promise<number>
   return tickerJson.length > 0 ? tickerJson[0].price : 1;
 }
 
+export function fiat(symbol: string)
+{
+  switch (symbol)
+  {
+    case "USD/USD":
+    case "USDC/USD":
+    case "USDT/USD":
+      return 1;
+    default:
+      return 0;
+  }
+}
+
 export async function getHistoricalData(symbol: string, timestamp: number) : Promise<number>
 {
-  if (symbol == 'USD/USD') return 1;
+  let fiatValue = fiat(symbol);
+  if (fiatValue != 0) return fiatValue;
   var historicalData = await HistoricalData.findOne({ symbol });
   if (!historicalData) {
     var symbols = symbol.split('/');
