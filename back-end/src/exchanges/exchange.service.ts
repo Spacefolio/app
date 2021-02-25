@@ -192,11 +192,6 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 	let quoteIsFiat = fiatValue != 0;
 	let quoteCurrencyInUsd = fiatValue;
 
-	if (baseCurrency == 'ALGO')
-	{
-		console.log("HERE");
-	}
-
 	if (!quoteIsFiat) {
 		quoteCurrencyInUsd = await getConversionRate(exchange, quoteCurrency, 'USD', order.timestamp);
 	}
@@ -301,8 +296,8 @@ async function createPortfolioItems(balances: { symbol: string; balance: ccxt.Ba
 			balance: balances[i].balance,
 			averageBuyPrice: { USD: averageBuyPrice },
 			averageSellPrice: { USD: averageSellPrice },
-			amountSold: last.amountSold,
-			amountBought: last.amountBought,
+			amountSold: last.totalAmountSold,
+			amountBought: last.totalAmountBought,
 			holdingHistory: balances[i].holdingHistory
 		};
 
@@ -446,15 +441,17 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 
 	const formattedPortfolioItems: IPortfolioItemView[] = await Promise.all(
 		exchangeAccount.portfolioItems.map(async (item) => {
+			let length = item.holdingHistory.length;
+			let last = item.holdingHistory[length-1];
 			const currentPrice = await getConversionRate(exchange, item.asset.symbol, 'USD');
       var currentValue = item.balance.total * currentPrice;
-      const profitAllTime = (item.amountSold * item.averageSellPrice.USD) - (item.amountBought * item.averageBuyPrice.USD) + currentValue;
+			let profitAllTime = last.totalValueReceived - last.totalValueInvested + currentValue;
 			
 			totalProfit += profitAllTime;
 			totalValue += currentValue;
 			totalInvested += (item.amountBought * item.averageBuyPrice.USD);
 
-			const profitPercentageAllTime = profitAllTime / (item.amountBought * item.averageBuyPrice.USD);
+			const profitPercentageAllTime = (profitAllTime / (last.totalValueInvested) * 100);
       //const profit24Hour = (amountSoldInTheLast24Hours * averageSellInTheLast24Hours) - (value24HoursAgo * howMuchIHad24HoursAgo) + currentValue
       const profit24Hour = randNum();
 			return {
@@ -474,7 +471,7 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 	let portfolioData: IPortfolioDataView = {
 		...exchangeAccountJson,
 		portfolioItems: formattedPortfolioItems,
-		profitPercentage: { USD: (totalValue + totalProfit / totalInvested ) * 100 },
+		profitPercentage: { USD: (((totalValue + totalProfit) - totalInvested) / totalInvested) * 100 },
 		portfolioTotal: { USD: totalValue },
 		profitTotal: { USD: totalProfit },
 	};
