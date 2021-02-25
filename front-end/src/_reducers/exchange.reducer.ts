@@ -1,5 +1,6 @@
 import { exchangeConstants } from "../_constants";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
+import { exchangeActions, portfolioActions } from "../_actions";
 
 interface IExchangeAction {
   type: string;
@@ -87,6 +88,7 @@ export function exchanges(
       return { ...state, addingExchange: true };
     case exchangeConstants.ADDNEW_SUCCESS:
       console.log(action.exchangeAccount);
+      
       return {
         ...state,
         addingExchange: false,

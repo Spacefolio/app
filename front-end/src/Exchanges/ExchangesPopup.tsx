@@ -44,11 +44,37 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
 
   const RenderExchangeItems = (
     <div className="my-exchanges-list-container">
+      <div
+        key={"AllAssets"}
+        style={{
+          width: "100%",
+          padding: "10px 0px",
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderLeft:
+            portfolioFilterID == "ALL" ? "3px solid var(--primary-base)" : "",
+        }}
+        onClick={() => dispatch(portfolioActions.FilterPortfolio("ALL"))}
+      >
+        <div
+          style={{
+            padding: "10px 0px",
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <PortfolioIcon width={25} height={25} />
+          <div>All Assets</div>
+        </div>
+      </div>
       {userLinkedExchanges.length != 0
         ? userLinkedExchanges.map((item: IExchangeAccountView) => {
             return <ExchangeItem data={item} />;
           })
-        : "You have no linked accounts... Add one below"}
+        : "You have no linked accounts... You should add one above"}
     </div>
   );
 
@@ -90,37 +116,6 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
     </div>
   );
 
-  const AllAssets = (
-    <div
-      key={"AllAssets"}
-      style={{
-        width: "100%",
-        padding: "10px 0px",
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderLeft:
-          portfolioFilterID == "ALL"
-            ? "3px solid var(--primary-base)"
-            : "",
-      }}
-      onClick={() => dispatch(portfolioActions.FilterPortfolio("ALL"))}
-    >
-      <div
-        style={{
-          padding: "10px 0px",
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <PortfolioIcon width={25} height={25} />
-        <div>All Assets</div>
-      </div>
-    </div>
-  );
-
   return (
     <div className="exchange-popup-wrapper">
       <div className="exchange-popup-inner-wrapper">
@@ -129,7 +124,6 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
             <h1 className="my-exchanges-label">{headerText}</h1>
           </div>
         </div>
-        {AllAssets}
         {myExchanges ? RenderExchangeItems : null}
         <Modal
           dismiss={() => {

@@ -4,6 +4,7 @@ import { alertActions } from "./alert.actions";
 import { history } from "../_helpers";
 import { IExchangeAccountView, IExchangeAccountRequest } from "../../../types";
 import { exchanges } from "../_reducers/exchange.reducer";
+import { portfolioActions } from "./";
 
 export const exchangeActions = {
   addNew,
@@ -21,6 +22,7 @@ function addNew(exchange: IExchangeAccountRequest) {
       .addNew(exchange)
       .then((res: any) => {
         dispatch(success(res));
+        dispatch(portfolioActions.sync());
         dispatch(alertActions.success("Exchange Added"));
       })
       .catch((error) => {

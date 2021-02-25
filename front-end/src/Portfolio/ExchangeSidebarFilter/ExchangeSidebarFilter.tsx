@@ -20,6 +20,7 @@ export const ExchangeSidebarFilter: React.FC<ExchangeSidebarFilterProps> = ({}) 
       <Button onClick={() => setAddExchangeVisible(true)}>Add Exchange</Button>
       <hr />
       <ManageExchanges
+      
         myExchanges={true}
         addExchange={false}
       />
