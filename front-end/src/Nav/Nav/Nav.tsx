@@ -18,6 +18,9 @@ export const Nav: React.FC<INavProps> = ({}) => {
   const user = useSelector((state: IRootState) => state.authentication.user);
   const [accountDropdownVisible, setAccountDropdownVisible] = useState(false);
   const [exchangesPopupVisible, setExchangesPopupVisible] = useState(false);
+  const viewType = useSelector(
+    (state: IRootState) => state.applicationView.currentViewType
+  );
 
   const { logout } = userActions;
 
@@ -46,27 +49,23 @@ export const Nav: React.FC<INavProps> = ({}) => {
     },
   ];
 
-  const LogoSection = (
-    <div className="nav-branding-area-container center-my-children">
-      <div
-        onClick={() => dispatch(applicationViewActions.toggleSidebar())}
-        style={{
-          borderRadius: "8px",
-          border: "red 3px solid",
-          height: "50px",
-          width: "50px",
-          marginRight: "20px",
-        }}
-      ></div>
-      <div style={{ color: "var(--primary-dark3)" }}>
-        <Link to="/dashboard">Algonex</Link>
-      </div>
-    </div>
-  );
-
-  return (
+  const DesktopNav = (
     <NavContainer>
-      {LogoSection}
+      <div className="nav-branding-area-container center-my-children">
+        <div
+          onClick={() => dispatch(applicationViewActions.toggleSidebar())}
+          style={{
+            borderRadius: "8px",
+            border: "red 3px solid",
+            height: "50px",
+            width: "50px",
+            marginRight: "20px",
+          }}
+        ></div>
+        <div style={{ color: "var(--primary-dark3)" }}>
+          <Link to="/dashboard">Algonex</Link>
+        </div>
+      </div>
       <div className="nav-flex-spacer"></div>
       <div className="account-links-container">
         <div style={{ position: "relative" }} ref={container}>
@@ -100,5 +99,21 @@ export const Nav: React.FC<INavProps> = ({}) => {
         />
       </Modal>
     </NavContainer>
+  );
+
+  const MobileNav = (
+    <NavContainer>
+      <div className="nav-branding-area-container center-my-children">
+        <div style={{ color: "var(--primary-dark3)" }}>
+          <Link to="/dashboard">Algonex</Link>
+        </div>
+      </div>
+    </NavContainer>
+  );
+
+  return (
+    <React.Fragment>
+      {viewType == "desktop" ? DesktopNav : MobileNav}
+    </React.Fragment>
   );
 };

@@ -38,23 +38,33 @@ export const MetaPortfolio = () => {
 
   const container = useRef();
 
+  const applicationWidth = useSelector(
+    (state: IRootState) => state.applicationView.applicationContainerWidth
+  );
+
   function CalculateMainChartSize() {
-    if (window.innerWidth > parseInt(RD.breakpointmonitor)) {
+    if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
       return 600;
-    } else if (window.innerWidth > parseInt(RD.breakpointlaptop)) {
+    } else if (
+      applicationWidth < parseInt(RD.breakpointmonitor) &&
+      applicationWidth >= parseInt(RD.breakpointlaptop)
+    ) {
       return 400;
-    } else if (window.innerWidth > parseInt(RD.breakpointtablet)) {
+    } else if (
+      applicationWidth < parseInt(RD.breakpointlaptop) &&
+      applicationWidth >= parseInt(RD.breakpointtablet)
+    ) {
       return 300;
-    } else if (window.innerWidth > parseInt(RD.breakpointsmartphone)) {
+    } else if (
+      applicationWidth < parseInt(RD.breakpointtablet) &&
+      applicationWidth >= parseInt(RD.breakpointsmartphone)
+    ) {
       return 250;
-    } else if (window.innerWidth < parseInt(RD.breakpointsmartphone)) {
+    } else if (applicationWidth < parseInt(RD.breakpointsmartphone)) {
       return 200;
     }
   }
 
-  const applicationWidth = useSelector(
-    (state: IRootState) => state.applicationView.applicationContainerWidth
-  );
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
   const [metaPortfolioChartData, setMetaPortfolioChartData] = useState([]);
   const [timeframeDropdownVisible, setTimeframeDropdownVisible] = useState(

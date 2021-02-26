@@ -69,20 +69,18 @@ export const Filter: React.FC<IFilterProps> = ({
         return (
           <>
             <div style={{ padding: "10px" }}>{key}</div>
-            <FlexCard
-              children={
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    flexDirection: "column",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  {GetItemsAtDate(sortedShit, key)}
-                </div>
-              }
-            />
+            <FlexCard>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                {GetItemsAtDate(sortedShit, key)}
+              </div>
+            </FlexCard>
           </>
         );
       });

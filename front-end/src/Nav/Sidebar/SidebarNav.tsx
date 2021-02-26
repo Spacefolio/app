@@ -26,6 +26,9 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
   const isSidebarVisible = useSelector(
     (state: IRootState) => state.applicationView.isSidebarVisible
   );
+  const viewType = useSelector(
+    (state: IRootState) => state.applicationView.currentViewType
+  );
 
   const Portfolio = (
     <NavLink
@@ -35,7 +38,9 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
     >
       <LinkWrapper>
         <PortfolioIcon />
-        {!isSidebarCollapsed ? <LinkText>Portfolio</LinkText> : null}
+        {!isSidebarCollapsed || viewType == "mobile" ? (
+          <LinkText>Portfolio</LinkText>
+        ) : null}
       </LinkWrapper>
     </NavLink>
   );
@@ -48,7 +53,9 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
     >
       <LinkWrapper>
         <BotHead />
-        {!isSidebarCollapsed ? <LinkText>Bots</LinkText> : null}
+        {!isSidebarCollapsed || viewType == "mobile" ? (
+          <LinkText>Bots</LinkText>
+        ) : null}
       </LinkWrapper>
     </NavLink>
   );
@@ -61,7 +68,9 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
     >
       <LinkWrapper>
         <Speedometer />
-        {!isSidebarCollapsed ? <LinkText>Dashboard</LinkText> : null}
+        {!isSidebarCollapsed || viewType == "mobile" ? (
+          <LinkText>Dashboard</LinkText>
+        ) : null}
       </LinkWrapper>
     </NavLink>
   );
@@ -79,14 +88,11 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
         {Bots}
       </DesktopContainer>
 
-      {isSidebarVisible ? (
-        <MobileBlurWrapper  onClick={() => dispatch(applicationViewActions.toggleSidebar())}>
-          <MobileContainer>
-            {Dashboard}
-            {Portfolio}
-            {Bots}
-          </MobileContainer>
-          <ModalBg/>
+      {viewType == "mobile" ? (
+        <MobileBlurWrapper>
+          {Dashboard}
+          {Portfolio}
+          {Bots}
         </MobileBlurWrapper>
       ) : null}
     </React.Fragment>

@@ -4,13 +4,12 @@ import { RD, SPACING } from "../Application/ResponsiveDesign";
 export const PortfolioWrapper = styled.div`
   padding: 8px 0px;
   display: flex;
-  // align-items: center;
-  // justify-content: center;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
 `;
 export const PortfolioSectionWrapper = styled.div`
-  grid-area: mainContent;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -19,8 +18,8 @@ export const PortfolioSidebarWrapper = styled.div`
   display: block;
   width: 300px;
   height: 100%;
-  grid-area: sidebar;
-  margin-right: ${SPACING.flexCardGap};
+  margin: 20px;
+  // margin-right: ${SPACING.flexCardGap};
 `;
 export const TabWrapper = styled.div`
   display: flex;

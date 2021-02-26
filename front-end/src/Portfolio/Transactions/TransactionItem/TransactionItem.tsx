@@ -58,7 +58,7 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
 
   const TypeSection = () => {
     return (
-      <DataWrapper>
+      <DataWrapper style={{gridArea: "typeSection"}}>
         <FixedInline>
           {decideTransactionIcon(type)}
           <FixedInline>
@@ -72,7 +72,7 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
 
   const AmountSection = () => {
     return (
-      <DataWrapper>
+      <DataWrapper style={{gridArea: "amountSection"}}>
         <div className="table-right-align" style={{ fontSize: "1.15em" }}>
           {amount} {symbol}
         </div>
@@ -87,23 +87,23 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
 
   const PriceSection = () => {
     return (
-      <DataWrapper>
-        <div className="table-right-align">${price}</div>
+      <DataWrapper style={{gridArea: "priceSection"}}>
+        <div className="table-right-align">${price.toFixed(2)}</div>
       </DataWrapper>
     );
   };
 
   const ValueSection = () => {
     return (
-      <DataWrapper>
-        <div className="table-right-align">${value}</div>
+      <DataWrapper style={{gridArea: "valueSection"}}>
+        <div className="table-right-align">${value.toFixed(2)}</div>
       </DataWrapper>
     );
   };
 
   const ExchangeNameSection = () => {
     return (
-      <DataWrapper>
+      <DataWrapper style={{gridArea: "exchangeNameSection"}}>
         <div className="table-right-align">{exchangeName} -</div>
         <div className="table-right-align">
           {symbol}/{quoteSymbol}
@@ -114,7 +114,7 @@ export const TransactionItem: React.FC<TreansactionItemProps> = ({
 
   const FeeSection = () => {
     return (
-      <DataWrapper>
+      <DataWrapper style={{gridArea: "feeSection"}}>
         {fee ? (
           <>
             <div className="table-right-align">

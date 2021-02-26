@@ -12,32 +12,44 @@ import { time } from "console";
 import { IRootState } from "../../_reducers";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
 
-function CalculateMainChartSize() {
-  if (window.innerWidth > parseInt(RD.breakpointmonitor)) {
-    return 1000;
-  } else if (window.innerWidth > parseInt(RD.breakpointlaptop)) {
-    return 700;
-  } else if (window.innerWidth > parseInt(RD.breakpointtablet)) {
-    return 530;
-  } else if (window.innerWidth > parseInt(RD.breakpointsmartphone)) {
-    return 630;
-  } else if (window.innerWidth < parseInt(RD.breakpointsmartphone)) {
-    return window.innerWidth - 140;
-  }
-}
-
 export const Charts = () => {
   const dispatch = useDispatch();
 
-  const applicationWidth = useSelector((state: IRootState) => state.applicationView.applicationContainerWidth)
-  const filterId = useSelector((state: IRootState) => state.portfolio.filterId)
+  const applicationWidth = useSelector(
+    (state: IRootState) => state.applicationView.applicationContainerWidth
+  );
+  function CalculateMainChartSize(width: number) {
+    if (width >= parseInt(RD.breakpointmonitor)) {
+      return 1000;
+    } else if (
+      width < parseInt(RD.breakpointmonitor) &&
+      width >= parseInt(RD.breakpointlaptop)
+    ) {
+      return 700;
+    } else if (
+      width < parseInt(RD.breakpointlaptop) &&
+      width >= parseInt(RD.breakpointtablet)
+    ) {
+      return 530;
+    } else if (
+      width < parseInt(RD.breakpointtablet) &&
+      width >= parseInt(RD.breakpointsmartphone)
+    ) {
+      return 630;
+    } else if (width < parseInt(RD.breakpointsmartphone)) {
+      return width - 140;
+    }
+  }
+  const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
   const [PortfolioChartData, setPortfolioChartData] = useState([]);
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
-  const [chartWidth, setChartWidth] = useState(CalculateMainChartSize());
+  const [chartWidth, setChartWidth] = useState(
+    CalculateMainChartSize(applicationWidth)
+  );
 
-useEffect(() => {
-setChartWidth(CalculateMainChartSize())
-}, [applicationWidth])
+  useEffect(() => {
+    setChartWidth(CalculateMainChartSize(applicationWidth));
+  }, [applicationWidth]);
 
   useEffect(() => {
     portfolioService

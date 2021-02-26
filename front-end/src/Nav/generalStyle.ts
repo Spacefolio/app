@@ -10,4 +10,5 @@ export const NavContainer = styled.div`
   width: 100%;
   height: 57px;
   align-items: center;
+  justify-content: center;
 `;

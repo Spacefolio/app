@@ -20,15 +20,26 @@ import {
 import useDimensions from "react-use-dimensions";
 import { applicationViewActions } from "../_actions/applicationView.actions";
 import { RD } from "./ResponsiveDesign";
+import { IRootState } from "../_reducers";
 
 export const Application = () => {
   const dispatch = useDispatch();
 
   const [ref, { width }] = useDimensions();
 
+  const applicationWidth = useSelector(
+    (state: IRootState) => state.applicationView.applicationContainerWidth
+  );
+  
   const flexSizing = () => {
-    if (width >= parseInt(RD.breakpointmonitor)) {
-      return{maxWidth: RD.widthmonitor}
+    if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
+      return { maxWidth: RD.widthmonitor };
+    } else if (applicationWidth < parseInt(RD.breakpointmonitor) && applicationWidth >= parseInt(RD.breakpointlaptop)) {
+      return { maxWidth: RD.widthlaptop };
+    } else if (applicationWidth < parseInt(RD.breakpointlaptop) && applicationWidth >= parseInt(RD.breakpointtablet)) {
+      return { maxWidth: RD.widthtablet };
+    } else if (applicationWidth < parseInt(RD.breakpointtablet) && applicationWidth >= parseInt(RD.breakpointsmartphone)) {
+      return { maxWidth: RD.widthsmartphone };
     }
   };
 

@@ -25,13 +25,14 @@ import useDimensions from "react-use-dimensions";
 import { RD, SPACING } from "../Application/ResponsiveDesign";
 import { IRootState } from "../_reducers";
 
-interface IPortfolioProps {
-}
+interface IPortfolioProps {}
 
 export const Portfolio: React.FC<IPortfolioProps> = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.authentication.user);
-  const width = useSelector((state: IRootState) => state.applicationView.applicationContainerWidth)
+  const width = useSelector(
+    (state: IRootState) => state.applicationView.applicationContainerWidth
+  );
 
   const { path } = useRouteMatch("/portfolio");
 
@@ -65,12 +66,11 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
   const FilterByExchangeDesktop =
     width > parseInt(RD.breakpointtablet) ? (
       <PortfolioSidebarWrapper>
-        <FlexCard styles={{ alignItems: "start" }}>
+        {/* <FlexCard styles={{ alignItems: "start", height: "100%" }}> */}
           <ExchangeSidebarFilter />
-        </FlexCard>
+        {/* </FlexCard> */}
       </PortfolioSidebarWrapper>
     ) : null;
-
 
   const FilterByExchangeMobile =
     width <= parseInt(RD.breakpointtablet) ? (
@@ -85,13 +85,12 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
       </FlexCard>
     ) : null;
 
-
   return (
     <PortfolioWrapper>
       {FilterByExchangeDesktop}
       <Scrollbox>
         <PortfolioSectionWrapper>
-          {FilterByExchangeMobile}
+          {/* {FilterByExchangeMobile} */}
           <FlexCard>
             <MetaPortfolio />
           </FlexCard>

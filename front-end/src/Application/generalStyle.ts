@@ -6,11 +6,11 @@ export const ApplicationContainer = styled.div`
   height: calc(100vh - 57px);
   justify-content: center;
   width: 100%;
-  padding: 10px;
+  margin: 10px;
 `;
 
 export const ApplicationFlexContainer = styled.div`
-  // width: 100%;
+  width: 100%;
   // max-width: 1920px;
   // @media (max-width: ${RD.breakpointmonitor}) {
   //   width: ${RD.widthlaptop};

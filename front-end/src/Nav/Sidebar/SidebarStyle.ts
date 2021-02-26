@@ -19,29 +19,26 @@ export const DesktopContainer = styled.div`
 `;
 
 export const MobileContainer = styled.div`
-  font-weight: 500;
-  font-size: 1em;
-  display: flex;
-  justify-content: start;
-  align-items: start;
-  flex-direction: column;
-  width: 300px;
-  background-color: white;
-  height: 100vh;
+  // font-weight: 500;
+  // font-size: 1em;
+  // display: flex;
+  // justify-content: start;
+  // align-items: start;
+  // flex-direction: column;
+  // width: 300px;
+  // background-color: white;
+  // height: 100vh;
 `;
 
 export const MobileBlurWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 8;
+  border-top: 3px solid var(--primary-base);
+  background-color: white;
+  width: 100vw;
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
-  justify-content: center;
-  @media screen and (min-width: ${RD.breakpointtablet}) {
-    display: none;
-  }
+  position: fixed;
+  bottom: 0;
 `;
 export const LinkWrapper = styled.div`
   cursor: pointer;
