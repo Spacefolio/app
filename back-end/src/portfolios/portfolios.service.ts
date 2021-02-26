@@ -5,7 +5,9 @@ import { mockPortfolioCalculationsFake } from "../../exchangeDataDetailed";
 export const portfolioService = {
   getAll,
   get,
-  sync
+  sync,
+  getPortfolioChart,
+  getMetaportfolioChart
 };
 
 async function sync(userId: string) {
@@ -33,4 +35,23 @@ async function get(userId: string, exchangeId: string) {
           //console.log(res)
           return portfolioData;
         }).catch((err) => { throw err; });
+}
+
+async function getMetaportfolioChart(userId: string) {
+  var portfolioData = await exchangeService.getExchangesData(userId);
+
+  for (let i = 0; i < portfolioData.length; i++)
+  {
+    let portfolio = portfolioData[i];
+    let portfolioItems = portfolio.portfolioItems;
+
+    for (let j = 0; j < portfolioItems.length; j++)
+    {
+      let item = portfolioItems[j];
+    }
+  }
+}
+
+async function getPortfolioChart(userId: string) {
+  var portfolioData = await exchangeService.getAll(userId);
 }

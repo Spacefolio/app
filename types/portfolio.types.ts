@@ -1,3 +1,4 @@
+import { IHoldingSnapshot } from "../back-end/src/exchanges/exchange.service";
 import { ITransaction } from "../back-end/src/transactions/transaction.model";
 import { exchangeType } from "../types";
 
@@ -20,6 +21,7 @@ export interface IPortfolioDataView {
   profitPercentage: { USD: number };
   portfolioTotal: { USD: number };
   profitTotal: { USD: number };
+  holdingHistory: IHoldingSnapshot[];
 }
 
 export interface IPortfolioItemView {

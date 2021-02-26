@@ -60,8 +60,8 @@ export interface IExchangeAccount {
   portfolioItems: [IPortfolioItem];
   transactions: [ITransaction];
   orders: [IOrder];
-  openOrders: [IOrder]
-  transactionViewItems: [ITransactionItemView]
+  openOrders: [IOrder];
+  transactionViewItems: [ITransactionItemView];
 }
 
 exchangeAccountSchema.set("toJSON", {
