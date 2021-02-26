@@ -9,8 +9,6 @@ import { ccxtService } from '../_helpers/ccxt.service';
 import { IOrder, IOrderDocument, orderSchema } from '../transactions/order.model';
 import { createTransactionViewItems, getConversionRate, saveTransactionViewItems } from '../transactions/transactionView';
 import { fiat } from '../historical/historical.service';
-import { privateDecrypt } from 'crypto';
-import { isTemplateExpression } from 'typescript';
 
 export const exchangeService = {
 	getAll,
@@ -280,8 +278,7 @@ async function createPortfolioItems(balances: { symbol: string; balance: ccxt.Ba
 	const portfolioItems: IPortfolioItem[] = [];
 
 	for (var i = 0; i < balances.length; i++) {
-
-		let length = balances[i].holdingHistory.length; 
+		let length = balances[i].holdingHistory.length;
 		let last = balances[i].holdingHistory[length - 1]
 		let averageBuyPrice = last.totalValueInvested / last.totalAmountBought;
 		let averageSellPrice = last.totalValueReceived / last.totalAmountSold;
@@ -464,6 +461,7 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 					all: profitPercentageAllTime,
 					h24: randNum()
 				},
+				holdingHistory: item.holdingHistory
 			};
 		})
 	);

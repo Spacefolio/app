@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Request, Response, NextFunction, response } from "express";
 import { transactionService } from "../transactions/transactions.service";
 import { IPortfolioDataView } from "../../../types";
 const router = Router();
@@ -11,7 +11,9 @@ router.get("/", getPortfolios);
 router.post("/sync", syncPortfolios);
 router.get("/transactions", getTransactionsAcrossAllPortfolios);
 router.get("/open-orders", getOpenOrdersAcrossAllPortfolios);
+router.get("/chart", getMetaportfolioChart);
 router.get("/:portfolioId/transactions", getTransactionsForAPortfolio);
+router.get("/:portfolioId/chart", getPortfolioChart);
 router.get("/:portfolioId", getPortfolio);
 router.put("/:portfolioId", updatePortfolio);
 router.delete("/:portfolioId", deletePortfolio);
@@ -111,4 +113,22 @@ function getOpenOrdersForAPortfolio(
       transactions ? res.json(transactions) : res.sendStatus(404)
     )
     .catch((err: any) => next(err));
+}
+
+function getMetaportfolioChart(
+  req: any,
+  res: Response,
+  next: NextFunction
+) {
+  portfolioService.getMetaportfolioChart(req.user.sub
+    )
+  .then((chart: any) => chart ? res.json(chart) : res.sendStatus(404))
+  .catch((err: any) => next(err));
+}
+
+function getPortfolioChart(req: any, res: Response, next: NextFunction)
+{
+  portfolioService.getPortfolioChart(req.user.sub)
+  .then((chart: any) => chart ? res.json(chart) : res.sendStatus(404))
+  .catch((err: any) => next(err));
 }
