@@ -15,10 +15,16 @@ interface IFilterProps {
   lineItemType: "openOrder" | "transaction";
 }
 
-export const Filter: React.FC<IFilterProps> = ({ data, sortAscending, lineItemType }) => {
+export const Filter: React.FC<IFilterProps> = ({
+  data,
+  sortAscending,
+  lineItemType,
+}) => {
   const container = useRef();
   const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
-  const [assetSearchDropdownVisible, setAssetSearchDropdownVisible] = useState(false);
+  const [assetSearchDropdownVisible, setAssetSearchDropdownVisible] = useState(
+    false
+  );
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
   const [assetType, setAssetType] = useState<string>();
@@ -88,7 +94,9 @@ export const Filter: React.FC<IFilterProps> = ({ data, sortAscending, lineItemTy
   const SortLineItems = (data: ILineItemArraySorter, ascending: boolean) => {
     var dateItems: any = {};
     data
-      .sort((a: any, b: any) => (ascending ? a["date"] - b["date"] : b["date"] - a["date"]))
+      .sort((a: any, b: any) =>
+        ascending ? a["date"] - b["date"] : b["date"] - a["date"]
+      )
       .map((item) => {
         let dateString = new Date(item.date).toDateString();
         if (dateItems[dateString] == undefined) {
@@ -103,8 +111,14 @@ export const Filter: React.FC<IFilterProps> = ({ data, sortAscending, lineItemTy
     return (
       <FilterSection>
         <FilterInput>
-          <DatePicker selected={fromDate} onChange={(date: any) => setFromDate(date)} />
-          <DatePicker selected={toDate} onChange={(date: any) => setToDate(date)} />
+          <DatePicker
+            selected={fromDate}
+            onChange={(date: any) => setFromDate(date)}
+          />
+          <DatePicker
+            selected={toDate}
+            onChange={(date: any) => setToDate(date)}
+          />
           <div>icon</div>
         </FilterInput>
       </FilterSection>
@@ -123,7 +137,10 @@ export const Filter: React.FC<IFilterProps> = ({ data, sortAscending, lineItemTy
               defaultItemClickHandler={setTransactionType}
             />
           ) : null}
-          <input onFocus={() => setAssetSearchDropdownVisible(true)} placeholder="All Types" />
+          <input
+            onFocus={() => setAssetSearchDropdownVisible(true)}
+            placeholder="All Types"
+          />
 
           <div>icon</div>
         </FilterInput>
@@ -133,7 +150,10 @@ export const Filter: React.FC<IFilterProps> = ({ data, sortAscending, lineItemTy
   const TransactionTypeSelector = () => {
     return (
       <FilterSection>
-        <FilterInput onClick={() => setTypeDropdownVisible(!typeDropdownVisible)} ref={container}>
+        <FilterInput
+          onClick={() => setTypeDropdownVisible(!typeDropdownVisible)}
+          ref={container}
+        >
           <div style={{ display: "flex", padding: "0px 5px" }}>
             <div>{transactionType}</div>
             <div>icon</div>

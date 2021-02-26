@@ -1,6 +1,7 @@
 import { exchangeConstants } from "../_constants";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { exchangeActions, portfolioActions } from "../_actions";
+import { IRootState } from ".";
 
 interface IExchangeAction {
   type: string;
@@ -22,7 +23,7 @@ interface IExchangeAccountState extends IExchangeAccountView {
 }
 
 export function exchanges(
-  state: any = { exchanges: [], exchangeRef: [], addingExchange: false },
+  state: IExchangesState = { exchanges: [], exchangeRef: [], addingExchange: false },
   action: IExchangeAction
 ) {
   switch (action.type) {

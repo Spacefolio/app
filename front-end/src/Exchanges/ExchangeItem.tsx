@@ -20,7 +20,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
   const [editExchangeVisible, setEditExchangeVisible] = useState(false);
   const exchangeRef = useSelector((state: IRootState) => state.exchanges.exchangeRef);
   const [hoverShowEdit, setHoverShowEdit] = useState(false);
-  const portfolioFilterID = useSelector((state: IRootState) => state.portfolio.filterPortfolio)
+  const portfolioFilterID = useSelector((state: IRootState) => state.portfolio.filterId)
 
   useEffect(() => {
     const targetRef: IExchangeReference = exchangeRef.filter(

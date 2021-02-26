@@ -7,12 +7,13 @@ import { ILabelObject, LabelSorter } from "../Transactions/LabelSorter";
 import { portfolioActions } from "../../_actions";
 import { FlexCard } from "../../_components";
 import { SPACING } from "../../Application/ResponsiveDesign";
+import { IRootState } from "../../_reducers";
 
 export const Holdings = () => {
   const dispatch = useDispatch();
 
   const portfolioData: IPortfolioDataView = useSelector(
-    (state: any) => state.portfolio.portfolioData[0]
+    (state: IRootState) => state.portfolio.filteredPortfolioData
   );
 
   const [filterField, setFilterField] = useState("value");

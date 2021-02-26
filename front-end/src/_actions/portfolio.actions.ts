@@ -6,7 +6,7 @@ import { IPortfolioDataView, ITransactionItemView } from "../../../types";
 export const portfolioActions = {
   sync,
   refresh,
-  getTransactions,
+  // getTransactions,
   getOpenOrders,
   FilterPortfolio,
 };
@@ -62,30 +62,30 @@ function refresh() {
   }
 }
 
-function getTransactions(exchangeID?: string) {
-  return (dispatch: any) => {
-    dispatch(request());
-    portfolioService
-      .getTransactionData(exchangeID)
-      .then((res: any) => {
-        dispatch(success(res));
-      })
-      .catch((error) => {
-        dispatch(failure(error.toString()));
-        dispatch(alertActions.error(error.toString()));
-      });
-  };
+// function getTransactions(exchangeID?: string) {
+//   return (dispatch: any) => {
+//     dispatch(request());
+//     portfolioService
+//       .getTransactionData(exchangeID)
+//       .then((res: any) => {
+//         dispatch(success(res));
+//       })
+//       .catch((error) => {
+//         dispatch(failure(error.toString()));
+//         dispatch(alertActions.error(error.toString()));
+//       });
+//   };
 
-  function request() {
-    return { type: portfolioConstants.TRANSACTIONS_REQUEST };
-  }
-  function success(transactionData: ITransactionItemView[]) {
-    return { type: portfolioConstants.TRANSACTIONS_SUCCESS, transactionData };
-  }
-  function failure(error: any) {
-    return { type: portfolioConstants.TRANSACTIONS_FAILURE, error };
-  }
-}
+//   function request() {
+//     return { type: portfolioConstants.TRANSACTIONS_REQUEST };
+//   }
+//   function success(transactionData: ITransactionItemView[]) {
+//     return { type: portfolioConstants.TRANSACTIONS_SUCCESS, transactionData };
+//   }
+//   function failure(error: any) {
+//     return { type: portfolioConstants.TRANSACTIONS_FAILURE, error };
+//   }
+// }
 
 function getOpenOrders(exchangeID?: string) {
   return (dispatch: any) => {

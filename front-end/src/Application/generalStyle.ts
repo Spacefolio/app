@@ -10,17 +10,17 @@ export const ApplicationContainer = styled.div`
 `;
 
 export const ApplicationFlexContainer = styled.div`
-  width: 100%;
-  max-width: 1920px;
-  @media screen and (max-width: ${RD.breakpointmonitor}) {
-    max-width: ${RD.widthlaptop};
-  }
-  @media screen and (max-width: ${RD.breakpointlaptop}) {
-    max-width: ${RD.widthtablet};
-  }
-  @media screen and (max-width: ${RD.breakpointtablet}) {
-    max-width: ${RD.widthsmartphone};
-  }
+  // width: 100%;
+  // max-width: 1920px;
+  // @media (max-width: ${RD.breakpointmonitor}) {
+  //   width: ${RD.widthlaptop};
+  // }
+  // @media screen and (max-width: ${RD.breakpointlaptop}) {
+  //   width: ${RD.widthtablet};
+  // }
+  // @media screen and (max-width: ${RD.breakpointtablet}) {
+  //   width: ${RD.widthsmartphone};
+  // }
 `;
 export const BodyWrapper = styled.div`
   display: flex;

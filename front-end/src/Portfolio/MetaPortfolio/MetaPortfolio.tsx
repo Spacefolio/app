@@ -22,6 +22,7 @@ import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
 import { RD } from "../../Application/ResponsiveDesign";
+import { IRootState } from "../../_reducers";
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,10 @@ export const MetaPortfolio = () => {
     }
   }
 
+  const applicationWidth = useSelector(
+    (state: IRootState) => state.applicationView.applicationContainerWidth
+  );
+  const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
   const [metaPortfolioChartData, setMetaPortfolioChartData] = useState([]);
   const [timeframeDropdownVisible, setTimeframeDropdownVisible] = useState(
     false
@@ -59,9 +64,10 @@ export const MetaPortfolio = () => {
   const [chartWidth, setChartWidth] = useState(CalculateMainChartSize());
 
   useEffect(() => {
-    window.addEventListener("resize", () =>
-      setChartWidth(CalculateMainChartSize())
-    );
+    setChartWidth(CalculateMainChartSize());
+  }, [applicationWidth]);
+
+  useEffect(() => {
     portfolioService
       .getPortfolioChartData(timeframe)
       .then((res) => {
@@ -71,7 +77,7 @@ export const MetaPortfolio = () => {
         console.log(err);
         dispatch(alertActions.error(err));
       });
-  }, []);
+  }, [timeframe, filterId]);
 
   const TimeFrameSelector = () => {
     const timeFrameSelectors: IDropdownItem[] = [
@@ -133,7 +139,7 @@ export const MetaPortfolio = () => {
     <PortfolioValueWrapper>
       <PortfolioValueContainer>
         <PortfolioValueItem style={{ fontSize: "1.5em" }}>
-          {data ? "$" + data.portfolioTotal.USD : "loading..."}
+          {data ? "$" + data.portfolioTotal.USD.toFixed(2) : "loading..."}
         </PortfolioValueItem>
         <div
           onClick={() => dispatch(portfolioActions.refresh())}
@@ -145,10 +151,10 @@ export const MetaPortfolio = () => {
       </PortfolioValueContainer>
       <PortfolioValueChangeContainer>
         <PortfolioValueItem>
-          {data ? data.profitPercentage.USD + "%" : "loading..."}
+          {data ? data.profitPercentage.USD.toFixed(2) + "%" : "loading..."}
         </PortfolioValueItem>
         <PortfolioValueItem>
-          {data ? "$" + data.profitTotal.USD : "loading..."}
+          {data ? "$" + data.profitTotal.USD.toFixed(2) : "loading..."}
         </PortfolioValueItem>
       </PortfolioValueChangeContainer>
     </PortfolioValueWrapper>

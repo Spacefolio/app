@@ -9,6 +9,8 @@ import { RD } from "../../Application/ResponsiveDesign";
 import { timeframe } from "../../../../types";
 import { PortfolioPieChart } from "../../_components/Charts/Pie/PieChart";
 import { time } from "console";
+import { IRootState } from "../../_reducers";
+import { applicationViewActions } from "../../_actions/applicationView.actions";
 
 function CalculateMainChartSize() {
   if (window.innerWidth > parseInt(RD.breakpointmonitor)) {
@@ -27,18 +29,19 @@ function CalculateMainChartSize() {
 export const Charts = () => {
   const dispatch = useDispatch();
 
+  const applicationWidth = useSelector((state: IRootState) => state.applicationView.applicationContainerWidth)
+  const filterId = useSelector((state: IRootState) => state.portfolio.filterId)
   const [PortfolioChartData, setPortfolioChartData] = useState([]);
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
   const [chartWidth, setChartWidth] = useState(CalculateMainChartSize());
 
+useEffect(() => {
+setChartWidth(CalculateMainChartSize())
+}, [applicationWidth])
+
   useEffect(() => {
-    // window.addEventListener("resize", () =>
-    //   setTimeout(function () {
-    //     setChartWidth(CalculateMainChartSize());
-    //   }, 100)
-    // );
     portfolioService
-      .getPortfolioChartData(timeframe)
+      .getPortfolioChartData(timeframe, filterId)
       .then((res) => {
         setPortfolioChartData(res);
       })
@@ -46,7 +49,7 @@ export const Charts = () => {
         console.log(err);
         dispatch(alertActions.error(err));
       });
-  }, []);
+  }, [timeframe, filterId]);
 
   const TimeFrameSelector = () => {
     const timeFrameSelectors: timeframe[] = [

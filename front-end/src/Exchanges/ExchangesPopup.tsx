@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../_reducers";
 import { data } from "jquery";
 import { PortfolioIcon } from "../_components/Icons";
+import { off } from "process";
 
 interface ExchangesPopupProps {
   headerText?: string;
@@ -34,7 +35,7 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
     null
   );
   const portfolioFilterID = useSelector(
-    (state: IRootState) => state.portfolio.filterPortfolio
+    (state: IRootState) => state.portfolio.filterId
   );
 
   useEffect(() => {
@@ -54,9 +55,9 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
           alignItems: "center",
           justifyContent: "space-between",
           borderLeft:
-            portfolioFilterID == "ALL" ? "3px solid var(--primary-base)" : "",
+            portfolioFilterID == "" ? "3px solid var(--primary-base)" : "",
         }}
-        onClick={() => dispatch(portfolioActions.FilterPortfolio("ALL"))}
+        onClick={() => dispatch(portfolioActions.FilterPortfolio(""))}
       >
         <div
           style={{
@@ -85,6 +86,7 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
           className="exchange-search-bar"
           name="search"
           type="text"
+          autoComplete={"off"}
           placeholder="search"
           value={searchFilter}
           onChange={(e) => setSearchFilter(e.target.value)}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Router,
@@ -18,31 +18,38 @@ import {
   BodyWrapper,
 } from "./generalStyle";
 import useDimensions from "react-use-dimensions";
+import { applicationViewActions } from "../_actions/applicationView.actions";
+import { RD } from "./ResponsiveDesign";
 
 export const Application = () => {
   const dispatch = useDispatch();
 
   const [ref, { width }] = useDimensions();
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const flexSizing = () => {
+    if (width >= parseInt(RD.breakpointmonitor)) {
+      return{maxWidth: RD.widthmonitor}
+    }
+  };
+
+  const [appWidth, setAppWidth] = useState(flexSizing());
+
+  useEffect(() => {
+    dispatch(applicationViewActions.UpdateApplicationWidth(width));
+    setAppWidth(flexSizing());
+  }, [width]);
 
   return (
     <div>
-      <Nav
-        isSidebarCollapsed={isSidebarCollapsed}
-        collapseSidebar={setIsSidebarCollapsed}
-      />
+      <Nav />
       <BodyWrapper>
-        <SidebarNav
-          CollapseSidebar={setIsSidebarCollapsed}
-          isSidebarCollapsed={isSidebarCollapsed}
-        />
+        <SidebarNav />
 
         <ApplicationContainer ref={ref}>
-          <ApplicationFlexContainer>
+          <ApplicationFlexContainer style={appWidth}>
             <Switch>
               <Route path={`/portfolio`}>
-                <Portfolio width={width} />
+                <Portfolio />
               </Route>
               <Route path={`/dashboard`}>
                 <Dashboard />

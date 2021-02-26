@@ -55,13 +55,19 @@ export const DeleteButton = () => {
 };
 
 interface ButtonProps {
-  children: string;
+  children: any;
   onClick: any;
+  props?: any;
 }
-export const Button: React.FC<ButtonProps> = ({ children, onClick }) => {
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  onClick,
+  ...props
+}) => {
   return (
     <div
-    onClick={() => onClick()}
+      {...props}
+      onClick={() => onClick()}
       className="general-buton-style center-my-children"
     >
       {children}

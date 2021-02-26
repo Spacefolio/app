@@ -37,7 +37,7 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   const AmountSection = () => {
     return (
       <DataWrapper>
-        <div className="table-right-align">${amount}</div>
+        <div className="table-right-align">{amount}</div>
       </DataWrapper>
     );
   };
@@ -45,14 +45,14 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   const CurrentPriceSection = () => {
     return (
       <DataWrapper>
-        <div className="table-right-align">${currentPrice}</div>
+        <div className="table-right-align">${currentPrice.toFixed(2)}</div>
       </DataWrapper>
     );
   };
   const ValueSection = () => {
     return (
       <DataWrapper>
-        <div className="table-right-align">${value.USD}</div>
+        <div className="table-right-align">${value.USD.toFixed(2)}</div>
       </DataWrapper>
     );
   };
@@ -63,7 +63,7 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
           className="table-right-align"
           style={{ color: portfolioValueItemStyler(profitTotal.all) }}
         >
-          ${profitTotal.all}
+          ${profitTotal.all.toFixed(2)}
         </div>
         <div
           className="table-right-align"
@@ -84,7 +84,7 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
         {ValueSection()}
         {ProfitSection()}
       </DesktopWrapper>
-      <MobileWrapper key={portfolioItem.id+"mobile"}>
+      <MobileWrapper key={portfolioItem.id + "mobile"}>
         {NameSection()}
         {AmountSection()}
         {ProfitSection()}

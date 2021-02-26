@@ -7,18 +7,15 @@ import { NavContainer } from "../generalStyle";
 import { userActions } from "../../_actions";
 import { Dropdown, IDropdownItem, Modal } from "../../_components";
 import { ManageExchanges } from "../../Exchanges";
+import { applicationView } from "../../_reducers/applicatoinView.reducer";
+import { applicationViewActions } from "../../_actions/applicationView.actions";
+import { IRootState } from "../../_reducers";
 
-interface INavProps {
-  collapseSidebar: any;
-  isSidebarCollapsed: boolean;
-}
+interface INavProps {}
 
-export const Nav: React.FC<INavProps> = ({
-  collapseSidebar,
-  isSidebarCollapsed,
-}) => {
+export const Nav: React.FC<INavProps> = ({}) => {
   const dispatch = useDispatch();
-  const user = useSelector((state: any) => state.authentication.user);
+  const user = useSelector((state: IRootState) => state.authentication.user);
   const [accountDropdownVisible, setAccountDropdownVisible] = useState(false);
   const [exchangesPopupVisible, setExchangesPopupVisible] = useState(false);
 
@@ -52,7 +49,7 @@ export const Nav: React.FC<INavProps> = ({
   const LogoSection = (
     <div className="nav-branding-area-container center-my-children">
       <div
-        onClick={() => collapseSidebar(!isSidebarCollapsed)}
+        onClick={() => dispatch(applicationViewActions.toggleSidebar())}
         style={{
           borderRadius: "8px",
           border: "red 3px solid",

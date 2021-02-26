@@ -43,25 +43,8 @@ async function refreshPortfolio() {
   };
 
   return await axios
-    .get(`${API_DOMAIN}/portfolios`, { headers: requestOptions })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((err) => {
-      throw err;
-    });
-}
-
-async function getPortfolioData(timeframe: string, exchangeId: string = "") {
-  const Authorization = authHeader().Authorization;
-  const requestOptions = {
-    Authorization: Authorization,
-  };
-
-  return await axios
-    .get(`${API_DOMAIN}/portfolios/${exchangeId}`, {
+    .get(`${API_DOMAIN}/portfolios/`, {
       headers: requestOptions,
-      params: { timeframe },
     })
     .then((response) => {
       return response.data;
@@ -70,6 +53,25 @@ async function getPortfolioData(timeframe: string, exchangeId: string = "") {
       throw err;
     });
 }
+
+// async function getPortfolioData(timeframe: string, exchangeId: string) {
+//   const Authorization = authHeader().Authorization;
+//   const requestOptions = {
+//     Authorization: Authorization,
+//   };
+
+//   return await axios
+//     .get(`${API_DOMAIN}/portfolios/${exchangeId ? exchangeId : null}`, {
+//       headers: requestOptions,
+//       params: { timeframe },
+//     })
+//     .then((response) => {
+//       return response.data;
+//     })
+//     .catch((err) => {
+//       throw err;
+//     });
+// }
 
 async function getTransactionData(exchangeID?: string) {
   const Authorization = authHeader().Authorization;
@@ -79,7 +81,9 @@ async function getTransactionData(exchangeID?: string) {
 
   return await axios
     .get(
-      `${API_DOMAIN}/portfolios${exchangeID != undefined ? "/" + exchangeID + "/" : "/"}transactions`,
+      `${API_DOMAIN}/portfolios${
+        exchangeID != undefined ? "/" + exchangeID + "/" : "/"
+      }transactions`,
       {
         headers: requestOptions,
       }
@@ -100,9 +104,7 @@ async function getOpenOrdersData(exchangeID?: string) {
 
   return await axios
     .get(
-      `${API_DOMAIN}/portfolios${
-        exchangeID != undefined ? "/" + exchangeID : "/"
-      }open-orders/`,
+      `${API_DOMAIN}/portfolios/${exchangeID ? exchangeID : ""}open-orders/`,
       {
         headers: requestOptions,
       }
@@ -188,7 +190,7 @@ const data: IPortfolioLineChartItem[] = [
 
 async function getPortfolioChartData(
   timeframe: timeframe,
-  exchangeID?: string,
+  exchangeID?: string
 ) {
   const Authorization = authHeader().Authorization;
   const requestOptions = {
@@ -196,7 +198,10 @@ async function getPortfolioChartData(
   };
 
   return await axios
-    .get(`${API_DOMAIN}/portfolios/${timeframe}`, { headers: requestOptions, params: {exchangeID:  exchangeID} })
+    .get(
+      `${API_DOMAIN}/${exchangeID ? exchangeID + "/" : ''}portfolios/chart`,
+      { headers: requestOptions, params: { timeframe: timeframe } }
+    )
     .then((response) => {
       return response.data;
     })

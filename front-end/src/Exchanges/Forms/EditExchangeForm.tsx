@@ -7,6 +7,7 @@ import {
   IExchangeAccountRequest,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
+import { Button } from "../../_components";
 
 interface ExchangeFormProps {
   exchangeAccountData: IExchangeAccountView;
@@ -112,21 +113,9 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
         />
       </div>
       <div>
-        <div
-          onClick={() => handleUpdate()}
-          className="center-my-children"
-          style={{
-            borderRadius: "3px",
-            border: "1px solid black",
-            height: "40px",
-            backgroundColor: "green",
-            color: "white",
-          }}
-        >
-          <div style={{ cursor: "pointer" }}>
-            {addingExchange ? "Updating..." : "Update"}
-          </div>
-        </div>
+        <Button onClick={() => handleUpdate()}>
+          {addingExchange ? "Updating..." : "Update"}
+        </Button>
       </div>
     </form>
   );

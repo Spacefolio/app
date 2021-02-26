@@ -5,6 +5,8 @@ import { history } from "../_helpers";
 import { IExchangeAccountView, IExchangeAccountRequest } from "../../../types";
 import { exchanges } from "../_reducers/exchange.reducer";
 import { portfolioActions } from "./";
+import { dispatch } from "d3";
+import { prototype } from "react-modal";
 
 export const exchangeActions = {
   addNew,
@@ -17,7 +19,6 @@ export const exchangeActions = {
 function addNew(exchange: IExchangeAccountRequest) {
   return (dispatch: any) => {
     dispatch(request(exchange));
-    console.log("action", exchange);
     exchangeService
       .addNew(exchange)
       .then((res: any) => {
@@ -120,6 +121,8 @@ function _delete(id: string) {
 
     exchangeService.delete(id).then((res) => {
       dispatch(success(id));
+      dispatch(portfolioActions.FilterPortfolio(""));
+      dispatch(portfolioActions.refresh());
     });
     dispatch(alertActions.success("Deleted")).catch((error: any) =>
       dispatch(failure(id, error.toString()))

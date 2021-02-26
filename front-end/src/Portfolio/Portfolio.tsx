@@ -23,14 +23,15 @@ import { Scrollbox } from "../_components/Scrollbox/Scrollbox";
 import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter/ExchangeSidebarFilter";
 import useDimensions from "react-use-dimensions";
 import { RD, SPACING } from "../Application/ResponsiveDesign";
+import { IRootState } from "../_reducers";
 
 interface IPortfolioProps {
-  width: number;
 }
 
-export const Portfolio: React.FC<IPortfolioProps> = ({ width }) => {
+export const Portfolio: React.FC<IPortfolioProps> = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.authentication.user);
+  const width = useSelector((state: IRootState) => state.applicationView.applicationContainerWidth)
 
   const { path } = useRouteMatch("/portfolio");
 

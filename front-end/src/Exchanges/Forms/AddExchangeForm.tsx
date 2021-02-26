@@ -7,6 +7,7 @@ import {
   IExchangeReference,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
+import { Button } from "../../_components";
 
 interface ExchangeFormProps {
   exchangeRefInfo: IExchangeReference;
@@ -106,21 +107,9 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
         />
       </div>
       <div>
-        <div
-          onClick={() => handleSubmit()}
-          className="center-my-children"
-          style={{
-            borderRadius: "3px",
-            border: "1px solid black",
-            height: "40px",
-            backgroundColor: "green",
-            color: "white",
-          }}
-        >
-          <div style={{ cursor: "pointer" }}>
+        <Button onClick={() => handleSubmit()}>
             {addingExchange ? "Submitting..." : "Submit"}
-          </div>
-        </div>
+        </Button>
       </div>
     </form>
   );

@@ -1,3 +1,4 @@
+import { ITransaction } from "../back-end/src/transactions/transaction.model";
 import { exchangeType } from "../types";
 
 export interface IPortfolioDataView {
@@ -11,6 +12,10 @@ export interface IPortfolioDataView {
     apiSecret: string;
     passphrase: string;
   };
+  orders: IOpenOrderItemView[];
+  transactionViewItems: ITransactionItemView[];
+  transactions: ITransaction[];
+  openOrders: IOpenOrderItemView[];
   portfolioItems: IPortfolioItemView[];
   profitPercentage: { USD: number };
   portfolioTotal: { USD: number };

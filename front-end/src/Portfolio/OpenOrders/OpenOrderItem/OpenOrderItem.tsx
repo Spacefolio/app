@@ -51,6 +51,8 @@ export const OpenOrderItem: React.FC<TreansactionItemProps> = ({
         return "Withdrawing";
       case "deposit":
         return "Depositing";
+      default: 
+      return "whoops";
     }
   };
 

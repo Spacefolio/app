@@ -8,7 +8,7 @@ import {
 interface IPortfolioAction {
   type: string;
   portfolioData: IPortfolioDataView[];
-  transactionData: ITransactionItemView[];
+  // transactionData: ITransactionItemView[];
   openOrdersData: IOpenOrderItemView[];
   exchangeID: string;
 }
@@ -16,19 +16,28 @@ export interface IPortfolioState {
   syncingPortfolio: boolean;
   recalculatingPortfolio: boolean;
   portfolioData: IPortfolioDataView[];
-  transactionData: ITransactionItemView[];
-  openOrdersData: IOpenOrderItemView[];
-  filterPortfolio: string;
+  filteredPortfolioData?: IPortfolioDataView;
+  filterId: string;
 }
+
+const FilterPortfolio = (
+  exchangeID: string,
+  portfolioData: IPortfolioDataView[]
+) => {
+  return exchangeID != ""
+    ? portfolioData.filter((portfolio: IPortfolioDataView) => {
+      console.log("function", portfolio.id, exchangeID, portfolioData[0])
+        return portfolio.id == exchangeID;
+      })[0]
+    : portfolioData[0];
+};
 
 export function portfolio(
   state: IPortfolioState = {
     syncingPortfolio: false,
     recalculatingPortfolio: false,
     portfolioData: [],
-    transactionData: [],
-    openOrdersData: [],
-    filterPortfolio: 'ALL',
+    filterId: "",
   },
   action: IPortfolioAction
 ) {
@@ -36,7 +45,7 @@ export function portfolio(
     case portfolioConstants.SYNC_REQUEST:
       return {
         ...state,
-
+        // filterId: '',
         syncingPortfolio: true,
       };
     case portfolioConstants.SYNC_SUCCESS:
@@ -44,6 +53,10 @@ export function portfolio(
         ...state,
         portfolioData: action.portfolioData,
         syncingPortfolio: false,
+        filteredPortfolioData: FilterPortfolio(
+          state.filterId,
+          action.portfolioData
+        ),
       };
     case portfolioConstants.SYNC_FAILURE:
       return {
@@ -51,19 +64,19 @@ export function portfolio(
         syncingPortfolio: false,
       };
 
-    case portfolioConstants.TRANSACTIONS_REQUEST:
-      return {
-        ...state,
-      };
-    case portfolioConstants.TRANSACTIONS_SUCCESS:
-      return {
-        ...state,
-        transactionData: action.transactionData,
-      };
-    case portfolioConstants.TRANSACTIONS_FAILURE:
-      return {
-        ...state,
-      };
+    // case portfolioConstants.TRANSACTIONS_REQUEST:
+    //   return {
+    //     ...state,
+    //   };
+    // case portfolioConstants.TRANSACTIONS_SUCCESS:
+    //   return {
+    //     ...state,
+    //     transactionData: action.transactionData,
+    //   };
+    // case portfolioConstants.TRANSACTIONS_FAILURE:
+    //   return {
+    //     ...state,
+    //   };
 
     case portfolioConstants.OPENORDERS_REQUEST:
       return {
@@ -86,9 +99,14 @@ export function portfolio(
         recalculatingPortfolio: true,
       };
     case portfolioConstants.REFRESH_SUCCESS:
+      console.log(action.portfolioData);
       return {
         ...state,
         portfolioData: action.portfolioData,
+        filteredPortfolioData: FilterPortfolio(
+          state.filterId,
+          action.portfolioData
+        ),
         recalculatingPortfolio: false,
       };
     case portfolioConstants.REFRESH_FAILURE:
@@ -96,10 +114,14 @@ export function portfolio(
         ...state,
         recalculatingPortfolio: false,
       };
-      case portfolioConstants.FILTER_PORTFOLIOS:
+    case portfolioConstants.FILTER_PORTFOLIOS:
       return {
         ...state,
-        filterPortfolio: action.exchangeID,
+        filterId: action.exchangeID,
+        filteredPortfolioData: FilterPortfolio(
+          action.exchangeID,
+          state.portfolioData
+        ),
       };
 
     default:

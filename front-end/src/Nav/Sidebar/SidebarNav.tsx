@@ -10,16 +10,23 @@ import {
 } from "./SidebarStyle";
 import { ModalBg, ModalWrapper } from "../../_components/Modal/generalStyle";
 import { BotHead, PortfolioIcon, Speedometer } from "../../_components/Icons";
+import { useDispatch, useSelector } from "react-redux";
+import { IRootState } from "../../_reducers";
+import { dispatch } from "d3";
+import { applicationViewActions } from "../../_actions/applicationView.actions";
 
-interface SidebarNavProps {
-  CollapseSidebar: any;
-  isSidebarCollapsed: boolean;
-}
+interface SidebarNavProps {}
 
-export const SidebarNav: React.FC<SidebarNavProps> = ({
-  isSidebarCollapsed,
-  CollapseSidebar,
-}) => {
+export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
+  const dispatch = useDispatch();
+
+  const isSidebarCollapsed = useSelector(
+    (state: IRootState) => state.applicationView.isSidebarCollapsed
+  );
+  const isSidebarVisible = useSelector(
+    (state: IRootState) => state.applicationView.isSidebarVisible
+  );
+
   const Portfolio = (
     <NavLink
       to="/portfolio"
@@ -72,8 +79,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {Bots}
       </DesktopContainer>
 
-      {!isSidebarCollapsed ? (
-        <MobileBlurWrapper onClick={() => CollapseSidebar(true)} >
+      {isSidebarVisible ? (
+        <MobileBlurWrapper  onClick={() => dispatch(applicationViewActions.toggleSidebar())}>
           <MobileContainer>
             {Dashboard}
             {Portfolio}
