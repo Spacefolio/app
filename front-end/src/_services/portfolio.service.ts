@@ -201,7 +201,7 @@ async function getPortfolioChartData(
 
   return await axios
     .get(
-      `${API_DOMAIN}/${exchangeID ? exchangeID + "/" : ""}portfolios/chart`,
+      `${API_DOMAIN}/portfolios/${exchangeID ? exchangeID + "/" : ""}chart`,
       { headers: requestOptions, params: { timeframe: timeframe } }
     )
     .then((response) => {
