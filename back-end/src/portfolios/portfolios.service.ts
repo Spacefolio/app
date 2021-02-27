@@ -55,6 +55,12 @@ async function getMetaportfolioChart(userId: string, timespan: timespan) {
   }
 }
 
-async function getPortfolioChart(userId: string, timespan: timespan) {
-  var portfolioData = await exchangeService.getAll(userId);
+async function getPortfolioChart(userId: string, portfolioId: string, timespan: timespan) {
+  var exchange = await exchangeService.getById(portfolioId);
+  
+  const { timeslices } = exchange;
+
+  Object.entries(timeslices).map(([key, value]) => {
+    console.log(key, value);
+  });
 }

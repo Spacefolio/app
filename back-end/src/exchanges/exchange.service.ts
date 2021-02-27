@@ -7,7 +7,7 @@ import { ITransaction, ITransactionDocument, Transaction } from '../transactions
 import { randNum } from '../../exchangeDataDetailed';
 import { ccxtService } from '../_helpers/ccxt.service';
 import { IOrder, IOrderDocument, orderSchema } from '../transactions/order.model';
-import { createTransactionViewItems, getConversionRate, saveTransactionViewItems } from '../transactions/transactionView';
+import { convertTransactionToTransactionView, createTransactionViewItems, getConversionRate, saveTransactionViewItems } from '../transactions/transactionView';
 import { fiat } from '../historical/historical.service';
 
 export const exchangeService = {
@@ -142,6 +142,8 @@ async function addTransactionSnapshotToHistory(transaction: ITransaction, exchan
 			lastSnapshot = holdingsHistory[currency][length - 1];
 	}
 
+	var fee = (transaction.fee) ? transaction.fee.cost : 0;
+
 	if (transaction.type == 'deposit') {
 		snapshot.totalAmountBought = lastSnapshot.totalAmountBought + amount;
 		snapshot.totalAmountSold = lastSnapshot.totalAmountSold;
@@ -154,11 +156,11 @@ async function addTransactionSnapshotToHistory(transaction: ITransaction, exchan
 
 	else {
 		snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
-		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + amount;
+		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + amount + fee;
 		snapshot.amountBought = 0;
-		snapshot.amountSold = amount;
+		snapshot.amountSold = amount + fee;
 		snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
-		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + (amount * priceInUsd);
+		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + ((amount-fee) * priceInUsd);
 		snapshot.price.USD = priceInUsd;
 	}
 
@@ -200,23 +202,24 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 			lastSnapshot = holdingsHistory[baseCurrency][length - 1];
 	}
 
+	let orderCost = order.cost + order.fee.cost;
+
 	if (order.side == 'buy') {
 		snapshot.totalAmountBought = lastSnapshot.totalAmountBought + order.filled;
 		snapshot.totalAmountSold = lastSnapshot.totalAmountSold;
 		snapshot.amountBought = order.filled;
 		snapshot.amountSold = 0;
-		snapshot.totalValueInvested = lastSnapshot.totalValueInvested + (order.cost * quoteCurrencyInUsd);
+		snapshot.totalValueInvested = lastSnapshot.totalValueInvested + (orderCost * quoteCurrencyInUsd);
 		snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
 		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : order.cost/order.filled * quoteCurrencyInUsd;
 	}
-
 	else {
 		snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
 		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + order.filled;
 		snapshot.amountBought = 0;
 		snapshot.amountSold = order.filled;
 		snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
-		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + (order.cost * quoteCurrencyInUsd);
+		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + ((order.cost - order.fee.cost) * quoteCurrencyInUsd);
 		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : order.cost/order.filled * quoteCurrencyInUsd;
 	}
 
@@ -245,18 +248,18 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 	if (order.side == 'buy') // count as a sell of the quote currency
 	{
 		snapshotQuote.totalAmountBought = lastSnapshotQuote.totalAmountBought;
-		snapshotQuote.totalAmountSold = lastSnapshotQuote.totalAmountSold + order.cost;
+		snapshotQuote.totalAmountSold = lastSnapshotQuote.totalAmountSold + orderCost;
 		snapshotQuote.amountBought = 0;
-		snapshotQuote.amountSold = order.cost;
+		snapshotQuote.amountSold = orderCost;
 		snapshotQuote.totalValueInvested = lastSnapshotQuote.totalValueInvested;
 		snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived + (order.cost * quoteCurrencyInUsd);
 		snapshotQuote.price.USD = quoteCurrencyInUsd;
 	}
 	else
-	{
-		snapshotQuote.totalAmountBought = lastSnapshotQuote.totalAmountBought + order.cost;
+	{ // count as a buy of the quote currency
+		snapshotQuote.totalAmountBought = lastSnapshotQuote.totalAmountBought + order.cost - (order.fee.cost);
 		snapshotQuote.totalAmountSold = lastSnapshotQuote.totalAmountSold;
-		snapshotQuote.amountBought = order.cost;
+		snapshotQuote.amountBought = order.cost - (order.fee.cost);
 		snapshotQuote.amountSold = 0;
 		snapshotQuote.totalValueInvested = lastSnapshotQuote.totalValueInvested + (order.cost * quoteCurrencyInUsd);
 		snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived;

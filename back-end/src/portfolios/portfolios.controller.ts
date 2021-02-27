@@ -82,7 +82,7 @@ function getTransactionsForAPortfolio(
   next: NextFunction
 ) {
   transactionService
-    .getTransactions(req.user.sub, req.params.exchangeId)
+    .getTransactions(req.user.sub, req.params.portfolioId)
     .then((transactions: any) =>
       transactions ? res.json(transactions) : res.sendStatus(404)
     )
@@ -108,7 +108,7 @@ function getOpenOrdersForAPortfolio(
   next: NextFunction
 ) {
   transactionService
-    .getOpenOrders(req.user.sub, req.params.exchangeId)
+    .getOpenOrders(req.user.sub, req.params.portfolioId)
     .then((transactions: any) =>
       transactions ? res.json(transactions) : res.sendStatus(404)
     )
@@ -131,7 +131,7 @@ function getPortfolioChart(req: any, res: Response, next: NextFunction)
 {
   let timeframe: timespan = getTimeframe(req.query.timeframe);
 
-  portfolioService.getPortfolioChart(req.user.sub, timeframe)
+  portfolioService.getPortfolioChart(req.user.sub, req.params.portfolioId, timeframe)
   .then((chart: any) => chart ? res.json(chart) : res.sendStatus(404))
   .catch((err: any) => next(err));
 }
