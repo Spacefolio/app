@@ -64,7 +64,7 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
 
   return (
     <div id={`${id}`}>
-      {portfolioItems.length == 0 ? (
+      {!portfolioItems && (
         <div
           style={{
             display: "flex",
@@ -76,7 +76,7 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
         >
           <div>LOADING CHART...</div>
         </div>
-      ) : null}
+      )}
     </div>
   );
 };

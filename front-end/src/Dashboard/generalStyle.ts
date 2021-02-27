@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {RD, SPACING} from '../Application/ResponsiveDesign' 
+import {RD, SPACING} from '../GlobalStyles/ResponsiveDesign' 
 
 export const DashboardWrapper = styled.div`
   width: 100%;

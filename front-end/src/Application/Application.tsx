@@ -16,10 +16,10 @@ import {
   ApplicationContainer,
   ApplicationFlexContainer,
   BodyWrapper,
-} from "./generalStyle";
+} from "./applicationStyles";
 import useDimensions from "react-use-dimensions";
 import { applicationViewActions } from "../_actions/applicationView.actions";
-import { RD } from "./ResponsiveDesign";
+import { RD } from "../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
 
 export const Application = () => {
@@ -30,15 +30,27 @@ export const Application = () => {
   const applicationWidth = useSelector(
     (state: IRootState) => state.applicationView.applicationContainerWidth
   );
-  
+  const viewType = useSelector(
+    (state: IRootState) => state.applicationView.currentViewType
+  );
+
   const flexSizing = () => {
     if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
       return { maxWidth: RD.widthmonitor };
-    } else if (applicationWidth < parseInt(RD.breakpointmonitor) && applicationWidth >= parseInt(RD.breakpointlaptop)) {
+    } else if (
+      applicationWidth < parseInt(RD.breakpointmonitor) &&
+      applicationWidth >= parseInt(RD.breakpointlaptop)
+    ) {
       return { maxWidth: RD.widthlaptop };
-    } else if (applicationWidth < parseInt(RD.breakpointlaptop) && applicationWidth >= parseInt(RD.breakpointtablet)) {
+    } else if (
+      applicationWidth < parseInt(RD.breakpointlaptop) &&
+      applicationWidth >= parseInt(RD.breakpointtablet)
+    ) {
       return { maxWidth: RD.widthtablet };
-    } else if (applicationWidth < parseInt(RD.breakpointtablet) && applicationWidth >= parseInt(RD.breakpointsmartphone)) {
+    } else if (
+      applicationWidth < parseInt(RD.breakpointtablet) &&
+      applicationWidth >= parseInt(RD.breakpointsmartphone)
+    ) {
       return { maxWidth: RD.widthsmartphone };
     }
   };
@@ -53,10 +65,10 @@ export const Application = () => {
   return (
     <div>
       <Nav />
-      <BodyWrapper>
-        <SidebarNav />
+      <BodyWrapper style={{}}>
+        {viewType == "desktop" ? <SidebarNav /> : null}
 
-        <ApplicationContainer ref={ref}>
+        <ApplicationContainer viewType={viewType} ref={ref}>
           <ApplicationFlexContainer style={appWidth}>
             <Switch>
               <Route path={`/portfolio`}>
@@ -70,6 +82,7 @@ export const Application = () => {
           </ApplicationFlexContainer>
         </ApplicationContainer>
       </BodyWrapper>
+      {viewType == "mobile" && <SidebarNav />}
     </div>
   );
 };

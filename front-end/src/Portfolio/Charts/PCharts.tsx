@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DashboardWrapper } from "./generalStyle";
-import { FlexCard } from "../../_components";
+import {
+  DashboardWrapper,
+  TimeframeItem,
+  TimeFrameSelectorContainer,
+} from "./generalStyle";
+
 import { PortfolioLineChart } from "../../_components/Charts/TimeSeries/PortfolioLineChart";
 import { alertActions } from "../../_actions";
 import { portfolioService } from "../../_services";
-import { RD } from "../../Application/ResponsiveDesign";
+import { RD } from "../../GlobalStyles/ResponsiveDesign";
 import { timeframe } from "../../../../types";
 import { PortfolioPieChart } from "../../_components/Charts/Pie/PieChart";
 import { time } from "console";
 import { IRootState } from "../../_reducers";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
+import { FlexCard } from "../../GlobalStyles";
 
 export const Charts = () => {
   const dispatch = useDispatch();
@@ -74,39 +79,27 @@ export const Charts = () => {
       "ALL",
     ];
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <TimeFrameSelectorContainer>
         {timeFrameSelectors.map((item: timeframe) => {
           return (
-            <div
-              onClick={(e) => {
+            <TimeframeItem
+              onClick={() => {
                 setTimeframe(item);
               }}
-              className={`
-                center-my-children ${
-                  item == timeframe ? "selected-field" : null
-                }`}
-              style={{
-                padding: "10px",
-                cursor: "pointer",
-              }}
+              selected={item == timeframe}
             >
               {item}
-            </div>
+            </TimeframeItem>
           );
         })}
-      </div>
+      </TimeFrameSelectorContainer>
     );
   };
 
   return (
     <DashboardWrapper>
       <FlexCard
-        styles={{ gridArea: "one" }}
+        style={{ gridArea: "one" }}
         children={
           <div>
             <PortfolioLineChart
@@ -122,11 +115,11 @@ export const Charts = () => {
           </div>
         }
       />
-      <FlexCard styles={{ gridArea: "two" }}>
-        <PortfolioPieChart size={450} id="portfolio-pie-chart" />
+      <FlexCard style={{ gridArea: "two" }}>
+        <PortfolioPieChart size={300} id="portfolio-pie-chart" />
       </FlexCard>
-      <FlexCard styles={{ gridArea: "three" }}>
-        <div>{"exchange allocation pie chart"}</div>
+      <FlexCard style={{ gridArea: "three" }}>
+        {"exchange allocation pie chart"}
       </FlexCard>
     </DashboardWrapper>
   );

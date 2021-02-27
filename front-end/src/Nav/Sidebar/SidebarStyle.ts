@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { RD } from "../../Application/ResponsiveDesign";
+import { RD } from "../../GlobalStyles/ResponsiveDesign";
 
 export const DesktopContainer = styled.div`
   font-weight: 500;
@@ -19,26 +19,12 @@ export const DesktopContainer = styled.div`
 `;
 
 export const MobileContainer = styled.div`
-  // font-weight: 500;
-  // font-size: 1em;
-  // display: flex;
-  // justify-content: start;
-  // align-items: start;
-  // flex-direction: column;
-  // width: 300px;
-  // background-color: white;
-  // height: 100vh;
-`;
-
-export const MobileBlurWrapper = styled.div`
   border-top: 3px solid var(--primary-base);
   background-color: white;
   width: 100vw;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  position: fixed;
-  bottom: 0;
 `;
 export const LinkWrapper = styled.div`
   cursor: pointer;

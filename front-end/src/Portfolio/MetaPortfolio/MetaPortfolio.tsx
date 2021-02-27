@@ -13,15 +13,15 @@ import {
 } from "./generalStyle";
 import {
   Dropdown,
-  FlexCard,
+
   IDropdownItem,
-  SyncButton,
+  SyncIcon,
 } from "../../_components";
 import { PortfolioLineChart } from "../../_components";
 import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
-import { RD } from "../../Application/ResponsiveDesign";
+import { RD } from "../../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../../_reducers";
 
 export const MetaPortfolio = () => {
@@ -139,7 +139,7 @@ export const MetaPortfolio = () => {
   const SyncButtonSection = (
     <SyncAreaContainer>
       <SyncButtonContainer onClick={() => dispatch(portfolioActions.sync())}>
-        <SyncButton isSyncing={isSyncing}></SyncButton>
+        <SyncIcon isSyncing={isSyncing}></SyncIcon>
         <div>Sync</div>
       </SyncButtonContainer>
     </SyncAreaContainer>
@@ -155,7 +155,7 @@ export const MetaPortfolio = () => {
           onClick={() => dispatch(portfolioActions.refresh())}
           style={{ width: "30px" }}
         >
-          <SyncButton isSyncing={isRefreshing} />
+          <SyncIcon isSyncing={isRefreshing} />
         </div>
         {TimeFrameSelector()}
       </PortfolioValueContainer>

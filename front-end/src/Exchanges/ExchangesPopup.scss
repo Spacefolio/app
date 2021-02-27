@@ -1,34 +1,9 @@
-.exchange-popup-wrapper {
-}
-.exchange-popup-inner-wrapper {
-}
-
-.my-exchanges-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
 .my-exchanges-label-container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-.my-exchanges-label {
-}
-.add-exchange-wrapper {
-}
 .my-exchanges-list-container {
   width: 100%;
-}
-
-.exchange-search-bar {
-  border-radius: 5px;
-  border: lightblue solid 3px;
-  width: 100%;
-  padding: 10px;
-  &:focus {
-  }
 }

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { RD } from "../Application/ResponsiveDesign";
+import { RD } from "../GlobalStyles/ResponsiveDesign";
 
 export const LabelWrapper = styled.div`
   width: 100%;

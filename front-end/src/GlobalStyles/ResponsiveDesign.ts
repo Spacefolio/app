@@ -36,3 +36,6 @@ export const COLORS = {
 export const SPACING = {
   flexCardGap: "15px",
 };
+export const TIMING = {
+  transitionTime: "0.3s",
+}

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { exchangeActions, portfolioActions } from "../_actions";
-import "./ExchangesPopup.scss";
 import { AddExchangeForm, EditExchangeForm, ExchangeItem } from "../Exchanges";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { Modal } from "../_components";
@@ -9,6 +8,15 @@ import { IRootState } from "../_reducers";
 import { data } from "jquery";
 import { PortfolioIcon } from "../_components/Icons";
 import { off } from "process";
+import {
+  AddExchangeWrapper,
+  ExchangeSearchBar,
+  MyExchangeNameWrapper,
+  MyExchangesLineItemContainer,
+  MyExchangesListContainer,
+  MyExchangeWrapper,
+} from "./ExchangeStyles";
+import { filter } from "d3";
 
 interface ExchangesPopupProps {
   headerText?: string;
@@ -44,46 +52,29 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
   }, []);
 
   const RenderExchangeItems = (
-    <div className="my-exchanges-list-container">
-      <div
+    <MyExchangesListContainer>
+      <MyExchangesLineItemContainer
+        selected={portfolioFilterID == ""}
         key={"AllAssets"}
-        style={{
-          width: "100%",
-          padding: "10px 0px",
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderLeft:
-            portfolioFilterID == "" ? "3px solid var(--primary-base)" : "",
-        }}
         onClick={() => dispatch(portfolioActions.FilterPortfolio(""))}
       >
-        <div
-          style={{
-            padding: "10px 0px",
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <PortfolioIcon width={25} height={25} />
+        <MyExchangeNameWrapper>
+          <PortfolioIcon style={{ width: "25px", height: "25px" }} />
           <div>All Assets</div>
-        </div>
-      </div>
+        </MyExchangeNameWrapper>
+      </MyExchangesLineItemContainer>
       {userLinkedExchanges.length != 0
         ? userLinkedExchanges.map((item: IExchangeAccountView) => {
-            return <ExchangeItem data={item} />;
+            return <ExchangeItem key={item.nickname} data={item} />;
           })
         : "You have no linked accounts... You should add one above"}
-    </div>
+    </MyExchangesListContainer>
   );
 
   const AddExchange = (
-    <div className="add-exchange-wrapper">
+    <AddExchangeWrapper>
       <div>
-        <input
-          className="exchange-search-bar"
+        <ExchangeSearchBar
           name="search"
           type="text"
           autoComplete={"off"}
@@ -92,51 +83,46 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
           onChange={(e) => setSearchFilter(e.target.value)}
         />
       </div>
-      {exchangeRef.length != 0
-        ? exchangeRef
-            .filter((item: IExchangeReference) => {
-              if (searchFilter != "") {
-                return item.name
-                  .toLowerCase()
-                  .startsWith(searchFilter.toLowerCase());
-              } else return true;
-            })
-            .map((item: IExchangeReference) => {
-              return (
-                <div
-                  onClick={() => {
-                    setAddExchangeVisible(true);
-                    setAddExchangeData(item);
-                  }}
-                  key={item.id}
-                >
-                  <img src={item.logoUrl} /> {item.name}
-                </div>
-              );
-            })
-        : null}
-    </div>
+      {exchangeRef &&
+        exchangeRef
+          .filter((item: IExchangeReference) => {
+            if (searchFilter != "") {
+              return item.name
+                .toLowerCase()
+                .startsWith(searchFilter.toLowerCase());
+            } else return true;
+          })
+          .map((item: IExchangeReference) => {
+            return (
+              <div
+                onClick={() => {
+                  setAddExchangeVisible(true);
+                  setAddExchangeData(item);
+                }}
+                key={item.id}
+              >
+                <img src={item.logoUrl} /> {item.name}
+              </div>
+            );
+          })}
+    </AddExchangeWrapper>
   );
 
   return (
-    <div className="exchange-popup-wrapper">
-      <div className="exchange-popup-inner-wrapper">
-        <div className="my-exchanges-wrapper">
-          <div>
-            <h1 className="my-exchanges-label">{headerText}</h1>
-          </div>
-        </div>
-        {myExchanges ? RenderExchangeItems : null}
-        <Modal
-          dismiss={() => {
-            setAddExchangeVisible(false);
-          }}
-          visible={addExchangeVisible}
-        >
-          <AddExchangeForm exchangeRefInfo={addExchangeData} />
-        </Modal>
-        {addExchange ? AddExchange : null}
-      </div>
+    <div>
+      <MyExchangeWrapper>
+        <h1>{headerText}</h1>
+      </MyExchangeWrapper>
+      {myExchanges && RenderExchangeItems}
+      <Modal
+        dismiss={() => {
+          setAddExchangeVisible(false);
+        }}
+        visible={addExchangeVisible}
+      >
+        <AddExchangeForm exchangeRefInfo={addExchangeData} />
+      </Modal>
+      {addExchange && AddExchange}
     </div>
   );
 };

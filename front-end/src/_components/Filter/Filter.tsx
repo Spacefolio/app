@@ -1,24 +1,26 @@
-import React, { useEffect, useRef } from "react";
-import { FilterInput, FilterSection, FilterWrapper } from "./generalStyle";
+import React, { useRef } from "react";
+import {
+  DateGroupedLineItemContainer,
+  DateLabel,
+  FilterInput,
+  FilterSection,
+  FilterWrapper,
+} from "./FilterStyles";
 import { useState } from "react";
 import { Dropdown, IDropdownItem } from "../Dropdown/Dropdown";
 import DatePicker from "react-datepicker";
-import { DDListItem } from "../Dropdown/generalStyle";
-import { FlexCard } from "..";
-import { TransactionItem } from "../../Portfolio/Transactions/TransactionItem/TransactionItem";
-import { OpenOrders } from "../../Portfolio";
-import { OpenOrderItem } from "../../Portfolio/OpenOrders/OpenOrderItem/OpenOrderItem";
+import { FlexCard } from "../../GlobalStyles";
 
 interface IFilterProps {
   data: any;
   sortAscending: boolean;
-  lineItemType: "openOrder" | "transaction";
+  LineItemComponent: any;
 }
 
 export const Filter: React.FC<IFilterProps> = ({
   data,
   sortAscending,
-  lineItemType,
+  LineItemComponent,
 }) => {
   const container = useRef();
   const [typeDropdownVisible, setTypeDropdownVisible] = useState(false);
@@ -27,7 +29,6 @@ export const Filter: React.FC<IFilterProps> = ({
   );
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
-  const [assetType, setAssetType] = useState<string>();
   const [transactionType, setTransactionType] = useState<string>("All Types");
 
   const ddownItems: IDropdownItem[] = [
@@ -50,36 +51,24 @@ export const Filter: React.FC<IFilterProps> = ({
 
   const GetItemsAtDate = (dateGroupedData: any, date: string) => {
     return dateGroupedData[date].map((item: any) => {
-      switch (lineItemType) {
-        case "transaction":
-          return <TransactionItem transactionItem={item} />;
-        case "openOrder":
-          return <OpenOrderItem openOrderItem={item} />;
-      }
+      return <LineItemComponent item={item} />;
     });
   };
 
   type ILineItemArraySorter = [{ date: number }];
 
   const RenderLineItems = () => {
-    const sortedShit = SortLineItems(data, sortAscending);
+    const sortedShit = CreateDateGroupedList(data, sortAscending);
 
     if (data) {
       return Object.keys(sortedShit).map((key) => {
         return (
           <>
-            <div style={{ padding: "10px" }}>{key}</div>
-            <FlexCard>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-evenly",
-                }}
-              >
+            <DateLabel key={key}>{key}</DateLabel>
+            <FlexCard key={key+"-data"}>
+              <DateGroupedLineItemContainer>
                 {GetItemsAtDate(sortedShit, key)}
-              </div>
+              </DateGroupedLineItemContainer>
             </FlexCard>
           </>
         );
@@ -89,7 +78,10 @@ export const Filter: React.FC<IFilterProps> = ({
     }
   };
 
-  const SortLineItems = (data: ILineItemArraySorter, ascending: boolean) => {
+  const CreateDateGroupedList = (
+    data: ILineItemArraySorter,
+    ascending: boolean
+  ) => {
     var dateItems: any = {};
     data
       .sort((a: any, b: any) =>

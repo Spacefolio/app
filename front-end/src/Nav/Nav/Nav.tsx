@@ -2,14 +2,22 @@ import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
-import "./Nav.scss";
-import { NavContainer } from "../generalStyle";
 import { userActions } from "../../_actions";
 import { Dropdown, IDropdownItem, Modal } from "../../_components";
 import { ManageExchanges } from "../../Exchanges";
 import { applicationView } from "../../_reducers/applicatoinView.reducer";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
 import { IRootState } from "../../_reducers";
+import {
+  BrandingContainer,
+  NavAccountContainer,
+  NavAccountText,
+  NavContainer,
+  NavFlexSpacer,
+  NavLogoArea,
+  ToggleSidebar,
+} from "../NavStyles";
+import { BasicLink, ClickableDiv } from "../../GlobalStyles";
 
 interface INavProps {}
 
@@ -51,42 +59,35 @@ export const Nav: React.FC<INavProps> = ({}) => {
 
   const DesktopNav = (
     <NavContainer>
-      <div className="nav-branding-area-container center-my-children">
-        <div
+      <NavLogoArea>
+        <ToggleSidebar
           onClick={() => dispatch(applicationViewActions.toggleSidebar())}
-          style={{
-            borderRadius: "8px",
-            border: "red 3px solid",
-            height: "50px",
-            width: "50px",
-            marginRight: "20px",
-          }}
-        ></div>
-        <div style={{ color: "var(--primary-dark3)" }}>
-          <Link to="/dashboard">Algonex</Link>
-        </div>
-      </div>
-      <div className="nav-flex-spacer"></div>
-      <div className="account-links-container">
-        <div style={{ position: "relative" }} ref={container}>
-          <div
-            onClick={() => {
-              setAccountDropdownVisible(!accountDropdownVisible);
-            }}
-            className="nav-button portfolio-btn text-nowrap"
-          >
-            {user.firstName} {user.lastName}
-          </div>
-          {accountDropdownVisible ? (
-            <Dropdown
-              isVisible={accountDropdownVisible}
-              dropdownItemList={ddownItems}
-              setVisiblity={setAccountDropdownVisible}
-              containerRef={container}
-            />
-          ) : null}
-        </div>
-      </div>
+        ></ToggleSidebar>
+        <BrandingContainer>
+          <BasicLink to="/dashboard">Algonex</BasicLink>
+        </BrandingContainer>
+      </NavLogoArea>
+      <NavFlexSpacer />
+
+      <NavAccountContainer
+        ref={container}
+        onClick={() => {
+          setAccountDropdownVisible(!accountDropdownVisible);
+        }}
+      >
+        <NavAccountText>
+          {user.firstName} {user.lastName}
+        </NavAccountText>
+        {accountDropdownVisible ? (
+          <Dropdown
+            isVisible={accountDropdownVisible}
+            dropdownItemList={ddownItems}
+            setVisiblity={setAccountDropdownVisible}
+            containerRef={container}
+          />
+        ) : null}
+      </NavAccountContainer>
+
       <Modal
         dismiss={() => setExchangesPopupVisible(false)}
         visible={exchangesPopupVisible}
@@ -103,11 +104,9 @@ export const Nav: React.FC<INavProps> = ({}) => {
 
   const MobileNav = (
     <NavContainer>
-      <div className="nav-branding-area-container center-my-children">
-        <div style={{ color: "var(--primary-dark3)" }}>
-          <Link to="/dashboard">Algonex</Link>
-        </div>
-      </div>
+      <NavLogoArea>
+        <Link to="/dashboard">Algonex</Link>
+      </NavLogoArea>
     </NavContainer>
   );
 

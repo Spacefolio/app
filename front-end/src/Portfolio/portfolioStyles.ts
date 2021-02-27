@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { RD, SPACING } from "../Application/ResponsiveDesign";
+import { RD, SPACING } from "../GlobalStyles/ResponsiveDesign";
 
 export const PortfolioWrapper = styled.div`
   padding: 8px 0px;

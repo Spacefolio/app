@@ -30,6 +30,7 @@ async function syncPortfolio() {
       { headers: requestOptions }
     )
     .then((response) => {
+      localStorage.setItem("Portfolio", JSON.stringify(response.data));
       return response.data;
     })
     .catch((err) => {
@@ -47,6 +48,7 @@ async function refreshPortfolio() {
       headers: requestOptions,
     })
     .then((response) => {
+      localStorage.setItem("Portfolio", JSON.stringify(response.data));
       return response.data;
     })
     .catch((err) => {
@@ -197,9 +199,10 @@ async function getPortfolioChartData(
     Authorization: Authorization,
   };
 
+  return data;
   return await axios
     .get(
-      `${API_DOMAIN}/${exchangeID ? exchangeID + "/" : ''}portfolios/chart`,
+      `${API_DOMAIN}/${exchangeID ? exchangeID + "/" : ""}portfolios/chart`,
       { headers: requestOptions, params: { timeframe: timeframe } }
     )
     .then((response) => {

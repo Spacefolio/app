@@ -13,12 +13,12 @@ import {
   MobileWrapper,
 } from "../../TabularCardStyles";
 
-interface TreansactionItemProps {
-  transactionItem: ITransactionItemView;
+interface ITransactionItemProps {
+  item: ITransactionItemView;
 }
 
-export const TransactionItem: React.FC<TreansactionItemProps> = ({
-  transactionItem,
+export const TransactionItem: React.FC<ITransactionItemProps> = ({
+  item: transactionItem,
 }) => {
   const portfolioValueItemStyler = (num: number) => {
     return num < 0 ? "var(--error-base)" : "var(--accent-base)";

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./ExchangeForm.scss";
 import { exchangeActions } from "../../_actions";
 import {
   exchangeType,
@@ -7,7 +6,13 @@ import {
   IExchangeAccountRequest,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "../../_components";
+import { BasicButton } from "../../GlobalStyles";
+import {
+  ExchangeFormContainer,
+  ExchangeFormInput,
+  ExchangeFormLabel,
+  ExchangeFormRow,
+} from "./ExchangeFormStyles";
 
 interface ExchangeFormProps {
   exchangeAccountData: IExchangeAccountView;
@@ -62,61 +67,55 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
   };
 
   return (
-    <form className="add-exchange-form">
-      <div>
-        <h1>Edit Exchange Info</h1>
-      </div>
-      <div className="add-exchange-data-row">
+    <ExchangeFormContainer>
+      <h1>Edit Exchange Info</h1>
+
+      <ExchangeFormRow>
         <div>
           {name}
           <img src={exchangeAccountData.logoUrl} />
         </div>
-      </div>
-      <div className="add-exchange-data-row">
-        <label className="add-exchange-row-label">NICKNAME</label>
-        <input
+      </ExchangeFormRow>
+      <ExchangeFormRow>
+        <ExchangeFormLabel>NICKNAME</ExchangeFormLabel>
+        <ExchangeFormInput
           name="nickname"
           onChange={(e) => setNickname(e.target.value)}
           type="text"
           value={nickname}
-          className="add-exchange-row-input"
         />
-      </div>
-      <div className="add-exchange-data-row">
-        <label className="add-exchange-row-label">API KEY</label>
-        <input
+      </ExchangeFormRow>
+      <ExchangeFormRow>
+        <ExchangeFormLabel>API KEY</ExchangeFormLabel>
+        <ExchangeFormInput
           name="apiKey"
           onChange={(e) => setApiKey(e.target.value)}
           type="text"
           value={apiKey}
-          className="add-exchange-row-input"
         />
-      </div>
-      <div className="add-exchange-data-row">
-        <label className="add-exchange-row-label">API SECRET</label>
-        <input
+      </ExchangeFormRow>
+      <ExchangeFormRow>
+        <ExchangeFormLabel>API SECRET</ExchangeFormLabel>
+        <ExchangeFormInput
           name="apiSecret"
           onChange={(e) => setApiSecret(e.target.value)}
           type="text"
           value={apiSecret}
-          className="add-exchange-row-input"
         />
-      </div>
-      <div className="add-exchange-data-row">
-        <label className="add-exchange-row-label">PASSPHRASE</label>
-        <input
+      </ExchangeFormRow>
+      <ExchangeFormRow>
+        <ExchangeFormLabel>PASSPHRASE</ExchangeFormLabel>
+        <ExchangeFormInput
           name="passphrase"
           onChange={(e) => setPassphrase(e.target.value)}
           type="text"
           value={passphrase}
-          className="add-exchange-row-input"
         />
-      </div>
-      <div>
-        <Button onClick={() => handleUpdate()}>
-          {addingExchange ? "Updating..." : "Update"}
-        </Button>
-      </div>
-    </form>
+      </ExchangeFormRow>
+
+      <BasicButton onClick={() => handleUpdate()}>
+        {addingExchange ? "Updating..." : "Update"}
+      </BasicButton>
+    </ExchangeFormContainer>
   );
 };

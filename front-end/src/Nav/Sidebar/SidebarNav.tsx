@@ -1,19 +1,19 @@
-import React, { useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React from "react";
+import { NavLink } from "react-router-dom";
 import "./SidebarNav.scss";
 import {
   DesktopContainer,
   LinkWrapper,
-  MobileBlurWrapper,
   MobileContainer,
   LinkText,
 } from "./SidebarStyle";
-import { ModalBg, ModalWrapper } from "../../_components/Modal/generalStyle";
-import { BotHead, PortfolioIcon, Speedometer } from "../../_components/Icons";
+import {
+  BotsIcon,
+  PortfolioIcon,
+  DashboardIcon,
+} from "../../_components/Icons";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
-import { dispatch } from "d3";
-import { applicationViewActions } from "../../_actions/applicationView.actions";
 
 interface SidebarNavProps {}
 
@@ -22,9 +22,6 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
 
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed
-  );
-  const isSidebarVisible = useSelector(
-    (state: IRootState) => state.applicationView.isSidebarVisible
   );
   const viewType = useSelector(
     (state: IRootState) => state.applicationView.currentViewType
@@ -38,9 +35,9 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
     >
       <LinkWrapper>
         <PortfolioIcon />
-        {!isSidebarCollapsed || viewType == "mobile" ? (
+        {(!isSidebarCollapsed || viewType == "mobile") && (
           <LinkText>Portfolio</LinkText>
-        ) : null}
+        )}
       </LinkWrapper>
     </NavLink>
   );
@@ -52,10 +49,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
       activeClassName="active-sidebar-tab"
     >
       <LinkWrapper>
-        <BotHead />
-        {!isSidebarCollapsed || viewType == "mobile" ? (
+        <BotsIcon />
+        {(!isSidebarCollapsed || viewType == "mobile") && (
           <LinkText>Bots</LinkText>
-        ) : null}
+        )}
       </LinkWrapper>
     </NavLink>
   );
@@ -67,10 +64,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
       activeClassName="active-sidebar-tab"
     >
       <LinkWrapper>
-        <Speedometer />
-        {!isSidebarCollapsed || viewType == "mobile" ? (
+        <DashboardIcon />
+        {(!isSidebarCollapsed || viewType == "mobile") && (
           <LinkText>Dashboard</LinkText>
-        ) : null}
+        )}
       </LinkWrapper>
     </NavLink>
   );
@@ -88,13 +85,13 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
         {Bots}
       </DesktopContainer>
 
-      {viewType == "mobile" ? (
-        <MobileBlurWrapper>
+      {viewType == "mobile" && (
+        <MobileContainer>
           {Dashboard}
           {Portfolio}
           {Bots}
-        </MobileBlurWrapper>
-      ) : null}
+        </MobileContainer>
+      )}
     </React.Fragment>
   );
 };

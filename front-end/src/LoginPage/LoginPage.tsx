@@ -5,18 +5,20 @@ import { useDispatch, useSelector } from "react-redux";
 import './LoginPage';
 
 import { userActions } from "../_actions";
+import { FlexCard } from '../GlobalStyles';
+import { IRootState } from '../_reducers';
 
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const loggingIn = useSelector((state) => state.authentication.loggingIn);
+  const loggingIn = useSelector((state: IRootState) => state.authentication.loggedIn);
   const dispatch = useDispatch();
 
   const { login } = userActions;
 
-  function handleSubmit(e) {
+  function handleSubmit(e: any) {
     e.preventDefault();
 
     setSubmitted(true);
@@ -26,7 +28,7 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="col-md-6 col-md-offset-3">
+    <FlexCard>
       <h2>Login</h2>
       <form name="form" onSubmit={handleSubmit}>
         <div
@@ -73,6 +75,6 @@ export const LoginPage = () => {
           </Link>
         </div>
       </form>
-    </div>
+    </FlexCard>
   );
 };

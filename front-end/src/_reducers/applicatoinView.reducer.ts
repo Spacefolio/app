@@ -1,4 +1,4 @@
-import { RD } from "../Application/ResponsiveDesign";
+import { RD } from "../GlobalStyles/ResponsiveDesign";
 import { applicationViewConstants } from "../_constants/applicationView.constants";
 
 interface IApplicationViewAcion {

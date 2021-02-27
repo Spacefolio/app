@@ -24,3 +24,14 @@ export const FilterSection = styled.div`
   align-content: center
   width: 100%;
 `;
+
+export const DateLabel = styled.div`
+  padding: 10px;
+`;
+
+export const DateGroupedLineItemContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+`;

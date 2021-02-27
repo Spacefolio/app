@@ -26,11 +26,13 @@ async function login(username: string, password: string) {
   const user = await handleResponse(response);
   // store user details and jwt token in local storage to keep user logged in between page refreshes
   localStorage.setItem("user", JSON.stringify(user));
+  
   return user;
 }
 
 function logout() {
   localStorage.removeItem("user");
+  localStorage.removeItem("Portfolio");
 }
 
 async function getById(id: string) {
