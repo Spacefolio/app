@@ -2,8 +2,9 @@ import { User } from "../users/user.model";
 import { exchangeService } from "../exchanges/exchange.service";
 import { mockPortfolioCalculationsFake } from "../../exchangeDataDetailed";
 import { ITransactionItemView, timespan } from "../../../types";
-import { IExchangeAccountDocument } from "../exchanges/exchange.model";
+import { IExchangeAccountDocument, IHoldingSlice, ITimeslice, ITimeslices } from "../exchanges/exchange.model";
 import ccxt from "ccxt";
+import { userService } from "../users/user.service";
 
 export const portfolioService = {
   getAll,
@@ -41,18 +42,31 @@ async function get(userId: string, exchangeId: string) {
 }
 
 async function getMetaportfolioChart(userId: string, timespan: timespan) {
-  var portfolioData = await exchangeService.getExchangesData(userId);
+  var user = await userService.getById(userId);
+  if (!user) throw "user not found";
 
-  for (let i = 0; i < portfolioData.length; i++)
+  let timeslices: ITimeslices = {};
+
+  for (let exchangeId of user.linkedExchanges)
   {
-    let portfolio = portfolioData[i];
-    let portfolioItems = portfolio.portfolioItems;
+    const exchangeDocument = await exchangeService.getById(exchangeId);
 
-    for (let j = 0; j < portfolioItems.length; j++)  
-    {
-      let item = portfolioItems[j];
-    }
+    Object.entries(exchangeDocument.timeslices).forEach(([timestamp, timeslice]:[string, ITimeslice]) => {
+      if (!timeslices[timeslice.start])
+      {
+        timeslices[timeslice.start] = timeslice;
+      }
+      else
+      {
+        timeslices[timeslice.start].value += timeslice.value;
+      }
+    });
   }
+
+  return Object.entries(timeslices).map(([timestamp, timeslice]:[string, ITimeslice]) => {
+    return { T: timestamp, USD:timeslice.value };
+  });
+
 }
 
 async function getPortfolioChart(userId: string, portfolioId: string, timespan: timespan) {
@@ -60,7 +74,7 @@ async function getPortfolioChart(userId: string, portfolioId: string, timespan: 
   
   const { timeslices } = exchange;
 
-  Object.entries(timeslices).map(([key, value]) => {
-    console.log(key, value);
+  return Object.entries(timeslices).map(([timestamp, timeslice]:[string, ITimeslice]) => {
+    return {T: timestamp, USD:timeslice.value};
   });
 }
