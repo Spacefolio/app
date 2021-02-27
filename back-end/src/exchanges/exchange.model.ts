@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IPortfolioItem, portfolioItemSchema } from "../portfolios/portfolio.model";
+import { holdingSnapshotSchema, IPortfolioItem, portfolioItemSchema } from "../portfolios/portfolio.model";
 import { IExchangeAccountView, exchangeType, ITransactionItemView } from "../../../types";
 import { ITransaction, ITransactionDocument, transactionItemViewSchema, transactionSchema } from "../transactions/transaction.model";
 import { IOrder, IOrderDocument, orderSchema } from "../transactions/order.model";
@@ -20,8 +20,58 @@ export interface IExchangeAccountDocument extends mongoose.Document {
   transactions: ITransactionDocument[];
   orders: IOrderDocument[];
   openOrders: IOrderDocument[];
-  transactionViewItems: ITransactionItemView[];
+  transactionViewItems: ITransactionItemView[],
+  timeslices: ITimeslices;
 }
+
+export interface IHoldingSnapshot
+{
+	timestamp: number;
+	price: { USD: number };
+	amountBought: number;
+	amountSold: number;
+	totalAmountBought: number;
+	totalAmountSold: number;
+	totalValueReceived: number;
+	totalValueInvested: number;
+}
+
+export interface IHoldingsHistory
+{
+  [key: string]: IHoldingSnapshot[]
+}
+
+const holdingSliceSchema = new mongoose.Schema({
+  asset: String,
+  amount: Number,
+  price: Number,
+  value: Number,
+  snapshots: [holdingSnapshotSchema]
+});
+
+export interface IHoldingSlice {
+  asset: string;
+  amount: number;
+  price: number;
+  value: number;
+  snapshots: IHoldingSnapshot[];
+}
+
+export interface ITimeslices {
+  [key: number]: ITimeslice
+}
+
+export interface ITimeslice {
+  start: number;
+  value: number;
+  holdings: { [key: string]: IHoldingSlice };
+}
+
+const timesliceSchema = new mongoose.Schema({
+  start: Number,
+  value: Number,
+  holdings: [holdingSliceSchema]
+});
 
 export interface IExchangeAccountModel
   extends mongoose.Model<IExchangeAccountDocument> {
@@ -42,7 +92,8 @@ const exchangeAccountSchema = new mongoose.Schema({
   transactions: [transactionSchema],
   orders: [orderSchema],
   openOrders: [orderSchema],
-  transactionViewItems: [transactionItemViewSchema]
+  transactionViewItems: [transactionItemViewSchema],
+  timeslices: { type: Object }
 });
 
 export interface IExchangeAccount {
@@ -62,6 +113,7 @@ export interface IExchangeAccount {
   orders: [IOrder];
   openOrders: [IOrder];
   transactionViewItems: [ITransactionItemView];
+  timeslices: [ITimeslice];
 }
 
 exchangeAccountSchema.set("toJSON", {

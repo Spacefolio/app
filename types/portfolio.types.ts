@@ -1,4 +1,4 @@
-import { IHoldingSnapshot } from "../back-end/src/exchanges/exchange.service";
+import { IHoldingSnapshot } from "../back-end/src/exchanges/exchange.model";
 import { ITransaction } from "../back-end/src/transactions/transaction.model";
 import { exchangeType } from "../types";
 
@@ -72,6 +72,7 @@ export interface IOpenOrderItemView {
 }
 
 export type timeframe = "24H" | "1W" | "1M" | "3M" | "6M" | "1Y" | "ALL";
+export enum timespan { H24="24H", W1="1W", M1="1M", M3="3M", M6="6M", Y1="1Y", ALL="ALL" };
 
 export interface IPortfolioLineChartItem {
   T: number; //UNIX timestamp of the plot point to be use as the x axis

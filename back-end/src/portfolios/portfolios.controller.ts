@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction, response } from "express";
 import { transactionService } from "../transactions/transactions.service";
-import { IPortfolioDataView } from "../../../types";
+import { IPortfolioDataView, timeframe, timespan } from "../../../types";
 const router = Router();
 import { exchangeService } from "../exchanges/exchange.service";
 import { portfolioItemSchema } from "./portfolio.model";
@@ -120,15 +120,24 @@ function getMetaportfolioChart(
   res: Response,
   next: NextFunction
 ) {
-  portfolioService.getMetaportfolioChart(req.user.sub
-    )
+  let timeframe: timespan = getTimeframe(req.query.timeframe);
+  
+  portfolioService.getMetaportfolioChart(req.user.sub, timeframe)
   .then((chart: any) => chart ? res.json(chart) : res.sendStatus(404))
   .catch((err: any) => next(err));
 }
 
 function getPortfolioChart(req: any, res: Response, next: NextFunction)
 {
-  portfolioService.getPortfolioChart(req.user.sub)
+  let timeframe: timespan = getTimeframe(req.query.timeframe);
+
+  portfolioService.getPortfolioChart(req.user.sub, timeframe)
   .then((chart: any) => chart ? res.json(chart) : res.sendStatus(404))
   .catch((err: any) => next(err));
+}
+
+function getTimeframe(timeframe: string) : timespan
+{
+  let time: timespan | undefined = (<any>timespan)[timeframe];
+  return (time === undefined) ? timespan.ALL : time;
 }

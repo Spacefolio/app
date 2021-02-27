@@ -61,7 +61,7 @@ export async function convertOrderToTransactionView(
 ): Promise<ITransactionItemView> {
 	var baseSymbol = getBaseSymbol(order.symbol);
 	var quoteSymbol = getQuoteSymbol(order.symbol);
-	var priceInUsd = order.price ? order.price : order.cost / order.amount;
+	var priceInUsd = order.price ? order.price : order.cost / order.filled;
 	var valueInUsd = order.cost;
 
 	if (quoteSymbol != 'USD') {
@@ -78,7 +78,7 @@ export async function convertOrderToTransactionView(
 		logoUrl: await getLogoUrlForSymbol(baseSymbol),
 		type: order.side,
 		date: order.timestamp,
-		amount: order.amount,
+		amount: order.filled,
 		quoteAmount: order.cost,
 		price: priceInUsd,
 		value: valueInUsd,

@@ -1,6 +1,6 @@
 import { IUserDocument, User } from '../users/user.model';
 import { IExchangeAccountRequest, exchangeType, IExchangeAccountView, IPortfolioDataView, IPortfolioItemView, ITransactionItemView } from '../../../types';
-import { ExchangeAccount, IExchangeAccount, IExchangeAccountDocument } from './exchange.model';
+import { ExchangeAccount, IExchangeAccount, IExchangeAccountDocument, IHoldingsHistory, IHoldingSlice, IHoldingSnapshot, ITimeslice } from './exchange.model';
 import ccxt, { Balances, Exchange } from 'ccxt';
 import { IPortfolioItem } from '../portfolios/portfolio.model';
 import { ITransaction, ITransactionDocument, Transaction } from '../transactions/transaction.model';
@@ -87,23 +87,6 @@ async function updatePortfolioItems(exchange: Exchange, exchangeAccountDocument:
 	const portfolioItems = await createPortfolioItems(neededBalances);
 	exchangeAccountDocument.portfolioItems = portfolioItems;
 	return portfolioItems;
-}
-
-export interface IHoldingSnapshot
-{
-	timestamp: number;
-	price: { USD: number };
-	amountBought: number;
-	amountSold: number;
-	totalAmountBought: number;
-	totalAmountSold: number;
-	totalValueReceived: number;
-	totalValueInvested: number;
-}
-
-export interface IHoldingsHistory
-{
-  [key: string]: IHoldingSnapshot[]
 }
 
 async function getHoldingsHistory(exchange: ccxt.Exchange, orders: IOrder[], transactions: ITransaction[]) {
@@ -218,26 +201,70 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 	}
 
 	if (order.side == 'buy') {
-		snapshot.totalAmountBought = lastSnapshot.totalAmountBought + order.amount;
+		snapshot.totalAmountBought = lastSnapshot.totalAmountBought + order.filled;
 		snapshot.totalAmountSold = lastSnapshot.totalAmountSold;
-		snapshot.amountBought = order.amount;
+		snapshot.amountBought = order.filled;
 		snapshot.amountSold = 0;
 		snapshot.totalValueInvested = lastSnapshot.totalValueInvested + (order.cost * quoteCurrencyInUsd);
 		snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
-		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : order.cost/order.amount * quoteCurrencyInUsd;
+		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : order.cost/order.filled * quoteCurrencyInUsd;
 	}
 
 	else {
 		snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
-		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + order.amount;
+		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + order.filled;
 		snapshot.amountBought = 0;
-		snapshot.amountSold = order.amount;
+		snapshot.amountSold = order.filled;
 		snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
 		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + (order.cost * quoteCurrencyInUsd);
-		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : order.cost/order.amount * quoteCurrencyInUsd;
+		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : order.cost/order.filled * quoteCurrencyInUsd;
+	}
+
+	let snapshotQuote = {
+		timestamp: order.timestamp,
+		price: { USD: 0 },
+		amountBought: 0,
+		amountSold: 0,
+		totalAmountBought: 0,
+		totalAmountSold: 0,
+		totalValueReceived: 0,
+		totalValueInvested: 0,
+	};
+
+	let lastSnapshotQuote = { ...snapshotQuote };
+
+	if (!holdingsHistory[quoteCurrency]) {
+		holdingsHistory[quoteCurrency] = [];
+	}
+	else {
+		let length = holdingsHistory[quoteCurrency].length;
+		if (length > 0)
+			lastSnapshotQuote = holdingsHistory[quoteCurrency][length - 1];
+	}
+
+	if (order.side == 'buy') // count as a sell of the quote currency
+	{
+		snapshotQuote.totalAmountBought = lastSnapshotQuote.totalAmountBought;
+		snapshotQuote.totalAmountSold = lastSnapshotQuote.totalAmountSold + order.cost;
+		snapshotQuote.amountBought = 0;
+		snapshotQuote.amountSold = order.cost;
+		snapshotQuote.totalValueInvested = lastSnapshotQuote.totalValueInvested;
+		snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived + (order.cost * quoteCurrencyInUsd);
+		snapshotQuote.price.USD = quoteCurrencyInUsd;
+	}
+	else
+	{
+		snapshotQuote.totalAmountBought = lastSnapshotQuote.totalAmountBought + order.cost;
+		snapshotQuote.totalAmountSold = lastSnapshotQuote.totalAmountSold;
+		snapshotQuote.amountBought = order.cost;
+		snapshotQuote.amountSold = 0;
+		snapshotQuote.totalValueInvested = lastSnapshotQuote.totalValueInvested + (order.cost * quoteCurrencyInUsd);
+		snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived;
+		snapshotQuote.price.USD = quoteCurrencyInUsd;
 	}
 
 	holdingsHistory[baseCurrency].push(snapshot);
+	holdingsHistory[quoteCurrency].push(snapshotQuote);
 }
 
 async function updateTransactions(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument) {
@@ -418,6 +445,7 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 	const portfolioItems: IPortfolioItem[] = await updatePortfolioItems(exchange, exchangeAccountDocument);
 
   await saveTransactionViewItems(exchange, exchangeAccountDocument);
+	await saveHoldingsTimeslices(exchange, exchangeAccountDocument);
 
 	const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => {
 		throw err;
@@ -425,6 +453,100 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 
 	const portfolioData = createPortfolioData(exchange, exchangeAccountDocument);
 	return portfolioData;
+}
+
+export interface ITimeslices {
+	[key: string]: ITimeslice
+}
+
+async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument) {
+	let timeslices: ITimeslices = {};
+	let allTimeHoldingSlices: IHoldingSlice[] = [];
+
+	for (let i = 0; i < exchange.portfolioItems.length; i++)
+	{
+		let item = exchange.portfolioItems[i];
+		let asset = item.asset.symbol;
+		let holdingHistory = item.holdingHistory;
+
+		let holdingSlice = { asset: asset, amount: 0, price: 0, value: 0, snapshots: holdingHistory};
+		allTimeHoldingSlices.push(holdingSlice);
+	}
+
+	let now = Date.now();
+	let endDate = now + (86400000 - (now % 86400000)); // start of tomorrow
+
+	let earliestTime = endDate;
+
+	for (let i = 0; i < allTimeHoldingSlices.length; i++)
+	{
+		let slice = allTimeHoldingSlices[i];
+
+		if (slice.snapshots[0].timestamp < earliestTime)
+		{
+			earliestTime = slice.snapshots[0].timestamp;
+		}
+	}
+
+	const startDate = (earliestTime - (earliestTime % 86400000));
+	
+	let currentSnapshot: number[] = [];
+	let lastPrice: number[] = [];
+	let lastAmount: number[] = [];
+	for (let i = 0; i < allTimeHoldingSlices.length; i++)
+	{
+		currentSnapshot[i] = 0;
+		lastPrice[i] = 0;
+		lastAmount[i] = 0;
+	}
+
+	for (let day = startDate; day < endDate; day+=86400000)
+	{
+		let timeslice: ITimeslice = {
+			start: day,
+			holdings: {},
+			value: 0
+		};
+
+		for (let holding = 0; holding < allTimeHoldingSlices.length; holding++)
+		{
+			let slice = allTimeHoldingSlices[holding];
+			let snapsInThisSlice: IHoldingSnapshot[] = [];
+			let amount = 0;
+
+			for (let i = currentSnapshot[holding]; i < slice.snapshots.length; i++)
+			{
+				let snap = slice.snapshots[i];
+				let snapDay = snap.timestamp - (snap.timestamp % 86400000);
+
+				if (snapDay == day)
+				{
+					snapsInThisSlice.push(snap);
+					lastAmount[holding] = snap.totalAmountBought - snap.totalAmountSold;
+					lastPrice[holding] = snap.price.USD;
+					currentSnapshot[holding]++;
+				}
+				else { break; }
+			}
+
+			let value = lastAmount[holding] * lastPrice[holding];
+
+			let holdingSlice: IHoldingSlice = {
+				asset: slice.asset,
+				amount: lastAmount[holding],
+				price: lastPrice[holding],
+				value: value,
+				snapshots: snapsInThisSlice
+			};
+
+			timeslice.holdings[slice.asset] = holdingSlice;
+			timeslice.value += value;
+		}
+
+		timeslices[day] = timeslice;
+	}
+
+	exchange.timeslices = timeslices;
 }
 
 async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IExchangeAccountDocument) {

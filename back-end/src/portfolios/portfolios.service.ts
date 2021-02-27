@@ -1,6 +1,9 @@
 import { User } from "../users/user.model";
 import { exchangeService } from "../exchanges/exchange.service";
 import { mockPortfolioCalculationsFake } from "../../exchangeDataDetailed";
+import { ITransactionItemView, timespan } from "../../../types";
+import { IExchangeAccountDocument } from "../exchanges/exchange.model";
+import ccxt from "ccxt";
 
 export const portfolioService = {
   getAll,
@@ -37,7 +40,7 @@ async function get(userId: string, exchangeId: string) {
         }).catch((err) => { throw err; });
 }
 
-async function getMetaportfolioChart(userId: string) {
+async function getMetaportfolioChart(userId: string, timespan: timespan) {
   var portfolioData = await exchangeService.getExchangesData(userId);
 
   for (let i = 0; i < portfolioData.length; i++)
@@ -45,13 +48,13 @@ async function getMetaportfolioChart(userId: string) {
     let portfolio = portfolioData[i];
     let portfolioItems = portfolio.portfolioItems;
 
-    for (let j = 0; j < portfolioItems.length; j++)
+    for (let j = 0; j < portfolioItems.length; j++)  
     {
       let item = portfolioItems[j];
     }
   }
 }
 
-async function getPortfolioChart(userId: string) {
+async function getPortfolioChart(userId: string, timespan: timespan) {
   var portfolioData = await exchangeService.getAll(userId);
 }

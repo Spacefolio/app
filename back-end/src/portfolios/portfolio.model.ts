@@ -1,6 +1,6 @@
 import { Balance } from 'ccxt';
 import mongoose from 'mongoose';
-import { IHoldingSnapshot } from '../exchanges/exchange.service';
+import { IHoldingSnapshot } from '../exchanges/exchange.model';
 import { IAsset } from '../../../types';
 
 /* #region Balance Schema */
@@ -98,4 +98,4 @@ balanceSchema.set('toJSON', {
 
 const PortfolioItem = mongoose.model<IPortfolioItemDocument, IPortfolioItemModel>('PortfolioItem', portfolioItemSchema);
 
-export { PortfolioItem, portfolioItemSchema };
+export { PortfolioItem, portfolioItemSchema, holdingSnapshotSchema };
