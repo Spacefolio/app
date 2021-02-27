@@ -64,17 +64,60 @@ async function getMetaportfolioChart(userId: string, timespan: timespan) {
   }
 
   return Object.entries(timeslices).map(([timestamp, timeslice]:[string, ITimeslice]) => {
-    return { T: timestamp, USD:timeslice.value };
+    return { T: timeslice.start, USD:timeslice.value };
   });
 
 }
 
-async function getPortfolioChart(userId: string, portfolioId: string, timespan: timespan) {
+async function getPortfolioChart(userId: string, portfolioId: string, timeframe: timespan) {
   var exchange = await exchangeService.getById(portfolioId);
   
   const { timeslices } = exchange;
 
-  return Object.entries(timeslices).map(([timestamp, timeslice]:[string, ITimeslice]) => {
-    return {T: timestamp, USD:timeslice.value};
+  let timeslicesAll = Object.entries(timeslices).map(([timestamp, timeslice]:[string, ITimeslice]) => {
+    return {T: timeslice.start, USD:timeslice.value};
   });
+
+  let timeslicesNew = [];
+
+  if (timeframe == timespan.W1)
+  {
+    for (let i = timeslicesAll.length - 8; i < timeslicesAll.length; i++)
+    {
+      /*
+      let slices = splitSlice(timeslicesAll[i], 4);
+      timeslicesNew.push(...slices);
+      */
+    }
+  }
+  else
+  {
+    return timeslicesAll
+  }
+}
+
+async function splitSlice(slice: ITimeslice, pieces: number)
+{
+  let newSlices: ITimeslice[] = [];
+  let sliceStart = slice.start;
+  
+  for (let i = 1; i <= pieces; i++)
+  {
+    let sliceEnd = slice.start + (i * 86400000/pieces);
+    
+    for (var [key, value] of Object.entries(slice.holdings))
+    {
+      
+    }
+
+    /*
+    let newSlice: ITimeslice = {
+      start: sliceStart,
+      value: ,
+    }
+    
+    newSlices.push(newSlice)
+    sliceStart = sliceEnd;
+    */
+  }   
 }
