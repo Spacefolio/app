@@ -26,17 +26,21 @@ const FilterPortfolio = (
 ) => {
   return exchangeID != ""
     ? portfolioData.filter((portfolio: IPortfolioDataView) => {
-      console.log("function", portfolio.id, exchangeID, portfolioData[0])
+        console.log("function", portfolio.id, exchangeID, portfolioData[0]);
         return portfolio.id == exchangeID;
       })[0]
     : portfolioData[0];
 };
 
+let Portfolio = JSON.parse(localStorage.getItem("Portfolio"));
+
+
 export function portfolio(
   state: IPortfolioState = {
     syncingPortfolio: false,
     recalculatingPortfolio: false,
-    portfolioData: [],
+    portfolioData: Portfolio ? Portfolio : [],
+    filteredPortfolioData: (Portfolio && FilterPortfolio('', Portfolio)),
     filterId: "",
   },
   action: IPortfolioAction
@@ -99,7 +103,6 @@ export function portfolio(
         recalculatingPortfolio: true,
       };
     case portfolioConstants.REFRESH_SUCCESS:
-      console.log(action.portfolioData);
       return {
         ...state,
         portfolioData: action.portfolioData,

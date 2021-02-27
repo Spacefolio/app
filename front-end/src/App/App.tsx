@@ -11,8 +11,8 @@ import { RegisterPage } from "../RegisterPage";
 import { Alert, ErrorBoundary } from "../_components";
 
 import "./App.scss";
-import { AppContainer } from "./generalStyle";
-import "./variables.scss";
+import { AppContainer } from "./appStyles";
+import "../GlobalStyles/variables.scss";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -24,19 +24,16 @@ export const App = () => {
     dispatch(clearAlerts());
   });
   return (
-
-      <AppContainer>
-        <Alert />
-        <Router history={history}>
-          <Switch>
-            
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/register" component={RegisterPage} />
-            <PrivateRoute path="/" component={Application} />
-            <Redirect from="*" to=""/>
-          </Switch>
-        </Router>
-      </AppContainer>
-
+    <AppContainer>
+      <Alert />
+      <Router history={history}>
+        <Switch>
+          <Route exact path="/login" component={LoginPage} />
+          <Route exact path="/register" component={RegisterPage} />
+          <PrivateRoute path="/" component={Application} />
+          <Redirect from="*" to="" />
+        </Switch>
+      </Router>
+    </AppContainer>
   );
 };

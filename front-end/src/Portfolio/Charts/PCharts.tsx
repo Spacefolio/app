@@ -1,43 +1,60 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DashboardWrapper } from "./generalStyle";
-import { FlexCard } from "../../_components";
+import {
+  DashboardWrapper,
+  TimeframeItem,
+  TimeFrameSelectorContainer,
+} from "./generalStyle";
+
 import { PortfolioLineChart } from "../../_components/Charts/TimeSeries/PortfolioLineChart";
 import { alertActions } from "../../_actions";
 import { portfolioService } from "../../_services";
-import { RD } from "../../Application/ResponsiveDesign";
+import { RD } from "../../GlobalStyles/ResponsiveDesign";
 import { timeframe } from "../../../../types";
 import { PortfolioPieChart } from "../../_components/Charts/Pie/PieChart";
 import { time } from "console";
 import { IRootState } from "../../_reducers";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
-
-function CalculateMainChartSize() {
-  if (window.innerWidth > parseInt(RD.breakpointmonitor)) {
-    return 1000;
-  } else if (window.innerWidth > parseInt(RD.breakpointlaptop)) {
-    return 700;
-  } else if (window.innerWidth > parseInt(RD.breakpointtablet)) {
-    return 530;
-  } else if (window.innerWidth > parseInt(RD.breakpointsmartphone)) {
-    return 630;
-  } else if (window.innerWidth < parseInt(RD.breakpointsmartphone)) {
-    return window.innerWidth - 140;
-  }
-}
+import { FlexCard } from "../../GlobalStyles";
 
 export const Charts = () => {
   const dispatch = useDispatch();
 
-  const applicationWidth = useSelector((state: IRootState) => state.applicationView.applicationContainerWidth)
-  const filterId = useSelector((state: IRootState) => state.portfolio.filterId)
+  const applicationWidth = useSelector(
+    (state: IRootState) => state.applicationView.applicationContainerWidth
+  );
+  function CalculateMainChartSize(width: number) {
+    if (width >= parseInt(RD.breakpointmonitor)) {
+      return 1000;
+    } else if (
+      width < parseInt(RD.breakpointmonitor) &&
+      width >= parseInt(RD.breakpointlaptop)
+    ) {
+      return 700;
+    } else if (
+      width < parseInt(RD.breakpointlaptop) &&
+      width >= parseInt(RD.breakpointtablet)
+    ) {
+      return 530;
+    } else if (
+      width < parseInt(RD.breakpointtablet) &&
+      width >= parseInt(RD.breakpointsmartphone)
+    ) {
+      return 630;
+    } else if (width < parseInt(RD.breakpointsmartphone)) {
+      return width - 140;
+    }
+  }
+  const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
   const [PortfolioChartData, setPortfolioChartData] = useState([]);
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
-  const [chartWidth, setChartWidth] = useState(CalculateMainChartSize());
+  const [chartWidth, setChartWidth] = useState(
+    CalculateMainChartSize(applicationWidth)
+  );
 
-useEffect(() => {
-setChartWidth(CalculateMainChartSize())
-}, [applicationWidth])
+  useEffect(() => {
+    setChartWidth(CalculateMainChartSize(applicationWidth));
+  }, [applicationWidth]);
 
   useEffect(() => {
     portfolioService
@@ -62,39 +79,27 @@ setChartWidth(CalculateMainChartSize())
       "ALL",
     ];
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <TimeFrameSelectorContainer>
         {timeFrameSelectors.map((item: timeframe) => {
           return (
-            <div
-              onClick={(e) => {
+            <TimeframeItem
+              onClick={() => {
                 setTimeframe(item);
               }}
-              className={`
-                center-my-children ${
-                  item == timeframe ? "selected-field" : null
-                }`}
-              style={{
-                padding: "10px",
-                cursor: "pointer",
-              }}
+              selected={item == timeframe}
             >
               {item}
-            </div>
+            </TimeframeItem>
           );
         })}
-      </div>
+      </TimeFrameSelectorContainer>
     );
   };
 
   return (
     <DashboardWrapper>
       <FlexCard
-        styles={{ gridArea: "one" }}
+        style={{ gridArea: "one" }}
         children={
           <div>
             <PortfolioLineChart
@@ -110,11 +115,11 @@ setChartWidth(CalculateMainChartSize())
           </div>
         }
       />
-      <FlexCard styles={{ gridArea: "two" }}>
-        <PortfolioPieChart size={450} id="portfolio-pie-chart" />
+      <FlexCard style={{ gridArea: "two" }}>
+        <PortfolioPieChart size={300} id="portfolio-pie-chart" />
       </FlexCard>
-      <FlexCard styles={{ gridArea: "three" }}>
-        <div>{"exchange allocation pie chart"}</div>
+      <FlexCard style={{ gridArea: "three" }}>
+        {"exchange allocation pie chart"}
       </FlexCard>
     </DashboardWrapper>
   );

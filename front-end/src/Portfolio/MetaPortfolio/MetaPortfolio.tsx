@@ -13,15 +13,15 @@ import {
 } from "./generalStyle";
 import {
   Dropdown,
-  FlexCard,
+
   IDropdownItem,
-  SyncButton,
+  SyncIcon,
 } from "../../_components";
 import { PortfolioLineChart } from "../../_components";
 import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
-import { RD } from "../../Application/ResponsiveDesign";
+import { RD } from "../../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../../_reducers";
 
 export const MetaPortfolio = () => {
@@ -38,23 +38,33 @@ export const MetaPortfolio = () => {
 
   const container = useRef();
 
+  const applicationWidth = useSelector(
+    (state: IRootState) => state.applicationView.applicationContainerWidth
+  );
+
   function CalculateMainChartSize() {
-    if (window.innerWidth > parseInt(RD.breakpointmonitor)) {
+    if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
       return 600;
-    } else if (window.innerWidth > parseInt(RD.breakpointlaptop)) {
+    } else if (
+      applicationWidth < parseInt(RD.breakpointmonitor) &&
+      applicationWidth >= parseInt(RD.breakpointlaptop)
+    ) {
       return 400;
-    } else if (window.innerWidth > parseInt(RD.breakpointtablet)) {
+    } else if (
+      applicationWidth < parseInt(RD.breakpointlaptop) &&
+      applicationWidth >= parseInt(RD.breakpointtablet)
+    ) {
       return 300;
-    } else if (window.innerWidth > parseInt(RD.breakpointsmartphone)) {
+    } else if (
+      applicationWidth < parseInt(RD.breakpointtablet) &&
+      applicationWidth >= parseInt(RD.breakpointsmartphone)
+    ) {
       return 250;
-    } else if (window.innerWidth < parseInt(RD.breakpointsmartphone)) {
+    } else if (applicationWidth < parseInt(RD.breakpointsmartphone)) {
       return 200;
     }
   }
 
-  const applicationWidth = useSelector(
-    (state: IRootState) => state.applicationView.applicationContainerWidth
-  );
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
   const [metaPortfolioChartData, setMetaPortfolioChartData] = useState([]);
   const [timeframeDropdownVisible, setTimeframeDropdownVisible] = useState(
@@ -129,7 +139,7 @@ export const MetaPortfolio = () => {
   const SyncButtonSection = (
     <SyncAreaContainer>
       <SyncButtonContainer onClick={() => dispatch(portfolioActions.sync())}>
-        <SyncButton isSyncing={isSyncing}></SyncButton>
+        <SyncIcon isSyncing={isSyncing}></SyncIcon>
         <div>Sync</div>
       </SyncButtonContainer>
     </SyncAreaContainer>
@@ -145,7 +155,7 @@ export const MetaPortfolio = () => {
           onClick={() => dispatch(portfolioActions.refresh())}
           style={{ width: "30px" }}
         >
-          <SyncButton isSyncing={isRefreshing} />
+          <SyncIcon isSyncing={isRefreshing} />
         </div>
         {TimeFrameSelector()}
       </PortfolioValueContainer>

@@ -20,17 +20,6 @@ html {
   background-color: var(--primary-base); /* color of the scroll thumb */
   border-radius: 50px; /* roundness of the scroll thumb */
 }
-.center-my-children {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.center-my-children-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 a,
 a:hover,
 a:focus,
@@ -41,7 +30,4 @@ input {
   &:focus {
     outline: none;
   }
-}
-.selected-field{
-  color: red;
 }

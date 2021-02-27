@@ -2,7 +2,7 @@ export const RD = {
   breakpointsmartphone: "768px",
   breakpointtablet: "1024px",
   breakpointlaptop: "1485px",
-  breakpointmonitor: "1975px",
+  breakpointmonitor: "1920px",
   widthsmartphone: "768px",
   widthtablet: "1024px",
   widthlaptop: "1485px",
@@ -36,3 +36,6 @@ export const COLORS = {
 export const SPACING = {
   flexCardGap: "15px",
 };
+export const TIMING = {
+  transitionTime: "0.3s",
+}

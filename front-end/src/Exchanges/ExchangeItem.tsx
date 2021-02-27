@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DeleteButton, EditButton } from "../_components";
+import { DeleteIcon, EditIcon } from "../_components";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { Modal } from "../_components";
 import { EditExchangeForm } from "./Forms";
@@ -8,6 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { STATES } from "mongoose";
 import { IRootState } from "../_reducers";
 import { TabItem } from "../Portfolio/portfolioStyles";
+import {
+  MyExchangeEditAreaWrapper,
+  MyExchangeNameWrapper,
+  MyExchangesLineItemContainer,
+} from "./ExchangeStyles";
 
 interface ExchangeItemProps {
   data: IExchangeAccountView;
@@ -18,9 +23,13 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
 
   const [logoUrl, setLogoUrl] = useState("");
   const [editExchangeVisible, setEditExchangeVisible] = useState(false);
-  const exchangeRef = useSelector((state: IRootState) => state.exchanges.exchangeRef);
+  const exchangeRef = useSelector(
+    (state: IRootState) => state.exchanges.exchangeRef
+  );
   const [hoverShowEdit, setHoverShowEdit] = useState(false);
-  const portfolioFilterID = useSelector((state: IRootState) => state.portfolio.filterId)
+  const portfolioFilterID = useSelector(
+    (state: IRootState) => state.portfolio.filterId
+  );
 
   useEffect(() => {
     const targetRef: IExchangeReference = exchangeRef.filter(
@@ -39,7 +48,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
       }}
       style={{ width: "1.2em" }}
     >
-      <DeleteButton />
+      <DeleteIcon />
     </div>
   );
 
@@ -50,56 +59,35 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
       }}
       style={{ width: "1.2em" }}
     >
-      <EditButton />
+      <EditIcon />
     </div>
   );
 
   return (
-    <div
+    <MyExchangesLineItemContainer
       key={data.id}
-      style={{
-        width: "100%",
-        padding: "10px 0px",
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderLeft: (portfolioFilterID == data.id? '3px solid var(--primary-base)': '')
-      }}
+      selected={portfolioFilterID == data.id}
       onPointerEnter={() => setHoverShowEdit(true)}
       onPointerLeave={() => setHoverShowEdit(false)}
       onClick={() => dispatch(portfolioActions.FilterPortfolio(data.id))}
     >
-      <div
-        style={{
-          padding: "10px 0px",
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <MyExchangeNameWrapper>
         <img height="25px" width="25px" src={logoUrl}></img>
         <div>{data.nickname}</div>
-      </div>
+      </MyExchangeNameWrapper>
 
-      {hoverShowEdit ? (
-        <div
-          style={{
-            display: "flex",
-            padding: "5px",
-            justifyContent: "space-evenly",
-          }}
-        >
+      {hoverShowEdit && (
+        <MyExchangeEditAreaWrapper>
           {EditButtonSection}
           {DeleteButtonSection}
-        </div>
-      ) : null}
+        </MyExchangeEditAreaWrapper>
+      )}
 
       <Modal
         visible={editExchangeVisible}
         dismiss={() => setEditExchangeVisible(false)}
         children={<EditExchangeForm exchangeAccountData={data} />}
       />
-    </div>
+    </MyExchangesLineItemContainer>
   );
 };

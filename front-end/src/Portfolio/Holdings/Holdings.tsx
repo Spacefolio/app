@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { DataLabelItemWrapper, DataLabelsContainer } from "../portfolioStyles";
+import React, { useState } from "react";
 import { HoldingItem } from "./HoldingItem/HoldingItem";
 import { IPortfolioDataView, IPortfolioItemView } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
 import { ILabelObject, LabelSorter } from "../Transactions/LabelSorter";
-import { portfolioActions } from "../../_actions";
-import { FlexCard } from "../../_components";
-import { SPACING } from "../../Application/ResponsiveDesign";
+import { SPACING } from "../../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../../_reducers";
+import { FlexCard } from "../../GlobalStyles";
 
 export const Holdings = () => {
   const dispatch = useDispatch();
@@ -52,12 +50,14 @@ export const Holdings = () => {
   ];
 
   return (
-    <div style={{display: "grid", gap: SPACING.flexCardGap}}>
+    <div style={{ display: "grid", gap: SPACING.flexCardGap }}>
       {portfolioData ? (
         sortHoldings(filterField, sortAscending).map(
           (pItem: IPortfolioItemView) => {
             return (
-              <FlexCard children={<HoldingItem portfolioItem={pItem} />} />
+              <FlexCard>
+                <HoldingItem portfolioItem={pItem} />
+              </FlexCard>
             );
           }
         )

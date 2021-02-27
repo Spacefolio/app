@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DDList, DDListItem, DDWrapper } from "./generalStyle";
+import { DDList, DDListItem, DDWrapper } from "./DropdownStyles";
 
 export interface IDropdownItem {
   text: string;
@@ -25,9 +25,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
   defaultItemClickHandler,
 }) => {
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 

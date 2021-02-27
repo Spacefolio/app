@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import * as d3 from "d3";
 import { IPortfolioLineChartItem, timeframe } from "../../../../../types";
-import { FlexCard } from "../../Cards/FlexCard";
+
 import "./PortfolioLineChart.scss";
 import moment from "moment";
 
@@ -162,19 +162,19 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 
   return (
     <div style={{ position: "relative" }} id={`${id}`}>
-      {!(data.length > 0) ? (
+      {!data && (
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: `${realHeight}px`,
-            height: `${realWidth}px`,
+            width: `${realWidth}px`,
+            height: `${realHeight}px`,
           }}
         >
           <div>LOADING CHART...</div>
         </div>
-      ) : null}
+      )}
     </div>
   );
 };

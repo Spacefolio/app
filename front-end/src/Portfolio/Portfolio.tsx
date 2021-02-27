@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./Portfolio.scss";
-import { FlexCard, PrivateRoute } from "../_components";
 import {
   PortfolioWrapper,
   TabWrapper,
@@ -19,25 +18,25 @@ import {
 } from "./portfolioStyles";
 import { MetaPortfolio, Transactions, OpenOrders, Holdings, Charts } from ".";
 import { portfolioActions } from "../_actions";
-import { Scrollbox } from "../_components/Scrollbox/Scrollbox";
 import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter/ExchangeSidebarFilter";
-import useDimensions from "react-use-dimensions";
-import { RD, SPACING } from "../Application/ResponsiveDesign";
+import { RD, SPACING } from "../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
+import { FlexCard, Scrollbox } from "../GlobalStyles";
 
-interface IPortfolioProps {
-}
+interface IPortfolioProps {}
 
 export const Portfolio: React.FC<IPortfolioProps> = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state: any) => state.authentication.user);
-  const width = useSelector((state: IRootState) => state.applicationView.applicationContainerWidth)
+  const portfolioData = useSelector((state: IRootState) => state.portfolio.portfolioData);
+  const width = useSelector(
+    (state: IRootState) => state.applicationView.applicationContainerWidth
+  );
 
   const { path } = useRouteMatch("/portfolio");
 
   useEffect(() => {
-    dispatch(portfolioActions.refresh());
-  }, []);
+    !portfolioData && dispatch(portfolioActions.refresh());
+  }, [portfolioData]);
 
   const PortfolioTabs = (
     <TabWrapper>
@@ -65,17 +64,16 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
   const FilterByExchangeDesktop =
     width > parseInt(RD.breakpointtablet) ? (
       <PortfolioSidebarWrapper>
-        <FlexCard styles={{ alignItems: "start" }}>
+        {/* <FlexCard styles={{ alignItems: "start", height: "100%" }}> */}
           <ExchangeSidebarFilter />
-        </FlexCard>
+        {/* </FlexCard> */}
       </PortfolioSidebarWrapper>
     ) : null;
-
 
   const FilterByExchangeMobile =
     width <= parseInt(RD.breakpointtablet) ? (
       <FlexCard
-        styles={{
+        style={{
           marginBottom: SPACING.flexCardGap,
           width: "100%",
           alignItems: "center",
@@ -85,13 +83,12 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
       </FlexCard>
     ) : null;
 
-
   return (
     <PortfolioWrapper>
       {FilterByExchangeDesktop}
       <Scrollbox>
         <PortfolioSectionWrapper>
-          {FilterByExchangeMobile}
+          {/* {FilterByExchangeMobile} */}
           <FlexCard>
             <MetaPortfolio />
           </FlexCard>

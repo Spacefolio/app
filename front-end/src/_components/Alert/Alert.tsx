@@ -1,23 +1,29 @@
 import React from "react";
 import { ReactReduxContext, useDispatch, useSelector } from "react-redux";
-import "./Alert.scss";
-import { CloseButton } from "../../_components";
+import { CloseIcon } from "../../_components";
 import { alertActions } from "../../_actions";
+import {
+  AlertContainer,
+  AlertMessage,
+  AlertWrapper,
+  IconContainer,
+} from "./AlertStyles";
+import { IRootState } from "../../_reducers";
 
 export const Alert = () => {
   const dispatch = useDispatch();
-  const alert = useSelector((state: any) => state.alert);
+  const alert = useSelector((state: IRootState) => state.alert);
 
   return (
-    <div className="alert-wrapper">
+    <AlertWrapper>
       {alert.message && (
-        <div className={`alert-container ${alert.type}`}>
-          <div style={{ marginRight: "10px" }}>{alert.message}</div>
-          <div style={{width: "1.5em"}} onClick={() => dispatch(alertActions.clear())}>
-            <CloseButton />
-          </div>
-        </div>
+        <AlertContainer alertType={alert.type}>
+          <AlertMessage>{alert.message}</AlertMessage>
+          <IconContainer onClick={() => dispatch(alertActions.clear())}>
+            <CloseIcon style={{ fill: "white" }} />
+          </IconContainer>
+        </AlertContainer>
       )}
-    </div>
+    </AlertWrapper>
   );
 };

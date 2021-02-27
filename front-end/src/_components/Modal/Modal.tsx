@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { ModalBg, ModalBoxSetup, ModalWrapper } from "./generalStyle";
-import { CloseButton } from "../../_components";
+import { ModalBg, ModalBoxSetup, ModalWrapper } from "./ModalStyles";
+import { CloseIcon } from "../../_components";
 
 interface ModalProps {
   visible: boolean;
@@ -17,7 +17,7 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   return (
     <React.Fragment>
-      {visible ? (
+      {visible && (
         <ModalWrapper>
           <ModalBoxSetup>
             <div
@@ -29,18 +29,18 @@ export const Modal: React.FC<ModalProps> = ({
                 width: "2em",
               }}
             >
-              <CloseButton />
+              <CloseIcon />
             </div>
 
             {children}
           </ModalBoxSetup>
           <ModalBg
             onClick={() => {
-              clickOutsidedismiss ? dismiss() : null;
+              clickOutsidedismiss && dismiss();
             }}
           />
         </ModalWrapper>
-      ) : null}
+      )}
     </React.Fragment>
   );
 };

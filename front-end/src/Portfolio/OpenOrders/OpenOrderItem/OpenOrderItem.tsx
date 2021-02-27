@@ -13,12 +13,12 @@ import {
   MobileWrapper,
 } from "../../TabularCardStyles";
 
-interface TreansactionItemProps {
-  openOrderItem: IOpenOrderItemView;
+interface IOrderItemProps {
+  item: IOpenOrderItemView;
 }
 
-export const OpenOrderItem: React.FC<TreansactionItemProps> = ({
-  openOrderItem,
+export const OpenOrderItem: React.FC<IOrderItemProps> = ({
+  item: openOrderItem,
 }) => {
   const portfolioValueItemStyler = (num: number) => {
     return num < 0 ? "var(--error-base)" : "var(--accent-base)";
@@ -51,8 +51,8 @@ export const OpenOrderItem: React.FC<TreansactionItemProps> = ({
         return "Withdrawing";
       case "deposit":
         return "Depositing";
-      default: 
-      return "whoops";
+      default:
+        return "whoops";
     }
   };
 

@@ -1,11 +1,12 @@
 import styled from "styled-components";
-import { RD } from "../../Application/ResponsiveDesign";
+import { RD } from "../../GlobalStyles/ResponsiveDesign";
 
 export const MetaPortfolioWrapper = styled.div`
-  padding: 20px;
+  padding: 10px 0;
   width: 100%;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-evenly;
 `;
 

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { CenteredFlexBox } from "../../GlobalStyles";
 
 export const ModalWrapper = styled.div`
   position: fixed;
@@ -6,9 +7,7 @@ export const ModalWrapper = styled.div`
   left: 0;
   bottom: 0;
   z-index: 4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${CenteredFlexBox}
 `;
 export const ModalBoxSetup = styled.div`
   position: absolute;
