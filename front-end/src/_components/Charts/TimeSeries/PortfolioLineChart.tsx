@@ -71,7 +71,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
     //create xAxis component
     const styledXAxis = d3
       .axisBottom(xScale)
-      .ticks(d3.timeHour.every(4))
+      .ticks(7)
       .tickSizeOuter(0)
       .tickSizeInner(0);
 
@@ -138,7 +138,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       tooltip.style("opacity", "0.9");
       let dateString = new Date(d0.T);
       tooltipValue.html(`USD ${d0.USD.toFixed(2)}`);
-      tooltipDate.html(`${moment().format("ll")}`);
+      tooltipDate.html(`${moment(d0.T).format("ll")}`);
       tooltip
         .style("left", xScale(d0.T) + 70 + "px")
         .style("top", yScale(d0.USD) + "px");
