@@ -199,7 +199,6 @@ async function getPortfolioChartData(
     Authorization: Authorization,
   };
 
-  return data;
   return await axios
     .get(
       `${API_DOMAIN}/${exchangeID ? exchangeID + "/" : ""}portfolios/chart`,
