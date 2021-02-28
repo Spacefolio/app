@@ -1,11 +1,18 @@
 import styled from "styled-components";
 import { RD } from "../../GlobalStyles/ResponsiveDesign";
 
-export const DesktopContainer = styled.div`
+interface IDesktopWrapperProps{
+  isSidebarCollapsed: Boolean;
+}
+
+export const DesktopContainer = styled.div<IDesktopWrapperProps>`
   font-weight: 500;
   font-size: 1em;
   display: flex;
   justify-content: start;
+  width: ${(props: any) => props.isSidebarCollapsed?'50px': '300px'};
+  align-items: ${(props: any) => props.isSidebarCollapsed?'center': 'start'};
+  box-shadow: 5px 10px 25px -24px;
   overflow: hidden;
   flex-direction: column;
   left: 0px;
@@ -13,9 +20,6 @@ export const DesktopContainer = styled.div`
   background-color: white;
   flex-shrink: 0;
   height: 100vh;
-  @media screen and (max-width: ${RD.breakpointtablet}) {
-    display: none;
-  }
 `;
 
 export const MobileContainer = styled.div`

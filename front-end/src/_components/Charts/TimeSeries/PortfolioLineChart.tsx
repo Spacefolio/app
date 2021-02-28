@@ -3,6 +3,9 @@ import * as d3 from "d3";
 import { IPortfolioLineChartItem, timeframe } from "../../../../../types";
 import "./PortfolioLineChart.scss";
 import moment from "moment";
+import { IRootState } from "../../../_reducers";
+import { useSelector } from "react-redux";
+import { NONAME } from "dns";
 
 interface PortfolioLineChartProps {
   width: number;
@@ -23,6 +26,10 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
   yAxis = false,
   data,
 }) => {
+  const viewType = useSelector(
+    (state: IRootState) => state.applicationView.currentViewType
+  );
+
   useEffect(() => {
     data.length > 0 ? drawBasicChart() : null;
   }, [data, width, height]);
@@ -34,8 +41,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
     right: 8,
   };
 
-  const realWidth = width - margin.left - margin.right;
-  const realHeight = height - margin.top - margin.bottom;
+  const chartWidth = width - margin.left - margin.right;
+  const chartHeight = height - margin.top - margin.bottom;
 
   interface IChartPoint {
     T: number;
@@ -147,12 +154,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .curve(d3.curveLinear);
 
     //append line inside the svg component
-    svg
-      .append("path")
-      .datum(data)
-      .attr("class", "line")
-      .attr("d", line)
-      .style("filter", "url(#glow)");
+    svg.append("path").datum(data).attr("class", "line").attr("d", line);
+    // .style("filter", "url(#glow)");
 
     //creates the dot on the chart showing the current value the tooltip reflects
     const focus = svg
@@ -177,21 +180,44 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
     //   .attr("y2", height);
 
     //move tooltip and change values on mousemove
+    const TooltipDimensions = {
+      W: 90,
+      H: 50,
+    };
+
     function mousemove(event: any) {
+      event.preventDefault();
       const bisect = d3.bisector((d: any) => d.T).left;
       const xPos = d3.pointer(event, this)[0];
       const yPos = d3.pointer(event, this)[1];
       const x0 = bisect(data, xScale.invert(xPos));
       const d0 = data[x0];
-      const tooltipX = (xPos)
-      const tooltipY = ((yScale(d0.USD) - 80) + height%(yScale(d0.USD) - 80))
+      var tooltipY;
+      const tooltipX =
+        xPos - TooltipDimensions.W / 2 < chartWidth
+          ? xPos - TooltipDimensions.W / 2 < 0
+            ? 0
+            : xPos - TooltipDimensions.W / 2
+          : chartWidth;
+
+      if (viewType == "desktop") {
+        tooltipY =
+          yScale(d0.USD) - TooltipDimensions.H < 0
+            ? yScale(d0.USD)
+            : yScale(d0.USD) - TooltipDimensions.H;
+      } else {
+        tooltipY =
+          yPos - TooltipDimensions.H > chartHeight ||
+          yPos - TooltipDimensions.H * 2 < 0
+            ? yScale(d0.USD) - TooltipDimensions.H < 0
+              ? yScale(d0.USD)
+              : yScale(d0.USD) - TooltipDimensions.H
+            : yPos - 2 * TooltipDimensions.H;
+      }
       focus.attr("transform", `translate(${xScale(d0.T)},${yScale(d0.USD)})`);
       tooltip.style("opacity", "0.9");
       let dateString = new Date(d0.T * 1);
-      tooltip.attr(
-        "transform",
-        `translate(${tooltipX},${tooltipY})`
-      );
+      tooltip.attr("transform", `translate(${tooltipX},${tooltipY})`);
       tooltipValue.html(`${d0.USD.toFixed(2)}`);
       tooltipDate.html(() => {
         let dateString = d0.T;
@@ -210,18 +236,37 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       });
       tooltipQuote.html(`${"USD"}`);
     }
+
+    function mouseover(event: any) {
+      event.preventDefault();
+      focus.style("display", null);
+      tooltip.style("opacity", 0.9);
+    }
+
+    function mouseout(event: any) {
+      event.preventDefault();
+      tooltip.style("opacity", "0");
+      focus.style("display", "none");
+    }
     //initialize tooltip
     const tooltip = svg
       .append("g")
       .attr("class", "tooltip")
       .style("opacity", 0);
 
+    const tooltipBox = tooltip
+      .append("rect")
+      .attr("height", TooltipDimensions.H)
+      .attr("width", TooltipDimensions.W)
+      .style("background-color", "white")
+      .attr("class", "tooltipBox");
+
     const tooltipText = tooltip
       .append("text")
       .attr("class", "tooltip-texts")
       .attr("x", 10)
       .attr("y", 20)
-      .attr("data-z-index", 1);
+      .attr("data-z-index", 3);
 
     //creates box to listen for mouse inputs
     const listenerBox = svg
@@ -229,16 +274,22 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .attr("class", "overlay")
       .attr("height", height)
       .attr("width", width)
-      .style("opacity", 0)
-      .on("mouseover", () => {
-        focus.style("display", null);
-        tooltip.style("opacity", 0.9);
-      })
-      .on("mouseout", () => {
-        tooltip.style("opacity", "0");
-        focus.style("display", "none");
-      })
-      .on("mousemove", mousemove);
+      .style("opacity", 0);
+      // .on("pointerenter", mouseover)
+      // .on("pointermove", mousemove)
+      // .on("pointerleave", mouseout);
+
+    viewType == "mobile"
+      ? listenerBox
+          .on("pointerdown", mouseover)
+          .on("pointermove", mousemove, false)
+          .on("pointercancel", mouseout, false)
+
+      : listenerBox
+          .on("mouseover", mouseover)
+          .on("mouseout", mouseout)
+          .on("mousemove", mousemove);
+
 
     //create sub component of the tooltip to render the Currency denomination in
     const tooltipQuote = tooltipText
@@ -270,8 +321,10 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: `${realWidth}px`,
-            height: `${realHeight}px`,
+            width: `${chartWidth}px`,
+            height: `${chartHeight}px`,
+            // touchAction: "none",
+            // pointerEvents: "none",
           }}
         >
           <div>LOADING CHART...</div>

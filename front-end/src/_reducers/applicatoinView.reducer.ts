@@ -25,19 +25,16 @@ export function applicationView(
     case applicationViewConstants.TOGGLE_SIDEBAR:
       return {
         ...state,
-        isSidebarVisible:
-          state.currentViewType == "mobile" ? !state.isSidebarVisible : false,
-        isSidebarCollapsed:
-          state.currentViewType == "desktop"
-            ? !state.isSidebarCollapsed
-            : false,
+        isSidebarCollapsed: !state.isSidebarCollapsed,
       };
     case applicationViewConstants.UPDATE_APPLICATION_WIDTH:
       return {
         ...state,
         applicationContainerWidth: action.width,
         currentViewType:
-          window.innerWidth >= parseInt(RD.breakpointtablet) ? "desktop" : "mobile",
+          window.innerWidth > parseInt(RD.breakpointsmartphone)
+            ? "desktop"
+            : "mobile",
       };
 
     default:

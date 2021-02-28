@@ -1,6 +1,6 @@
 .line {
   fill: none;
-  stroke: var(--accent-base);
+  stroke: var(--primary-base);
   stroke-width: 3;
 }
 .focus-circle {
@@ -19,24 +19,24 @@
   border-radius: 5px;
   padding: 5px;
 }
-.x-axis{
+.x-axis {
   font-size: 12px;
 }
-.y-axis{
+.y-axis {
   font-size: 15px;
 }
-.tooltip-value{
-
+.tooltip-value {
 }
-.tooltip-date{
-
+.tooltip-date {
 }
-.intersect-line{
-
+.intersect-line {
 }
-.overlay{
-
+.overlay {
 }
-.tooltip-rect{
-  background-color: orangered;
+.tooltipBox {
+  opacity: 0.9;
+  fill: white;
+  stroke: black;
+  rx: 5;
+  z-index: 2;
 }

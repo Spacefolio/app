@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "./SidebarNav.scss";
 import {
   DesktopContainer,
   LinkWrapper,
@@ -74,18 +73,13 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
 
   return (
     <React.Fragment>
-      <DesktopContainer
-        style={{
-          width: isSidebarCollapsed ? "50px" : "300px",
-          alignItems: isSidebarCollapsed ? "center" : "start",
-        }}
-      >
-        {Dashboard}
-        {Portfolio}
-        {Bots}
-      </DesktopContainer>
-
-      {viewType == "mobile" && (
+      {viewType == "desktop" ? (
+        <DesktopContainer isSidebarCollapsed={isSidebarCollapsed}>
+          {Dashboard}
+          {Portfolio}
+          {Bots}
+        </DesktopContainer>
+      ) : (
         <MobileContainer>
           {Dashboard}
           {Portfolio}

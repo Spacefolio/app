@@ -36,6 +36,7 @@ export const FlexCard = styled.div`
   background: white;
   border-radius: 30px;
   padding: 20px;
+  box-shadow: 0px 10px 25px -24px;
 `;
 export const BasicSearchBar = styled.input`
   border-radius: 5px;
@@ -53,11 +54,12 @@ export const BasicButton = styled.div`
   background-color: var(--primary-base);
   padding: 10px;
   color: white;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0px 15px 25px -17px var(--primary-base);
   cursor: pointer;
   ${TimingStyle}
   &:hover {
     background-color: var(--accent-base);
+    box-shadow: 0px 15px 25px -17px var(--accent-base);
   }
 `;
 export const FullScreenOverlay = styled.div`
