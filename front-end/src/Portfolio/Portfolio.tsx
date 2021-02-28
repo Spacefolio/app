@@ -1,14 +1,11 @@
 import React, { useEffect } from "react";
 import {
-  NavLink,
-  Router,
   Route,
   Switch,
   useRouteMatch,
   Redirect,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import "./Portfolio.scss";
 import {
   PortfolioWrapper,
   TabWrapper,
@@ -22,6 +19,7 @@ import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter/ExchangeSidebarFi
 import { RD, SPACING } from "../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
 import { FlexCard, Scrollbox } from "../GlobalStyles";
+import { LinkText, NavTab } from "../Nav/Sidebar/SidebarStyles";
 
 interface IPortfolioProps {}
 
@@ -40,24 +38,24 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 
   const PortfolioTabs = (
     <TabWrapper>
-      <NavLink activeClassName="active-porfolio-tab" to={`${path}/charts`}>
-        <TabItem>Charts</TabItem>
-      </NavLink>
+      <NavTab activeClassName="active-porfolio-tab" to={`${path}/charts`}>
+        <LinkText>Charts</LinkText>
+      </NavTab>
 
-      <NavLink activeClassName="active-porfolio-tab" to={`${path}/holdings`}>
-        <TabItem>Holdings</TabItem>
-      </NavLink>
+      <NavTab activeClassName="active-porfolio-tab" to={`${path}/holdings`}>
+        <LinkText>Holdings</LinkText>
+      </NavTab>
 
-      <NavLink
+      <NavTab
         activeClassName="active-porfolio-tab"
         to={`${path}/transactions`}
       >
-        <TabItem>Transactions</TabItem>
-      </NavLink>
+        <LinkText>Transactions</LinkText>
+      </NavTab>
 
-      <NavLink activeClassName="active-porfolio-tab" to={`${path}/orders`}>
-        <TabItem>Open Orders</TabItem>
-      </NavLink>
+      <NavTab activeClassName="active-porfolio-tab" to={`${path}/orders`}>
+        <LinkText>Open Orders</LinkText>
+      </NavTab>
     </TabWrapper>
   );
 
@@ -85,7 +83,6 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 
   return (
     <PortfolioWrapper>
-      {FilterByExchangeDesktop}
       <Scrollbox>
         <PortfolioSectionWrapper>
           {/* {FilterByExchangeMobile} */}

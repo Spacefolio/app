@@ -1,11 +1,11 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import {
   DesktopContainer,
-  LinkWrapper,
-  MobileContainer,
   LinkText,
-} from "./SidebarStyle";
+  NavTab,
+  TabSubContentContainer,
+  SidebarIconContainer,
+} from "./SidebarStyles";
 import {
   BotsIcon,
   PortfolioIcon,
@@ -13,6 +13,7 @@ import {
 } from "../../_components/Icons";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
+import { ExchangeSidebarFilter } from "../../Portfolio/ExchangeSidebarFilter/ExchangeSidebarFilter";
 
 interface SidebarNavProps {}
 
@@ -27,65 +28,58 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
   );
 
   const Portfolio = (
-    <NavLink
-      to="/portfolio"
-      className="sidebar-tab"
-      activeClassName="active-sidebar-tab"
-    >
-      <LinkWrapper>
-        <PortfolioIcon />
-        {(!isSidebarCollapsed || viewType == "mobile") && (
-          <LinkText>Portfolio</LinkText>
-        )}
-      </LinkWrapper>
-    </NavLink>
+    <React.Fragment>
+      <NavTab to="/portfolio" activeClassName="active-sidebar-tab">
+        <SidebarIconContainer>
+          <PortfolioIcon />
+        </SidebarIconContainer>
+        <LinkText isVisible={!isSidebarCollapsed}>Portfolio</LinkText>
+      </NavTab>
+      <TabSubContentContainer viewType={viewType} isActiveTab={false}>
+        <ExchangeSidebarFilter />
+      </TabSubContentContainer>
+    </React.Fragment>
   );
 
   const Bots = (
-    <NavLink
-      to="/bots"
-      className="sidebar-tab"
-      activeClassName="active-sidebar-tab"
-    >
-      <LinkWrapper>
-        <BotsIcon />
-        {(!isSidebarCollapsed || viewType == "mobile") && (
-          <LinkText>Bots</LinkText>
-        )}
-      </LinkWrapper>
-    </NavLink>
+    <React.Fragment>
+      <NavTab to="/bots" activeClassName="active-sidebar-tab">
+        <SidebarIconContainer>
+          <BotsIcon />
+        </SidebarIconContainer>
+        <LinkText isVisible={!isSidebarCollapsed}>Bots</LinkText>
+      </NavTab>
+      <TabSubContentContainer viewType={viewType} isActiveTab={false}>
+        <ExchangeSidebarFilter />
+      </TabSubContentContainer>
+    </React.Fragment>
   );
 
   const Dashboard = (
-    <NavLink
-      to="/dashboard"
-      className="sidebar-tab"
-      activeClassName="active-sidebar-tab"
-    >
-      <LinkWrapper>
-        <DashboardIcon />
-        {(!isSidebarCollapsed || viewType == "mobile") && (
-          <LinkText>Dashboard</LinkText>
-        )}
-      </LinkWrapper>
-    </NavLink>
+    <React.Fragment>
+      <NavTab to="/dashboard" activeClassName="active-sidebar-tab">
+        <SidebarIconContainer>
+          <DashboardIcon />
+        </SidebarIconContainer>
+        <LinkText isVisible={!isSidebarCollapsed}>Dashboard</LinkText>
+      </NavTab>
+      <TabSubContentContainer viewType={viewType} isActiveTab={false}>
+        <ExchangeSidebarFilter />
+      </TabSubContentContainer>
+    </React.Fragment>
   );
 
   return (
-    <React.Fragment>
-      {viewType == "desktop" ? (
-        <DesktopContainer isSidebarCollapsed={isSidebarCollapsed}>
-          {Dashboard}
-          {Portfolio}
-          {Bots}
-        </DesktopContainer>
-      ) : (
-        <MobileContainer>
-          {Dashboard}
-          {Portfolio}
-          {Bots}
-        </MobileContainer>
-      )}
-    </React.Fragment>
+    <DesktopContainer
+      // onMouseOver={() => {
+      //   isSidebarCollapsed &&
+      //     dispatch(applicationViewActions.toggleSidebar());
+      // }}
+      isSidebarCollapsed={isSidebarCollapsed}
+    >
+      {Dashboard}
+      {Portfolio}
+      {Bots}
+    </DesktopContainer>
   );
 };

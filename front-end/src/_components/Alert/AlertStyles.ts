@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { COLORS } from "../../GlobalStyles/ResponsiveDesign";
 
 export const AlertWrapper = styled.div`
   display: flex;
@@ -16,7 +17,7 @@ export const AlertContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: ${(props: IAlertContainerProps) =>
-    props.alertType == "danger" ? "var(--error-base)" : "var(--accent-base)"};
+    props.alertType == "danger" ? COLORS.errorBase : COLORS.accentBase};
   padding: 10px;
   position: fixed;
   bottom: 5%;

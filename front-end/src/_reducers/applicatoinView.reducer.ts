@@ -1,5 +1,6 @@
 import { RD } from "../GlobalStyles/ResponsiveDesign";
 import { applicationViewConstants } from "../_constants/applicationView.constants";
+import { IViewType } from "../../../types";
 
 interface IApplicationViewAcion {
   type: string;
@@ -9,7 +10,7 @@ interface IApplicationViewAcion {
 export interface IApplicationViewState {
   isSidebarCollapsed: boolean;
   isSidebarVisible: boolean;
-  currentViewType: "mobile" | "desktop";
+  currentViewType: IViewType;
   applicationContainerWidth?: number;
 }
 

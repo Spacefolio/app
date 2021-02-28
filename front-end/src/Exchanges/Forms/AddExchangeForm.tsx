@@ -6,7 +6,7 @@ import {
   IExchangeReference,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { BasicButton } from "../../GlobalStyles";
+import { BaseButton } from "../../GlobalStyles";
 import {
   ExchangeFormContainer,
   ExchangeFormRow,
@@ -107,9 +107,9 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
         />
       </ExchangeFormRow>
 
-      <BasicButton onClick={() => handleSubmit()}>
+      <BaseButton onClick={() => handleSubmit()}>
         {addingExchange ? "Submitting..." : "Submit"}
-      </BasicButton>
+      </BaseButton>
     </ExchangeFormContainer>
   );
 };

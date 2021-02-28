@@ -17,7 +17,7 @@ import {
   NavLogoArea,
   ToggleSidebar,
 } from "../NavStyles";
-import { BasicLink, ClickableDiv } from "../../GlobalStyles";
+import { BaseLink, ClickableDiv } from "../../GlobalStyles";
 
 interface INavProps {}
 
@@ -64,7 +64,7 @@ export const Nav: React.FC<INavProps> = ({}) => {
           onClick={() => dispatch(applicationViewActions.toggleSidebar())}
         ></ToggleSidebar>
         <BrandingContainer>
-          <BasicLink to="/dashboard">Algonex</BasicLink>
+          <BaseLink to="/dashboard">Algonex</BaseLink>
         </BrandingContainer>
       </NavLogoArea>
       <NavFlexSpacer />

@@ -13,3 +13,47 @@ to {
   transform: rotate(-360deg);
 }
 `;
+
+export const ResizeTransition = `
+-webkit-transition:all 1s ease;
+-moz-transition:all 1s ease;
+      -o-transition:all 1s ease;
+            transition:all 1s ease;
+`;
+
+export const FadeoutAnimation = `
+-webkit-animation:fadeOut 1s;
+    -webkit-animation-delay:3s;
+    -webkit-animation-fill-mode:forwards;
+    -moz-animation:fadeOut 1s;
+    -moz-animation-delay:3s;
+    -moz-animation-fill-mode:forwards;
+    animation:fadeOut 1s;
+    animation-delay:3s;
+    animation-fill-mode:forwards;
+}
+@-webkit-keyframes fadeOut {
+  from {
+      opacity:1;
+  }
+  to {
+      opacity:0;
+  }
+}
+@-moz-keyframes fadeOut {
+  from {
+      opacity:1;
+  }
+  to {
+      opacity:0;
+  }
+}
+@keyframes fadeOut {
+  from {
+      opacity:1;
+  }
+  to {
+      opacity:0;
+  }
+}
+`;

@@ -31,7 +31,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
   );
 
   useEffect(() => {
-    data.length > 0 ? drawBasicChart() : null;
+    data.length > 0 && drawBasicChart();
   }, [data, width, height]);
 
   const margin = {
@@ -275,21 +275,19 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .attr("height", height)
       .attr("width", width)
       .style("opacity", 0);
-      // .on("pointerenter", mouseover)
-      // .on("pointermove", mousemove)
-      // .on("pointerleave", mouseout);
+    // .on("pointerenter", mouseover)
+    // .on("pointermove", mousemove)
+    // .on("pointerleave", mouseout);
 
     viewType == "mobile"
       ? listenerBox
           .on("pointerdown", mouseover)
           .on("pointermove", mousemove, false)
           .on("pointercancel", mouseout, false)
-
       : listenerBox
           .on("mouseover", mouseover)
           .on("mouseout", mouseout)
           .on("mousemove", mousemove);
-
 
     //create sub component of the tooltip to render the Currency denomination in
     const tooltipQuote = tooltipText
@@ -314,21 +312,19 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
   };
 
   return (
-    <div style={{ position: "relative" }} id={`${id}`}>
-      {!data && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: `${chartWidth}px`,
-            height: `${chartHeight}px`,
-            // touchAction: "none",
-            // pointerEvents: "none",
-          }}
-        >
-          <div>LOADING CHART...</div>
-        </div>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: `${width}px`,
+        height: `${height}px`,
+      }}
+    >
+      {!(data.length > 0) ? (
+        <div>LOADING CHART...</div>
+      ) : (
+        <div style={{ position: "relative" }} id={`${id}`}></div>
       )}
     </div>
   );

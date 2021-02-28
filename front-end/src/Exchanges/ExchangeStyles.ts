@@ -1,6 +1,7 @@
 import { style } from "d3";
 import styled from "styled-components";
-import { BasicSearchBar } from "../GlobalStyles";
+import { BaseSearchBar } from "../GlobalStyles";
+import { COLORS } from "../GlobalStyles/ResponsiveDesign";
 
 export const MyExchangesContainer = styled.div`
   display: flex;
@@ -32,8 +33,8 @@ export const MyExchangesLineItemContainer = styled.div<MyExchangeLineItemProps>`
   justify-content: space-between;
   ${(props) =>
     props.selected
-      ? "border-left: 3px solid var(--primary-base);"
-      : "margin-left: 3px;"}
+      ? `border-left: 3px solid ${COLORS.primaryBase};`
+      : `margin-left: 3px;`}
 `;
 
 export const MyExchangeEditAreaWrapper = styled.div`
@@ -55,6 +56,6 @@ export const ExchangeFormContainer = styled.form`
 
 export const AddExchangeWrapper = styled.div``;
 
-export const ExchangeSearchBar = styled(BasicSearchBar)`
+export const ExchangeSearchBar = styled(BaseSearchBar)`
 
 `;

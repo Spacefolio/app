@@ -35,6 +35,7 @@ export const COLORS = {
 };
 export const SPACING = {
   flexCardGap: "15px",
+  NavbarHeight: "60px",
 };
 export const TIMING = {
   transitionTime: "0.3s",

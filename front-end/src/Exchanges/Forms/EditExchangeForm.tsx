@@ -6,7 +6,7 @@ import {
   IExchangeAccountRequest,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { BasicButton } from "../../GlobalStyles";
+import { BaseButton } from "../../GlobalStyles";
 import {
   ExchangeFormContainer,
   ExchangeFormInput,
@@ -113,9 +113,9 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
         />
       </ExchangeFormRow>
 
-      <BasicButton onClick={() => handleUpdate()}>
+      <BaseButton onClick={() => handleUpdate()}>
         {addingExchange ? "Updating..." : "Update"}
-      </BasicButton>
+      </BaseButton>
     </ExchangeFormContainer>
   );
 };

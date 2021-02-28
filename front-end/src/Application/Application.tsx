@@ -7,8 +7,7 @@ import {
   useRouteMatch,
   Redirect,
 } from "react-router-dom";
-import { PrivateRoute } from "../_components";
-import { history } from "../_helpers";
+
 import { Portfolio } from "../Portfolio";
 import { Dashboard } from "../Dashboard";
 import { Nav, SidebarNav } from "../Nav";
@@ -21,6 +20,7 @@ import useDimensions from "react-use-dimensions";
 import { applicationViewActions } from "../_actions/applicationView.actions";
 import { RD } from "../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
+import { BottomNav } from "../Nav";
 
 export const Application = () => {
   const dispatch = useDispatch();
@@ -63,11 +63,10 @@ export const Application = () => {
   }, [width]);
 
   return (
-    <div>
+    <React.Fragment>
       <Nav />
-      <BodyWrapper style={{}}>
-        {viewType == "desktop" ? <SidebarNav /> : null}
-
+      <BodyWrapper>
+        {viewType == "desktop" && <SidebarNav />}
         <ApplicationContainer viewType={viewType} ref={ref}>
           <ApplicationFlexContainer style={appWidth}>
             <Switch>
@@ -82,7 +81,7 @@ export const Application = () => {
           </ApplicationFlexContainer>
         </ApplicationContainer>
       </BodyWrapper>
-      {viewType == "mobile" && <SidebarNav />}
-    </div>
+      {viewType == "mobile" && <BottomNav/>}
+    </React.Fragment>
   );
 };

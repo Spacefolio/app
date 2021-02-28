@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { TIMING } from "./ResponsiveDesign";
+import { COLORS, TIMING } from "./ResponsiveDesign";
 export const TimingStyle = `
 transition: ${TIMING.transitionTime};
 `;
@@ -10,23 +10,32 @@ export const CenteredFlexBox = `
   align-items: center;
 `;
 export const BaseSvg = styled.svg`
-  fill: black;
+  fill: ${COLORS.primaryDark2};
 `;
 export const ClickableDiv = styled.div`
   cursor: pointer;
   ${TimingStyle}
 `;
 export const ClickableSvg = styled(BaseSvg)`
+  width: 100%;
+  height: 100%;
   ${TimingStyle}
   &:hover {
-    fill: var(--accent-base);
+    fill: ${COLORS.accentBase};
   }
+`;
+export const BaseText = styled.div`
+  ${TimingStyle}
 `;
 export const Scrollbox = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
   height: 100%;
   width: 100%;
+`;
+export const BaseGrid = styled.div`
+  display: grid;
+  ${TimingStyle}
 `;
 export const FlexCard = styled.div`
   width: 100%;
@@ -37,8 +46,9 @@ export const FlexCard = styled.div`
   border-radius: 30px;
   padding: 20px;
   box-shadow: 0px 10px 25px -24px;
+  ${TimingStyle};
 `;
-export const BasicSearchBar = styled.input`
+export const BaseSearchBar = styled.input`
   border-radius: 5px;
   border: lightblue solid 3px;
   width: 100%;
@@ -46,20 +56,20 @@ export const BasicSearchBar = styled.input`
   &:focus {
   }
 `;
-export const BasicButton = styled.div`
+export const BaseButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background-color: var(--primary-base);
+  background-color: ${COLORS.primaryBase};
   padding: 10px;
   color: white;
-  box-shadow: 0px 15px 25px -17px var(--primary-base);
+  box-shadow: 0px 15px 25px -17px ${COLORS.primaryBase};
   cursor: pointer;
   ${TimingStyle}
   &:hover {
-    background-color: var(--accent-base);
-    box-shadow: 0px 15px 25px -17px var(--accent-base);
+    background-color: ${COLORS.accentBase};
+    box-shadow: 0px 15px 25px -17px ${COLORS.accentBase};
   }
 `;
 export const FullScreenOverlay = styled.div`
@@ -71,7 +81,7 @@ export const FullScreenOverlay = styled.div`
   bottom: 0;
   margin: 50%;
 `;
-export const BasicLink = styled(Link)`
-  color: var(--primary-base);
+export const BaseLink = styled(Link)`
+  color: ${COLORS.primaryBase};
   ${TimingStyle}
 `;

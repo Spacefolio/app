@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { COLORS } from "../../GlobalStyles/ResponsiveDesign";
 
 export const DDWrapper = styled.div`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04);
@@ -9,7 +10,7 @@ export const DDWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   position: absolute;
-  background-color: var(--primary-light4);
+  background-color: ${COLORS.primaryLight4};
 `;
 
 export const DDList = styled.div`
@@ -20,11 +21,11 @@ export const DDList = styled.div`
 
 export const DDListItem = styled.div`
   cursor: pointer;
-  color: var(--primary-dark3);
+  color: ${COLORS.primaryDark3};
   padding: 10px;
   width: 100%;
   &:hover {
-    color: var(--accent-light5);
-    background-color: var(--secondary-dark2);
+    color: ${null};
+    background-color: ${null};
   }
 `;

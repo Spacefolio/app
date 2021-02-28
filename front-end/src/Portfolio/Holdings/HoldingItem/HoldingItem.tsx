@@ -1,6 +1,6 @@
 import React from "react";
 import { IPortfolioDataView, IPortfolioItemView } from "../../../../../types";
-import "../../Portfolio.scss";
+import { COLORS } from "../../../GlobalStyles/ResponsiveDesign";
 import {
   DataWrapper,
   DesktopWrapper,
@@ -22,7 +22,7 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   } = portfolioItem;
 
   const portfolioValueItemStyler = (num: number) => {
-    return num < 0 ? "var(--error-base)" : "var(--accent-base)";
+    return num < 0 ? COLORS.errorBase : COLORS.accentBase;
   };
 
   const NameSection = () => {

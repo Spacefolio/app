@@ -1,5 +1,5 @@
 import React from "react";
-import { BasicButton, ClickableSvg } from "../../GlobalStyles";
+import { BaseButton, ClickableSvg } from "../../GlobalStyles";
 import { SyncIconWrapper } from "./IconStyles";
 
 interface ISvgProps {
