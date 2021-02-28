@@ -1,18 +1,21 @@
 .line {
   fill: none;
-  stroke: black;
-  stroke-width: 4;
+  stroke: var(--accent-base);
+  stroke-width: 3;
 }
 .focus-circle {
-  fill: black;
+  fill: none;
+  stroke-width: 2;
+  stroke: var(--primary-base);
 }
 .tooltip {
   opacity: 0;
+
   display: flex;
   position: absolute;
   flex-direction: column;
   background-color: white;
-  border: solid 2px;
+  border: solid 2px black;
   border-radius: 5px;
   padding: 5px;
 }
@@ -27,4 +30,13 @@
 }
 .tooltip-date{
 
+}
+.intersect-line{
+
+}
+.overlay{
+
+}
+.tooltip-rect{
+  background-color: orangered;
 }
