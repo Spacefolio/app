@@ -138,6 +138,6 @@ function getPortfolioChart(req: any, res: Response, next: NextFunction)
 
 function getTimeframe(timeframe: string) : timespan
 {
-  let time: timespan | undefined = (<any>timespan)[timeframe];
+  var time: timespan = timeframe as timespan;
   return (time === undefined) ? timespan.ALL : time;
 }
