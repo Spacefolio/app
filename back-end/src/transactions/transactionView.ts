@@ -188,7 +188,7 @@ export async function getConversionRate(
       return sleep(exchange.rateLimit).then(() => exchange.fetchTicker(symbol))
       .then((ticker: ccxt.Ticker) => {
         return (ticker.last ? ticker.last : ((ticker.high + ticker.low) / 2));
-      })
+      }).catch((err) => { return 1; })
     });
   }
 
@@ -196,6 +196,6 @@ export async function getConversionRate(
     if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
     return sleep(exchange.rateLimit).then(() => exchange.fetchOHLCV(symbol, '1m', timestamp, ).then((ohlcv: ccxt.OHLCV[]) => {
       return (ohlcv[0][1] + ohlcv[0][4]) / 2;
-    }))
+    })).catch((err) => { return 1; })
   });
 }

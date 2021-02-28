@@ -33,7 +33,7 @@ function loadExchange(
     apiKey: exchangeAccount.apiInfo.apiKey,
     secret: exchangeAccount.apiInfo.apiSecret,
     password: exchangeAccount.apiInfo.passphrase,
-    timeout: 30000,
+    timeout: 500,
     enableRateLimit: true,
   });
 

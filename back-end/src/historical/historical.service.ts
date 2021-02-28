@@ -67,7 +67,7 @@ export async function loadHistoricalDataToDb(symbol: string) {
 
 export async function getTicker(symbol: string) : Promise<number>
 {
-  var tickerJson = await axios.get<ITickerResponse[]>(`https://financialmodelingprep.com/api/v3/quote/${symbol}USD?apikey=77c0e8deb5f1500de6679057af187bef`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
+  var tickerJson = await axios.get<ITickerResponse[]>(`https://financialmodelingprep.com/api/v3/quote/${symbol}USD?apikey=77c0e8deb5f1500de6679057af187bef`, { timeout: 500 }).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
   if (!tickerJson) { return 1; }
   return tickerJson.length > 0 ? tickerJson[0].price : 1;
 }
