@@ -10,9 +10,8 @@ import { BaseButton } from "../../GlobalStyles";
 import {
   ExchangeFormContainer,
   ExchangeFormRow,
-  ExchangeFormLabel,
-  ExchangeFormInput,
 } from "./ExchangeFormStyles";
+import { TextField } from "@material-ui/core";
 
 interface ExchangeFormProps {
   exchangeRefInfo: IExchangeReference;
@@ -71,39 +70,38 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
         </div>
       </ExchangeFormRow>
       <ExchangeFormRow>
-        <ExchangeFormLabel>NICKNAME</ExchangeFormLabel>
-        <ExchangeFormInput
-          name="nickname"
-          onChange={(e) => setNickname(e.target.value)}
-          type="text"
+        <TextField
+          id="filled-basic"
+          label="NICKNAME"
           value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
         />
       </ExchangeFormRow>
       <ExchangeFormRow>
-        <ExchangeFormLabel>API KEY</ExchangeFormLabel>
-        <ExchangeFormInput
-          name="apiKey"
-          onChange={(e) => setApiKey(e.target.value)}
-          type="text"
+        <TextField
+          required
+          id="filled-basic"
+          label="API KEY"
           value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
         />
       </ExchangeFormRow>
       <ExchangeFormRow>
-        <ExchangeFormLabel>API SECRET</ExchangeFormLabel>
-        <ExchangeFormInput
-          name="apiSecret"
+        <TextField
+          required
+          id="filled-basic"
+          label="API SECRET"
           onChange={(e) => setApiSecret(e.target.value)}
-          type="text"
           value={apiSecret}
         />
       </ExchangeFormRow>
       <ExchangeFormRow>
-        <ExchangeFormLabel>PASSPHRASE</ExchangeFormLabel>
-        <ExchangeFormInput
-          name="passphrase"
-          onChange={(e) => setPassphrase(e.target.value)}
-          type="text"
+        <TextField
+          required
+          id="filled-basic"
+          label="PASSPHRASE"
           value={passphrase}
+          onChange={(e) => setPassphrase(e.target.value)}
         />
       </ExchangeFormRow>
 

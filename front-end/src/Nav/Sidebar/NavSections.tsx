@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BotsIcon,
   PortfolioIcon,
@@ -17,9 +17,14 @@ import { ExchangeSidebarFilter } from "../../Portfolio/ExchangeSidebarFilter/Exc
 import { IViewType } from "../../../../types";
 import { Route, useRouteMatch } from "react-router";
 import { useState } from "react";
+import { Modal } from "@material-ui/core";
 
 export function BotSection(isSidebarCollapsed: boolean, viewType: IViewType) {
   const [subIsVisible, setSubIsVisible] = useState(false);
+
+  useEffect(() => {
+    isSidebarCollapsed && setSubIsVisible(false);
+  }, [isSidebarCollapsed]);
 
   const tabUri = "/bots";
   return (
@@ -50,6 +55,10 @@ export function DashboardSection(
 ) {
   const [subIsVisible, setSubIsVisible] = useState(false);
 
+  useEffect(() => {
+    isSidebarCollapsed && setSubIsVisible(false);
+  }, [isSidebarCollapsed]);
+
   const tabUri = "/dashboard";
   return (
     <React.Fragment>
@@ -78,6 +87,11 @@ export function PortfolioSection(
   viewType: IViewType
 ) {
   const [subIsVisible, setSubIsVisible] = useState(false);
+
+  useEffect(() => {
+    isSidebarCollapsed && setSubIsVisible(false);
+  }, [isSidebarCollapsed]);
+
   const tabUri = "/portfolio";
   return (
     <React.Fragment>

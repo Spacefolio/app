@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import { RD } from "../../GlobalStyles/ResponsiveDesign";
+import { CenteredFlexBox, ClickableDiv } from "../../GlobalStyles";
+import { COLORS, RD } from "../../GlobalStyles/ResponsiveDesign";
 
 export const MetaPortfolioWrapper = styled.div`
   padding: 10px 0;
+  position: relative;
   width: 100%;
   display: flex;
   align-items: center;
@@ -12,17 +14,21 @@ export const MetaPortfolioWrapper = styled.div`
 
 export const MetaPortfolioChartWrapper = styled.div``;
 
-export const SyncAreaContainer = styled.div`
-  display: flex;
-`;
-
-export const SyncButtonContainer = styled.div`
-  border-radius: 5px;
-  padding: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  width: 80px;
+export const SyncButtonContainer = styled(ClickableDiv)`
+  border-radius: 10px;
+  padding: 8px;
+  opacity: 0.8;
+  ${CenteredFlexBox}
+  border: 3px solid ${COLORS.primaryBase};
+  width: 90px;
+  &:hover {
+    border: 3px solid ${COLORS.accentBase};
+    color: ${COLORS.accentBase};
+    svg {
+      fill: ${COLORS.accentBase};
+    }
+    color: ${COLORS.accentBase};
+  }
 `;
 
 export const PortfolioValueWrapper = styled.div`

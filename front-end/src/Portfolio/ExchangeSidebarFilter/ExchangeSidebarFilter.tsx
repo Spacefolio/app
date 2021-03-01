@@ -21,7 +21,6 @@ export const ExchangeSidebarFilter: React.FC<ExchangeSidebarFilterProps> = ({}) 
       <BaseButton onClick={() => setAddExchangeVisible(true)}>
         Add Exchange
       </BaseButton>
-      <hr />
       <ManageExchanges myExchanges={true} addExchange={false} />
 
       <Modal dismiss={setAddExchangeVisible} visible={addExchangeVisible}>

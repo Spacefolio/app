@@ -4,6 +4,7 @@ import { COLORS } from "../../../GlobalStyles/ResponsiveDesign";
 import {
   DataWrapper,
   DesktopWrapper,
+  HoldingDesktopWrapper,
   MobileWrapper,
 } from "../../TabularCardStyles";
 
@@ -27,7 +28,7 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 
   const NameSection = () => {
     return (
-      <DataWrapper style={{ flexDirection: "row", alignItems: "center" }}>
+      <DataWrapper style={{ flexDirection: "row", alignItems: "center", gridArea: 'assetName'}}>
         <img width={"50px"} src={asset.logoUrl} />
         <div>{asset.name}</div>
       </DataWrapper>
@@ -36,7 +37,7 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 
   const AmountSection = () => {
     return (
-      <DataWrapper>
+      <DataWrapper style={{gridArea: 'amount'}}>
         <div className="table-right-align">{amount}</div>
       </DataWrapper>
     );
@@ -44,21 +45,21 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 
   const CurrentPriceSection = () => {
     return (
-      <DataWrapper>
+      <DataWrapper style={{gridArea: 'currentPrice'}}>
         <div className="table-right-align">${currentPrice.toFixed(2)}</div>
       </DataWrapper>
     );
   };
   const ValueSection = () => {
     return (
-      <DataWrapper>
+      <DataWrapper style={{gridArea: 'value'}}>
         <div className="table-right-align">${value.USD.toFixed(2)}</div>
       </DataWrapper>
     );
   };
   const ProfitSection = () => {
     return (
-      <DataWrapper>
+      <DataWrapper style={{gridArea: 'profit'}}>
         <div
           className="table-right-align"
           style={{ color: portfolioValueItemStyler(profitTotal.all) }}
@@ -77,13 +78,13 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 
   return (
     <React.Fragment>
-      <DesktopWrapper key={portfolioItem.id}>
+      <HoldingDesktopWrapper key={portfolioItem.id}>
         {NameSection()}
         {AmountSection()}
         {CurrentPriceSection()}
         {ValueSection()}
         {ProfitSection()}
-      </DesktopWrapper>
+      </HoldingDesktopWrapper>
       <MobileWrapper key={portfolioItem.id + "mobile"}>
         {NameSection()}
         {AmountSection()}

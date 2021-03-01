@@ -10,15 +10,15 @@ export const CenteredFlexBox = `
   align-items: center;
 `;
 export const BaseSvg = styled.svg`
-  fill: ${COLORS.primaryDark2};
+  fill: ${COLORS.infoBase};
 `;
 export const ClickableDiv = styled.div`
   cursor: pointer;
   ${TimingStyle}
 `;
 export const ClickableSvg = styled(BaseSvg)`
-  width: 100%;
-  height: 100%;
+  width: 1rem;
+  height: 1rem;
   cursor: pointer;
   ${TimingStyle}
   &:hover {
@@ -39,31 +39,28 @@ export const BaseGrid = styled.div`
   ${TimingStyle}
 `;
 export const FlexCard = styled.div`
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: white;
-  border-radius: 30px;
-  padding: 20px;
+  border-radius: 2rem;
+  padding: 1rem;
   box-shadow: 0px 10px 25px -24px;
   ${TimingStyle};
 `;
 export const BaseSearchBar = styled.input`
-  border-radius: 5px;
-  border: lightblue solid 3px;
+  border-radius: 1rem;
+  border: lightblue solid 1rem;
   width: 100%;
   padding: 10px;
   &:focus {
   }
 `;
 export const BaseButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
+  ${CenteredFlexBox}
+  border-radius: 1rem;
   background-color: ${COLORS.primaryBase};
-  padding: 10px;
+  padding: 1rem;
   color: white;
   box-shadow: 0px 15px 25px -17px ${COLORS.primaryBase};
   cursor: pointer;
@@ -87,13 +84,11 @@ export const BaseLink = styled(Link)`
   ${TimingStyle}
 `;
 export const SvgWrapActionButton = styled(ClickableDiv)`
-  height: 50px;
-  width: 50px;
-  padding: 10px;
-  border: 3px solid ${COLORS.primaryBase};
-  border-radius: 10px;
+  height: 3rem;
+  width: 3rem;
+  ${CenteredFlexBox};
   &:hover {
-    border: ${COLORS.accentBase} 3px solid;
+
     ${ClickableSvg} {
       fill: ${COLORS.accentBase};
     }

@@ -17,6 +17,7 @@ import {
   MyExchangeWrapper,
 } from "./ExchangeStyles";
 import { filter } from "d3";
+import { ClickableDiv } from "../GlobalStyles";
 
 interface ExchangesPopupProps {
   headerText?: string;
@@ -59,8 +60,7 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
         onClick={() => dispatch(portfolioActions.FilterPortfolio(""))}
       >
         <MyExchangeNameWrapper>
-          <PortfolioIcon style={{ width: "25px", height: "25px" }} />
-          <div>All Assets</div>
+          <ClickableDiv style={{marginLeft: "25px"}}>All Assets</ClickableDiv>
         </MyExchangeNameWrapper>
       </MyExchangesLineItemContainer>
       {userLinkedExchanges.length != 0

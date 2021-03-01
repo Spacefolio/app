@@ -14,7 +14,8 @@ export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
   justify-content: center;
   height: calc(100vh - ${SPACING.NavbarHeight});
-  margin: 0 ${SPACING.flexCardGap};
+  margin-top: ${SPACING.NavbarHeight};
+  padding: 0 ${SPACING.flexCardGap};
   width: 100%;
 `;
 
@@ -24,6 +25,7 @@ export const ApplicationFlexContainer = styled.div`
 `;
 export const BodyWrapper = styled.div`
   display: flex;
+  position: relative;
   height: 100%;
   width: 100%;
 `;

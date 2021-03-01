@@ -9,10 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { BaseButton } from "../../GlobalStyles";
 import {
   ExchangeFormContainer,
-  ExchangeFormInput,
-  ExchangeFormLabel,
   ExchangeFormRow,
 } from "./ExchangeFormStyles";
+import { makeStyles, Theme, createStyles, TextField } from "@material-ui/core";
 
 interface ExchangeFormProps {
   exchangeAccountData: IExchangeAccountView;
@@ -66,50 +65,60 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
     dispatch(exchangeActions.update(exchange, exchangeAccountData.id));
   };
 
+  const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+      root: {
+        "& > *": {
+          margin: theme.spacing(1),
+          width: "25ch",
+        },
+      },
+    })
+  );
+
+  const classes = useStyles();
+
   return (
-    <ExchangeFormContainer>
+    <ExchangeFormContainer
+      className={classes.root}
+      noValidate
+      autoComplete="off"
+    >
       <h1>Edit Exchange Info</h1>
 
       <ExchangeFormRow>
-        <div>
-          {name}
-          <img src={exchangeAccountData.logoUrl} />
-        </div>
-      </ExchangeFormRow>
-      <ExchangeFormRow>
-        <ExchangeFormLabel>NICKNAME</ExchangeFormLabel>
-        <ExchangeFormInput
-          name="nickname"
-          onChange={(e) => setNickname(e.target.value)}
-          type="text"
+        <TextField
+          id="filled-basic"
+          label="NICKNAME"
           value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
         />
       </ExchangeFormRow>
       <ExchangeFormRow>
-        <ExchangeFormLabel>API KEY</ExchangeFormLabel>
-        <ExchangeFormInput
-          name="apiKey"
-          onChange={(e) => setApiKey(e.target.value)}
-          type="text"
+        <TextField
+          required
+          id="filled-basic"
+          label="API KEY"
           value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
         />
       </ExchangeFormRow>
       <ExchangeFormRow>
-        <ExchangeFormLabel>API SECRET</ExchangeFormLabel>
-        <ExchangeFormInput
-          name="apiSecret"
+        <TextField
+          required
+          id="filled-basic"
+          label="API SECRET"
           onChange={(e) => setApiSecret(e.target.value)}
-          type="text"
           value={apiSecret}
         />
       </ExchangeFormRow>
       <ExchangeFormRow>
-        <ExchangeFormLabel>PASSPHRASE</ExchangeFormLabel>
-        <ExchangeFormInput
-          name="passphrase"
-          onChange={(e) => setPassphrase(e.target.value)}
-          type="text"
+        <TextField
+          required
+          id="filled-basic"
+          label="PASSPHRASE"
           value={passphrase}
+          onChange={(e) => setPassphrase(e.target.value)}
         />
       </ExchangeFormRow>
 

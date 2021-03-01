@@ -3,8 +3,7 @@ import { DesktopContainer } from "./SidebarStyles";
 
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
-import { DesktopSidebar } from "./Desktop";
-import { MobileSidebar } from "./Mobile";
+import { DashboardSection, PortfolioSection, BotSection } from "./NavSections";
 
 interface SidebarNavProps {}
 
@@ -19,8 +18,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
   );
 
   return (
-    <React.Fragment>
-      {viewType == "mobile" ? <MobileSidebar /> : <DesktopSidebar />}
-    </React.Fragment>
+    <DesktopContainer isSidebarCollapsed={isSidebarCollapsed}>
+      {DashboardSection(isSidebarCollapsed, viewType)}
+      {PortfolioSection(isSidebarCollapsed, viewType)}
+      {BotSection(isSidebarCollapsed, viewType)}
+    </DesktopContainer>
   );
 };

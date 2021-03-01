@@ -18,6 +18,7 @@ import {
   ToggleSidebar,
 } from "../NavStyles";
 import { BaseLink, ClickableDiv } from "../../GlobalStyles";
+import { Slide, useScrollTrigger } from "@material-ui/core";
 
 interface INavProps {}
 
@@ -35,6 +36,28 @@ export const Nav: React.FC<INavProps> = ({}) => {
   const isSidebarVisible = useSelector(
     (state: IRootState) => state.applicationView.isSidebarVisible
   );
+
+  interface Props {
+    /**
+     * Injected by the documentation to work in an iframe.
+     * You won't need it on your project.
+     */
+    window?: () => Window;
+    children: React.ReactElement;
+  }
+  function HideOnScroll(props: Props) {
+    const { children, window } = props;
+    // Note that you normally won't need to set the window ref as useScrollTrigger
+    // will default to window.
+    // This is only being set here because the demo is in an iframe.
+    const trigger = useScrollTrigger({ target: window ? window() : undefined });
+
+    return (
+      <Slide appear={false} direction="down" in={!trigger}>
+        {children}
+      </Slide>
+    );
+  }
 
   const { logout } = userActions;
 
@@ -64,14 +87,15 @@ export const Nav: React.FC<INavProps> = ({}) => {
   ];
 
   const DesktopNav = (
-    <NavContainer><ToggleSidebar
-          onClick={() =>
-            dispatch(applicationViewActions.toggleSidebar("desktop"))
-          }
-        ><ArrowIcon direction={!isSidebarCollapsed ? "right" : "left"} />
-        </ToggleSidebar>
+    <NavContainer>
+      <ToggleSidebar
+        onClick={() =>
+          dispatch(applicationViewActions.toggleSidebar("desktop"))
+        }
+      >
+        <ArrowIcon direction={!isSidebarCollapsed ? "right" : "left"} />
+      </ToggleSidebar>
       <NavLogoArea>
-        
         <BrandingContainer>
           <BaseLink to="/dashboard">Algonex</BaseLink>
         </BrandingContainer>
@@ -112,16 +136,13 @@ export const Nav: React.FC<INavProps> = ({}) => {
   );
 
   const MobileNav = (
-    <NavContainer>
-      <ToggleSidebar
-        onClick={() => dispatch(applicationViewActions.toggleSidebar("mobile"))}
-      >
-        <ArrowIcon direction={isSidebarVisible ? "right" : "left"} />
-      </ToggleSidebar>
-      <NavLogoArea>
-        <Link to="/dashboard">Algonex</Link>
-      </NavLogoArea>
-    </NavContainer>
+    <HideOnScroll>
+      <NavContainer>
+        <NavLogoArea>
+          <Link to="/dashboard">Algonex</Link>
+        </NavLogoArea>
+      </NavContainer>
+    </HideOnScroll>
   );
 
   return (

@@ -2,7 +2,7 @@ const { O_DIRECT } = require("constants");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 require("dotenv").config();
-var webpack = require('webpack');
+var webpack = require("webpack");
 
 module.exports = {
   mode: "development",
@@ -54,7 +54,10 @@ module.exports = {
       template: "./src/index.html",
     }),
     new webpack.DefinePlugin({
-      API_DOMAIN: JSON.stringify(process.env.NODE_ENV == "DEVELOPMENT" ? "http://192.168.1.134:4000" : "/api"
+      API_DOMAIN: JSON.stringify(
+        process.env.NODE_ENV == "DEVELOPMENT"
+          ? "http://192.168.1.134:4000"
+          : "/api"
       ),
     }),
   ],

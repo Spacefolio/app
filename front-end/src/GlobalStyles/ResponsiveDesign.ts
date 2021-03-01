@@ -34,7 +34,7 @@ export const COLORS = {
   infoDark2: "#0064ba",
 };
 export const SPACING = {
-  flexCardGap: "15px",
+  flexCardGap: "1rem",
   NavbarHeight: "60px",
 };
 export const TIMING = {

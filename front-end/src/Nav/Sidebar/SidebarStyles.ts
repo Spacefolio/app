@@ -19,7 +19,7 @@ interface IDesktopWrapperProps {
   isSidebarVisible?: Boolean;
 }
 
-export const SidebarContainer = styled.div`
+export const DesktopContainer = styled.div<IDesktopWrapperProps>`
   font-weight: 500;
   font-size: 1em;
   display: flex;
@@ -30,18 +30,27 @@ export const SidebarContainer = styled.div`
   left: 0px;
   background-color: ${COLORS.primaryLight4};
   flex-shrink: 0;
-`;
-
-export const DesktopContainer = styled(SidebarContainer)<IDesktopWrapperProps>`
+  height: 100vh;
   width: ${(props: any) =>
     props.isSidebarCollapsed ? SPACING.NavbarHeight : "300px"};
   align-items: ${(props: any) =>
     props.isSidebarCollapsed ? "center" : "start"};
   z-index: 1;
+  margin-top: ${SPACING.NavbarHeight};
   ${TimingStyle}
 `;
 
-export const MobileContainer = styled(SidebarContainer)<IDesktopWrapperProps>`
+export const MobileContainer = styled.div<IDesktopWrapperProps>`
+  font-weight: 500;
+  font-size: 1em;
+  display: flex;
+  justify-content: start;
+  box-shadow: 5px 10px 25px -24px;
+  overflow: hidden;
+  flex-direction: column;
+  left: 0px;
+  background-color: ${COLORS.primaryLight4};
+  flex-shrink: 0;
   height: 100%;
   position: fixed;
   width: ${(props: any) => (props.isSidebarVisible ? 0 : "300px")};
