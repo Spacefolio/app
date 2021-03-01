@@ -4,7 +4,7 @@ import { authentication, IAuthenticationState } from "./authentication.reducer";
 import { IRegistrationState, registration } from "./registration.reducer";
 import { alert } from "./alert.reducer";
 import { exchanges, IExchangesState } from "./exchange.reducer";
-import { IApplicationViewState, applicationView } from "./applicatoinView.reducer";
+import { IApplicationViewState, applicationView } from "./applicationView.reducer";
 
 export interface IRootState {
   portfolio: IPortfolioState;

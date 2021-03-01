@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { ManageExchanges } from "../../Exchanges";
-import { BasicButton } from "../../GlobalStyles";
+import { BaseButton, BaseText } from "../../GlobalStyles";
 import { Modal } from "../../_components";
 import { Scrollbox } from "../../GlobalStyles";
 import { IRootState } from "../../_reducers";
@@ -18,10 +18,9 @@ export const ExchangeSidebarFilter: React.FC<ExchangeSidebarFilterProps> = ({}) 
 
   return (
     <Scrollbox>
-      <BasicButton onClick={() => setAddExchangeVisible(true)}>
+      <BaseButton onClick={() => setAddExchangeVisible(true)}>
         Add Exchange
-      </BasicButton>
-      <hr />
+      </BaseButton>
       <ManageExchanges myExchanges={true} addExchange={false} />
 
       <Modal dismiss={setAddExchangeVisible} visible={addExchangeVisible}>

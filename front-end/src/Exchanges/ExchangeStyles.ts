@@ -1,6 +1,7 @@
 import { style } from "d3";
 import styled from "styled-components";
-import { BasicSearchBar } from "../GlobalStyles";
+import { BaseSearchBar, BaseSvg, ClickableDiv } from "../GlobalStyles";
+import { COLORS } from "../GlobalStyles/ResponsiveDesign";
 
 export const MyExchangesContainer = styled.div`
   display: flex;
@@ -23,17 +24,21 @@ interface MyExchangeLineItemProps {
   selected: boolean;
 }
 
-export const MyExchangesLineItemContainer = styled.div<MyExchangeLineItemProps>`
+export const MyExchangesLineItemContainer = styled(ClickableDiv)<MyExchangeLineItemProps>`
   width: 100%;
   padding: 10px 0px;
+  font-size: 1.1em;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   ${(props) =>
     props.selected
-      ? "border-left: 3px solid var(--primary-base);"
-      : "margin-left: 3px;"}
+      ? `border-left: 3px solid ${COLORS.accentBase};`
+      : `margin-left: 3px;`}
+  &:hover{
+    background-color: ${COLORS.infoLight2};
+  }
 `;
 
 export const MyExchangeEditAreaWrapper = styled.div`
@@ -41,7 +46,7 @@ export const MyExchangeEditAreaWrapper = styled.div`
   justify-content: space-evenly;
 `;
 
-export const MyExchangeNameWrapper = styled.div`
+export const MyExchangeNameWrapper = styled(ClickableDiv)`
   display: flex;
   align-items: center;
   position: relative;
@@ -55,6 +60,17 @@ export const ExchangeFormContainer = styled.form`
 
 export const AddExchangeWrapper = styled.div``;
 
-export const ExchangeSearchBar = styled(BasicSearchBar)`
+export const ExchangeSearchBar = styled(BaseSearchBar)``;
+export const MyExchangeSvgWrapper = styled(ClickableDiv)`
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  padding: 10px;
+`;
+export const DeleteButtonContainer = styled(MyExchangeSvgWrapper)`
+  right: 5px;
+`;
 
+export const EditButtonContainer = styled(MyExchangeSvgWrapper)`
+  right: 50px;
 `;

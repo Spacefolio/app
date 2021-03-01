@@ -9,9 +9,12 @@ import { STATES } from "mongoose";
 import { IRootState } from "../_reducers";
 import { TabItem } from "../Portfolio/portfolioStyles";
 import {
+  DeleteButtonContainer,
+  EditButtonContainer,
   MyExchangeEditAreaWrapper,
   MyExchangeNameWrapper,
   MyExchangesLineItemContainer,
+  MyExchangeSvgWrapper,
 } from "./ExchangeStyles";
 
 interface ExchangeItemProps {
@@ -42,25 +45,23 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
   }, []);
 
   const DeleteButtonSection = (
-    <div
+    <DeleteButtonContainer
       onClick={() => {
         dispatch(exchangeActions.delete(data.id));
       }}
-      style={{ width: "1.2em" }}
     >
       <DeleteIcon />
-    </div>
+    </DeleteButtonContainer>
   );
 
   const EditButtonSection = (
-    <div
+    <EditButtonContainer
       onClick={() => {
         setEditExchangeVisible(true);
       }}
-      style={{ width: "1.2em" }}
     >
       <EditIcon />
-    </div>
+    </EditButtonContainer>
   );
 
   return (
@@ -73,14 +74,14 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
     >
       <MyExchangeNameWrapper>
         <img height="25px" width="25px" src={logoUrl}></img>
-        <div>{data.nickname}</div>
+        {data.nickname}
       </MyExchangeNameWrapper>
 
       {hoverShowEdit && (
-        <MyExchangeEditAreaWrapper>
+        <>
           {EditButtonSection}
           {DeleteButtonSection}
-        </MyExchangeEditAreaWrapper>
+        </>
       )}
 
       <Modal

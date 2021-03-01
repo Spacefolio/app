@@ -1,5 +1,12 @@
 import styled from "styled-components";
-import { BasicLink, CenteredFlexBox, ClickableDiv } from "../GlobalStyles";
+import {
+  BaseLink,
+  CenteredFlexBox,
+  ClickableDiv,
+  ClickableSvg,
+  SvgWrapActionButton,
+} from "../GlobalStyles";
+import { COLORS, SPACING } from "../GlobalStyles/ResponsiveDesign";
 
 export const NavLogoArea = styled.div`
   flex-shrink: 0;
@@ -16,14 +23,13 @@ export const NavLogoArea = styled.div`
 export const NavContainer = styled.div`
   font-weight: 500;
   font-size: 1em;
-  display: flex;
+  ${CenteredFlexBox}
+  position: fixed;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
   z-index: 2;
   background-color: white;
   width: 100%;
-  height: 57px;
-  align-items: center;
-  justify-content: center;
+  height: ${SPACING.NavbarHeight};
 `;
 export const NavFlexSpacer = styled.div`
   width: 100%;
@@ -36,21 +42,14 @@ export const NavAccountContainer = styled.div`
   padding: 10px;
 `;
 
-export const ToggleSidebar = styled(ClickableDiv)`
-  cursor: pointer;
-  border-radius: 8px;
-  background-color: var(--primary-base);
-  height: 50px;
-  width: 50px;
-  margin-right: 20px;
-  &:hover {
-    background-color: var(--accent-base);
-  }
+export const ToggleSidebar = styled(SvgWrapActionButton)`
+  position: absolute;
+  left: 5px;
 `;
 
 export const BrandingContainer = styled(ClickableDiv)``;
 
-export const BrandTextLink = styled(BasicLink)`
+export const BrandTextLink = styled(BaseLink)`
   $:hover {
     color: var(--accent-color);
   }

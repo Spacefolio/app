@@ -1,15 +1,17 @@
 import { RD } from "../GlobalStyles/ResponsiveDesign";
 import { applicationViewConstants } from "../_constants/applicationView.constants";
+import { IViewType } from "../../../types";
 
 interface IApplicationViewAcion {
   type: string;
   width: number;
+  manualToggle: boolean;
 }
 
 export interface IApplicationViewState {
   isSidebarCollapsed: boolean;
   isSidebarVisible: boolean;
-  currentViewType: "mobile" | "desktop";
+  currentViewType: IViewType;
   applicationContainerWidth?: number;
 }
 
@@ -22,10 +24,17 @@ export function applicationView(
   action: IApplicationViewAcion
 ) {
   switch (action.type) {
-    case applicationViewConstants.TOGGLE_SIDEBAR:
+    case applicationViewConstants.TOGGLE_SIDEBAR_DESKTOP:
       return {
         ...state,
-        isSidebarCollapsed: !state.isSidebarCollapsed,
+        isSidebarCollapsed: action.manualToggle
+          ? true
+          : !state.isSidebarCollapsed,
+      };
+    case applicationViewConstants.TOGGLE_SIDEBAR_MOBILE:
+      return {
+        ...state,
+        isSidebarVisible: action.manualToggle ? true : !state.isSidebarVisible,
       };
     case applicationViewConstants.UPDATE_APPLICATION_WIDTH:
       return {

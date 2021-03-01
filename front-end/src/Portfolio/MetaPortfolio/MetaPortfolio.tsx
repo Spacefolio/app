@@ -4,19 +4,13 @@ import {
   MetaPortfolioWrapper,
   PortfolioValueWrapper,
   MetaPortfolioChartWrapper,
-  SyncAreaContainer,
   SyncButtonContainer,
   PortfolioValueChangeContainer,
   PortfolioValueContainer,
   PortfolioValueItem as PortfolioValueItem,
   MetaPortfolioTimeframeSelector,
 } from "./generalStyle";
-import {
-  Dropdown,
-
-  IDropdownItem,
-  SyncIcon,
-} from "../../_components";
+import { Dropdown, IDropdownItem, SyncIcon } from "../../_components";
 import { PortfolioLineChart } from "../../_components";
 import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView, timeframe } from "../../../../types";
@@ -137,12 +131,10 @@ export const MetaPortfolio = () => {
   );
 
   const SyncButtonSection = (
-    <SyncAreaContainer>
-      <SyncButtonContainer onClick={() => dispatch(portfolioActions.sync())}>
-        <SyncIcon isSyncing={isSyncing}></SyncIcon>
-        <div>Sync</div>
-      </SyncButtonContainer>
-    </SyncAreaContainer>
+    <SyncButtonContainer onClick={() => dispatch(portfolioActions.sync())}>
+      <SyncIcon isSyncing={isSyncing}></SyncIcon>
+      Sync
+    </SyncButtonContainer>
   );
 
   const PortfolioValueSection = (

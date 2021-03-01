@@ -3,9 +3,9 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { userActions } from "../../_actions";
-import { Dropdown, IDropdownItem, Modal } from "../../_components";
+import { ArrowIcon, Dropdown, IDropdownItem, Modal } from "../../_components";
 import { ManageExchanges } from "../../Exchanges";
-import { applicationView } from "../../_reducers/applicatoinView.reducer";
+import { applicationView } from "../../_reducers/applicationView.reducer";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
 import { IRootState } from "../../_reducers";
 import {
@@ -17,7 +17,8 @@ import {
   NavLogoArea,
   ToggleSidebar,
 } from "../NavStyles";
-import { BasicLink, ClickableDiv } from "../../GlobalStyles";
+import { BaseLink, ClickableDiv } from "../../GlobalStyles";
+import { Slide, useScrollTrigger } from "@material-ui/core";
 
 interface INavProps {}
 
@@ -29,6 +30,34 @@ export const Nav: React.FC<INavProps> = ({}) => {
   const viewType = useSelector(
     (state: IRootState) => state.applicationView.currentViewType
   );
+  const isSidebarCollapsed = useSelector(
+    (state: IRootState) => state.applicationView.isSidebarCollapsed
+  );
+  const isSidebarVisible = useSelector(
+    (state: IRootState) => state.applicationView.isSidebarVisible
+  );
+
+  interface Props {
+    /**
+     * Injected by the documentation to work in an iframe.
+     * You won't need it on your project.
+     */
+    window?: () => Window;
+    children: React.ReactElement;
+  }
+  function HideOnScroll(props: Props) {
+    const { children, window } = props;
+    // Note that you normally won't need to set the window ref as useScrollTrigger
+    // will default to window.
+    // This is only being set here because the demo is in an iframe.
+    const trigger = useScrollTrigger({ target: window ? window() : undefined });
+
+    return (
+      <Slide appear={false} direction="down" in={!trigger}>
+        {children}
+      </Slide>
+    );
+  }
 
   const { logout } = userActions;
 
@@ -59,12 +88,16 @@ export const Nav: React.FC<INavProps> = ({}) => {
 
   const DesktopNav = (
     <NavContainer>
+      <ToggleSidebar
+        onClick={() =>
+          dispatch(applicationViewActions.toggleSidebar("desktop"))
+        }
+      >
+        <ArrowIcon direction={!isSidebarCollapsed ? "right" : "left"} />
+      </ToggleSidebar>
       <NavLogoArea>
-        <ToggleSidebar
-          onClick={() => dispatch(applicationViewActions.toggleSidebar())}
-        ></ToggleSidebar>
         <BrandingContainer>
-          <BasicLink to="/dashboard">Algonex</BasicLink>
+          <BaseLink to="/dashboard">Algonex</BaseLink>
         </BrandingContainer>
       </NavLogoArea>
       <NavFlexSpacer />
@@ -103,11 +136,13 @@ export const Nav: React.FC<INavProps> = ({}) => {
   );
 
   const MobileNav = (
-    <NavContainer>
-      <NavLogoArea>
-        <Link to="/dashboard">Algonex</Link>
-      </NavLogoArea>
-    </NavContainer>
+    <HideOnScroll>
+      <NavContainer>
+        <NavLogoArea>
+          <Link to="/dashboard">Algonex</Link>
+        </NavLogoArea>
+      </NavContainer>
+    </HideOnScroll>
   );
 
   return (

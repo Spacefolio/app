@@ -2,7 +2,7 @@ const { O_DIRECT } = require("constants");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 require("dotenv").config();
-var webpack = require('webpack');
+var webpack = require("webpack");
 
 module.exports = {
   mode: "development",

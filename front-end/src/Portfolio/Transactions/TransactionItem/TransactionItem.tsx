@@ -4,6 +4,7 @@ import {
   decideTransactionIcon,
   SellTransactionIcon,
 } from "../../../_components";
+import { trimFields } from "../../PortfolioHelperFunctions";
 import { TabItem } from "../../portfolioStyles";
 import {
   DataWrapper,
@@ -11,6 +12,7 @@ import {
   FixedInline,
   LabelWrapper,
   MobileWrapper,
+  TransactionDesktopWrapper,
 } from "../../TabularCardStyles";
 
 interface ITransactionItemProps {
@@ -74,11 +76,11 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
     return (
       <DataWrapper style={{gridArea: "amountSection"}}>
         <div className="table-right-align" style={{ fontSize: "1.15em" }}>
-          {amount} {symbol}
+          {trimFields(amount, symbol)} {symbol}
         </div>
         {isTrade() ? (
           <div className="table-right-align" style={{ fontSize: ".7em" }}>
-            {type == "buy" ? "With" : "For"} {quoteAmount} {quoteSymbol}
+            {type == "buy" ? "With" : "For"} {trimFields(quoteAmount, quoteSymbol)} {quoteSymbol}
           </div>
         ) : null}
       </DataWrapper>
@@ -88,7 +90,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
   const PriceSection = () => {
     return (
       <DataWrapper style={{gridArea: "priceSection"}}>
-        <div className="table-right-align">${price.toFixed(2)}</div>
+        <div className="table-right-align">${trimFields(price, "USD")}</div>
       </DataWrapper>
     );
   };
@@ -96,7 +98,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
   const ValueSection = () => {
     return (
       <DataWrapper style={{gridArea: "valueSection"}}>
-        <div className="table-right-align">${value.toFixed(2)}</div>
+        <div className="table-right-align">${trimFields(value, "USD")}</div>
       </DataWrapper>
     );
   };
@@ -118,7 +120,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
         {fee ? (
           <>
             <div className="table-right-align">
-              {fee.cost.toFixed(8)} {fee.currency}
+              {trimFields(fee.cost, fee.currency)} {fee.currency}
             </div>
             {fee.rate ? (
               <div className="table-right-align">{fee.rate}%</div>
@@ -133,14 +135,14 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
 
   return (
     <React.Fragment>
-      <DesktopWrapper>
+      <TransactionDesktopWrapper>
         {TypeSection()}
         {AmountSection()}
         {PriceSection()}
         {ValueSection()}
         {ExchangeNameSection()}
         {FeeSection()}
-      </DesktopWrapper>
+      </TransactionDesktopWrapper>
       <MobileWrapper>
         {TypeSection()}
         {AmountSection()}

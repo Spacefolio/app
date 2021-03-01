@@ -1,19 +1,29 @@
+import { IViewType } from "../../../types";
 import { applicationViewConstants } from "../_constants/applicationView.constants";
 
 export const applicationViewActions = {
   toggleSidebar,
-  UpdateApplicationWidth
+  UpdateApplicationWidth,
 };
 
-function toggleSidebar() {
+function toggleSidebar(viewType: IViewType, manualToggle?: boolean) {
   return (dispatch: any) => {
-    dispatch(toggle());
+    switch (viewType) {
+      case "mobile":
+        dispatch(mobile(manualToggle));
+        break;
+      case "desktop":
+        dispatch(desktop(manualToggle));
+        break;
+    }
   };
-  function toggle() {
-    return { type: applicationViewConstants.TOGGLE_SIDEBAR };
+  function mobile(manualToggle: boolean) {
+    return { type: applicationViewConstants.TOGGLE_SIDEBAR_MOBILE, manualToggle };
+  }
+  function desktop(manualToggle: boolean) {
+    return { type: applicationViewConstants.TOGGLE_SIDEBAR_DESKTOP, manualToggle };
   }
 }
-
 
 function UpdateApplicationWidth(width: number) {
   return (dispatch: any) => {

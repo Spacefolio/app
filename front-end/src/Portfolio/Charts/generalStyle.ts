@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
-import { CenteredFlexBox } from "../../GlobalStyles";
+import { COLORS, RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
+import { BaseGrid, CenteredFlexBox } from "../../GlobalStyles";
 
-export const DashboardWrapper = styled.div`
+export const DashboardWrapper = styled(BaseGrid)`
   width: 100%;
   display: grid;
   gap: ${SPACING.flexCardGap};
@@ -37,6 +37,6 @@ export const TimeframeItem = styled.div<ITimeFrameItemProps>`
   ${CenteredFlexBox}
   ${(props) =>
     props.selected
-      ? "border: 3px solid var(--accent-base); border-radius: 5px;"
+      ? `border: 3px solid ${COLORS.accentBase}; border-radius: 5px;`
       : `margin: 3px;`}
 `;
