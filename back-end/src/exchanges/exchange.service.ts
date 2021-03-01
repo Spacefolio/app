@@ -9,6 +9,7 @@ import { ccxtService } from '../_helpers/ccxt.service';
 import { IOrder, IOrderDocument, orderSchema } from '../transactions/order.model';
 import { convertTransactionToTransactionView, createTransactionViewItems, getConversionRate, saveTransactionViewItems } from '../transactions/transactionView';
 import { fiat } from '../historical/historical.service';
+import { coindataService } from '../coindata/coindata.service';
 
 export const exchangeService = {
 	getAll,

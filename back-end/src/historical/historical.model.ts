@@ -57,7 +57,7 @@ export interface IDailyCandleModel
 export const dailyCandleSchema = new mongoose.Schema(
   {
     date: { type: String },
-    day: { type: Number, index: true },
+    day: { type: Number },
     open: { type: Number },
     high: { type: Number },
     low: { type: Number },
@@ -71,7 +71,6 @@ export const dailyCandleSchema = new mongoose.Schema(
     label: { type: String },
     changeOverTime: { type: Number },
   },
-  { autoIndex: false }
 );
 
 const historicalDataSchema = new mongoose.Schema({
