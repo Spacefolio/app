@@ -1,0 +1,9 @@
+{
+  "name": "Algonex",
+  "short_name": "Algonex",
+  "start_url": ".",
+  "display": "standalone",
+  "description": "Cool Stuff",
+  "icons": [],
+  "related_applications": []
+}

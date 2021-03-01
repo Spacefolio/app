@@ -107,7 +107,6 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
           })}
     </AddExchangeWrapper>
   );
-
   return (
     <div>
       <MyExchangeWrapper>

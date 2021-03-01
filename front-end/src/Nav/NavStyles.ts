@@ -1,6 +1,12 @@
 import styled from "styled-components";
-import { BaseLink, CenteredFlexBox, ClickableDiv } from "../GlobalStyles";
-import { SPACING } from "../GlobalStyles/ResponsiveDesign";
+import {
+  BaseLink,
+  CenteredFlexBox,
+  ClickableDiv,
+  ClickableSvg,
+  SvgWrapActionButton,
+} from "../GlobalStyles";
+import { COLORS, SPACING } from "../GlobalStyles/ResponsiveDesign";
 
 export const NavLogoArea = styled.div`
   flex-shrink: 0;
@@ -36,17 +42,9 @@ export const NavAccountContainer = styled.div`
   padding: 10px;
 `;
 
-export const ToggleSidebar = styled(ClickableDiv)`
-  cursor: pointer;
-  border-radius: 8px;
-  border: 3px var(--primary-base) solid;
-  // background-color: var(--primary-base);
-  height: 50px;
-  width: 50px;
-  margin-right: 20px;
-  &:hover {
-    background-color: var(--accent-base);
-  }
+export const ToggleSidebar = styled(SvgWrapActionButton)`
+  position: absolute;
+  left: 5px;
 `;
 
 export const BrandingContainer = styled(ClickableDiv)``;

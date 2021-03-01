@@ -8,7 +8,7 @@
 body,
 html {
   overflow: hidden;
-  height: 100vh;
+  height: 100%;
   font-size: 17px;
   font-family: Metropolis;
   background-color: var(--primary-light3);
@@ -33,7 +33,9 @@ input {
 }
 .active-sidebar-tab {
 }
-.active-sidebar-tab > div > div {
+.active-sidebar-tab > div {
+  color: var(--accent-base);
 }
 .active-sidebar-tab > div > svg {
+  fill: var(--accent-base);
 }

@@ -13,6 +13,7 @@ import { Alert, ErrorBoundary } from "../_components";
 import "./App.scss";
 import { AppContainer } from "./appStyles";
 import "../GlobalStyles/variables.scss";
+import { applicationViewActions } from "../_actions/applicationView.actions";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export const App = () => {
 
   history.listen((location: any, action: any) => {
     dispatch(clearAlerts());
+    dispatch(applicationViewActions.toggleSidebar('mobile', false));
   });
   return (
     <AppContainer>

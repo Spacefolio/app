@@ -3,9 +3,9 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { userActions } from "../../_actions";
-import { Dropdown, IDropdownItem, Modal } from "../../_components";
+import { ArrowIcon, Dropdown, IDropdownItem, Modal } from "../../_components";
 import { ManageExchanges } from "../../Exchanges";
-import { applicationView } from "../../_reducers/applicatoinView.reducer";
+import { applicationView } from "../../_reducers/applicationView.reducer";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
 import { IRootState } from "../../_reducers";
 import {
@@ -28,6 +28,12 @@ export const Nav: React.FC<INavProps> = ({}) => {
   const [exchangesPopupVisible, setExchangesPopupVisible] = useState(false);
   const viewType = useSelector(
     (state: IRootState) => state.applicationView.currentViewType
+  );
+  const isSidebarCollapsed = useSelector(
+    (state: IRootState) => state.applicationView.isSidebarCollapsed
+  );
+  const isSidebarVisible = useSelector(
+    (state: IRootState) => state.applicationView.isSidebarVisible
   );
 
   const { logout } = userActions;
@@ -58,11 +64,14 @@ export const Nav: React.FC<INavProps> = ({}) => {
   ];
 
   const DesktopNav = (
-    <NavContainer>
+    <NavContainer><ToggleSidebar
+          onClick={() =>
+            dispatch(applicationViewActions.toggleSidebar("desktop"))
+          }
+        ><ArrowIcon direction={!isSidebarCollapsed ? "right" : "left"} />
+        </ToggleSidebar>
       <NavLogoArea>
-        <ToggleSidebar
-          onClick={() => dispatch(applicationViewActions.toggleSidebar())}
-        ></ToggleSidebar>
+        
         <BrandingContainer>
           <BaseLink to="/dashboard">Algonex</BaseLink>
         </BrandingContainer>
@@ -104,6 +113,11 @@ export const Nav: React.FC<INavProps> = ({}) => {
 
   const MobileNav = (
     <NavContainer>
+      <ToggleSidebar
+        onClick={() => dispatch(applicationViewActions.toggleSidebar("mobile"))}
+      >
+        <ArrowIcon direction={isSidebarVisible ? "right" : "left"} />
+      </ToggleSidebar>
       <NavLogoArea>
         <Link to="/dashboard">Algonex</Link>
       </NavLogoArea>

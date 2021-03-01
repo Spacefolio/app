@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { ManageExchanges } from "../../Exchanges";
-import { BaseButton } from "../../GlobalStyles";
+import { BaseButton, BaseText } from "../../GlobalStyles";
 import { Modal } from "../../_components";
 import { Scrollbox } from "../../GlobalStyles";
 import { IRootState } from "../../_reducers";

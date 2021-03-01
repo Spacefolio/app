@@ -19,6 +19,7 @@ export const ClickableDiv = styled.div`
 export const ClickableSvg = styled(BaseSvg)`
   width: 100%;
   height: 100%;
+  cursor: pointer;
   ${TimingStyle}
   &:hover {
     fill: ${COLORS.accentBase};
@@ -84,4 +85,17 @@ export const FullScreenOverlay = styled.div`
 export const BaseLink = styled(Link)`
   color: ${COLORS.primaryBase};
   ${TimingStyle}
+`;
+export const SvgWrapActionButton = styled(ClickableDiv)`
+  height: 50px;
+  width: 50px;
+  padding: 10px;
+  border: 3px solid ${COLORS.primaryBase};
+  border-radius: 10px;
+  &:hover {
+    border: ${COLORS.accentBase} 3px solid;
+    ${ClickableSvg} {
+      fill: ${COLORS.accentBase};
+    }
+  }
 `;

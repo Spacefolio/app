@@ -20,7 +20,6 @@ import useDimensions from "react-use-dimensions";
 import { applicationViewActions } from "../_actions/applicationView.actions";
 import { RD } from "../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
-import { BottomNav } from "../Nav";
 
 export const Application = () => {
   const dispatch = useDispatch();
@@ -66,7 +65,7 @@ export const Application = () => {
     <React.Fragment>
       <Nav />
       <BodyWrapper>
-        {viewType == "desktop" && <SidebarNav />}
+        <SidebarNav />
         <ApplicationContainer viewType={viewType} ref={ref}>
           <ApplicationFlexContainer style={appWidth}>
             <Switch>
@@ -81,7 +80,6 @@ export const Application = () => {
           </ApplicationFlexContainer>
         </ApplicationContainer>
       </BodyWrapper>
-      {viewType == "mobile" && <BottomNav/>}
     </React.Fragment>
   );
 };

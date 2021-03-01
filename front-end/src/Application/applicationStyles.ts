@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { RD, SPACING } from "../GlobalStyles/ResponsiveDesign";
-import { CenteredFlexBox, ResizeTransition, TimingStyle } from "../GlobalStyles";
+import {
+  CenteredFlexBox,
+  ResizeTransition,
+  TimingStyle,
+} from "../GlobalStyles";
 
 interface ApplicationProps {
   viewType: "mobile" | "desktop";
@@ -9,10 +13,9 @@ interface ApplicationProps {
 export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
   justify-content: center;
-  height: ${(props) =>
-    props.viewType == "desktop" ? "calc(100vh - 57px)" : "calc(100vh - 134px)"};
-  width: 100%;
+  height: calc(100vh - ${SPACING.NavbarHeight});
   margin: 0 ${SPACING.flexCardGap};
+  width: 100%;
 `;
 
 export const ApplicationFlexContainer = styled.div`
@@ -21,6 +24,6 @@ export const ApplicationFlexContainer = styled.div`
 `;
 export const BodyWrapper = styled.div`
   display: flex;
-  width: 100%;
   height: 100%;
+  width: 100%;
 `;
