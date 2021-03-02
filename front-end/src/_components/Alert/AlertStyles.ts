@@ -30,6 +30,6 @@ export const AlertMessage = styled.div`
 `;
 
 export const IconContainer = styled.div`
-  width: 1.5em;
-  height: 1.5em;
+  width: 2rem;
+  height: 2rem;
 `;

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { COLORS, RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
 import { BaseGrid, CenteredFlexBox } from "../../GlobalStyles";
+import { Paper } from "@material-ui/core";
 
 export const DashboardWrapper = styled(BaseGrid)`
   width: 100%;
@@ -30,7 +31,7 @@ export const TimeFrameSelectorContainer = styled.div`
 interface ITimeFrameItemProps {
   selected: boolean;
 }
-export const TimeframeItem = styled.div<ITimeFrameItemProps>`
+export const TimeframeItem = styled(Paper)<ITimeFrameItemProps>`
   padding: 5px;
   min-width: 50px;
   max-width: 50px;

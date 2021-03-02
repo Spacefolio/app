@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import { userActions } from "../../_actions";
-import { ArrowIcon, Dropdown, IDropdownItem, Modal } from "../../_components";
+import { ArrowIcon, Dropdown, IDropdownItem } from "../../_components";
 import { ManageExchanges } from "../../Exchanges";
 import { applicationView } from "../../_reducers/applicationView.reducer";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
@@ -18,7 +18,7 @@ import {
   ToggleSidebar,
 } from "../NavStyles";
 import { BaseLink, ClickableDiv } from "../../GlobalStyles";
-import { Slide, useScrollTrigger } from "@material-ui/core";
+import { Modal, Slide, useScrollTrigger } from "@material-ui/core";
 
 interface INavProps {}
 
@@ -122,9 +122,8 @@ export const Nav: React.FC<INavProps> = ({}) => {
       </NavAccountContainer>
 
       <Modal
-        dismiss={() => setExchangesPopupVisible(false)}
-        visible={exchangesPopupVisible}
-        clickOutsidedismiss={false}
+        open={exchangesPopupVisible}
+        onClose={() => setExchangesPopupVisible(false)}
       >
         <ManageExchanges
           headerText={"My Exchanges"}

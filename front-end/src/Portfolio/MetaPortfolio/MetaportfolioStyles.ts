@@ -3,7 +3,7 @@ import { CenteredFlexBox, ClickableDiv } from "../../GlobalStyles";
 import { COLORS, RD } from "../../GlobalStyles/ResponsiveDesign";
 
 export const MetaPortfolioWrapper = styled.div`
-  padding: 10px 0;
+  padding: 1rem 0;
   position: relative;
   width: 100%;
   display: flex;
@@ -12,11 +12,14 @@ export const MetaPortfolioWrapper = styled.div`
   justify-content: space-evenly;
 `;
 
-export const MetaPortfolioChartWrapper = styled.div``;
+export const MetaPortfolioChartWrapper = styled.div`
+  ${CenteredFlexBox}
+  height: 100%;
+`;
 
 export const SyncButtonContainer = styled(ClickableDiv)`
-  border-radius: 10px;
-  padding: 8px;
+  border-radius: 1rem;
+  padding: 1rem;
   opacity: 0.8;
   ${CenteredFlexBox}
   border: 3px solid ${COLORS.primaryBase};
@@ -32,9 +35,9 @@ export const SyncButtonContainer = styled(ClickableDiv)`
 `;
 
 export const PortfolioValueWrapper = styled.div`
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
 `;
 
 export const PortfolioValueChangeContainer = styled.div`
@@ -42,9 +45,7 @@ export const PortfolioValueChangeContainer = styled.div`
   align-items: center;
   justify-content: center;
 `;
-export const PortfolioValueItem = styled.div`
-  padding: 5px 10px;
-`;
+export const PortfolioValueItem = styled.div``;
 
 export const PortfolioValueContainer = styled.div`
   display: flex;
@@ -52,8 +53,8 @@ export const PortfolioValueContainer = styled.div`
   align-items: center;
 `;
 
-export const MetaPortfolioTimeframeSelector = styled.div`
-  padding: 5px;
-  border: solid 3px var(--accent-base);
-  border-radius: 5px;
+export const MetaPortfolioTimeframeSelector = styled(ClickableDiv)`
+  display: flex;
+  align-items: center;
+  justify-items: center;
 `;

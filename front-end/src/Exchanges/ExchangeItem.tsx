@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { DeleteIcon, EditIcon } from "../_components";
+import { DeleteIcon, EditIcon, Modal } from "../_components";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
-import { Modal } from "../_components";
 import { EditExchangeForm } from "./Forms";
 import { exchangeActions, portfolioActions } from "../_actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -87,8 +86,9 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
       <Modal
         visible={editExchangeVisible}
         dismiss={() => setEditExchangeVisible(false)}
-        children={<EditExchangeForm exchangeAccountData={data} />}
-      />
+      >
+        <EditExchangeForm exchangeAccountData={data} />
+      </Modal>
     </MyExchangesLineItemContainer>
   );
 };

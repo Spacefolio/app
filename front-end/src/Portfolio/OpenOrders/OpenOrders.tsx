@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Filter } from "../../_components";
+import { Filter, ViewLoading } from "../../_components";
 import { IPortfolioDataView } from "../../../../types";
 import { OpenOrderItem } from "./OpenOrderItem/OpenOrderItem";
 import { IRootState } from "../../_reducers";
@@ -15,7 +15,7 @@ export const OpenOrders = () => {
   const [sortAscending, setSortAscending] = useState(false);
 
   return (
-    <div>
+    <React.Fragment>
       {filteredPortfolioData ? (
         <Filter
           data={filteredPortfolioData.openOrders}
@@ -23,8 +23,8 @@ export const OpenOrders = () => {
           LineItemComponent={OpenOrderItem}
         />
       ) : (
-        "NEED LOAD"
+        <ViewLoading />
       )}
-    </div>
+    </React.Fragment>
   );
 };

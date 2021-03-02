@@ -8,15 +8,21 @@ import {
 
 interface ApplicationProps {
   viewType: "mobile" | "desktop";
+  width: number;
 }
 
 export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
+  width: 100%;
   justify-content: center;
-  height: calc(100vh - ${SPACING.NavbarHeight});
   margin-top: ${SPACING.NavbarHeight};
   padding: 0 ${SPACING.flexCardGap};
-  width: 100%;
+  height: calc(${(props) => window.innerHeight}px - ${SPACING.NavbarHeight});
+  @media only screen and (max-width: ${RD.breakpointsmartphone}) {
+    margin-top: ${SPACING.NavbarHeight};
+    height: ${(props) => window.outerHeight}px;
+    padding: 0;
+  }
 `;
 
 export const ApplicationFlexContainer = styled.div`

@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { ILabelObject, LabelSorter } from "../Transactions/LabelSorter";
 import { SPACING } from "../../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../../_reducers";
-import { FlexCard } from "../../GlobalStyles";
+import { FlexCard, GrowFromZero } from "../../GlobalStyles";
+import { ViewLoading } from "../../_components";
 
 export const Holdings = () => {
   const dispatch = useDispatch();
@@ -23,47 +24,51 @@ export const Holdings = () => {
     );
   };
 
-  const labelData: ILabelObject[] = [
-    {
-      label: "Name",
-    },
-    {
-      label: "Amount",
-      filterName: "amount",
-      classname: "table-right-align",
-    },
-    {
-      label: "Price",
-      filterName: "price",
-      classname: "table-right-align",
-    },
-    {
-      label: "Value",
-      filterName: "value",
-      classname: "table-right-align",
-    },
-    {
-      label: "P/L",
-      filterName: "profitTotal.all",
-      classname: "table-right-align",
-    },
-  ];
+  // const labelData: ILabelObject[] = [
+  //   {
+  //     label: "Name",
+  //   },
+  //   {
+  //     label: "Amount",
+  //     filterName: "amount",
+  //     classname: "table-right-align",
+  //   },
+  //   {
+  //     label: "Price",
+  //     filterName: "price",
+  //     classname: "table-right-align",
+  //   },
+  //   {
+  //     label: "Value",
+  //     filterName: "value",
+  //     classname: "table-right-align",
+  //   },
+  //   {
+  //     label: "P/L",
+  //     filterName: "profitTotal.all",
+  //     classname: "table-right-align",
+  //   },
+  // ];
 
   return (
-    <div style={{ display: "grid", gap: SPACING.flexCardGap }}>
+    <React.Fragment>
       {portfolioData ? (
-        sortHoldings(filterField, sortAscending).map(
-          (pItem: IPortfolioItemView) => {
-            return (
-              <FlexCard>
-                <HoldingItem portfolioItem={pItem} />
-              </FlexCard>
-            );
-          }
-        )
+        <div style={{ display: "grid", gap: SPACING.flexCardGap }}>
+          {sortHoldings(filterField, sortAscending).map(
+            (pItem: IPortfolioItemView) => {
+              return (
+                <GrowFromZero in={true}>
+                  <FlexCard>
+                    <HoldingItem portfolioItem={pItem} />
+                  </FlexCard>
+                </GrowFromZero>
+              );
+            }
+          )}
+        </div>
       ) : (
-        <div>loading...</div>
+        <ViewLoading />
       )}
-    </div>
+    </React.Fragment>
   );
 };

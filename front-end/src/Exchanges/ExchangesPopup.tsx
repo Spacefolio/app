@@ -5,9 +5,6 @@ import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { Modal } from "../_components";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../_reducers";
-import { data } from "jquery";
-import { PortfolioIcon } from "../_components/Icons";
-import { off } from "process";
 import {
   AddExchangeWrapper,
   ExchangeSearchBar,
@@ -108,10 +105,10 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
     </AddExchangeWrapper>
   );
   return (
-    <div>
-      <MyExchangeWrapper>
+    <React.Fragment>
+      {headerText && <MyExchangeWrapper>
         <h1>{headerText}</h1>
-      </MyExchangeWrapper>
+      </MyExchangeWrapper>}
       {myExchanges && RenderExchangeItems}
       <Modal
         dismiss={() => {
@@ -122,6 +119,6 @@ export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
         <AddExchangeForm exchangeRefInfo={addExchangeData} />
       </Modal>
       {addExchange && AddExchange}
-    </div>
+    </React.Fragment>
   );
 };

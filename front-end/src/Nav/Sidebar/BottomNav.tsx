@@ -1,5 +1,5 @@
 import React from "react";
-import { DesktopContainer } from "./SidebarStyles";
+import { SidebarContainer } from "./SidebarStyles";
 
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
@@ -10,8 +10,9 @@ import {
   BottomNavigationAction,
   makeStyles,
 } from "@material-ui/core";
-import { PortfolioIcon, DashboardIcon, BotsIcon } from "../../_components";
+import { BotsIcon } from "../../_components";
 import { useHistory } from "react-router";
+import { Dashboard, PieChart, Timeline } from "@material-ui/icons";
 
 interface BottomNavProps {}
 
@@ -49,18 +50,18 @@ export const MobileNav: React.FC<BottomNavProps> = ({}) => {
     >
       <BottomNavigationAction
         label="Portfolio"
-        icon={<PortfolioIcon />}
+        icon={<PieChart />}
         onClick={() => history.push("/portfolio")}
         selected={location.toString() == "/portfolio"}
       />
       <BottomNavigationAction
         label="Dashboard"
-        icon={<DashboardIcon />}
+        icon={<Dashboard />}
         onClick={() => history.push("/dashboard")}
       />
       <BottomNavigationAction
         label="Bots"
-        icon={<BotsIcon />}
+        icon={<Timeline />}
         onClick={() => history.push("/bots")}
       />
     </BottomNavigation>

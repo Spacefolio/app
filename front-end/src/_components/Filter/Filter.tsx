@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   DateGroupedLineItemContainer,
   DateLabel,
@@ -9,7 +9,8 @@ import {
 import { useState } from "react";
 import { Dropdown, IDropdownItem } from "../Dropdown/Dropdown";
 import DatePicker from "react-datepicker";
-import { FlexCard } from "../../GlobalStyles";
+import { FlexCard, GrowFromZero } from "../../GlobalStyles";
+import { Grow, LinearProgress } from "@material-ui/core";
 
 interface IFilterProps {
   data: any;
@@ -30,6 +31,8 @@ export const Filter: React.FC<IFilterProps> = ({
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
   const [transactionType, setTransactionType] = useState<string>("All Types");
+
+  useEffect(() => {}, []);
 
   const ddownItems: IDropdownItem[] = [
     {
@@ -60,22 +63,20 @@ export const Filter: React.FC<IFilterProps> = ({
   const RenderLineItems = () => {
     const sortedShit = CreateDateGroupedList(data, sortAscending);
 
-    if (data) {
-      return Object.keys(sortedShit).map((key) => {
-        return (
-          <>
-            <DateLabel key={key}>{key}</DateLabel>
-            <FlexCard key={key+"-data"}>
+    return Object.keys(sortedShit).map((key) => {
+      return (
+        <React.Fragment>
+          <DateLabel key={key}>{key}</DateLabel>
+          <GrowFromZero in={true}>
+            <FlexCard key={key + "-data"}>
               <DateGroupedLineItemContainer>
                 {GetItemsAtDate(sortedShit, key)}
               </DateGroupedLineItemContainer>
             </FlexCard>
-          </>
-        );
-      });
-    } else {
-      return <div>loading...</div>;
-    }
+          </GrowFromZero>
+        </React.Fragment>
+      );
+    });
   };
 
   const CreateDateGroupedList = (

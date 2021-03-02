@@ -34,13 +34,12 @@ const FilterPortfolio = (
 
 let Portfolio = JSON.parse(localStorage.getItem("Portfolio"));
 
-
 export function portfolio(
   state: IPortfolioState = {
     syncingPortfolio: false,
     recalculatingPortfolio: false,
     portfolioData: Portfolio ? Portfolio : [],
-    filteredPortfolioData: (Portfolio && FilterPortfolio('', Portfolio)),
+    filteredPortfolioData: Portfolio && FilterPortfolio("", Portfolio),
     filterId: "",
   },
   action: IPortfolioAction
@@ -99,7 +98,8 @@ export function portfolio(
     case portfolioConstants.REFRESH_REQUEST:
       return {
         ...state,
-
+        portfolioData: [],
+        filteredPortfolioData: null,
         recalculatingPortfolio: true,
       };
     case portfolioConstants.REFRESH_SUCCESS:
