@@ -9,6 +9,7 @@ import {
   IconContainer,
 } from "./AlertStyles";
 import { IRootState } from "../../_reducers";
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 
 export const Alert = () => {
   const dispatch = useDispatch();
@@ -25,5 +26,20 @@ export const Alert = () => {
         </AlertContainer>
       )}
     </AlertWrapper>
+  );
+};
+export const ViewLoading = () => {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <CircularProgress />
+    </div>
   );
 };

@@ -6,6 +6,7 @@ import moment from "moment";
 import { IRootState } from "../../../_reducers";
 import { useSelector } from "react-redux";
 import { NONAME } from "dns";
+import { ViewLoading } from "../..";
 
 interface PortfolioLineChartProps {
   width: number;
@@ -322,7 +323,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       }}
     >
       {!(data.length > 0) ? (
-        <div>LOADING CHART...</div>
+        <ViewLoading />
       ) : (
         <div style={{ position: "relative" }} id={`${id}`}></div>
       )}

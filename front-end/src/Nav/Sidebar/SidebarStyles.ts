@@ -1,4 +1,4 @@
-import { Card, Drawer } from "@material-ui/core";
+import { Card, Drawer, SwipeableDrawer } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { IViewType } from "../../../../types";
@@ -37,6 +37,18 @@ export const SidebarContainer = styled.div<IDesktopWrapperProps>`
   ${TimingStyle}
 `;
 
+export const SidebarDrawer = styled(SwipeableDrawer)`
+  display: flex;
+  justify-content: start;
+  box-shadow: 5px 10px 25px -24px;
+  flex-direction: column;
+  background-color: ${COLORS.primaryLight4};
+  height: 100vh;
+  width: ${SPACING.sidebarWidth};
+  align-items: start;
+  ${TimingStyle}
+`;
+
 export const LinkWrapper = styled.div`
   cursor: pointer;
   display: flex;
@@ -59,30 +71,18 @@ export const LinkText = styled(BaseText)<ILinkTextProps>`
   height: 100%;
 `;
 
-export const NavTab = styled.div`
+export const SidebarTab = styled(ClickableDiv)`
   display: flex;
   width: 100%;
   height: ${SPACING.NavbarHeight};
-  color: ${COLORS.primaryBase};
-  position: relative;
-  ${TimingStyle}
-  &:hover {
-    ${LinkText} {
-      color: ${COLORS.accentBase};
-    }
-    ${ClickableSvg} {
-      fill: ${COLORS.accentBase};
-    }
-  }
 `;
 
 interface ITabContentContainerProps {
   isActiveTab: boolean;
 }
-export const TabSubContentContainer = styled(Card)<ITabContentContainerProps>`
+export const TabSubContentContainer = styled.div<ITabContentContainerProps>`
   ${TimingStyle}
-  ${(props) =>
-    props.isActiveTab ? `padding: 10px; height: 300px;` : `height: 0px;`}
+  ${(props) => (props.isActiveTab ? `height: 300px;` : `height: 0px;`)}
   background-color: ${COLORS.primaryLight3};
   width: 100%;
 `;

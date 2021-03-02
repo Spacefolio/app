@@ -1,5 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
+import React from "react";
 import { COLORS, TIMING } from "./ResponsiveDesign";
 export const TimingStyle = `
 transition: ${TIMING.transitionTime};
@@ -13,8 +14,19 @@ export const BaseSvg = styled.svg`
   fill: ${COLORS.infoBase};
 `;
 export const ClickableDiv = styled.div`
+  color: ${COLORS.primaryBase};
   cursor: pointer;
+  position: relative;
   ${TimingStyle}
+  * {
+    cursor: pointer;
+  }
+  &:hover {
+    * {
+      fill: ${COLORS.accentBase};
+      color: ${COLORS.accentBase};
+    }
+  }
 `;
 export const ClickableSvg = styled(BaseSvg)`
   width: 1rem;
@@ -29,6 +41,7 @@ export const BaseText = styled.div`
   ${TimingStyle}
 `;
 export const Scrollbox = styled.div`
+
   overflow-y: scroll;
   overflow-x: hidden;
   height: 100%;
@@ -93,3 +106,4 @@ export const SvgWrapperButton = styled(ClickableDiv)`
     }
   }
 `;
+

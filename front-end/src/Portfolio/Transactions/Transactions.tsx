@@ -6,9 +6,10 @@ import { TransactionItem } from "./TransactionItem/TransactionItem";
 
 import { useState } from "react";
 
-import { Filter } from "../../_components";
+import { Filter, ViewLoading } from "../../_components";
 
 import { IRootState } from "../../_reducers";
+import { CircularProgress, Grow, LinearProgress } from "@material-ui/core";
 
 export const Transactions = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ export const Transactions = () => {
   );
 
   return (
-    <div>
+    <React.Fragment>
       {filteredPortfolioData ? (
         <Filter
           data={filteredPortfolioData.transactionViewItems}
@@ -27,8 +28,8 @@ export const Transactions = () => {
           LineItemComponent={TransactionItem}
         />
       ) : (
-        "NEED LOAD"
+        <ViewLoading />
       )}
-    </div>
+    </React.Fragment>
   );
 };

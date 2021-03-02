@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import {
-  BotsIcon,
-  PortfolioIcon,
-  DashboardIcon,
+
   ArrowIcon,
 } from "../../_components/Icons";
 import {
   LinkText,
   LinkWrapper,
-  NavTab,
+  SidebarTab,
   SidebarDetailsButton,
   SidebarIconContainer,
   TabSubContentContainer,
@@ -67,10 +65,10 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
   return (
     <React.Fragment>
       <LinkWrapper>
-        <NavTab onClick={() => handleClick()}>
+        <SidebarTab onClick={() => handleClick()}>
           <SidebarIconContainer>{icon}</SidebarIconContainer>
           <LinkText>{text}</LinkText>
-        </NavTab>
+        </SidebarTab>
         {children && (
           <SvgWrapperButton onClick={() => setSubIsVisible(!subIsVisible)}>
             <ArrowIcon direction={subIsVisible ? "up" : "down"} />

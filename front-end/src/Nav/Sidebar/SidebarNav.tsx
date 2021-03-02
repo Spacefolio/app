@@ -4,9 +4,11 @@ import { SidebarContainer } from "./SidebarStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import { SidebarActionItem } from "./NavSections";
-import { Drawer } from "@material-ui/core";
-import { BotsIcon, DashboardIcon, PortfolioIcon } from "../../_components";
+import { Drawer, SwipeableDrawer } from "@material-ui/core";
+import { BotsIcon } from "../../_components";
 import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter";
+import { Dashboard, PieChart, Timeline } from "@material-ui/icons";
+import { applicationViewActions } from "../../_actions/applicationView.actions";
 
 interface SidebarNavProps {}
 
@@ -19,20 +21,21 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
   const viewType = useSelector(
     (state: IRootState) => state.applicationView.currentViewType
   );
+  const width = useSelector(
+    (state: IRootState) => state.applicationView.applicationContainerWidth
+  );
 
   return (
     <SidebarContainer isSidebarCollapsed={isSidebarCollapsed}>
       <SidebarActionItem
         text="Dashboard"
-        icon={<DashboardIcon />}
+        icon={<Dashboard />}
         linkUri="/dashboard"
-      >
-
-      </SidebarActionItem>
+      ></SidebarActionItem>
 
       <SidebarActionItem
         text="Portfolio"
-        icon={<PortfolioIcon />}
+        icon={<PieChart />}
         linkUri="/portfolio"
       >
         <ExchangeSidebarFilter />
@@ -40,11 +43,9 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
 
       <SidebarActionItem
         text="Bots"
-        icon={<BotsIcon />}
+        icon={<Timeline />}
         linkUri="/bots"
-      >
-
-      </SidebarActionItem>
+      ></SidebarActionItem>
     </SidebarContainer>
   );
 };

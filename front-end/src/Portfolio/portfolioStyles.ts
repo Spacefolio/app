@@ -13,6 +13,7 @@ export const PortfolioSectionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
 `;
 export const PortfolioSidebarWrapper = styled.div`
   display: block;
@@ -68,3 +69,4 @@ export const DataLabelItemWrapper = styled.div`
   text-align: right;
   width: 100%;
 `;
+

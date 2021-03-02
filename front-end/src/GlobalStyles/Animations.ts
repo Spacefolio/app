@@ -1,3 +1,6 @@
+import { Grow } from "@material-ui/core";
+import styled from "styled-components";
+
 export const spinAnimation = `
 fill: var(--accent-base);
 animation-name: spin;
@@ -56,4 +59,7 @@ export const FadeoutAnimation = `
       opacity:0;
   }
 }
+`;
+export const GrowFromZero = styled(Grow)`
+  transformorigin: 0 0 0;
 `;

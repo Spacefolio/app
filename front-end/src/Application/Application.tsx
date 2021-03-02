@@ -36,22 +36,22 @@ export const Application = () => {
 
   const flexSizing = () => {
     if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
-      return { maxWidth: RD.widthmonitor };
+      return { maxWidth: "100%" };
     } else if (
       applicationWidth < parseInt(RD.breakpointmonitor) &&
       applicationWidth >= parseInt(RD.breakpointlaptop)
     ) {
-      return { maxWidth: RD.widthlaptop };
+      return { maxWidth: "100%" };
     } else if (
       applicationWidth < parseInt(RD.breakpointlaptop) &&
       applicationWidth >= parseInt(RD.breakpointtablet)
     ) {
-      return { maxWidth: RD.widthtablet };
+      return { maxWidth: "100%" };
     } else if (
       applicationWidth < parseInt(RD.breakpointtablet) &&
       applicationWidth >= parseInt(RD.breakpointsmartphone)
     ) {
-      return { maxWidth: RD.widthsmartphone };
+      return { maxWidth: "100%" };
     }
   };
 
@@ -67,7 +67,7 @@ export const Application = () => {
       <Nav />
       <BodyWrapper>
         {viewType == "mobile" ? <MobileNav /> : <SidebarNav />}
-        <ApplicationContainer viewType={viewType} ref={ref}>
+        <ApplicationContainer width={width} viewType={viewType} ref={ref}>
           <ApplicationFlexContainer style={appWidth}>
             <Switch>
               <Route path={`/portfolio`}>
