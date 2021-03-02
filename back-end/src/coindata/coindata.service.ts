@@ -1,14 +1,14 @@
 import axios from "axios";
 import { DEFAULT_ENCODING } from "crypto";
 import { resourceLimits } from "worker_threads";
-import { CoinData, ICoinListItem, ICoinMarketData } from "./coindata.model";
+import { CoinData, ICoinListItem, ICoinMarketData, ICoinMarketDataDocument } from "./coindata.model";
 
 export const coindataService = {
   fetchCoinMarketData,
   getCoinMarketData
 };
 
-async function fetchCoinMarketData()
+async function fetchCoinMarketData() : Promise<ICoinMarketDataDocument>
 {
   const coinList = await axios.get<ICoinListItem[]>("https://api.coingecko.com/api/v3/coins/list").then((res) => {
     return res.data;
@@ -17,12 +17,24 @@ async function fetchCoinMarketData()
   const coinMarketData = await fetchAllCoinsMarketData();
 
   let now = new Date();
-  let coinDataDoc = await CoinData.updateOne({}, { coinList, coinListLastUpdated: now, coinMarketData }, { upsert: true });
+  return await CoinData.updateOne({}, { coinList, coinListLastUpdated: now, coinMarketData }, { upsert: true });
 }
 
 async function getCoinMarketData(symbol: string)
 {
+  var coinData = await CoinData.findOne().lean();
+  let coinMarketData;
+  if (!coinData)
+  {
+    await fetchCoinMarketData();
+    coinData = await CoinData.findOne().lean();
+    if (!coinData) { throw "Failed to fetch coin market data list."}
+  }
   
+  coinMarketData = coinData.coinMarketData.find((data) => data.symbol == symbol);
+  
+  if (!coinMarketData) throw `No coin with the symbol '${symbol}' was found`;
+  return coinMarketData;
 }
 
 async function fetchAllCoinsMarketData(page:number = 1) : Promise<ICoinMarketData[]>

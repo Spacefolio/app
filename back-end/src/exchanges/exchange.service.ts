@@ -379,6 +379,9 @@ async function getExchangesData(userId: string) {
 
 	let portfolioData: IPortfolioDataView[] = [];
 
+	let btcMarketData = await coindataService.getCoinMarketData("btc");
+	console.log(btcMarketData);
+
 	for (var i = 0; i < user.linkedExchanges.length; i++) {
 		const exchangeDocument = await ExchangeAccount.findById(user.linkedExchanges[i]);
 
