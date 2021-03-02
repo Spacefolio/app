@@ -10,7 +10,7 @@ import {
 } from "./portfolioStyles";
 import { MetaPortfolio, Transactions, OpenOrders, Holdings, Charts } from ".";
 import { portfolioActions } from "../_actions";
-import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter/ExchangeSidebarFilter";
+import { ExchangeSidebarFilter } from "../Nav/Sidebar/ExchangeSidebarFilter";
 import { RD, SPACING } from "../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
 import { FlexCard, Scrollbox } from "../GlobalStyles";
@@ -56,9 +56,7 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
   const FilterByExchangeDesktop =
     width > parseInt(RD.breakpointtablet) ? (
       <PortfolioSidebarWrapper>
-        {/* <FlexCard styles={{ alignItems: "start", height: "100%" }}> */}
         <ExchangeSidebarFilter />
-        {/* </FlexCard> */}
       </PortfolioSidebarWrapper>
     ) : null;
 

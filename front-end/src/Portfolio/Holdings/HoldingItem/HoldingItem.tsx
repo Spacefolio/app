@@ -6,7 +6,7 @@ import {
   DesktopWrapper,
   HoldingDesktopWrapper,
   MobileWrapper,
-} from "../../TabularCardStyles";
+} from "../../../GlobalStyles/TabularStyles";
 
 interface HoldingItemProps {
   portfolioItem: IPortfolioItemView;

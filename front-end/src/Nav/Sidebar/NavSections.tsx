@@ -48,6 +48,8 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
     } else {
       if (CheckCurrentPage(location, linkUri)) {
         setSubIsVisible(true);
+      } else {
+        setSubIsVisible(false);
       }
     }
     lastLink = location;

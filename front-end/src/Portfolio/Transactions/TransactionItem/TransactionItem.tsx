@@ -4,7 +4,7 @@ import {
   decideTransactionIcon,
   SellTransactionIcon,
 } from "../../../_components";
-import { trimFields } from "../../PortfolioHelperFunctions";
+import { trimFields } from "../../../_helpers/PortfolioHelperFunctions";
 import { TabItem } from "../../portfolioStyles";
 import {
   DataWrapper,
@@ -13,7 +13,7 @@ import {
   LabelWrapper,
   MobileWrapper,
   TransactionDesktopWrapper,
-} from "../../TabularCardStyles";
+} from "../../../GlobalStyles/TabularStyles";
 
 interface ITransactionItemProps {
   item: ITransactionItemView;

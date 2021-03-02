@@ -6,7 +6,7 @@ import { IRootState } from "../../_reducers";
 import { SidebarActionItem } from "./NavSections";
 import { Drawer } from "@material-ui/core";
 import { BotsIcon, DashboardIcon, PortfolioIcon } from "../../_components";
-import { ExchangeSidebarFilter } from "../../Portfolio/ExchangeSidebarFilter/ExchangeSidebarFilter";
+import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter";
 
 interface SidebarNavProps {}
 
