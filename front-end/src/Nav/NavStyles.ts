@@ -4,7 +4,7 @@ import {
   CenteredFlexBox,
   ClickableDiv,
   ClickableSvg,
-  SvgWrapActionButton,
+  SvgWrapperButton,
 } from "../GlobalStyles";
 import { COLORS, SPACING } from "../GlobalStyles/ResponsiveDesign";
 
@@ -24,9 +24,9 @@ export const NavContainer = styled.div`
   font-weight: 500;
   font-size: 1em;
   ${CenteredFlexBox}
-  position: fixed;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
   z-index: 2;
+  position: fixed;
   background-color: white;
   width: 100%;
   height: ${SPACING.NavbarHeight};
@@ -39,12 +39,12 @@ export const NavAccountContainer = styled.div`
   position: relative;
   height: 100%;
   ${CenteredFlexBox};
-  padding: 10px;
+  padding: 1em;
 `;
 
-export const ToggleSidebar = styled(SvgWrapActionButton)`
+export const ToggleSidebar = styled(SvgWrapperButton)`
   position: absolute;
-  left: 5px;
+  left: 1em;
 `;
 
 export const BrandingContainer = styled(ClickableDiv)``;

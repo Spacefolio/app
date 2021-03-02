@@ -17,8 +17,9 @@ import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
 import { RD } from "../../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../../_reducers";
+import { Skeleton } from "@material-ui/lab";
 
-export const MetaPortfolio = () => {
+export const MetaPortfolio = () => { 
   const dispatch = useDispatch();
   const isSyncing = useSelector(
     (state: any) => state.portfolio.syncingPortfolio
@@ -155,9 +156,13 @@ export const MetaPortfolio = () => {
         <PortfolioValueItem>
           {data ? data.profitPercentage.USD.toFixed(2) + "%" : "loading..."}
         </PortfolioValueItem>
-        <PortfolioValueItem>
-          {data ? "$" + data.profitTotal.USD.toFixed(2) : "loading..."}
-        </PortfolioValueItem>
+        {data ? (
+          <PortfolioValueItem>
+            {"$" + data.profitTotal.USD.toFixed(2)}
+          </PortfolioValueItem>
+        ) : (
+          <Skeleton variant="text" />
+        )}
       </PortfolioValueChangeContainer>
     </PortfolioValueWrapper>
   );

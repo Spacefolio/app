@@ -1,5 +1,5 @@
 import React from "react";
-import { DesktopContainer } from "./SidebarStyles";
+import { SidebarContainer } from "./SidebarStyles";
 
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";

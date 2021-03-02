@@ -1,9 +1,12 @@
 import React from "react";
-import { DesktopContainer } from "./SidebarStyles";
+import { SidebarContainer } from "./SidebarStyles";
 
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
-import { DashboardSection, PortfolioSection, BotSection } from "./NavSections";
+import { SidebarActionItem } from "./NavSections";
+import { Drawer } from "@material-ui/core";
+import { BotsIcon, DashboardIcon, PortfolioIcon } from "../../_components";
+import { ExchangeSidebarFilter } from "../../Portfolio/ExchangeSidebarFilter/ExchangeSidebarFilter";
 
 interface SidebarNavProps {}
 
@@ -18,10 +21,30 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
   );
 
   return (
-    <DesktopContainer isSidebarCollapsed={isSidebarCollapsed}>
-      {DashboardSection(isSidebarCollapsed, viewType)}
-      {PortfolioSection(isSidebarCollapsed, viewType)}
-      {BotSection(isSidebarCollapsed, viewType)}
-    </DesktopContainer>
+    <SidebarContainer isSidebarCollapsed={isSidebarCollapsed}>
+      <SidebarActionItem
+        text="Dashboard"
+        icon={<DashboardIcon />}
+        linkUri="/dashboard"
+      >
+
+      </SidebarActionItem>
+
+      <SidebarActionItem
+        text="Portfolio"
+        icon={<PortfolioIcon />}
+        linkUri="/portfolio"
+      >
+        <ExchangeSidebarFilter />
+      </SidebarActionItem>
+
+      <SidebarActionItem
+        text="Bots"
+        icon={<BotsIcon />}
+        linkUri="/bots"
+      >
+
+      </SidebarActionItem>
+    </SidebarContainer>
   );
 };

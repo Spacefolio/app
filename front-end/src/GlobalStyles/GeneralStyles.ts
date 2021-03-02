@@ -83,12 +83,11 @@ export const BaseLink = styled(Link)`
   color: ${COLORS.primaryBase};
   ${TimingStyle}
 `;
-export const SvgWrapActionButton = styled(ClickableDiv)`
+export const SvgWrapperButton = styled(ClickableDiv)`
   height: 3rem;
   width: 3rem;
   ${CenteredFlexBox};
   &:hover {
-
     ${ClickableSvg} {
       fill: ${COLORS.accentBase};
     }

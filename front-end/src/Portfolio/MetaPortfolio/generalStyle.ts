@@ -5,6 +5,7 @@ import { COLORS, RD } from "../../GlobalStyles/ResponsiveDesign";
 export const MetaPortfolioWrapper = styled.div`
   padding: 10px 0;
   position: relative;
+
   width: 100%;
   display: flex;
   align-items: center;
@@ -12,7 +13,11 @@ export const MetaPortfolioWrapper = styled.div`
   justify-content: space-evenly;
 `;
 
-export const MetaPortfolioChartWrapper = styled.div``;
+export const MetaPortfolioChartWrapper = styled.div`
+  width: 60%;
+  ${CenteredFlexBox}
+  height: 100%;
+`;
 
 export const SyncButtonContainer = styled(ClickableDiv)`
   border-radius: 10px;
@@ -32,9 +37,11 @@ export const SyncButtonContainer = styled(ClickableDiv)`
 `;
 
 export const PortfolioValueWrapper = styled.div`
-  height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: red;
+  width: 20%;
+  height: 100%;
 `;
 
 export const PortfolioValueChangeContainer = styled.div`
@@ -43,7 +50,7 @@ export const PortfolioValueChangeContainer = styled.div`
   justify-content: center;
 `;
 export const PortfolioValueItem = styled.div`
-  padding: 5px 10px;
+  padding: 0 ;
 `;
 
 export const PortfolioValueContainer = styled.div`

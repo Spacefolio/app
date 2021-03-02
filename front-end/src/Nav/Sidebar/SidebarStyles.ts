@@ -1,3 +1,4 @@
+import { Card, Drawer } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { IViewType } from "../../../../types";
@@ -8,54 +9,31 @@ import {
   ClickableDiv,
   ClickableSvg,
   FadeoutAnimation,
-  SvgWrapActionButton,
+  SvgWrapperButton,
   TimingStyle,
 } from "../../GlobalStyles";
 import { COLORS, RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
 import { ArrowIcon } from "../../_components";
 
 interface IDesktopWrapperProps {
-  isSidebarCollapsed?: Boolean;
-  isSidebarVisible?: Boolean;
+  isSidebarCollapsed: Boolean;
 }
 
-export const DesktopContainer = styled.div<IDesktopWrapperProps>`
-  font-weight: 500;
-  font-size: 1em;
+export const SidebarContainer = styled.div<IDesktopWrapperProps>`
   display: flex;
   justify-content: start;
   box-shadow: 5px 10px 25px -24px;
   overflow: hidden;
   flex-direction: column;
-  left: 0px;
   background-color: ${COLORS.primaryLight4};
   flex-shrink: 0;
   height: 100vh;
   width: ${(props: any) =>
-    props.isSidebarCollapsed ? SPACING.NavbarHeight : "300px"};
+    props.isSidebarCollapsed ? SPACING.NavbarHeight : SPACING.sidebarWidth};
   align-items: ${(props: any) =>
     props.isSidebarCollapsed ? "center" : "start"};
   z-index: 1;
-  margin-top: ${SPACING.NavbarHeight};
-  ${TimingStyle}
-`;
-
-export const MobileContainer = styled.div<IDesktopWrapperProps>`
-  font-weight: 500;
-  font-size: 1em;
-  display: flex;
-  justify-content: start;
-  box-shadow: 5px 10px 25px -24px;
-  overflow: hidden;
-  flex-direction: column;
-  left: 0px;
-  background-color: ${COLORS.primaryLight4};
-  flex-shrink: 0;
-  height: 100%;
-  position: fixed;
-  width: ${(props: any) => (props.isSidebarVisible ? 0 : "300px")};
-  align-items: start;
-  z-index: 3;
+  padding-top: ${SPACING.NavbarHeight};
   ${TimingStyle}
 `;
 
@@ -81,7 +59,7 @@ export const LinkText = styled(BaseText)<ILinkTextProps>`
   height: 100%;
 `;
 
-export const NavTab = styled(NavLink)`
+export const NavTab = styled.div`
   display: flex;
   width: 100%;
   height: ${SPACING.NavbarHeight};
@@ -101,7 +79,7 @@ export const NavTab = styled(NavLink)`
 interface ITabContentContainerProps {
   isActiveTab: boolean;
 }
-export const TabSubContentContainer = styled.div<ITabContentContainerProps>`
+export const TabSubContentContainer = styled(Card)<ITabContentContainerProps>`
   ${TimingStyle}
   ${(props) =>
     props.isActiveTab ? `padding: 10px; height: 300px;` : `height: 0px;`}
@@ -115,4 +93,4 @@ export const SidebarIconContainer = styled.div`
   position: absolute;
   ${CenteredFlexBox}
 `;
-export const SidebarDetailsButton = styled(SvgWrapActionButton)``;
+export const SidebarDetailsButton = styled(SvgWrapperButton)``;

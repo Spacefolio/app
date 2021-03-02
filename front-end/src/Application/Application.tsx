@@ -65,7 +65,6 @@ export const Application = () => {
   return (
     <React.Fragment>
       <Nav />
-
       <BodyWrapper>
         {viewType == "mobile" ? <MobileNav /> : <SidebarNav />}
         <ApplicationContainer viewType={viewType} ref={ref}>

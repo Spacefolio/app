@@ -1,10 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  Route,
-  Switch,
-  useRouteMatch,
-  Redirect,
-} from "react-router-dom";
+import { Route, Switch, useRouteMatch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   PortfolioWrapper,
@@ -25,7 +20,9 @@ interface IPortfolioProps {}
 
 export const Portfolio: React.FC<IPortfolioProps> = () => {
   const dispatch = useDispatch();
-  const portfolioData = useSelector((state: IRootState) => state.portfolio.portfolioData);
+  const portfolioData = useSelector(
+    (state: IRootState) => state.portfolio.portfolioData
+  );
   const width = useSelector(
     (state: IRootState) => state.applicationView.applicationContainerWidth
   );
@@ -38,22 +35,19 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 
   const PortfolioTabs = (
     <TabWrapper>
-      <NavTab activeClassName="active-porfolio-tab" to={`${path}/charts`}>
+      <NavTab>
         <LinkText>Charts</LinkText>
       </NavTab>
 
-      <NavTab activeClassName="active-porfolio-tab" to={`${path}/holdings`}>
+      <NavTab>
         <LinkText>Holdings</LinkText>
       </NavTab>
 
-      <NavTab
-        activeClassName="active-porfolio-tab"
-        to={`${path}/transactions`}
-      >
+      <NavTab>
         <LinkText>Transactions</LinkText>
       </NavTab>
 
-      <NavTab activeClassName="active-porfolio-tab" to={`${path}/orders`}>
+      <NavTab>
         <LinkText>Open Orders</LinkText>
       </NavTab>
     </TabWrapper>
@@ -63,7 +57,7 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
     width > parseInt(RD.breakpointtablet) ? (
       <PortfolioSidebarWrapper>
         {/* <FlexCard styles={{ alignItems: "start", height: "100%" }}> */}
-          <ExchangeSidebarFilter />
+        <ExchangeSidebarFilter />
         {/* </FlexCard> */}
       </PortfolioSidebarWrapper>
     ) : null;

@@ -13,104 +13,73 @@ import {
   SidebarIconContainer,
   TabSubContentContainer,
 } from "./SidebarStyles";
-import { ExchangeSidebarFilter } from "../../Portfolio/ExchangeSidebarFilter/ExchangeSidebarFilter";
-import { IViewType } from "../../../../types";
-import { Route, useRouteMatch } from "react-router";
+import { Route, useHistory, useLocation, useRouteMatch } from "react-router";
 import { useState } from "react";
-import { Modal } from "@material-ui/core";
+import { link } from "fs/promises";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../_reducers";
+import { CheckCurrentPage } from "../../_helpers/navigation";
+import { SvgWrapperButton } from "../../GlobalStyles";
 
-export function BotSection(isSidebarCollapsed: boolean, viewType: IViewType) {
+interface ISidebarActionItemProps {
+  text: string;
+  children?: React.ReactNode;
+  icon: React.ReactNode;
+  linkUri: string;
+}
+export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
+  text,
+  children,
+  icon,
+  linkUri,
+}) => {
+  const isSidebarCollapsed = useSelector(
+    (state: IRootState) => state.applicationView.isSidebarCollapsed
+  );
+  const history = useHistory();
   const [subIsVisible, setSubIsVisible] = useState(false);
+  const location = useLocation();
+
+  var lastLink: any = location;
 
   useEffect(() => {
-    isSidebarCollapsed && setSubIsVisible(false);
-  }, [isSidebarCollapsed]);
+    if (isSidebarCollapsed) {
+      setSubIsVisible(false);
+    } else {
+      if (CheckCurrentPage(location, linkUri)) {
+        setSubIsVisible(true);
+      }
+    }
+    lastLink = location;
+  }, [isSidebarCollapsed, location]);
 
-  const tabUri = "/bots";
+  const handleClick = () => {
+    if (!CheckCurrentPage(lastLink, linkUri)) {
+      history.push(linkUri);
+      setSubIsVisible(true);
+    } else {
+      !isSidebarCollapsed && setSubIsVisible(!subIsVisible);
+    }
+  };
+
   return (
     <React.Fragment>
       <LinkWrapper>
-        <NavTab to={tabUri} activeClassName="active-sidebar-tab">
-          <SidebarIconContainer>
-            <BotsIcon />
-          </SidebarIconContainer>
-          <LinkText isVisible={!isSidebarCollapsed}>Bots</LinkText>
+        <NavTab onClick={() => handleClick()}>
+          <SidebarIconContainer>{icon}</SidebarIconContainer>
+          <LinkText>{text}</LinkText>
         </NavTab>
-        <SidebarDetailsButton onClick={() => setSubIsVisible(!subIsVisible)}>
-          <ArrowIcon direction={subIsVisible ? "up" : "down"} />
-        </SidebarDetailsButton>
+        {children && (
+          <SvgWrapperButton onClick={() => setSubIsVisible(!subIsVisible)}>
+            <ArrowIcon direction={subIsVisible ? "up" : "down"} />
+          </SvgWrapperButton>
+        )}
       </LinkWrapper>
-      <Route path={tabUri}>
+      {children && (
         <TabSubContentContainer isActiveTab={subIsVisible}>
-          {/* <ExchangeSidebarFilter /> */}
+          {children}
         </TabSubContentContainer>
-      </Route>
+      )}
     </React.Fragment>
   );
-}
-
-export function DashboardSection(
-  isSidebarCollapsed: boolean,
-  viewType: IViewType
-) {
-  const [subIsVisible, setSubIsVisible] = useState(false);
-
-  useEffect(() => {
-    isSidebarCollapsed && setSubIsVisible(false);
-  }, [isSidebarCollapsed]);
-
-  const tabUri = "/dashboard";
-  return (
-    <React.Fragment>
-      <LinkWrapper>
-        <NavTab to={tabUri} activeClassName="active-sidebar-tab">
-          <SidebarIconContainer>
-            <DashboardIcon />
-          </SidebarIconContainer>
-          <LinkText isVisible={!isSidebarCollapsed}>Dashboard</LinkText>
-        </NavTab>
-        <SidebarDetailsButton onClick={() => setSubIsVisible(!subIsVisible)}>
-          <ArrowIcon direction={subIsVisible ? "up" : "down"} />
-        </SidebarDetailsButton>
-      </LinkWrapper>
-      <Route path={tabUri}>
-        <TabSubContentContainer isActiveTab={subIsVisible}>
-          {/* <ExchangeSidebarFilter /> */}
-        </TabSubContentContainer>
-      </Route>
-    </React.Fragment>
-  );
-}
-
-export function PortfolioSection(
-  isSidebarCollapsed: boolean,
-  viewType: IViewType
-) {
-  const [subIsVisible, setSubIsVisible] = useState(false);
-
-  useEffect(() => {
-    isSidebarCollapsed && setSubIsVisible(false);
-  }, [isSidebarCollapsed]);
-
-  const tabUri = "/portfolio";
-  return (
-    <React.Fragment>
-      <LinkWrapper>
-        <NavTab to={tabUri} activeClassName="active-sidebar-tab">
-          <SidebarIconContainer>
-            <PortfolioIcon />
-          </SidebarIconContainer>
-          <LinkText isVisible={!isSidebarCollapsed}>Portfolio</LinkText>
-        </NavTab>
-        <SidebarDetailsButton onClick={() => setSubIsVisible(!subIsVisible)}>
-          <ArrowIcon direction={subIsVisible ? "up" : "down"} />
-        </SidebarDetailsButton>
-      </LinkWrapper>
-      <Route path={tabUri}>
-        <TabSubContentContainer isActiveTab={subIsVisible}>
-          <ExchangeSidebarFilter />
-        </TabSubContentContainer>
-      </Route>
-    </React.Fragment>
-  );
-}
+};

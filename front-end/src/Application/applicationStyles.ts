@@ -13,9 +13,9 @@ interface ApplicationProps {
 export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
   justify-content: center;
-  height: calc(100vh - ${SPACING.NavbarHeight});
-  margin-top: ${SPACING.NavbarHeight};
-  padding: 0 ${SPACING.flexCardGap};
+  height: 100vh;
+  padding: ${SPACING.NavbarHeight} ${SPACING.flexCardGap};
+  padding-bottom: 0px;
   width: 100%;
 `;
 
