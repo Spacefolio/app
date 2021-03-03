@@ -5,8 +5,7 @@ import { history } from "../_helpers";
 import { alertActions } from "../_actions";
 import { PrivateRoute } from "../_components";
 import { Application } from "../Application";
-import { LoginPage } from "../LoginPage";
-import { RegisterPage } from "../RegisterPage";
+import { LoginPage, RegisterPage } from "../RegisterPage";
 import { Alert, ErrorBoundary } from "../_components";
 import "typeface-roboto";
 import "./App.scss";
@@ -23,7 +22,6 @@ export const App = () => {
 
   history.listen((location: any, action: any) => {
     dispatch(clearAlerts());
-    dispatch(applicationViewActions.toggleSidebar("mobile", false));
   });
   return (
     <ScopedCssBaseline>

@@ -19,7 +19,6 @@ export const ApplicationContainer = styled.div<ApplicationProps>`
   padding: 0 ${SPACING.flexCardGap};
   height: calc(${(props) => window.innerHeight}px - ${SPACING.NavbarHeight});
   @media only screen and (max-width: ${RD.breakpointsmartphone}) {
-    margin-top: ${SPACING.NavbarHeight};
     height: ${(props) => window.outerHeight}px;
     padding: 0;
   }

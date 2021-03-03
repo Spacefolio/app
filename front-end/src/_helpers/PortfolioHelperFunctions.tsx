@@ -1,10 +1,12 @@
 import React from "react";
-import { timeframe } from "../../../types";
-import { RD } from "../GlobalStyles/ResponsiveDesign";
+import { useSelector } from "react-redux";
+import { IViewType, timeframe } from "../../../types";
+import { RD, SPACING } from "../GlobalStyles/ResponsiveDesign";
 import {
   TimeFrameSelectorContainer,
   TimeframeItem,
 } from "../Portfolio/Charts/PChartStyles";
+import { IRootState } from "../_reducers";
 
 export const trimFields = (value: number, currencyType: string) => {
   switch (currencyType) {
@@ -21,7 +23,8 @@ export const trimFields = (value: number, currencyType: string) => {
   }
 };
 
-export function CalculateMainChartSize(width: number) {
+export function CalculateMainChartSize(width: number, ViewType: IViewType) {
+
   if (width >= parseInt(RD.breakpointmonitor)) {
     return [1200, 400];
   } else if (
@@ -39,8 +42,10 @@ export function CalculateMainChartSize(width: number) {
     width >= parseInt(RD.breakpointsmartphone)
   ) {
     return [630, 400];
-  } else if (width < parseInt(RD.breakpointsmartphone)) {
-    return [(width - 100), 300];
+  } else if (width < parseInt(RD.breakpointsmartphone) && ViewType == 'mobile') {
+    return [(width), 400];
+  } else if (width < parseInt(RD.breakpointsmartphone) && ViewType == 'desktop'){
+    return [parseInt(RD.widthsmartphone) - 50, 400]
   }
 }
 export const timeFrameSelectors: timeframe[] = [

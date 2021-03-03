@@ -30,23 +30,26 @@ export const Application = () => {
   const applicationWidth = useSelector(
     (state: IRootState) => state.applicationView.applicationContainerWidth
   );
+  const isSidebarCollapsed = useSelector(
+    (state: IRootState) => state.applicationView.isSidebarCollapsed
+  );
   const viewType = useSelector(
     (state: IRootState) => state.applicationView.currentViewType
   );
 
   const flexSizing = () => {
     if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
-      return { maxWidth: "100%" };
+      return { maxWidth: RD.widthmonitor };
     } else if (
       applicationWidth < parseInt(RD.breakpointmonitor) &&
       applicationWidth >= parseInt(RD.breakpointlaptop)
     ) {
-      return { maxWidth: "100%" };
+      return { maxWidth: RD.widthlaptop };
     } else if (
       applicationWidth < parseInt(RD.breakpointlaptop) &&
       applicationWidth >= parseInt(RD.breakpointtablet)
     ) {
-      return { maxWidth: "100%" };
+      return { maxWidth: RD.widthtablet };
     } else if (
       applicationWidth < parseInt(RD.breakpointtablet) &&
       applicationWidth >= parseInt(RD.breakpointsmartphone)
@@ -60,27 +63,27 @@ export const Application = () => {
   useEffect(() => {
     dispatch(applicationViewActions.UpdateApplicationWidth(width));
     setAppWidth(flexSizing());
-  }, [width]);
+  }, [width, isSidebarCollapsed]);
 
   return (
     <React.Fragment>
-      <Nav />
-      <BodyWrapper>
-        {viewType == "mobile" ? <MobileNav /> : <SidebarNav />}
-        <ApplicationContainer width={width} viewType={viewType} ref={ref}>
-          <ApplicationFlexContainer style={appWidth}>
-            <Switch>
-              <Route path={`/portfolio`}>
-                <Portfolio />
-              </Route>
-              <Route path={`/dashboard`}>
-                <Dashboard />
-              </Route>
-              <Redirect to="/dashboard" />
-            </Switch>
-          </ApplicationFlexContainer>
-        </ApplicationContainer>
-      </BodyWrapper>
+      <Nav/>
+        <BodyWrapper>
+          {viewType == "mobile" ? <MobileNav /> : <SidebarNav />}
+          <ApplicationContainer width={width} viewType={viewType} ref={ref}>
+            <ApplicationFlexContainer style={appWidth}>
+              <Switch>
+                <Route path={`/portfolio`}>
+                  <Portfolio />
+                </Route>
+                <Route path={`/dashboard`}>
+                  <Dashboard />
+                </Route>
+                <Redirect to="/dashboard" />
+              </Switch>
+            </ApplicationFlexContainer>
+          </ApplicationContainer>
+        </BodyWrapper>
     </React.Fragment>
   );
 };

@@ -6,7 +6,7 @@ interface IRegistrationAction{
 }
 
 export interface IRegistrationState{
-  
+  registering: boolean;
 }
 
 export function registration(state = {}, action: IRegistrationAction) {

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { COLORS, RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
-import { BaseGrid, CenteredFlexBox } from "../../GlobalStyles";
+import { BaseGrid, CenteredFlexBox, ClickableDiv } from "../../GlobalStyles";
 import { Paper } from "@material-ui/core";
 
 export const DashboardWrapper = styled(BaseGrid)`
@@ -31,13 +31,13 @@ export const TimeFrameSelectorContainer = styled.div`
 interface ITimeFrameItemProps {
   selected: boolean;
 }
-export const TimeframeItem = styled(Paper)<ITimeFrameItemProps>`
-  padding: 5px;
+export const TimeframeItem = styled(ClickableDiv)<ITimeFrameItemProps>`
+  padding: 1rem;
   min-width: 50px;
   max-width: 50px;
   ${CenteredFlexBox}
   ${(props) =>
     props.selected
-      ? `border: 3px solid ${COLORS.accentBase}; border-radius: 5px;`
-      : `margin: 3px;`}
+      ? `color: ${COLORS.accentBase}`
+      : ``}
 `;

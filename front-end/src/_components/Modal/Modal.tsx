@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { ModalBg, ModalBoxSetup, ModalWrapper } from "./ModalStyles";
-import { CloseIcon } from "../../_components";
-import { SvgWrapperButton } from "../../GlobalStyles";
+import React from "react";
+import { CloseButton, ModalBg, ModalBoxSetup, ModalWrapper } from "./ModalStyles";
+
+import { GrowFromZero, SvgWrapperButton } from "../../GlobalStyles";
+import { Close } from "@material-ui/icons";
 
 interface ModalProps {
   visible: boolean;
@@ -20,15 +21,14 @@ export const Modal: React.FC<ModalProps> = ({
     <React.Fragment>
       {visible && (
         <ModalWrapper>
-          <ModalBoxSetup>
-            <SvgWrapperButton
-              onClick={() => dismiss()}
-            >
-              <CloseIcon />
-            </SvgWrapperButton>
-
-            {children}
-          </ModalBoxSetup>
+          <GrowFromZero in={true}>
+            <ModalBoxSetup>
+              <CloseButton onClick={() => dismiss()}>
+                <Close />
+              </CloseButton>
+              {children}
+            </ModalBoxSetup>
+          </GrowFromZero>
           <ModalBg
             onClick={() => {
               clickOutsidedismiss && dismiss();

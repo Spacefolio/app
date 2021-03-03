@@ -7,11 +7,13 @@ export const DashboardWrapper = styled.div`
   gap: ${SPACING.flexCardGap};
   margin-top: ${SPACING.flexCardGap};
   @media screen and (min-width: ${RD.breakpointtablet}) {
+    grid-template-columns: 50% 50%; 
     grid-template-areas:
       "one one"
       "two three"
       "five four";
   }
+
 
   @media screen and (max-width: ${RD.breakpointtablet}) {
     grid-template-areas:

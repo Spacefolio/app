@@ -30,6 +30,12 @@ export const SidebarContainer = styled.div<IDesktopWrapperProps>`
   height: 100vh;
   width: ${(props: any) =>
     props.isSidebarCollapsed ? SPACING.NavbarHeight : SPACING.sidebarWidth};
+  @media (max-width: 1068px) {
+    position: fixed;
+    width: ${(props: any) =>
+      props.isSidebarCollapsed ? "0px" : SPACING.sidebarWidth};
+  }
+
   align-items: ${(props: any) =>
     props.isSidebarCollapsed ? "center" : "start"};
   z-index: 1;
@@ -86,9 +92,12 @@ export const TabSubContentContainer = styled.div<ITabContentContainerProps>`
   background-color: ${COLORS.primaryLight3};
   width: 100%;
 `;
-export const SidebarIconContainer = styled.div`
+export const SidebarIconContainer = styled.div<ITabContentContainerProps>`
   height: 100%;
   padding: 1em;
+  svg {
+    ${(props) => props.isActiveTab && `fill: ${COLORS.accentBase};`}
+  }
   width: ${SPACING.NavbarHeight};
   position: absolute;
   ${CenteredFlexBox}

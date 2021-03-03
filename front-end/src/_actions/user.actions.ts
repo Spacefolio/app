@@ -2,7 +2,7 @@ import { userConstants } from '../_constants';
 import { userService } from '../_services';
 import { alertActions } from '.';
 import { history } from '../_helpers';
-import {IUser} from '../../../types';
+import {INewUser, IUser} from '../../../types';
 import { Redirect } from 'react-router';
 
 export const userActions = {
@@ -40,7 +40,7 @@ function logout() {
     return { type: userConstants.LOGOUT };
 }
 
-function register(user: IUser) {
+function register(user: INewUser) {
     return (dispatch: any) => {
         dispatch(request(user));
 
@@ -58,7 +58,7 @@ function register(user: IUser) {
             );
     };
 
-    function request(user: IUser) { return { type: userConstants.REGISTER_REQUEST, user } }
+    function request(user: INewUser) { return { type: userConstants.REGISTER_REQUEST, user } }
     function success(user: IUser) { return { type: userConstants.REGISTER_SUCCESS, user } }
     function failure(error: string) { return { type: userConstants.REGISTER_FAILURE, error } }
   }

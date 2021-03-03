@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { exchangeActions, portfolioActions } from "../_actions";
 import { AddExchangeForm, EditExchangeForm, ExchangeItem } from "../Exchanges";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
-import { Modal } from "../_components";
+
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../_reducers";
 import {
+  AddExchangeGrid,
+  AddExchangeItem,
   AddExchangeWrapper,
   ExchangeSearchBar,
   MyExchangeNameWrapper,
@@ -13,112 +15,116 @@ import {
   MyExchangesListContainer,
   MyExchangeWrapper,
 } from "./ExchangeStyles";
-import { filter } from "d3";
+
 import { ClickableDiv } from "../GlobalStyles";
+import { Modal } from "../_components";
+import { Avatar, ListItemAvatar, Typography } from "@material-ui/core";
+import { AccountBalanceWallet } from "@material-ui/icons";
 
-interface ExchangesPopupProps {
-  headerText?: string;
-  myExchanges: boolean;
-  addExchange: boolean;
-}
-
-export const ManageExchanges: React.FC<ExchangesPopupProps> = ({
-  myExchanges,
-  addExchange,
-  headerText,
-}) => {
-  const dispatch = useDispatch();
-
-  const loadingExchanges = useSelector((state: any) => state.exchanges.loading);
-  const userLinkedExchanges = useSelector(
-    (state: IRootState) => state.exchanges.exchanges
-  );
+export function AddNewExchangeList() {
   const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef);
-
   const [searchFilter, setSearchFilter] = useState("");
   const [addExchangeVisible, setAddExchangeVisible] = useState(false);
   const [addExchangeData, setAddExchangeData] = useState<IExchangeReference>(
     null
   );
-  const portfolioFilterID = useSelector(
-    (state: IRootState) => state.portfolio.filterId
-  );
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(exchangeActions.getRef());
+  }, []);
+
+  return (
+    <AddExchangeWrapper>
+      <ExchangeSearchBar
+        name="search"
+        type="text"
+        autoComplete={"off"}
+        placeholder="search"
+        value={searchFilter}
+        onChange={(e: any) => setSearchFilter(e.target.value)}
+      />
+      <AddExchangeGrid>
+        {exchangeRef &&
+          exchangeRef
+            .filter((item: IExchangeReference) => {
+              if (searchFilter != "") {
+                return item.name
+                  .toLowerCase()
+                  .startsWith(searchFilter.toLowerCase());
+              } else return true;
+            })
+            .map((item: IExchangeReference) => {
+              return (
+                <AddExchangeItem
+                  key={item.id}
+                  onClick={() => {
+                    setAddExchangeVisible(true);
+                    setAddExchangeData(item);
+                  }}
+                >
+                  <Avatar src={item.logoUrl} />
+                  <Typography variant={"button"}>{item.name}</Typography>
+                </AddExchangeItem>
+              );
+            })}
+      </AddExchangeGrid>
+
+      <Modal
+        visible={addExchangeVisible}
+        dismiss={() => setAddExchangeVisible(false)}
+      >
+        <AddExchangeForm exchangeRefInfo={addExchangeData} />
+      </Modal>
+    </AddExchangeWrapper>
+  );
+}
+
+interface IListMyExchangesProps {
+  enableEditing: boolean;
+}
+
+export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
+  enableEditing,
+}) => {
   useEffect(() => {
     dispatch(exchangeActions.getAll());
     dispatch(exchangeActions.getRef());
   }, []);
-
-  const RenderExchangeItems = (
+  const loadingExchanges = useSelector((state: any) => state.exchanges.loading);
+  const userLinkedExchanges: IExchangeAccountView[] = useSelector(
+    (state: IRootState) => state.exchanges.exchanges
+  );
+  const portfolioFilterID = useSelector(
+    (state: IRootState) => state.portfolio.filterId
+  );
+  const dispatch = useDispatch();
+  return (
     <MyExchangesListContainer>
       <MyExchangesLineItemContainer
+        button={true}
         selected={portfolioFilterID == ""}
         key={"AllAssets"}
         onClick={() => dispatch(portfolioActions.FilterPortfolio(""))}
       >
-        <MyExchangeNameWrapper>
-          <ClickableDiv style={{marginLeft: "25px"}}>All Assets</ClickableDiv>
-        </MyExchangeNameWrapper>
+        <ListItemAvatar>
+          <Avatar>
+            <AccountBalanceWallet />
+          </Avatar>
+        </ListItemAvatar>
+        <MyExchangeNameWrapper>All Portfolios</MyExchangeNameWrapper>
       </MyExchangesLineItemContainer>
       {userLinkedExchanges.length != 0
         ? userLinkedExchanges.map((item: IExchangeAccountView) => {
-            return <ExchangeItem key={item.nickname} data={item} />;
+            return (
+              <ExchangeItem
+                enableEditing={enableEditing}
+                key={item.nickname}
+                data={item}
+              />
+            );
           })
         : "You have no linked accounts... You should add one above"}
     </MyExchangesListContainer>
-  );
-
-  const AddExchange = (
-    <AddExchangeWrapper>
-      <div>
-        <ExchangeSearchBar
-          name="search"
-          type="text"
-          autoComplete={"off"}
-          placeholder="search"
-          value={searchFilter}
-          onChange={(e) => setSearchFilter(e.target.value)}
-        />
-      </div>
-      {exchangeRef &&
-        exchangeRef
-          .filter((item: IExchangeReference) => {
-            if (searchFilter != "") {
-              return item.name
-                .toLowerCase()
-                .startsWith(searchFilter.toLowerCase());
-            } else return true;
-          })
-          .map((item: IExchangeReference) => {
-            return (
-              <div
-                onClick={() => {
-                  setAddExchangeVisible(true);
-                  setAddExchangeData(item);
-                }}
-                key={item.id}
-              >
-                <img src={item.logoUrl} /> {item.name}
-              </div>
-            );
-          })}
-    </AddExchangeWrapper>
-  );
-  return (
-    <React.Fragment>
-      {headerText && <MyExchangeWrapper>
-        <h1>{headerText}</h1>
-      </MyExchangeWrapper>}
-      {myExchanges && RenderExchangeItems}
-      <Modal
-        dismiss={() => {
-          setAddExchangeVisible(false);
-        }}
-        visible={addExchangeVisible}
-      >
-        <AddExchangeForm exchangeRefInfo={addExchangeData} />
-      </Modal>
-      {addExchange && AddExchange}
-    </React.Fragment>
   );
 };

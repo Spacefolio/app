@@ -1,18 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SidebarContainer } from "./SidebarStyles";
-
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
-
 import value from "*.png";
 import {
   BottomNavigation,
   BottomNavigationAction,
   makeStyles,
 } from "@material-ui/core";
-import { BotsIcon } from "../../_components";
-import { useHistory } from "react-router";
-import { Dashboard, PieChart, Timeline } from "@material-ui/icons";
+import { useHistory, useLocation, useRouteMatch } from "react-router";
+import { Dashboard, Extension, PieChart, Timeline } from "@material-ui/icons";
 
 interface BottomNavProps {}
 
@@ -26,17 +23,29 @@ export const MobileNav: React.FC<BottomNavProps> = ({}) => {
   const isSidebarVisible = useSelector(
     (state: IRootState) => state.applicationView.isSidebarVisible
   );
-  const useStyles = makeStyles({
-    root: {
-      width: 500,
-    },
-  });
 
-  const classes = useStyles();
+  const location = useLocation();
 
   const history = useHistory();
 
-  const [value, setValue] = React.useState("recents");
+  const [value, setValue] = React.useState(0);
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case "/portfolio":
+        setValue(0);
+        break;
+      case "/dashboard":
+        setValue(1);
+        break;
+      case "/bots":
+        setValue(2);
+        break;
+      case "/integrations":
+        setValue(3);
+        break;
+    }
+  }, []);
 
   return (
     <BottomNavigation
@@ -45,14 +54,12 @@ export const MobileNav: React.FC<BottomNavProps> = ({}) => {
         setValue(newValue);
       }}
       showLabels
-      className={classes.root}
       style={{ width: "100%", position: "fixed", bottom: "0px" }}
     >
       <BottomNavigationAction
         label="Portfolio"
         icon={<PieChart />}
         onClick={() => history.push("/portfolio")}
-        selected={location.toString() == "/portfolio"}
       />
       <BottomNavigationAction
         label="Dashboard"
@@ -62,6 +69,11 @@ export const MobileNav: React.FC<BottomNavProps> = ({}) => {
       <BottomNavigationAction
         label="Bots"
         icon={<Timeline />}
+        onClick={() => history.push("/bots")}
+      />
+      <BottomNavigationAction
+        label="Integrations"
+        icon={<Extension />}
         onClick={() => history.push("/bots")}
       />
     </BottomNavigation>

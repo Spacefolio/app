@@ -1,14 +1,12 @@
 import React from "react";
 import { SidebarContainer } from "./SidebarStyles";
-
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import { SidebarActionItem } from "./NavSections";
-import { Drawer, SwipeableDrawer } from "@material-ui/core";
-import { BotsIcon } from "../../_components";
 import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter";
-import { Dashboard, PieChart, Timeline } from "@material-ui/icons";
+import { Dashboard, Extension, PieChart, Timeline } from "@material-ui/icons";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
+import { AddNewExchangeList } from "../../Exchanges";
 
 interface SidebarNavProps {}
 
@@ -46,6 +44,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
         icon={<Timeline />}
         linkUri="/bots"
       ></SidebarActionItem>
+
+      <SidebarActionItem
+        text="Integrations"
+        icon={<Extension />}
+        linkUri="/bots"
+      ><AddNewExchangeList/></SidebarActionItem>
     </SidebarContainer>
   );
 };

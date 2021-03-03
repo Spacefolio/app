@@ -1,8 +1,5 @@
 import React, { useEffect } from "react";
-import {
-
-  ArrowIcon,
-} from "../../_components/Icons";
+import { ArrowIcon } from "../../_components/Icons";
 import {
   LinkText,
   LinkWrapper,
@@ -17,7 +14,7 @@ import { link } from "fs/promises";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import { CheckCurrentPage } from "../../_helpers/navigation";
-import { SvgWrapperButton } from "../../GlobalStyles";
+import { SvgWrapperButton, Scrollbox } from "../../GlobalStyles";
 
 interface ISidebarActionItemProps {
   text: string;
@@ -37,26 +34,27 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
   const history = useHistory();
   const [subIsVisible, setSubIsVisible] = useState(false);
   const location = useLocation();
-
-  var lastLink: any = location;
+  const [isCurrentPage, setIsCurrentPage] = useState(
+    CheckCurrentPage(location, linkUri)
+  );
 
   useEffect(() => {
     if (isSidebarCollapsed) {
       setSubIsVisible(false);
+      setIsCurrentPage(CheckCurrentPage(location, linkUri));
     } else {
-      if (CheckCurrentPage(location, linkUri)) {
-        setSubIsVisible(true);
+      setIsCurrentPage(CheckCurrentPage(location, linkUri));
+      if (isCurrentPage) {
       } else {
         setSubIsVisible(false);
       }
     }
-    lastLink = location;
   }, [isSidebarCollapsed, location]);
 
   const handleClick = () => {
-    if (!CheckCurrentPage(lastLink, linkUri)) {
+    if (!isCurrentPage) {
       history.push(linkUri);
-      setSubIsVisible(true);
+      
     } else {
       !isSidebarCollapsed && setSubIsVisible(!subIsVisible);
     }
@@ -66,7 +64,7 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
     <React.Fragment>
       <LinkWrapper>
         <SidebarTab onClick={() => handleClick()}>
-          <SidebarIconContainer>{icon}</SidebarIconContainer>
+          <SidebarIconContainer isActiveTab={isCurrentPage}>{icon}</SidebarIconContainer>
           <LinkText>{text}</LinkText>
         </SidebarTab>
         {children && (
@@ -77,7 +75,7 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
       </LinkWrapper>
       {children && (
         <TabSubContentContainer isActiveTab={subIsVisible}>
-          {children}
+          <Scrollbox>{children}</Scrollbox>
         </TabSubContentContainer>
       )}
     </React.Fragment>

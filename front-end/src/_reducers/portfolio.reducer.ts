@@ -98,8 +98,8 @@ export function portfolio(
     case portfolioConstants.REFRESH_REQUEST:
       return {
         ...state,
-        portfolioData: [],
-        filteredPortfolioData: null,
+        // portfolioData: [],
+        // filteredPortfolioData: null,
         recalculatingPortfolio: true,
       };
     case portfolioConstants.REFRESH_SUCCESS:

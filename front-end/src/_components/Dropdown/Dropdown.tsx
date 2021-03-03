@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { GrowFromZero } from "../../GlobalStyles";
 import { DDList, DDListItem, DDWrapper } from "./DropdownStyles";
 
 export interface IDropdownItem {
@@ -7,22 +8,18 @@ export interface IDropdownItem {
   selected?: boolean;
 }
 interface DropdownProps {
-  dropdownItemList: IDropdownItem[];
+  children: React.ReactNode;
   setVisiblity: any;
   isVisible: boolean;
-  alignment?: "below" | "above" | "center";
   //this is the ref to the dropdown toggle button
   containerRef: any;
-  defaultItemClickHandler?: any;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
-  dropdownItemList,
   setVisiblity,
   isVisible,
-  alignment,
   containerRef,
-  defaultItemClickHandler,
+  children,
 }) => {
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -31,35 +28,19 @@ export const Dropdown: React.FC<DropdownProps> = ({
     };
   }, []);
 
-  const DecideClickAction = (item: IDropdownItem) => {
-    if (item.onClickHandler != undefined) {
-      return item.onClickHandler();
-    } else if (defaultItemClickHandler != undefined) {
-      return defaultItemClickHandler(item.text);
-    } else return () => {};
-  };
-
-  const createDropdownItems = () => {
-    return dropdownItemList.map((item: IDropdownItem) => {
-      return (
-        <DDListItem key={item.text} onClick={() => DecideClickAction(item)}>
-          {item.text}
-        </DDListItem>
-      );
-    });
-  };
-
   const handleClickOutside = (e: any) => {
     if (containerRef.current.contains(e.target)) {
       return;
     } else {
-      setVisiblity(!isVisible);
+      setVisiblity(false);
     }
   };
 
   return (
-    <DDWrapper>
-      <DDList>{createDropdownItems()}</DDList>
-    </DDWrapper>
+    <React.Fragment>
+      <GrowFromZero in={isVisible}>
+        <DDWrapper>{children}</DDWrapper>
+      </GrowFromZero>
+    </React.Fragment>
   );
 };

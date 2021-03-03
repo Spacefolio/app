@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
-import styled from "styled-components";
 import React from "react";
 import { COLORS, TIMING } from "./ResponsiveDesign";
+import styled from "styled-components";
 export const TimingStyle = `
 transition: ${TIMING.transitionTime};
 `;
@@ -10,39 +10,39 @@ export const CenteredFlexBox = `
   justify-content: center;
   align-items: center;
 `;
-export const BaseSvg = styled.svg`
-  fill: ${COLORS.infoBase};
-`;
-export const ClickableDiv = styled.div`
-  color: ${COLORS.primaryBase};
-  cursor: pointer;
+export const BaseSvg = styled.svg``;
+
+export const BaseDiv = styled.div`
   position: relative;
-  ${TimingStyle}
+  cursor: pointer;
   * {
     cursor: pointer;
   }
+`;
+
+export const ClickableDiv = styled(BaseDiv)`
   &:hover {
-    * {
+    color: ${COLORS.accentBase};
+    svg {
       fill: ${COLORS.accentBase};
-      color: ${COLORS.accentBase};
     }
   }
+  ${TimingStyle}
 `;
 export const ClickableSvg = styled(BaseSvg)`
   width: 1rem;
   height: 1rem;
   cursor: pointer;
-  ${TimingStyle}
   &:hover {
     fill: ${COLORS.accentBase};
   }
+  ${TimingStyle}
 `;
 export const BaseText = styled.div`
   ${TimingStyle}
 `;
 export const Scrollbox = styled.div`
-
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
   width: 100%;
@@ -56,16 +56,17 @@ export const FlexCard = styled.div`
   align-items: center;
   justify-content: center;
   background: white;
-  border-radius: 2rem;
+  border-radius: 1rem;
   padding: 1rem;
   box-shadow: 0px 10px 25px -24px;
   ${TimingStyle};
 `;
 export const BaseSearchBar = styled.input`
-  border-radius: 1rem;
-  border: lightblue solid 1rem;
+  cursor: pointer
+  border-radius: .5rem;
+  border: ${COLORS.primaryBase} solid 3px;
   width: 100%;
-  padding: 10px;
+  padding: 1rem;
   &:focus {
   }
 `;
@@ -96,14 +97,20 @@ export const BaseLink = styled(Link)`
   color: ${COLORS.primaryBase};
   ${TimingStyle}
 `;
+
+export const InlineDiv = styled.div`
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+`;
+
 export const SvgWrapperButton = styled(ClickableDiv)`
-  height: 3rem;
-  width: 3rem;
-  ${CenteredFlexBox};
+  height: 2rem;
+  width: 2rem;
+  ${CenteredFlexBox}
   &:hover {
     ${ClickableSvg} {
       fill: ${COLORS.accentBase};
     }
   }
 `;
-

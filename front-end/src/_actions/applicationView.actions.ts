@@ -8,20 +8,13 @@ export const applicationViewActions = {
 
 function toggleSidebar(viewType: IViewType, manualToggle?: boolean) {
   return (dispatch: any) => {
-    switch (viewType) {
-      case "mobile":
-        dispatch(mobile(manualToggle));
-        break;
-      case "desktop":
-        dispatch(desktop(manualToggle));
-        break;
-    }
+    dispatch(desktop(manualToggle));
   };
-  function mobile(manualToggle: boolean) {
-    return { type: applicationViewConstants.TOGGLE_SIDEBAR_MOBILE, manualToggle };
-  }
   function desktop(manualToggle: boolean) {
-    return { type: applicationViewConstants.TOGGLE_SIDEBAR_DESKTOP, manualToggle };
+    return {
+      type: applicationViewConstants.TOGGLE_SIDEBAR_DESKTOP,
+      manualToggle,
+    };
   }
 }
 

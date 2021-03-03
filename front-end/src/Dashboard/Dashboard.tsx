@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DashboardWrapper } from "./generalStyle";
+import { DashboardWrapper } from "./DashboardStyles";
 import { PortfolioLineChart } from "../_components";
 import { alertActions } from "../_actions";
 import { portfolioService } from "../_services";
 import { FlexCard } from "../GlobalStyles";
+import { AddNewExchangeList } from "../Exchanges";
+import { Typography } from "@material-ui/core";
 
 export const Dashboard = () => {
   const dispatch = useDispatch();
@@ -25,7 +27,8 @@ export const Dashboard = () => {
 
   return (
     <DashboardWrapper>
-      <FlexCard style={{ gridArea: "one" }}>
+      <FlexCard style={{ gridArea: "one", flexDirection: "column" }}>
+        <Typography variant={"h4"}>Portfolio</Typography>
         <PortfolioLineChart
           data={metaPortfolioChartData}
           width={300}
@@ -33,17 +36,18 @@ export const Dashboard = () => {
           id={"dashboardSummaryChart"}
         />
       </FlexCard>
-      <FlexCard style={{ gridArea: "two" }}>
-        <div>{"My Exchanges card"}</div>
+      <FlexCard style={{ gridArea: "two", flexDirection: "column" }}>
+        <Typography variant={"h4"}>Add Integrations</Typography>
+        <AddNewExchangeList />
       </FlexCard>
-      <FlexCard style={{ gridArea: "three" }}>
-        <div>{"another one"}</div>
+      <FlexCard style={{ gridArea: "three", flexDirection: "column" }}>
+        <Typography variant={"h4"}></Typography>
       </FlexCard>
-      <FlexCard style={{ gridArea: "four" }}>
-        <div>{"another one"}</div>
+      <FlexCard style={{ gridArea: "four", flexDirection: "column" }}>
+        <Typography variant={"h4"}></Typography>
       </FlexCard>
-      <FlexCard style={{ gridArea: "five" }}>
-        <div>{"another one"}</div>
+      <FlexCard style={{ gridArea: "five", flexDirection: "column" }}>
+        <Typography variant={"h4"}></Typography>
       </FlexCard>
     </DashboardWrapper>
   );

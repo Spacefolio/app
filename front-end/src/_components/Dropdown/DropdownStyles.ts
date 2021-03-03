@@ -1,7 +1,8 @@
+import { Card } from "@material-ui/core";
 import styled from "styled-components";
 import { COLORS } from "../../GlobalStyles/ResponsiveDesign";
 
-export const DDWrapper = styled.div`
+export const DDWrapper = styled(Card)`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
   z-index: 6;

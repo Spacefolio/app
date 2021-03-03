@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { CenteredFlexBox } from "../../GlobalStyles";
+import { CenteredFlexBox, SvgWrapperButton } from "../../GlobalStyles";
 
 export const ModalWrapper = styled.div`
   position: fixed;
@@ -27,10 +27,8 @@ export const ModalBg = styled.div`
   z-index: 2;
   background: rgba(0, 0, 0, 0.5);
 `;
-export const CloseButton = styled.div`
-position: absolute
+export const CloseButton = styled(SvgWrapperButton)`
+position: absolute;
 top: 0px;
 right: 0px;
-width: 100px;
-height: 100px;
 `;

@@ -1,6 +1,5 @@
 import React from "react";
 import { ReactReduxContext, useDispatch, useSelector } from "react-redux";
-import { CloseIcon } from "../../_components";
 import { alertActions } from "../../_actions";
 import {
   AlertContainer,
@@ -10,6 +9,8 @@ import {
 } from "./AlertStyles";
 import { IRootState } from "../../_reducers";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import { Close } from "@material-ui/icons";
+import { SvgWrapperButton } from "../../GlobalStyles";
 
 export const Alert = () => {
   const dispatch = useDispatch();
@@ -20,9 +21,9 @@ export const Alert = () => {
       {alert.message && (
         <AlertContainer alertType={alert.type}>
           <AlertMessage>{alert.message}</AlertMessage>
-          <IconContainer onClick={() => dispatch(alertActions.clear())}>
-            <CloseIcon style={{ fill: "white" }} />
-          </IconContainer>
+          <SvgWrapperButton onClick={() => dispatch(alertActions.clear())}>
+            <Close style={{ fill: "white" }} />
+          </SvgWrapperButton>
         </AlertContainer>
       )}
     </AlertWrapper>

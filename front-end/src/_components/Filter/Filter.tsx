@@ -98,70 +98,69 @@ export const Filter: React.FC<IFilterProps> = ({
     return dateItems;
   };
 
-  const DatePickerSection = () => {
-    return (
-      <FilterSection>
-        <FilterInput>
-          <DatePicker
-            selected={fromDate}
-            onChange={(date: any) => setFromDate(date)}
-          />
-          <DatePicker
-            selected={toDate}
-            onChange={(date: any) => setToDate(date)}
-          />
-          <div>icon</div>
-        </FilterInput>
-      </FilterSection>
-    );
-  };
-  const AssetSearchSection = () => {
-    return (
-      <FilterSection>
-        <FilterInput ref={container}>
-          {typeDropdownVisible ? (
-            <Dropdown
-              setVisiblity={assetSearchDropdownVisible}
-              containerRef={container}
-              dropdownItemList={ddownItems}
-              isVisible={typeDropdownVisible}
-              defaultItemClickHandler={setTransactionType}
-            />
-          ) : null}
-          <input
-            onFocus={() => setAssetSearchDropdownVisible(true)}
-            placeholder="All Types"
-          />
+  // const DatePickerSection = () => {
+  //   return (
+  //     <FilterSection>
+  //       <FilterInput>
+  //         <DatePicker
+  //           selected={fromDate}
+  //           onChange={(date: any) => setFromDate(date)}
+  //         />
+  //         <DatePicker
+  //           selected={toDate}
+  //           onChange={(date: any) => setToDate(date)}
+  //         />
+  //         <div>icon</div>
+  //       </FilterInput>
+  //     </FilterSection>
+  //   );
+  // };
+  // const AssetSearchSection = () => {
+  //   return (
+  //     <FilterSection>
+  //       <FilterInput ref={container}>
+  //         {typeDropdownVisible ? (
+  //           <Dropdown
+  //             setVisiblity={assetSearchDropdownVisible}
+  //             containerRef={container}
 
-          <div>icon</div>
-        </FilterInput>
-      </FilterSection>
-    );
-  };
-  const TransactionTypeSelector = () => {
-    return (
-      <FilterSection>
-        <FilterInput
-          onClick={() => setTypeDropdownVisible(!typeDropdownVisible)}
-          ref={container}
-        >
-          <div style={{ display: "flex", padding: "0px 5px" }}>
-            <div>{transactionType}</div>
-            <div>icon</div>
-          </div>
-          {typeDropdownVisible ? (
-            <Dropdown
-              setVisiblity={setTypeDropdownVisible}
-              containerRef={container}
-              dropdownItemList={ddownItems}
-              isVisible={typeDropdownVisible}
-              defaultItemClickHandler={setTransactionType}
-            />
-          ) : null}
-        </FilterInput>
-      </FilterSection>
-    );
-  };
+  //             isVisible={typeDropdownVisible}
+  //             defaultItemClickHandler={setTransactionType}
+  //           />
+  //         ) : null}
+  //         <input
+  //           onFocus={() => setAssetSearchDropdownVisible(true)}
+  //           placeholder="All Types"
+  //         />
+
+  //         <div>icon</div>
+  //       </FilterInput>
+  //     </FilterSection>
+  //   );
+  // };
+  // const TransactionTypeSelector = () => {
+  //   return (
+  //     <FilterSection>
+  //       <FilterInput
+  //         onClick={() => setTypeDropdownVisible(!typeDropdownVisible)}
+  //         ref={container}
+  //       >
+  //         <div style={{ display: "flex", padding: "0px 5px" }}>
+  //           <div>{transactionType}</div>
+  //           <div>icon</div>
+  //         </div>
+  //         {typeDropdownVisible ? (
+  //           <Dropdown
+  //             setVisiblity={setTypeDropdownVisible}
+  //             containerRef={container}
+
+  //             isVisible={typeDropdownVisible}
+  //           />
+  //         ) : null}
+  //       </FilterInput>
+  //     </FilterSection>
+  //   );
+  // };
 
   return (
     <React.Fragment>

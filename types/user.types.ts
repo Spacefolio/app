@@ -9,6 +9,13 @@ export interface IUser {
     linkedExchanges: IExchangeAccountView[];
 }
 
+export interface INewUser {
+  username: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+}
+
 export interface ILoginRequest {
     username: string;
     password: string;

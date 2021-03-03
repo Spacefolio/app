@@ -109,7 +109,12 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
         <PortfolioSectionWrapper>
           {/* {FilterByExchangeMobile} */}
           <GrowFromZero in={true}>
-            <FlexCard>
+            <FlexCard
+              style={{
+                padding: 0,
+                borderRadius: ".5rem",
+              }}
+            >
               <MetaPortfolio />
             </FlexCard>
           </GrowFromZero>

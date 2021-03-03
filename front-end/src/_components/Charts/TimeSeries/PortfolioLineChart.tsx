@@ -9,6 +9,8 @@ import { NONAME } from "dns";
 import { ViewLoading } from "../..";
 
 interface PortfolioLineChartProps {
+  setPV?: React.Dispatch<any>;
+  setDate?: React.Dispatch<any>;
   width: number;
   height: number;
   id: string;
@@ -19,6 +21,8 @@ interface PortfolioLineChartProps {
 }
 
 export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
+  setPV,
+  setDate,
   height,
   timeframe,
   width,
@@ -36,10 +40,10 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
   }, [data, width, height]);
 
   const margin = {
-    top: 8,
-    bottom: xAxis ? 30 : 8,
-    left: yAxis ? 80 : 8,
-    right: 8,
+    top: 5,
+    bottom: xAxis ? 30 : 5,
+    left: yAxis ? 80 : 0,
+    right: 0,
   };
 
   const chartWidth = width - margin.left - margin.right;
@@ -64,8 +68,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .select(`#${id}`)
       .append("svg")
       .attr("id", `${id}1`)
-      .attr("height", height + (margin.top + margin.bottom))
-      .attr("width", width + (margin.left + margin.right))
+      .attr("height", height)
+      .attr("width", width)
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
@@ -86,12 +90,12 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
     const xScale = d3
       .scaleTime()
       .domain([xMinValue, xMaxValue])
-      .range([0, width]);
+      .range([0, chartWidth]);
 
     //scale y axis dollar values according to height provided
     const yScale = d3
       .scaleLinear()
-      .range([height, 0])
+      .range([chartHeight, 0])
       .domain([yMinValue, yMaxValue]);
 
     //create xAxis component
@@ -129,23 +133,21 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .tickSizeInner(0);
 
     //append x axis
-    xAxis
-      ? svg
-          .append("g")
-          .attr("class", "x-axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(styledXAxis)
-          .call((g) => g.select(".domain").remove())
-      : null;
+    xAxis &&
+      svg
+        .append("g")
+        .attr("class", "x-axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(styledXAxis)
+        .call((g) => g.select(".domain").remove());
 
     //append y axis
-    yAxis
-      ? svg
-          .append("g")
-          .attr("class", "y-axis")
-          .call(styledYAxis)
-          .call((g) => g.select(".domain").remove())
-      : null;
+    yAxis &&
+      svg
+        .append("g")
+        .attr("class", "y-axis")
+        .call(styledYAxis)
+        .call((g) => g.select(".domain").remove());
 
     //create line object that draws the actual chart path
     const line: any = d3
@@ -155,72 +157,48 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .curve(d3.curveLinear);
 
     //append line inside the svg component
-    svg.append("path").datum(data).attr("class", "line").attr("d", line);
+    var path = svg
+      .append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
+
+    var totalLength = path.node().getTotalLength();
+
+    path
+      .attr("stroke-dasharray", totalLength + " " + totalLength)
+      .attr("stroke-dashoffset", totalLength)
+      .transition()
+      .duration(1000)
+      // .ease(easement)
+      .attr("stroke-dashoffset", 0);
+
     // .style("filter", "url(#glow)");
 
-    //creates the dot on the chart showing the current value the tooltip reflects
+    //creates the spot on the chart showing the current value the tooltip reflects
     const focus = svg
       .append("g")
       .attr("class", "focus")
       .style("display", "none");
 
-    //append circle to the focus element
+    // append the intersection line path
     focus
-      .append("circle")
-      .attr("r", 5)
-      .attr("class", "focus-circle")
-      .style("filter", "url(#glow)");
+      .append("line")
+      .attr("class", "x")
+      .style("opacity", 1)
+      .attr("y1", -height * 2)
+      .attr("y2", height * 2);
 
-    //append the intersection line path
-    // focus
-    //   .append("line")
-    //   .attr("class", "x")
-    //   .style("stroke", "blue")
-    //   .style("opacity", 0.5)
-    //   .attr("y1", -height)
-    //   .attr("y2", height);
-
-    //move tooltip and change values on mousemove
-    const TooltipDimensions = {
-      W: 90,
-      H: 50,
-    };
-
-    function mousemove(event: any) {
-      event.preventDefault();
+    function handleMove(xPos: number) {
       const bisect = d3.bisector((d: any) => d.T).left;
-      const xPos = d3.pointer(event, this)[0];
-      const yPos = d3.pointer(event, this)[1];
       const x0 = bisect(data, xScale.invert(xPos));
       const d0 = data[x0];
-      var tooltipY;
-      const tooltipX =
-        xPos - TooltipDimensions.W / 2 < chartWidth
-          ? xPos - TooltipDimensions.W / 2 < 0
-            ? 0
-            : xPos - TooltipDimensions.W / 2
-          : chartWidth;
-
-      if (viewType == "desktop") {
-        tooltipY =
-          yScale(d0.USD) - TooltipDimensions.H < 0
-            ? yScale(d0.USD)
-            : yScale(d0.USD) - TooltipDimensions.H;
-      } else {
-        tooltipY =
-          yPos - TooltipDimensions.H > chartHeight ||
-          yPos - TooltipDimensions.H * 2 < 0
-            ? yScale(d0.USD) - TooltipDimensions.H < 0
-              ? yScale(d0.USD)
-              : yScale(d0.USD) - TooltipDimensions.H
-            : yPos - 2 * TooltipDimensions.H;
-      }
-      focus.attr("transform", `translate(${xScale(d0.T)},${yScale(d0.USD)})`);
-      tooltip.style("opacity", "0.9");
+      focus
+        .attr("transform", `translate(${xScale(d0.T)},${yScale(d0.USD)})`)
+        .style("display", null);
       let dateString = new Date(d0.T * 1);
-      tooltip.attr("transform", `translate(${tooltipX},${tooltipY})`);
-      tooltipValue.html(`${d0.USD.toFixed(2)}`);
-      tooltipDate.html(() => {
+      setPV(d0.USD.toFixed(2));
+      let valueDate = () => {
         let dateString = d0.T;
         switch (timeframe) {
           case "ALL":
@@ -234,82 +212,59 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
           case "24H":
             return moment(dateString).format("h:mm");
         }
-      });
-      tooltipQuote.html(`${"USD"}`);
+      };
+      setDate(valueDate);
+    }
+
+    function mousemove(event: any) {
+      event.preventDefault();
+      const xPos = d3.pointer(event, this)[0];
+      handleMove(xPos);
+    }
+
+    function touchmove(event: any) {
+      if (event.originalEvent !== undefined && event.cancelable) {
+        event.preventDefault();
+      }
+      const touchList = event.touches[0];
+      const xPos = touchList.clientX;
+      handleMove(xPos);
     }
 
     function mouseover(event: any) {
-      event.preventDefault();
       focus.style("display", null);
-      tooltip.style("opacity", 0.9);
     }
 
     function mouseout(event: any) {
+      if (event.originalEvent !== undefined && event.cancelable) {
+        event.preventDefault();
+      }
       event.preventDefault();
-      tooltip.style("opacity", "0");
       focus.style("display", "none");
+      setDate(null)
+      setPV(null);
     }
-    //initialize tooltip
-    const tooltip = svg
-      .append("g")
-      .attr("class", "tooltip")
-      .style("opacity", 0);
-
-    const tooltipBox = tooltip
-      .append("rect")
-      .attr("height", TooltipDimensions.H)
-      .attr("width", TooltipDimensions.W)
-      .style("background-color", "white")
-      .attr("class", "tooltipBox");
-
-    const tooltipText = tooltip
-      .append("text")
-      .attr("class", "tooltip-texts")
-      .attr("x", 10)
-      .attr("y", 20)
-      .attr("data-z-index", 3);
 
     //creates box to listen for mouse inputs
     const listenerBox = svg
       .append("rect")
       .attr("class", "overlay")
-      .attr("height", height)
-      .attr("width", width)
+      .attr("height", chartHeight)
+      .attr("width", chartWidth)
+      .style("cursor", "crosshair")
       .style("opacity", 0);
-    // .on("pointerenter", mouseover)
-    // .on("pointermove", mousemove)
-    // .on("pointerleave", mouseout);
 
-    viewType == "mobile"
-      ? listenerBox
-          .on("pointerdown", mouseover)
-          .on("pointermove", mousemove, false)
-          .on("pointercancel", mouseout, false)
-      : listenerBox
-          .on("mouseover", mouseover)
-          .on("mouseout", mouseout)
-          .on("mousemove", mousemove);
+    viewType == "mobile" &&
+      listenerBox
+        .on("touchstart", touchmove, false)
+        .on("touchmove", touchmove)
+        .on("touchend", mouseout);
 
-    //create sub component of the tooltip to render the Currency denomination in
-    const tooltipQuote = tooltipText
-      .append("tspan")
-      .attr("class", "tooltip-quote")
-      .attr("dx", 0)
-      .attr("dy", 0);
-
-    //create sub component of the tooltip to render the portfolio value in
-    const tooltipValue = tooltipText
-      .append("tspan")
-      .attr("class", "tooltip-value")
-      .attr("dx", 5)
-      .attr("dy", 0);
-
-    //create sub component of the tooltip to render the date in
-    const tooltipDate = tooltipText
-      .append("tspan")
-      .attr("class", "tooltip-date")
-      .attr("x", 10)
-      .attr("dy", 20);
+    viewType == "desktop" &&
+      listenerBox
+        .on("mouseover", mouseover)
+        .on("mouseout", mouseout)
+        .on("mousemove", mousemove);
   };
 
   return (
@@ -318,6 +273,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        padding: 0,
+        margin: 0,
         width: `${width}px`,
         height: `${height}px`,
       }}
@@ -325,7 +282,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       {!(data.length > 0) ? (
         <ViewLoading />
       ) : (
-        <div style={{ position: "relative" }} id={`${id}`}></div>
+        <div style={{}} id={`${id}`}></div>
       )}
     </div>
   );

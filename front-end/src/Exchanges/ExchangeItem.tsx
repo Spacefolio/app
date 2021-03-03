@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DeleteIcon, EditIcon, Modal } from "../_components";
+import { Modal } from "../_components";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { EditExchangeForm } from "./Forms";
 import { exchangeActions, portfolioActions } from "../_actions";
@@ -8,19 +8,33 @@ import { STATES } from "mongoose";
 import { IRootState } from "../_reducers";
 import { TabItem } from "../Portfolio/portfolioStyles";
 import {
-  DeleteButtonContainer,
-  EditButtonContainer,
-  MyExchangeEditAreaWrapper,
+  ModifyContainer,
   MyExchangeNameWrapper,
   MyExchangesLineItemContainer,
-  MyExchangeSvgWrapper,
 } from "./ExchangeStyles";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  Avatar,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+} from "@material-ui/core";
+import { GrowFromZero, SvgWrapperButton } from "../GlobalStyles";
+import { Delete, Edit, Work } from "@material-ui/icons";
 
 interface ExchangeItemProps {
   data: IExchangeAccountView;
+  enableEditing: boolean;
 }
 
-export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
+export const ExchangeItem: React.FC<ExchangeItemProps> = ({
+  data,
+  enableEditing,
+}) => {
   const dispatch = useDispatch();
 
   const [logoUrl, setLogoUrl] = useState("");
@@ -28,10 +42,10 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
   const exchangeRef = useSelector(
     (state: IRootState) => state.exchanges.exchangeRef
   );
-  const [hoverShowEdit, setHoverShowEdit] = useState(false);
   const portfolioFilterID = useSelector(
     (state: IRootState) => state.portfolio.filterId
   );
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   useEffect(() => {
     const targetRef: IExchangeReference = exchangeRef.filter(
@@ -43,52 +57,81 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({ data }) => {
     targetRef ? setLogoUrl(targetRef.logoUrl) : null;
   }, []);
 
+  function handleClose(shouldDelete: boolean) {
+    if (shouldDelete) {
+      dispatch(exchangeActions.delete(data.id));
+    } else {
+      setIsDeleteOpen(false);
+    }
+  }
   const DeleteButtonSection = (
-    <DeleteButtonContainer
-      onClick={() => {
-        dispatch(exchangeActions.delete(data.id));
-      }}
-    >
-      <DeleteIcon />
-    </DeleteButtonContainer>
+    <React.Fragment>
+      <SvgWrapperButton onClick={() => setIsDeleteOpen(true)}>
+        <Delete />
+      </SvgWrapperButton>
+
+      <Dialog
+        open={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{`Unlink ${data.name} from your account`}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Removing an integration from Algonex is permanent. Restoring it to
+            your account will require you to re-enter your API keys. Do you wish
+            to continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleClose(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleClose(true)} color="primary">
+            Continue
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
   );
 
   const EditButtonSection = (
-    <EditButtonContainer
+    <SvgWrapperButton
       onClick={() => {
         setEditExchangeVisible(true);
       }}
     >
-      <EditIcon />
-    </EditButtonContainer>
+      <Edit />
+    </SvgWrapperButton>
   );
 
   return (
-    <MyExchangesLineItemContainer
-      key={data.id}
-      selected={portfolioFilterID == data.id}
-      onPointerEnter={() => setHoverShowEdit(true)}
-      onPointerLeave={() => setHoverShowEdit(false)}
-      onClick={() => dispatch(portfolioActions.FilterPortfolio(data.id))}
-    >
-      <MyExchangeNameWrapper>
-        <img height="25px" width="25px" src={logoUrl}></img>
-        {data.nickname}
-      </MyExchangeNameWrapper>
+    <React.Fragment>
+      <MyExchangesLineItemContainer
+        button={true}
+        key={data.id}
+        selected={portfolioFilterID == data.id}
+        onClick={() => dispatch(portfolioActions.FilterPortfolio(data.id))}
+      >
+        <ListItemAvatar>
+          <Avatar src={logoUrl} />
+        </ListItemAvatar>
+        <MyExchangeNameWrapper>{data.nickname}</MyExchangeNameWrapper>
 
-      {hoverShowEdit && (
-        <>
-          {EditButtonSection}
-          {DeleteButtonSection}
-        </>
-      )}
-
+        {enableEditing && (
+          <ModifyContainer>
+            {EditButtonSection}
+            {DeleteButtonSection}
+          </ModifyContainer>
+        )}
+      </MyExchangesLineItemContainer>
       <Modal
         visible={editExchangeVisible}
         dismiss={() => setEditExchangeVisible(false)}
       >
         <EditExchangeForm exchangeAccountData={data} />
       </Modal>
-    </MyExchangesLineItemContainer>
+    </React.Fragment>
   );
 };

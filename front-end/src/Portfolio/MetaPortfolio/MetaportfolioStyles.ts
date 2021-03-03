@@ -1,15 +1,18 @@
 import styled from "styled-components";
-import { CenteredFlexBox, ClickableDiv } from "../../GlobalStyles";
+import {
+  BaseDiv,
+  CenteredFlexBox,
+  ClickableDiv,
+  InlineDiv,
+} from "../../GlobalStyles";
 import { COLORS, RD } from "../../GlobalStyles/ResponsiveDesign";
 
 export const MetaPortfolioWrapper = styled.div`
-  padding: 1rem 0;
-  position: relative;
   width: 100%;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 export const MetaPortfolioChartWrapper = styled.div`
@@ -18,39 +21,45 @@ export const MetaPortfolioChartWrapper = styled.div`
 `;
 
 export const SyncButtonContainer = styled(ClickableDiv)`
-  border-radius: 1rem;
-  padding: 1rem;
-  opacity: 0.8;
   ${CenteredFlexBox}
-  border: 3px solid ${COLORS.primaryBase};
-  width: 90px;
-  &:hover {
-    border: 3px solid ${COLORS.accentBase};
-    color: ${COLORS.accentBase};
-    svg {
-      fill: ${COLORS.accentBase};
-    }
-    color: ${COLORS.accentBase};
-  }
 `;
 
 export const PortfolioValueWrapper = styled.div`
   display: flex;
+  justify-content: space-evenly;
+  align-items: start;
+  height: 100px;
+  padding: 1rem;
+  width: 100%;
+`;
+
+export const PortfolioProfitContainer = styled.div`
+  ${CenteredFlexBox}
+`;
+
+interface Props {
+  value: number;
+}
+export const PortfolioProfitSection = styled(InlineDiv)<Props>`
+  ${(props) =>
+    props.value > 0
+      ? `color: ${COLORS.accentBase};`
+      : ` color: ${COLORS.errorBase};`}
+`;
+
+export const PortfolioName = styled(BaseDiv)`
+  color: black;
+  position: relative;
+  white-space: nowrap;
+  font-size: 2rem;
+  font-weight: 500;
+`;
+
+export const PortfolioValueColumn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
   flex-direction: column;
-  height: 100%;
-`;
-
-export const PortfolioValueChangeContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-export const PortfolioValueItem = styled.div``;
-
-export const PortfolioValueContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 export const MetaPortfolioTimeframeSelector = styled(ClickableDiv)`

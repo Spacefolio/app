@@ -8,17 +8,10 @@ import {
 } from "../GlobalStyles";
 import { COLORS, SPACING } from "../GlobalStyles/ResponsiveDesign";
 
-export const NavLogoArea = styled.div`
-  flex-shrink: 0;
-  width: 280px;
-  height: 100%;
-  font-weight: 800;
-  font-size: 1.8em;
-  color: white;
+export const NavLogoArea = styled(ClickableDiv)`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
 `;
 export const NavContainer = styled.div`
   font-weight: 500;
@@ -39,15 +32,14 @@ export const NavAccountContainer = styled.div`
   position: relative;
   height: 100%;
   ${CenteredFlexBox};
-  padding: 1em;
 `;
 
 export const ToggleSidebar = styled(SvgWrapperButton)`
-  position: absolute;
-  left: 1em;
+  height: 5rem;
+  width: 5rem;
 `;
 
-export const BrandingContainer = styled(ClickableDiv)``;
+export const BrandingContainer = styled.div``;
 
 export const BrandTextLink = styled(BaseLink)`
   $:hover {

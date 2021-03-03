@@ -1,15 +1,13 @@
 import axios from "axios";
 import { authHeader } from "../_helpers";
-import { IUser } from "../../../types";
+import { INewUser, IUser } from "../../../types";
 
 export const userService = {
   login,
   logout,
   register,
-  // getAll,
   getById,
   update,
-  // delete: _delete
 };
 
 async function login(username: string, password: string) {
@@ -26,7 +24,7 @@ async function login(username: string, password: string) {
   const user = await handleResponse(response);
   // store user details and jwt token in local storage to keep user logged in between page refreshes
   localStorage.setItem("user", JSON.stringify(user));
-  
+
   return user;
 }
 
@@ -41,24 +39,18 @@ async function getById(id: string) {
     headers: authHeader(),
   };
 
-  const response = await fetch(
-    `${API_DOMAIN}}/users/${id}`,
-    requestOptions
-  );
+  const response = await fetch(`${API_DOMAIN}}/users/${id}`, requestOptions);
   return handleResponse(response);
 }
 
-async function register(user: IUser) {
+async function register(user: INewUser) {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
   };
 
-  const response = await fetch(
-    `${API_DOMAIN}/users/register`,
-    requestOptions
-  );
+  const response = await fetch(`${API_DOMAIN}/users/register`, requestOptions);
   return handleResponse(response);
 }
 

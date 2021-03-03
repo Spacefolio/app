@@ -1,7 +1,22 @@
+import {
+  Card,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+} from "@material-ui/core";
 import { style } from "d3";
 import styled from "styled-components";
-import { BaseSearchBar, BaseSvg, ClickableDiv } from "../GlobalStyles";
-import { COLORS } from "../GlobalStyles/ResponsiveDesign";
+import {
+  BaseSearchBar,
+  BaseSvg,
+  CenteredFlexBox,
+  ClickableDiv,
+  ClickableSvg,
+  FlexCard,
+  TimingStyle,
+} from "../GlobalStyles";
+import { COLORS, SPACING } from "../GlobalStyles/ResponsiveDesign";
 
 export const MyExchangesContainer = styled.div`
   display: flex;
@@ -18,27 +33,23 @@ export const MyExchangeWrapper = styled.div`
   width: 100%;
 `;
 
-export const MyExchangesListContainer = styled.div``;
+export const MyExchangesListContainer = styled(List)`
+  width: 100%;
+`;
 
 interface MyExchangeLineItemProps {
   selected: boolean;
 }
 
-export const MyExchangesLineItemContainer = styled(ClickableDiv)<MyExchangeLineItemProps>`
-  width: 100%;
-  padding: 10px 0px;
-  font-size: 1.1em;
+export const MyExchangesLineItemContainer = styled(
+  ListItem
+)<MyExchangeLineItemProps>`
+  font-size: 1rem;
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   ${(props) =>
     props.selected
       ? `border-left: 3px solid ${COLORS.accentBase};`
       : `margin-left: 3px;`}
-  &:hover{
-    background-color: ${COLORS.infoLight2};
-  }
 `;
 
 export const MyExchangeEditAreaWrapper = styled.div`
@@ -46,31 +57,45 @@ export const MyExchangeEditAreaWrapper = styled.div`
   justify-content: space-evenly;
 `;
 
-export const MyExchangeNameWrapper = styled(ClickableDiv)`
-  display: flex;
-  align-items: center;
-  position: relative;
-  padding: 10px 0;
-  flex-wrap: none;
-`;
+export const MyExchangeNameWrapper = styled(ListItemText)``;
 
 export const ExchangeFormContainer = styled.form`
   position: relative;
 `;
 
-export const AddExchangeWrapper = styled.div``;
-
-export const ExchangeSearchBar = styled(BaseSearchBar)``;
-export const MyExchangeSvgWrapper = styled(ClickableDiv)`
-  position: absolute;
-  height: 50px;
-  width: 50px;
-  padding: 10px;
-`;
-export const DeleteButtonContainer = styled(MyExchangeSvgWrapper)`
-  right: 5px;
+export const AddExchangeWrapper = styled.div`
+  width: 100%;
 `;
 
-export const EditButtonContainer = styled(MyExchangeSvgWrapper)`
-  right: 50px;
+export const ExchangeSearchBar = styled(BaseSearchBar)`
+  border-radius: 1rem;
+`;
+
+export const ModifyContainer = styled(ListItemSecondaryAction)`
+  ${CenteredFlexBox}
+`;
+
+export const AddExchangeItem = styled(FlexCard)`
+  width: 15rem;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin: ${SPACING.flexCardGap};
+  border: solid white 3px;
+  cursor: pointer;
+  * {
+    cursor: pointer;
+  }
+  &:hover {
+    border: solid black 3px;
+  }
+  ${TimingStyle};
+`;
+
+export const AddExchangeGrid = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: row;
+  flex-wrap: wrap;
 `;
