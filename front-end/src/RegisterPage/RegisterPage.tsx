@@ -226,7 +226,7 @@ export const RegisterPage = () => {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/register" variant="body2">
+              <Link href="/login" variant="body2">
                 {"Already have an account? Sign In Here"}
               </Link>
             </Grid>

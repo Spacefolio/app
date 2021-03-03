@@ -131,19 +131,27 @@ export const MetaPortfolio = () => {
 
     const PortfolioValue = (
       <React.Fragment>
-        <AnimatedNumber
-          duration={300}
-          delay={100}
-          easing={"linear"}
-          value={portfolioValue ? portfolioValue : data.portfolioTotal.USD}
-          formatValue={(value: number) => `$${value.toFixed(2)}`}
-        />
+        {data ? (
+          <AnimatedNumber
+            duration={300}
+            delay={100}
+            easing={"linear"}
+            value={portfolioValue ? portfolioValue : data.portfolioTotal.USD}
+            formatValue={(value: number) => `$${value.toFixed(2)}`}
+          />
+        ) : (
+          "loading..."
+        )}
       </React.Fragment>
     );
 
     const PortfolioDate = (
       <React.Fragment>
-        {portfolioDate ? portfolioDate : moment(Date.now()).format("ll")}
+        {data
+          ? portfolioDate
+            ? portfolioDate
+            : moment(Date.now()).format("ll")
+          : "loading..."}
       </React.Fragment>
     );
 
@@ -154,12 +162,22 @@ export const MetaPortfolio = () => {
     );
 
     const ProfitTotal = (
-      <React.Fragment>{`$${data.profitTotal.USD.toFixed(2)}`}</React.Fragment>
+      <React.Fragment>
+        {data ? `$${data.profitTotal.USD.toFixed(2)}` : "loading..."}
+      </React.Fragment>
     );
 
     const ProfitDirection = (
       <React.Fragment>
-        {data.profitTotal.USD > 0 ? <ArrowDropUp /> : <ArrowDropDown />}
+        {data ? (
+          data.profitTotal.USD > 0 ? (
+            <ArrowDropUp />
+          ) : (
+            <ArrowDropDown />
+          )
+        ) : (
+          "loading..."
+        )}
       </React.Fragment>
     );
 
@@ -172,7 +190,7 @@ export const MetaPortfolio = () => {
               {RefreshButton}
             </InlineDiv>
           </Typography>
-          <PortfolioProfitSection value={data.profitTotal.USD}>
+          <PortfolioProfitSection value={data && data.profitTotal.USD}>
             {ProfitDirection} {ProfitTotal} {ProfitPercentage}
           </PortfolioProfitSection>
           {PortfolioDate}

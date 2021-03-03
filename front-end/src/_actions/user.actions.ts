@@ -1,67 +1,78 @@
-import { userConstants } from '../_constants';
-import { userService } from '../_services';
-import { alertActions } from '.';
-import { history } from '../_helpers';
-import {INewUser, IUser} from '../../../types';
-import { Redirect } from 'react-router';
+import { userConstants } from "../_constants";
+import { userService } from "../_services";
+import { alertActions, portfolioActions } from ".";
+import { history } from "../_helpers";
+import { INewUser, IUser } from "../../../types";
+import { Redirect } from "react-router";
 
 export const userActions = {
-    login,
-    logout,
-    register,
-    // getAll,
-    // delete: _delete
+  login,
+  logout,
+  register,
+  // getAll,
+  // delete: _delete
 };
 
 function login(username: string, password: string) {
-    return (dispatch: any) => {
-        dispatch(request( username ));
+  return (dispatch: any) => {
+    dispatch(request(username));
 
-        userService.login(username, password)
-            .then(
-                user => { 
-                    dispatch(success(user));
-                    history.push('/');
-                },
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error(error.toString()));
-                }
-            );
-    };
+    userService.login(username, password).then(
+      (user) => {
+        dispatch(success(user));
+        dispatch(portfolioActions.refresh());
+        history.push("/");
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(alertActions.error(error.toString()));
+      }
+    );
+  };
 
-    function request(username: string) { return { type: userConstants.LOGIN_REQUEST, username } }
-    function success(user: any) { return { type: userConstants.LOGIN_SUCCESS, user } }
-    function failure(error: any) { return { type: userConstants.LOGIN_FAILURE, error } }
+  function request(username: string) {
+    return { type: userConstants.LOGIN_REQUEST, username };
+  }
+  function success(user: any) {
+    return { type: userConstants.LOGIN_SUCCESS, user };
+  }
+  function failure(error: any) {
+    return { type: userConstants.LOGIN_FAILURE, error };
+  }
 }
 
 function logout() {
-    userService.logout();
-    return { type: userConstants.LOGOUT };
+  userService.logout();
+  return { type: userConstants.LOGOUT };
 }
 
 function register(user: INewUser) {
-    return (dispatch: any) => {
-        dispatch(request(user));
+  return (dispatch: any) => {
+    dispatch(request(user));
 
-        userService.register(user)
-            .then(
-                user => { 
-                    dispatch(success(user));
-                    history.push('/login');
-                    dispatch(alertActions.success('Registration successful'));
-                },
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error(error.toString()));
-                }
-            );
-    };
+    userService.register(user).then(
+      (user) => {
+        dispatch(success(user));
+        history.push("/login");
+        dispatch(alertActions.success("Registration successful"));
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(alertActions.error(error.toString()));
+      }
+    );
+  };
 
-    function request(user: INewUser) { return { type: userConstants.REGISTER_REQUEST, user } }
-    function success(user: IUser) { return { type: userConstants.REGISTER_SUCCESS, user } }
-    function failure(error: string) { return { type: userConstants.REGISTER_FAILURE, error } }
+  function request(user: INewUser) {
+    return { type: userConstants.REGISTER_REQUEST, user };
   }
+  function success(user: IUser) {
+    return { type: userConstants.REGISTER_SUCCESS, user };
+  }
+  function failure(error: string) {
+    return { type: userConstants.REGISTER_FAILURE, error };
+  }
+}
 // function getAll() {
 //     return dispatch => {
 //         dispatch(request());
@@ -77,7 +88,6 @@ function register(user: INewUser) {
 //     function success(users) { return { type: userConstants.GETALL_SUCCESS, users } }
 //     function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
 // }
-
 
 // function _delete(id) {
 //     return dispatch => {
