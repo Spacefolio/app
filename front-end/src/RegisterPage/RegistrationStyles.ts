@@ -1,4 +1,4 @@
-import { Container } from '@material-ui/core';
+import { Button, Container, Grid } from "@material-ui/core";
 import styled from "styled-components";
 
 export const FormWrapper = styled(Container)`
@@ -6,4 +6,11 @@ export const FormWrapper = styled(Container)`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+export const SubmitButton = styled(Button)`
+
+`;
+
+export const Form = styled.form`
 `;

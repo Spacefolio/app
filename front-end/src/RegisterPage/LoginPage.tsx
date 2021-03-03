@@ -46,7 +46,6 @@ export const LoginPage = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <FormWrapper>
         <Avatar>
           <LockOutlined />
@@ -72,6 +71,7 @@ export const LoginPage = () => {
             variant="outlined"
             required
             fullWidth
+            margin="normal"
             name="password"
             label="Password"
             type="password"

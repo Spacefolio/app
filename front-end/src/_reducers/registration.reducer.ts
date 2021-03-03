@@ -1,23 +1,28 @@
-import { userConstants } from '../_constants';
+import { userConstants } from "../_constants";
 
-interface IRegistrationAction{
+interface IRegistrationAction {
   type: string;
   value: any;
+  error: string;
 }
 
-export interface IRegistrationState{
+export interface IRegistrationState {
   registering: boolean;
+  registrationError: string;
 }
 
-export function registration(state = {}, action: IRegistrationAction) {
+export function registration(
+  state = { registering: false },
+  action: IRegistrationAction
+) {
   switch (action.type) {
     case userConstants.REGISTER_REQUEST:
       return { registering: true };
     case userConstants.REGISTER_SUCCESS:
-      return {};
+      return { registering: false };
     case userConstants.REGISTER_FAILURE:
-      return {};
+      return { registering: false, registrationError: action.error };
     default:
-      return state
+      return state;
   }
 }

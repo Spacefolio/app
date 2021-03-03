@@ -6,13 +6,12 @@ import { alertActions } from "../_actions";
 import { PrivateRoute } from "../_components";
 import { Application } from "../Application";
 import { LoginPage, RegisterPage } from "../RegisterPage";
-import { Alert, ErrorBoundary } from "../_components";
+import { Alert } from "../_components";
 import "typeface-roboto";
 import "./App.scss";
 import { AppContainer } from "./appStyles";
 import "../GlobalStyles/variables.scss";
-import { applicationViewActions } from "../_actions/applicationView.actions";
-import ScopedCssBaseline from "@material-ui/core/ScopedCssBaseline";
+import { CssBaseline } from "@material-ui/core";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -24,7 +23,8 @@ export const App = () => {
     dispatch(clearAlerts());
   });
   return (
-    <ScopedCssBaseline>
+    <React.Fragment>
+      <CssBaseline />
       <AppContainer>
         <Alert />
         <Router history={history}>
@@ -36,6 +36,6 @@ export const App = () => {
           </Switch>
         </Router>
       </AppContainer>
-    </ScopedCssBaseline>
+    </React.Fragment>
   );
 };
