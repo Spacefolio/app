@@ -1,4 +1,6 @@
+import { TableCell, TableRow } from "@material-ui/core";
 import styled from "styled-components";
+import { TimingStyle } from "../../../GlobalStyles";
 
 export const FilterWrapper = styled.div`
   margin: 10px 0;
@@ -29,9 +31,14 @@ export const DateLabel = styled.div`
   padding: 10px;
 `;
 
-export const DateGroupedLineItemContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+export const TableRowStyled = styled(TableRow)`
+  background: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0px 10px 25px -24px;
+  ${TimingStyle};
+`;
+export const TableCellStyled = styled(TableCell)`
+  padding: .5rem;
+  ${TimingStyle};
 `;

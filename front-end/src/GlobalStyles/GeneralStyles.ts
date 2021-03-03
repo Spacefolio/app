@@ -98,10 +98,14 @@ export const BaseLink = styled(Link)`
   ${TimingStyle}
 `;
 
-export const InlineDiv = styled.div`
+interface InlineDivProps {
+  align?: "start" | "flex-end";
+}
+export const InlineDiv = styled.div<InlineDivProps>`
   white-space: nowrap;
   display: flex;
   align-items: center;
+  justify-content: ${(props) => props.align};
 `;
 
 export const SvgWrapperButton = styled(ClickableDiv)`
@@ -113,4 +117,9 @@ export const SvgWrapperButton = styled(ClickableDiv)`
       fill: ${COLORS.accentBase};
     }
   }
+`;
+export const FlexWrap = styled(InlineDiv)`
+  white-space: none;
+  flex-wrap: wrap;
+  gap: 5px;
 `;

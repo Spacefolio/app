@@ -7,6 +7,15 @@ import { SPACING } from "../../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../../_reducers";
 import { FlexCard, GrowFromZero } from "../../GlobalStyles";
 import { ViewLoading } from "../../_components";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@material-ui/core";
 
 export const Holdings = () => {
   const dispatch = useDispatch();
@@ -24,48 +33,31 @@ export const Holdings = () => {
     );
   };
 
-  // const labelData: ILabelObject[] = [
-  //   {
-  //     label: "Name",
-  //   },
-  //   {
-  //     label: "Amount",
-  //     filterName: "amount",
-  //     classname: "table-right-align",
-  //   },
-  //   {
-  //     label: "Price",
-  //     filterName: "price",
-  //     classname: "table-right-align",
-  //   },
-  //   {
-  //     label: "Value",
-  //     filterName: "value",
-  //     classname: "table-right-align",
-  //   },
-  //   {
-  //     label: "P/L",
-  //     filterName: "profitTotal.all",
-  //     classname: "table-right-align",
-  //   },
-  // ];
-
   return (
     <React.Fragment>
       {portfolioData ? (
-        <div style={{ display: "grid", gap: SPACING.flexCardGap }}>
-          {sortHoldings(filterField, sortAscending).map(
-            (pItem: IPortfolioItemView) => {
-              return (
-                <GrowFromZero in={true}>
-                  <FlexCard>
-                    <HoldingItem portfolioItem={pItem} />
-                  </FlexCard>
-                </GrowFromZero>
-              );
-            }
-          )}
-        </div>
+        <Paper>
+          <GrowFromZero in={true}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Asset</TableCell>
+                  <TableCell align="right">Amount</TableCell>
+                  <TableCell align="right">Price</TableCell>
+                  <TableCell align="right">Value</TableCell>
+                  <TableCell align="right">Profit</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {sortHoldings(filterField, sortAscending).map(
+                  (pItem: IPortfolioItemView) => {
+                    return <HoldingItem portfolioItem={pItem} />;
+                  }
+                )}
+              </TableBody>
+            </Table>
+          </GrowFromZero>
+        </Paper>
       ) : (
         <ViewLoading />
       )}

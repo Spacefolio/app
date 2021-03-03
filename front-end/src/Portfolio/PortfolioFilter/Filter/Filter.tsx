@@ -1,16 +1,31 @@
 import React, { useEffect, useRef } from "react";
 import {
-  DateGroupedLineItemContainer,
+  TableRowStyled,
   DateLabel,
   FilterInput,
   FilterSection,
   FilterWrapper,
+  TableCellStyled,
 } from "./FilterStyles";
 import { useState } from "react";
-import { Dropdown, IDropdownItem } from "../Dropdown/Dropdown";
+import {
+  Dropdown,
+  IDropdownItem,
+} from "../../../_components/Dropdown/Dropdown";
 import DatePicker from "react-datepicker";
-import { FlexCard, GrowFromZero } from "../../GlobalStyles";
-import { Grow, LinearProgress } from "@material-ui/core";
+import { FlexCard, GrowFromZero, InlineDiv } from "../../../GlobalStyles";
+import {
+  Grow,
+  LinearProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@material-ui/core";
+import { IRootState } from "../../../_reducers";
+import { useSelector } from "react-redux";
 
 interface IFilterProps {
   data: any;
@@ -31,6 +46,10 @@ export const Filter: React.FC<IFilterProps> = ({
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
   const [transactionType, setTransactionType] = useState<string>("All Types");
+
+  const viewType = useSelector(
+    (state: IRootState) => state.applicationView.currentViewType
+  );
 
   useEffect(() => {}, []);
 
@@ -66,14 +85,19 @@ export const Filter: React.FC<IFilterProps> = ({
     return Object.keys(sortedShit).map((key) => {
       return (
         <React.Fragment>
-          <DateLabel key={key}>{key}</DateLabel>
-          <GrowFromZero in={true}>
-            <FlexCard key={key + "-data"}>
-              <DateGroupedLineItemContainer>
-                {GetItemsAtDate(sortedShit, key)}
-              </DateGroupedLineItemContainer>
-            </FlexCard>
-          </GrowFromZero>
+          <TableRow>
+            <TableCellStyled style={{ height: "50px" }} colSpan={100}>
+              <InlineDiv>
+                <DateLabel key={key}>
+                  <Typography variant={"h6"}>{key}</Typography>
+                </DateLabel>
+              </InlineDiv>
+            </TableCellStyled>
+          </TableRow>
+
+          {/* <GrowFromZero in={true}> */}
+          {GetItemsAtDate(sortedShit, key)}
+          {/* </GrowFromZero> */}
         </React.Fragment>
       );
     });
@@ -169,7 +193,37 @@ export const Filter: React.FC<IFilterProps> = ({
         {/* {AssetSearchSection()} */}
         {/* {TransactionTypeSelector()} */}
       </FilterWrapper>
-      {RenderLineItems()}
+      {viewType == "desktop" ? (
+        <GrowFromZero in={true}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Type</TableCell>
+                <TableCell align="right">Amount</TableCell>
+                <TableCell align="right">Price</TableCell>
+                <TableCell align="right">Value</TableCell>
+                <TableCell align="right">Exchange/Pair</TableCell>
+                <TableCell align="right">Fee</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{RenderLineItems()}</TableBody>
+          </Table>
+        </GrowFromZero>
+      ) : (
+        <GrowFromZero in={true}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Type</TableCell>
+                <TableCell align="right">Amount</TableCell>
+                <TableCell align="right">Price</TableCell>
+                <TableCell align="right">Value</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{RenderLineItems()}</TableBody>
+          </Table>
+        </GrowFromZero>
+      )}
     </React.Fragment>
   );
 };

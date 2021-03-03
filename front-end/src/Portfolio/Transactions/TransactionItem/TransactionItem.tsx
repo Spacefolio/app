@@ -14,6 +14,14 @@ import {
   MobileWrapper,
   TransactionDesktopWrapper,
 } from "../../../GlobalStyles/TabularStyles";
+import { Avatar, TableRow, Typography } from "@material-ui/core";
+import { FlexWrap, InlineDiv } from "../../../GlobalStyles";
+import {
+  TableCellStyled,
+  TableRowStyled,
+} from "../../PortfolioFilter/Filter/FilterStyles";
+import { IRootState } from "../../../_reducers";
+import { useSelector } from "react-redux";
 
 interface ITransactionItemProps {
   item: ITransactionItemView;
@@ -42,112 +50,124 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
 
   const dateString = new Date(date).toDateString();
 
+  const viewType = useSelector(
+    (state: IRootState) => state.applicationView.currentViewType
+  );
+
   const isTrade = () =>
     type == "withdrawal" || type == "deposit" ? false : true;
 
   const renameTradeType = () => {
     switch (type) {
       case "buy":
-        return "Bought";
+        return "Bought ";
       case "sell":
-        return "Sold";
+        return "Sold ";
       case "withdrawal":
-        return "Withdrew";
+        return "Withdrew ";
       case "deposit":
-        return "Deposited";
+        return "Deposited ";
     }
   };
 
   const TypeSection = () => {
     return (
-      <DataWrapper style={{gridArea: "typeSection"}}>
-        <FixedInline>
-          {decideTransactionIcon(type)}
-          <FixedInline>
-            <div>{renameTradeType()}</div>
-            <div>{symbol}</div>
-          </FixedInline>
-        </FixedInline>
-      </DataWrapper>
+      <TableCellStyled>
+        <InlineDiv>
+          <Avatar>{decideTransactionIcon(type)}</Avatar> {symbol}
+        </InlineDiv>
+      </TableCellStyled>
     );
   };
 
   const AmountSection = () => {
     return (
-      <DataWrapper style={{gridArea: "amountSection"}}>
-        <div className="table-right-align" style={{ fontSize: "1.15em" }}>
-          {trimFields(amount, symbol)} {symbol}
-        </div>
+      <TableCellStyled align="right">
+        <FlexWrap align="flex-end">
+          <Typography variant="button">{renameTradeType()}</Typography>
+          <InlineDiv align="flex-end">
+            {trimFields(amount, symbol)} {symbol}
+          </InlineDiv>
+        </FlexWrap>
+
         {isTrade() ? (
-          <div className="table-right-align" style={{ fontSize: ".7em" }}>
-            {type == "buy" ? "With" : "For"} {trimFields(quoteAmount, quoteSymbol)} {quoteSymbol}
-          </div>
+          <React.Fragment>
+            <Typography variant="button">
+              {type == "buy" ? "With" : "For "}
+            </Typography>{" "}
+            <InlineDiv align="flex-end">
+              {trimFields(quoteAmount, quoteSymbol)} {quoteSymbol}
+            </InlineDiv>
+          </React.Fragment>
         ) : null}
-      </DataWrapper>
+      </TableCellStyled>
     );
   };
 
   const PriceSection = () => {
     return (
-      <DataWrapper style={{gridArea: "priceSection"}}>
-        <div className="table-right-align">${trimFields(price, "USD")}</div>
-      </DataWrapper>
+      <TableCellStyled align="right">
+        ${trimFields(price, "USD")}
+      </TableCellStyled>
     );
   };
 
   const ValueSection = () => {
     return (
-      <DataWrapper style={{gridArea: "valueSection"}}>
-        <div className="table-right-align">${trimFields(value, "USD")}</div>
-      </DataWrapper>
+      <TableCellStyled align="right">
+        ${trimFields(value, "USD")}
+      </TableCellStyled>
     );
   };
 
   const ExchangeNameSection = () => {
     return (
-      <DataWrapper style={{gridArea: "exchangeNameSection"}}>
-        <div className="table-right-align">{exchangeName} -</div>
-        <div className="table-right-align">
-          {symbol}/{quoteSymbol}
-        </div>
-      </DataWrapper>
+      <TableCellStyled align="right">
+        <InlineDiv align="flex-end">{exchangeName}</InlineDiv>
+        <InlineDiv align="flex-end">
+          {" "}
+          - {symbol}/{quoteSymbol}
+        </InlineDiv>
+      </TableCellStyled>
     );
   };
 
   const FeeSection = () => {
     return (
-      <DataWrapper style={{gridArea: "feeSection"}}>
+      <TableCellStyled align="right">
         {fee ? (
-          <>
-            <div className="table-right-align">
-              {trimFields(fee.cost, fee.currency)} {fee.currency}
-            </div>
-            {fee.rate ? (
-              <div className="table-right-align">{fee.rate}%</div>
-            ) : null}
-          </>
+          <React.Fragment>
+            {trimFields(fee.cost, fee.currency)} {fee.currency}
+            {fee.rate ? <div>{fee.rate}%</div> : null}
+          </React.Fragment>
         ) : (
-          <div className="table-right-align">-</div>
+          "-"
         )}
-      </DataWrapper>
+      </TableCellStyled>
     );
   };
 
   return (
     <React.Fragment>
-      <TransactionDesktopWrapper>
-        {TypeSection()}
-        {AmountSection()}
-        {PriceSection()}
-        {ValueSection()}
-        {ExchangeNameSection()}
-        {FeeSection()}
-      </TransactionDesktopWrapper>
-      <MobileWrapper>
-        {TypeSection()}
-        {AmountSection()}
-        {ValueSection()}
-      </MobileWrapper>
+      <TableRowStyled key={quoteAmount * value * amount - price}>
+        {viewType == "mobile" ? (
+          <React.Fragment>
+            {TypeSection()}
+            {AmountSection()}
+            {PriceSection()}
+            {ValueSection()}
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            {TypeSection()}
+            {AmountSection()}
+            {PriceSection()}
+            {ValueSection()}
+            {ExchangeNameSection()}
+            {FeeSection()}
+          </React.Fragment>
+        )}
+      </TableRowStyled>
     </React.Fragment>
   );
 };
