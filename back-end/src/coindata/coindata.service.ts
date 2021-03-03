@@ -14,7 +14,7 @@ async function fetchCoinMarketData()
 
   for (let i = 0; i < coinMarketData.length; i++)
   {
-    let coin = await Coin.updateOne({ id: coinMarketData[i].symbol }, { id: coinMarketData[i].id, symbol: coinMarketData[i].symbol, currentMarketData: coinMarketData[i], currentPrice: { USD: coinMarketData[i].current_price, lastUpdated:  now }  }, { upsert: true }, (err, raw) => { if (err) throw err; });
+    let coin = await Coin.updateOne({ id: coinMarketData[i].id }, { id: coinMarketData[i].id, symbol: coinMarketData[i].symbol, currentMarketData: coinMarketData[i], currentPrice: { USD: coinMarketData[i].current_price, lastUpdated:  now }  }, { upsert: true }, (err, raw) => { if (err) throw err; });
   }
 
   return {};
