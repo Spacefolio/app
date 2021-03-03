@@ -5,7 +5,8 @@ import { ITransactionDocument } from './transaction.model';
 import { ccxtService } from '../_helpers/ccxt.service';
 import ccxt from 'ccxt';
 import { Db } from 'mongodb';
-import { fiat, getHistoricalData, getTicker } from '../historical/historical.service';
+import { fiat, getHistoricalData } from '../coindata/historical.service';
+import { getCurrentPrice } from '../coindata/coindata.service';
 
 export async function createTransactionViewItems(exchange: IExchangeAccountDocument): Promise<ITransactionItemView[]> {
 	const transactionViewItems: ITransactionItemView[] = [];
@@ -157,18 +158,6 @@ export async function getLogoUrlForSymbol(symbol: string) {
 	return 'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png';
 }
 
-export async function getQuoteAmountAtTime(
-	exchange: ccxt.Exchange,
-	timestamp: number,
-	baseCurrency: string,
-	baseAmount: number,
-	quoteCurrency: string
-): Promise<number> {
-	const rate = await getConversionRate(exchange, quoteCurrency, baseCurrency, timestamp);
-
-	return rate * baseAmount;
-}
-
 export async function getConversionRate(
 	exchange: ccxt.Exchange,
 	baseCurrency: string,
@@ -183,7 +172,7 @@ export async function getConversionRate(
   
   if (timestamp == undefined)
   {
-    return await getTicker(baseCurrency).catch(async (err) => {
+    return await getCurrentPrice(baseCurrency).catch(async (err: any) => {
       if (!exchange.has.fetchTicker) throw 'Exchange does not have fetchTicker';
       return sleep(exchange.rateLimit).then(() => exchange.fetchTicker(symbol))
       .then((ticker: ccxt.Ticker) => {
@@ -194,7 +183,7 @@ export async function getConversionRate(
 
   return await getHistoricalData(symbol, timestamp).catch(async () => {
     if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
-    return sleep(exchange.rateLimit).then(() => exchange.fetchOHLCV(symbol, '1m', timestamp, ).then((ohlcv: ccxt.OHLCV[]) => {
+    return sleep(exchange.rateLimit).then(() => exchange.fetchOHLCV(symbol, '1m', timestamp, 1).then((ohlcv: ccxt.OHLCV[]) => {
       return (ohlcv[0][1] + ohlcv[0][4]) / 2;
     })).catch((err) => { return 1; })
   });

@@ -3,7 +3,7 @@ import { coindataService } from "./coindata.service";
 const router = Router();
 
 // routes
-router.post("/:", fetchCoinMarketData);
+router.post("/", fetchCoinMarketData);
 router.get("/:symbol", getCoinMarketData);
 
 export { router as coindataRouter };

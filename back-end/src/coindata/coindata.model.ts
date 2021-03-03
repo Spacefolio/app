@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export interface ICoinMarketData {
   id: string;
@@ -70,33 +70,10 @@ export interface ICoinListItemDocument extends mongoose.Document
   name: String;
 }
 
-export interface ICoinMarketDataDocument extends mongoose.Document
+export interface ICoinDocument extends mongoose.Document
 {
-  id: String,
-  symbol: String,
-  name: String,
-  image: String,
-  current_price: Number,
-  market_cap: Number,
-  market_cap_rank: Number,
-  fully_diluted_valuation: Number,
-  total_volume: Number,
-  high_24h: Number,
-  low_24h: Number,
-  price_change_24h: Number,
-  price_change_percentage: Number,
-  market_cap_change_24h: Number,
-  market_cap_change_percentage: Number,
-  circulating_supply: Number,
-  total_supply: Number,
-  max_supply: Number,
-  ath: Number,
-  ath_change_percentage: Number,
-  ath_date: String,
-  atl: Number,
-  atl_change_percentage: Number,
-  atl_date: String,
-  last_updated: String  
+  currentMarketData: ICoinMarketData,
+  dailyPrices: string
 }
 
 export const coinListItemSchema = new mongoose.Schema({
@@ -114,66 +91,50 @@ coinListItemSchema.set("toJSON", {
   },
 });
 
-coinMarketDataSchema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  transform: function (doc: ICoinMarketDataDocument, ret) {
-    delete ret._id;
-    delete ret.hash;
-  },
-});
-
 export interface ICoinListItemModel
   extends mongoose.Model<ICoinListItemDocument> {
   build(attr: ICoinListItem): ICoinListItemDocument;
 }
 
-export interface ICoinMarketDataModel extends mongoose.Model<ICoinMarketDataDocument> {
-  build(attr: ICoinMarketData): ICoinMarketDataDocument;
-}
-
-const CoinListItem = mongoose.model<
-  ICoinListItemDocument,
-  ICoinListItemModel
->("CoinListItem", coinListItemSchema);
-
-export interface ICoinData
+export interface ICoin
 {
-  coinList: ICoinListItem[];
-  coinListLastUpdated: Date;
-  coinMarketData: ICoinMarketData[];
+  id: string;
+  symbol: string;
+  currentMarketData: ICoinMarketData;
+  dailyPrices: string;
+  currentPrice: { USD: number, lastUpdated: number };
 }
 
-export interface ICoinDataDocument extends mongoose.Document {
-  coinList: ICoinListItem[];
-  coinListLastUpdated: Date;
-  coinMarketData: Array<ICoinMarketData>;
+export interface ICoinDocument extends mongoose.Document {
+  id: string;
+  symbol: string;
+  currentMarketData: ICoinMarketData;
+  dailyPrices: string;
+  currentPrice: { USD: number, lastUpdated: number };
 }
 
-export const coinDataSchema = new mongoose.Schema({
-  coinList: [coinListItemSchema],
-  coinListLastUpdated: Date,
-  coinMarketData: [coinMarketDataSchema]
-});
+export const coinSchema = new mongoose.Schema({
+  id: { type: String, unique: true },
+  symbol: { type: String, unique: true },
+  currentMarketData: coinMarketDataSchema,
+  dailyPrices: { type: Schema.Types.ObjectId, ref: 'historical-value' },
+  currentPrice: { USD: Number, lastUpdated: Number }
+}, { id: false });
 
-coinDataSchema.set("toJSON", {
+coinSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (doc: ICoinDataDocument, ret) {
+  transform: function (doc: ICoinDocument, ret) {
     delete ret._id;
     delete ret.hash;
   },
 });
 
-export interface ICoinMarketDataModel extends mongoose.Model<ICoinMarketDataDocument> {
-  build(attr: ICoinMarketData): ICoinMarketDataDocument
+export interface ICoinModel extends mongoose.Model<ICoinDocument> {
+  build(attr: ICoin): ICoinDocument
 }
 
-export interface ICoinDataModel extends mongoose.Model<ICoinDataDocument> {
-  build(attr: ICoinData): ICoinDataDocument
-}
+const Coin = mongoose.model<ICoinDocument,
+ICoinModel>("Coin", coinSchema);
 
-const CoinData = mongoose.model<ICoinDataDocument,
-ICoinDataModel>("Coin", coinDataSchema);
-
-export { CoinData };
+export { Coin };

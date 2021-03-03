@@ -2,9 +2,10 @@ import mongoose, { Schema } from "mongoose";
 
 export interface IHistoricalDataDocument extends mongoose.Document {
   symbol: string;
-  dailyCandles: [IDailyCandle];
+  prices: Array<IDailyPrice>;
 }
 
+/*
 export interface IDailyCandleDocument extends mongoose.Document {
   day: number;
   date: string;
@@ -21,7 +22,8 @@ export interface IDailyCandleDocument extends mongoose.Document {
   label: string;
   changeOverTime: number;
 }
-
+*/
+/*
 export interface IDailyCandle {
   day: number;
   date: string;
@@ -38,10 +40,16 @@ export interface IDailyCandle {
   label: string;
   changeOverTime: number;
 }
+*/
+
+export interface IDailyPrice {
+  timestamp: number;
+  price: number;
+}
 
 export interface IHistoricalData {
   symbol: string;
-  dailyCandles: [IDailyCandle];
+  prices: Array<IDailyPrice>;
 }
 
 export interface IHistoricalDataModel
@@ -49,11 +57,7 @@ export interface IHistoricalDataModel
   build(attr: IHistoricalData): IHistoricalDataDocument;
 }
 
-export interface IDailyCandleModel
-  extends mongoose.Model<IDailyCandleDocument> {
-  build(attr: IDailyCandle): IDailyCandleDocument;
-}
-
+/*
 export const dailyCandleSchema = new mongoose.Schema(
   {
     date: { type: String },
@@ -72,10 +76,16 @@ export const dailyCandleSchema = new mongoose.Schema(
     changeOverTime: { type: Number },
   },
 );
+*/
+
+export const dailyPriceSchema = new mongoose.Schema({
+  timestamp: Number,
+  price: Number
+});
 
 const historicalDataSchema = new mongoose.Schema({
-  symbol: { type: String, required: true },
-  dailyCandles: [dailyCandleSchema],
+  symbol: String,
+  prices: [dailyPriceSchema]
 });
 
 historicalDataSchema.set("toJSON", {

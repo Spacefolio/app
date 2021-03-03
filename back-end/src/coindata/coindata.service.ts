@@ -1,40 +1,80 @@
 import axios from "axios";
-import { DEFAULT_ENCODING } from "crypto";
-import { resourceLimits } from "worker_threads";
-import { CoinData, ICoinListItem, ICoinMarketData, ICoinMarketDataDocument } from "./coindata.model";
+import { Coin, ICoinMarketData } from "./coindata.model";
 
 export const coindataService = {
   fetchCoinMarketData,
-  getCoinMarketData
+  getCoinMarketData,
 };
 
-async function fetchCoinMarketData() : Promise<ICoinMarketDataDocument>
+async function fetchCoinMarketData()
 {
-  const coinList = await axios.get<ICoinListItem[]>("https://api.coingecko.com/api/v3/coins/list").then((res) => {
-    return res.data;
-  }).catch((err) => { throw err; });
-
   const coinMarketData = await fetchAllCoinsMarketData();
 
-  let now = new Date();
-  return await CoinData.updateOne({}, { coinList, coinListLastUpdated: now, coinMarketData }, { upsert: true });
+  let now = Date.now();
+
+  for (let i = 0; i < coinMarketData.length; i++)
+  {
+    let coin = await Coin.updateOne({ id: coinMarketData[i].symbol }, { id: coinMarketData[i].id, symbol: coinMarketData[i].symbol, currentMarketData: coinMarketData[i], currentPrice: { USD: coinMarketData[i].current_price, lastUpdated:  now }  }, { upsert: true }, (err, raw) => { if (err) throw err; });
+  }
+
+  return {};
 }
 
 async function getCoinMarketData(symbol: string)
 {
-  var coinData = await CoinData.findOne().lean();
-  let coinMarketData;
+  let symbolLower = symbol.toLowerCase();
+  var coinData = await Coin.findOne({ symbol: symbolLower }).lean();
   if (!coinData)
   {
-    await fetchCoinMarketData();
-    coinData = await CoinData.findOne().lean();
-    if (!coinData) { throw "Failed to fetch coin market data list."}
+    let coin = await Coin.findOne()
+    if (!coin)
+    {
+      await fetchCoinMarketData();
+      coinData = await Coin.findOne({ symbol: symbolLower }).lean();
+    }
+    if (!coinData) { throw `Failed to fetch coin market data for symbol '${symbol}'`; }
   }
   
-  coinMarketData = coinData.coinMarketData.find((data) => data.symbol == symbol);
+  return coinData.currentMarketData;
+}
+
+interface ISimplePriceResponse
+{
+  [coinId: string]: { usd: number }
+}
+
+async function fetchCurrentPrice(coinId: string) : Promise<number>
+{
+  var tickerJson = await axios.get<ISimplePriceResponse>(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`, { timeout: 500 }).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
+  if (!tickerJson) { return 1; }
+  return tickerJson[coinId] ? tickerJson[coinId].usd : 1;
+}
+
+export async function getCurrentPrice(symbol: string)
+{
+  let symbolLower = symbol.toLowerCase();
+  var coinData = await Coin.findOne({ symbol: symbolLower });
   
-  if (!coinMarketData) throw `No coin with the symbol '${symbol}' was found`;
-  return coinMarketData;
+  if (!coinData)
+  {
+    let coin = await Coin.findOne()
+    if (!coin)
+    {
+      await fetchCoinMarketData();
+      coinData = await Coin.findOne({ symbol: symbolLower });
+    }
+    if (!coinData) { throw `Failed to fetch coin market data for symbol '${symbol}'`; }
+  }
+
+  if (coinData.currentPrice.lastUpdated < (Date.now() - 3000))
+  {
+    let latestPrice = await fetchCurrentPrice(coinData.id);
+    coinData.currentPrice.USD = latestPrice;
+    coinData.currentPrice.lastUpdated = Date.now();
+    coinData.save();
+  }
+
+  return coinData.currentPrice.USD;
 }
 
 async function fetchAllCoinsMarketData(page:number = 1) : Promise<ICoinMarketData[]>

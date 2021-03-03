@@ -10,6 +10,7 @@ import { usersRouter } from "./users/users.controller";
 import { exchangesRouter } from "./exchanges/exchanges.controller";
 import { portfolioRouter } from "./portfolios/portfolios.controller";
 import { transactionsRouter } from "./transactions/transactions.controller";
+import { coindataRouter } from "./coindata/coindata.controller";
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -22,6 +23,7 @@ app.use(jwt());
 app.use("/users", usersRouter);
 app.use("/exchanges", exchangesRouter);
 app.use("/portfolios", portfolioRouter);
+app.use("/coins", coindataRouter);
 
 // global error handler
 app.use(errorHandler);
