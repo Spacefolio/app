@@ -18,7 +18,12 @@ import {
 
 import { ClickableDiv } from "../GlobalStyles";
 import { Modal } from "../_components";
-import { Avatar, ListItemAvatar, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  ListItemAvatar,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { AccountBalanceWallet } from "@material-ui/icons";
 
 export function AddNewExchangeList() {
@@ -36,13 +41,17 @@ export function AddNewExchangeList() {
 
   return (
     <AddExchangeWrapper>
-      <ExchangeSearchBar
+      <TextField
+        style={{ width: "100%" }}
         name="search"
-        type="text"
         autoComplete={"off"}
         placeholder="search"
         value={searchFilter}
         onChange={(e: any) => setSearchFilter(e.target.value)}
+        id="outlined-search"
+        label="Filter Exchanges"
+        type="search"
+        variant="outlined"
       />
       <AddExchangeGrid>
         {exchangeRef &&

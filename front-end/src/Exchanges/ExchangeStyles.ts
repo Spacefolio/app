@@ -68,19 +68,20 @@ export const AddExchangeWrapper = styled.div`
 `;
 
 export const ExchangeSearchBar = styled(BaseSearchBar)`
-  border-radius: 1rem;
+    
 `;
 
 export const ModifyContainer = styled(ListItemSecondaryAction)`
   ${CenteredFlexBox}
 `;
 
-export const AddExchangeItem = styled(FlexCard)`
-  width: 15rem;
+export const AddExchangeItem = styled(Card)` 
+  width: 12rem;
   display: flex;
   justify-content: start;
   align-items: center;
-  margin: ${SPACING.flexCardGap};
+  margin: 5px;
+  padding: .5rem;
   border: solid white 3px;
   cursor: pointer;
   * {
@@ -98,4 +99,8 @@ export const AddExchangeGrid = styled.div`
   justify-content: space-evenly;
   flex-direction: row;
   flex-wrap: wrap;
+  width: 100%;
+  max-height: 400px;
+  min-width: 300px;
+  min-height: 400px;
 `;

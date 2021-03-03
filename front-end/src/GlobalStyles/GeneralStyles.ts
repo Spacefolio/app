@@ -63,8 +63,8 @@ export const FlexCard = styled.div`
 `;
 export const BaseSearchBar = styled.input`
   cursor: pointer
-  border-radius: .5rem;
-  border: ${COLORS.primaryBase} solid 3px;
+  border-radius: 3px;
+  border: ${COLORS.primaryBase} solid 1px;
   width: 100%;
   padding: 1rem;
   &:focus {
