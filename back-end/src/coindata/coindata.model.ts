@@ -115,7 +115,7 @@ export interface ICoinDocument extends mongoose.Document {
 
 export const coinSchema = new mongoose.Schema({
   id: { type: String, unique: true },
-  symbol: { type: String, unique: true },
+  symbol: { type: String },
   currentMarketData: coinMarketDataSchema,
   dailyPrices: { type: Schema.Types.ObjectId, ref: 'historical-value' },
   currentPrice: { USD: Number, lastUpdated: Number }
