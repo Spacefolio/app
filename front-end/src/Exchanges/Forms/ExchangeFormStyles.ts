@@ -4,9 +4,10 @@ export const ExchangeFormRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: .5rem;
 `;
 
-export const ExchangeFormContainer = styled.form`
+export const ExchangeForm = styled.form`
   position: relative;
+  width: 300px;
 `;

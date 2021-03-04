@@ -1,5 +1,5 @@
 import React from "react";
-import { SidebarContainer } from "./SidebarStyles";
+import { SidebarActionArea, SidebarContainer } from "./SidebarStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import { SidebarActionItem } from "./NavSections";
@@ -49,7 +49,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
         text="Integrations"
         icon={<Extension />}
         linkUri="/bots"
-      ><AddNewExchangeList/></SidebarActionItem>
+      ></SidebarActionItem>
     </SidebarContainer>
   );
 };

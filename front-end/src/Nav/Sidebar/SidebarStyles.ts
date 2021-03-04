@@ -43,6 +43,11 @@ export const SidebarContainer = styled.div<IDesktopWrapperProps>`
   ${TimingStyle}
 `;
 
+export const SidebarActionArea = styled.div`
+margin: 0;
+padding: 0;
+`;
+
 export const SidebarDrawer = styled(SwipeableDrawer)`
   display: flex;
   justify-content: start;

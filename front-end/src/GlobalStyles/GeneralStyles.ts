@@ -70,8 +70,9 @@ export const BaseSearchBar = styled.input`
   &:focus {
   }
 `;
-export const BaseButton = styled.div`
+export const BaseButton = styled.button`
   ${CenteredFlexBox}
+  width: 100%;
   border-radius: 1rem;
   background-color: ${COLORS.primaryBase};
   padding: 1rem;
