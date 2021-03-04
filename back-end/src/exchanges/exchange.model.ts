@@ -22,6 +22,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
   openOrders: IOrderDocument[];
   transactionViewItems: ITransactionItemView[],
   timeslices: ITimeslices;
+  lastSyncedDate: Date;
 }
 
 export interface IHoldingSnapshot
@@ -93,7 +94,8 @@ const exchangeAccountSchema = new mongoose.Schema({
   orders: [orderSchema],
   openOrders: [orderSchema],
   transactionViewItems: [transactionItemViewSchema],
-  timeslices: { type: Object }
+  timeslices: { type: Object },
+  lastSyncedDate: { type: Date, default: 0 }
 });
 
 export interface IExchangeAccount {
@@ -114,6 +116,7 @@ export interface IExchangeAccount {
   openOrders: [IOrder];
   transactionViewItems: [ITransactionItemView];
   timeslices: [ITimeslice];
+  lastSyncedDate: Date;
 }
 
 exchangeAccountSchema.set("toJSON", {

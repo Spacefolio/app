@@ -34,7 +34,7 @@ function loadExchange(
     secret: exchangeAccount.apiInfo.apiSecret,
     password: exchangeAccount.apiInfo.passphrase,
     timeout: 500,
-    enableRateLimit: true,
+    enableRateLimit: false,
   });
 
   return exchange;

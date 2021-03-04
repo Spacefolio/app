@@ -66,15 +66,13 @@ async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
 	return savedExchange;
 }
 
-async function updatePortfolioItems(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument) {
+async function updatePortfolioItems(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument, orders: IOrder[], transactions: ITransaction[]) {
 	const balances = await exchange.fetchBalance().catch((err) => {
 		throw err;
 	});
 
 	var exchangeAccount:IExchangeAccount = exchangeAccountDocument.toObject();
-	var orders = exchangeAccount.orders;
-	var transactions = exchangeAccount.transactions;
-	var holdingsHistory = await getHoldingsHistory(exchange, orders, transactions);
+	var holdingsHistory = await getHoldingsHistory(exchangeAccountDocument, exchange, orders, transactions);
 	var neededBalances: { symbol: string; balance: ccxt.Balance; holdingHistory: IHoldingSnapshot[]}[] = [];
 
 	const thingsToRemove = ['info', 'free', 'used', 'total'];
@@ -90,8 +88,14 @@ async function updatePortfolioItems(exchange: Exchange, exchangeAccountDocument:
 	return portfolioItems;
 }
 
-async function getHoldingsHistory(exchange: ccxt.Exchange, orders: IOrder[], transactions: ITransaction[]) {
+async function getHoldingsHistory(exchangeAccountDocument: IExchangeAccountDocument, exchange: ccxt.Exchange, orders: IOrder[], transactions: ITransaction[]) {
 	var holdingsHistory: IHoldingsHistory = {};
+	
+	for (let i = 0; i < exchangeAccountDocument.portfolioItems.length; i++)
+	{
+		let item = exchangeAccountDocument.portfolioItems[i];
+		holdingsHistory[item.asset.symbol] = item.holdingHistory;
+	}
 
 	var mergedList = [...orders, ...transactions].sort((a,b) => a.timestamp - b.timestamp);
 
@@ -196,7 +200,6 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 	if (!holdingsHistory[baseCurrency]) {
 		holdingsHistory[baseCurrency] = [];
 	}
-
 	else {
 		let length = holdingsHistory[baseCurrency].length;
 		if (length > 0)
@@ -272,20 +275,33 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 }
 
 async function updateTransactions(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument) {
-	const ccxtTransactions = await exchange.fetchTransactions().catch((err) => {
+	//var time = Date.now();
+	const ccxtTransactions = await exchange.fetchTransactions(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {}).catch((err) => {
 		throw err;
 	});
-	const transactions = await ccxtService.createTransactions(ccxtTransactions);
-	exchangeAccountDocument.transactions = transactions;
+	//console.log("Fetch transactions from exchange: ", Date.now() - time);
+	//time = Date.now();
+	var transactionsPojo: ITransaction[] = [];
 
-	return transactions;
+	const transactions = await ccxtService.createTransactions(ccxtTransactions);
+	//console.log("create transactions: ", Date.now() - time);
+	//time = Date.now();
+	for (let i = 0; i < transactions.length; i++)
+	{
+		exchangeAccountDocument.transactions.push(transactions[i]);
+		transactionsPojo.push(transactions[i].toObject());
+	}
+
+	//console.log("push new transactions: ", Date.now() - time);
+	//time = Date.now();
+
+	return transactionsPojo;
 }
 
 async function updateOrders(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument) {
-	var closedOrders: IOrderDocument[] = [];
-	var openOrders: IOrderDocument[] = [];
+	var closedOrders: IOrder[] = [];
 
-	const ccxtOrders = await exchange.fetchOrders().catch((err) => {
+	const ccxtOrders = await exchange.fetchOrders(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {}).catch((err) => {
 		throw err;
 	});
 
@@ -293,16 +309,14 @@ async function updateOrders(exchange: Exchange, exchangeAccountDocument: IExchan
 
 	for (var i = 0; i < orders.length; i++) {
 		if (orders[i].status == 'open') {
-			openOrders.push(orders[i]);
+			exchangeAccountDocument.openOrders.push(orders[i]);
 		} else if (orders[i].status == 'closed') {
-			closedOrders.push(orders[i]);
+			exchangeAccountDocument.orders.push(orders[i]);
+			closedOrders.push(orders[i].toObject());
 		}
 	}
 
-	exchangeAccountDocument.orders = closedOrders;
-	exchangeAccountDocument.openOrders = openOrders;
-
-	return orders;
+	return closedOrders;
 }
 
 async function createPortfolioItems(balances: { symbol: string; balance: ccxt.Balance, holdingHistory: IHoldingSnapshot[]}[]): Promise<IPortfolioItem[]> {
@@ -438,24 +452,45 @@ async function syncAllExchangesData(userId: string) {
 }
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {
+	//console.log(Date.now());
+	const lastSynced = new Date();
+	//var lastItem = lastSynced;
 	const exchangeAccountDocument = await exchangeService.getById(exchangeId);
-
+	//console.log("Get exchange account document: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
 	if (!exchangeAccountDocument) {
 		throw 'Exchange account not found';
 	}
 
 	const transactions: ITransaction[] = await updateTransactions(exchange, exchangeAccountDocument);
+	//console.log("Update transactions: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
 	const orders: IOrder[] = await updateOrders(exchange, exchangeAccountDocument);
-	const portfolioItems: IPortfolioItem[] = await updatePortfolioItems(exchange, exchangeAccountDocument);
+	//console.log("Update orders: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
+	const portfolioItems: IPortfolioItem[] = await updatePortfolioItems(exchange, exchangeAccountDocument, orders, transactions);
+	//console.log("Update portfolio items ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
 
-  await saveTransactionViewItems(exchange, exchangeAccountDocument);
+	const newOrdersCount = orders.length;
+	const newTransactionsCount = transactions.length;
+  await saveTransactionViewItems(exchange, exchangeAccountDocument, newOrdersCount, newTransactionsCount);
+	//console.log("save transaction view items: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
 	await saveHoldingsTimeslices(exchange, exchangeAccountDocument);
+	//console.log("save holdings timeslices: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
+
+	exchangeAccountDocument.lastSyncedDate = lastSynced;
 
 	const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => {
 		throw err;
 	});
+	//console.log("save exchange account document back to mongodb: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
 
 	const portfolioData = createPortfolioData(exchange, exchangeAccountDocument);
+	//console.log("Create portfoliodata: ", Date.now() - lastItem.valueOf());
 	return portfolioData;
 }
 
@@ -467,6 +502,11 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 	let timeslices: ITimeslices = {};
 	let allTimeHoldingSlices: IHoldingSlice[] = [];
 
+	let now = Date.now();
+	let endDate = now + (86400000 - (now % 86400000)); // start of tomorrow
+
+	let earliestTime = endDate;
+
 	for (let i = 0; i < exchange.portfolioItems.length; i++)
 	{
 		let item = exchange.portfolioItems[i];
@@ -477,18 +517,22 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 		allTimeHoldingSlices.push(holdingSlice);
 	}
 
-	let now = Date.now();
-	let endDate = now + (86400000 - (now % 86400000)); // start of tomorrow
-
-	let earliestTime = endDate;
-
-	for (let i = 0; i < allTimeHoldingSlices.length; i++)
+	if (exchange.lastSyncedDate.valueOf() > 0) // just pick up where we left off since we've synced before
 	{
-		let slice = allTimeHoldingSlices[i];
-
-		if (slice.snapshots[0].timestamp < earliestTime)
+		Object.entries(exchange.timeslices).forEach(([key, value]:[string, ITimeslice]) => {
+			timeslices[value.start] = value;
+			earliestTime = value.start;
+		});
+	}
+	else { // this is the first time ever syncing
+		for (let i = 0; i < allTimeHoldingSlices.length; i++)
 		{
-			earliestTime = slice.snapshots[0].timestamp;
+			let slice = allTimeHoldingSlices[i];
+
+			if (slice.snapshots[0].timestamp < earliestTime)
+			{
+				earliestTime = slice.snapshots[0].timestamp;
+			}
 		}
 	}
 
@@ -516,14 +560,19 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 		{
 			let slice = allTimeHoldingSlices[holding];
 			let snapsInThisSlice: IHoldingSnapshot[] = [];
-			let amount = 0;
 
 			for (let i = currentSnapshot[holding]; i < slice.snapshots.length; i++)
 			{
 				let snap = slice.snapshots[i];
 				let snapDay = snap.timestamp - (snap.timestamp % 86400000);
 
-				if (snapDay == day)
+				if (snapDay < day)
+				{
+					lastAmount[holding] = snap.totalAmountBought - snap.totalAmountSold;
+					lastPrice[holding] = snap.price.USD;
+					currentSnapshot[holding]++;
+				}
+				else if (snapDay == day)
 				{
 					snapsInThisSlice.push(snap);
 					lastAmount[holding] = snap.totalAmountBought - snap.totalAmountSold;
