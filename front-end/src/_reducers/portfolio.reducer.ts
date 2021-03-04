@@ -8,16 +8,16 @@ import {
 interface IPortfolioAction {
   type: string;
   portfolioData: IPortfolioDataView[];
-  // transactionData: ITransactionItemView[];
   openOrdersData: IOpenOrderItemView[];
   exchangeID: string;
+  filteredPortfolioData: IPortfolioDataView;
 }
 export interface IPortfolioState {
   syncingPortfolio: boolean;
   recalculatingPortfolio: boolean;
   portfolioData: IPortfolioDataView[];
-  filteredPortfolioData?: IPortfolioDataView;
   filterId: string;
+  filteredPortfolioData: IPortfolioDataView;
 }
 
 const FilterPortfolio = (
@@ -31,7 +31,6 @@ const FilterPortfolio = (
       })[0]
     : portfolioData[0];
 };
-
 let Portfolio = JSON.parse(localStorage.getItem("Portfolio"));
 
 export function portfolio(
@@ -81,25 +80,24 @@ export function portfolio(
     //     ...state,
     //   };
 
-    case portfolioConstants.OPENORDERS_REQUEST:
-      return {
-        ...state,
-      };
-    case portfolioConstants.OPENORDERS_SUCCESS:
-      return {
-        ...state,
-        openOrdersData: action.openOrdersData,
-      };
-    case portfolioConstants.OPENORDERS_FAILURE:
-      return {
-        ...state,
-      };
+    // case portfolioConstants.OPENORDERS_REQUEST:
+    //   return {
+    //     ...state,
+    //   };
+    // case portfolioConstants.OPENORDERS_SUCCESS:
+    //   return {
+    //     ...state,
+    //     openOrdersData: action.openOrdersData,
+    //   };
+    // case portfolioConstants.OPENORDERS_FAILURE:
+    //   return {
+    //     ...state,
+    //   };
 
     case portfolioConstants.REFRESH_REQUEST:
       return {
         ...state,
         // portfolioData: [],
-        // filteredPortfolioData: null,
         recalculatingPortfolio: true,
       };
     case portfolioConstants.REFRESH_SUCCESS:
@@ -117,7 +115,7 @@ export function portfolio(
         ...state,
         recalculatingPortfolio: false,
       };
-    case portfolioConstants.FILTER_PORTFOLIOS:
+    case portfolioConstants.FILTER_ID:
       return {
         ...state,
         filterId: action.exchangeID,
