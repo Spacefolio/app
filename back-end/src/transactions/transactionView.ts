@@ -1,7 +1,7 @@
 import { IExchangeAccount, IExchangeAccountDocument } from '../exchanges/exchange.model';
 import { ITransactionItemView } from '../../../types';
-import { IOrderDocument } from './order.model';
-import { ITransactionDocument } from './transaction.model';
+import { IOrder, IOrderDocument } from './order.model';
+import { ITransaction, ITransactionDocument } from './transaction.model';
 import { ccxtService } from '../_helpers/ccxt.service';
 import ccxt from 'ccxt';
 import { Db } from 'mongodb';
@@ -27,16 +27,14 @@ export async function createTransactionViewItems(exchange: IExchangeAccountDocum
 	return transactionViewItems;
 }
 
-export async function saveTransactionViewItems(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument) {
-
-  exchange.transactionViewItems = [];
-  for (var i = 0; i < exchange.transactions.length; i++) {
+export async function saveTransactionViewItems(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument, newOrdersCount: number, newTransactionsCount: number) {
+	for (var i = exchange.transactions.length - newTransactionsCount; i < exchange.transactions.length; i++) {
 		let transaction: ITransactionDocument = exchange.transactions[i];
 		let transactionItem: ITransactionItemView = await convertTransactionToTransactionView(ccxtExchange, exchange, transaction);
 		exchange.transactionViewItems.push(transactionItem);
 	}
 
-	for (var i = 0; i < exchange.orders.length; i++) {
+	for (var i = exchange.orders.length - newOrdersCount; i < exchange.orders.length; i++) {
 		let order: IOrderDocument = exchange.orders[i];
 		let transactionItem: ITransactionItemView = await convertOrderToTransactionView(ccxtExchange, exchange, order);
 		exchange.transactionViewItems.push(transactionItem);
