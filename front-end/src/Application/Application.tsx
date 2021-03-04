@@ -30,9 +30,11 @@ export const Application = () => {
   const applicationWidth = useSelector(
     (state: IRootState) => state.applicationView.applicationContainerWidth
   );
+
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed
   );
+
   const viewType = useSelector(
     (state: IRootState) => state.applicationView.currentViewType
   );
@@ -58,32 +60,34 @@ export const Application = () => {
     }
   };
 
-  const [appWidth, setAppWidth] = useState(flexSizing());
+  var lastWidth: number;
 
   useEffect(() => {
     dispatch(applicationViewActions.UpdateApplicationWidth(width));
-    setAppWidth(flexSizing());
+    if (lastWidth > width) {
+      dispatch(applicationViewActions.toggleSidebar());
+    }
   }, [width, isSidebarCollapsed]);
 
   return (
     <React.Fragment>
-      <Nav/>
-        <BodyWrapper>
-          {viewType == "mobile" ? <MobileNav /> : <SidebarNav />}
-          <ApplicationContainer width={width} viewType={viewType} ref={ref}>
-            <ApplicationFlexContainer style={appWidth}>
-              <Switch>
-                <Route path={`/portfolio`}>
-                  <Portfolio />
-                </Route>
-                <Route path={`/dashboard`}>
-                  <Dashboard />
-                </Route>
-                <Redirect to="/dashboard" />
-              </Switch>
-            </ApplicationFlexContainer>
-          </ApplicationContainer>
-        </BodyWrapper>
+      <Nav />
+      <BodyWrapper>
+        {viewType == "mobile" ? <MobileNav /> : <SidebarNav />}
+        <ApplicationContainer width={width} viewType={viewType} ref={ref}>
+          <ApplicationFlexContainer style={flexSizing()}>
+            <Switch>
+              <Route path={`/portfolio`}>
+                <Portfolio />
+              </Route>
+              <Route path={`/dashboard`}>
+                <Dashboard />
+              </Route>
+              <Redirect to="/dashboard" />
+            </Switch>
+          </ApplicationFlexContainer>
+        </ApplicationContainer>
+      </BodyWrapper>
     </React.Fragment>
   );
 };

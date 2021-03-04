@@ -27,13 +27,15 @@ export const SidebarContainer = styled.div<IDesktopWrapperProps>`
   flex-direction: column;
   background-color: ${COLORS.primaryLight4};
   flex-shrink: 0;
-  height: 100vh;
+  height: 100%;
   width: ${(props: any) =>
     props.isSidebarCollapsed ? SPACING.NavbarHeight : SPACING.sidebarWidth};
-  @media (max-width: 1068px) {
-    position: fixed;
-    width: ${(props: any) =>
-      props.isSidebarCollapsed ? "0px" : SPACING.sidebarWidth};
+
+  @media (max-width: ${RD.breakpointtablet}) {
+    ${(props) =>
+      `position: fixed; width: ${
+        props.isSidebarCollapsed ? "0px" : SPACING.sidebarWidth
+      };`}
   }
 
   align-items: ${(props: any) =>
@@ -44,8 +46,8 @@ export const SidebarContainer = styled.div<IDesktopWrapperProps>`
 `;
 
 export const SidebarActionArea = styled.div`
-margin: 0;
-padding: 0;
+  margin: 0;
+  padding: 0;
 `;
 
 export const SidebarDrawer = styled(SwipeableDrawer)`

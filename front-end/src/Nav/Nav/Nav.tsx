@@ -81,7 +81,7 @@ export const Nav = () => {
     <NavContainer>
       <ToggleSidebar
         onClick={() =>
-          dispatch(applicationViewActions.toggleSidebar("desktop"))
+          dispatch(applicationViewActions.toggleSidebar())
         }
       >
         <ArrowIcon direction={!isSidebarCollapsed ? "right" : "down"} />

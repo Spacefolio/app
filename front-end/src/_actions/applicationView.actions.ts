@@ -6,7 +6,7 @@ export const applicationViewActions = {
   UpdateApplicationWidth,
 };
 
-function toggleSidebar(viewType: IViewType, manualToggle?: boolean) {
+function toggleSidebar(manualToggle?: boolean) {
   return (dispatch: any) => {
     dispatch(desktop(manualToggle));
   };

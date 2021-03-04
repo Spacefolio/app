@@ -84,7 +84,6 @@ function getAll() {
     return { type: exchangeConstants.GETALL_REQUEST };
   }
   function success(exchanges: any) {
-    console.log(exchanges);
     return { type: exchangeConstants.GETALL_SUCCESS, exchanges };
   }
   function failure(error: any) {
@@ -106,7 +105,6 @@ function getRef() {
     return { type: exchangeConstants.GETREF_REQUEST };
   }
   function success(exchanges: any) {
-    console.log(exchanges);
     return { type: exchangeConstants.GETREF_SUCCESS, exchanges };
   }
   function failure(error: any) {

@@ -2,11 +2,12 @@ import { portfolioConstants } from "../_constants";
 import { portfolioService } from "../_services";
 import { alertActions } from "./alert.actions";
 import { IPortfolioDataView, ITransactionItemView } from "../../../types";
+import { history } from "../_helpers";
 
 export const portfolioActions = {
   sync,
   refresh,
-  // getTransactions,
+  SetFilteredPortfolioData,
   getOpenOrders,
   FilterPortfolio,
 };
@@ -43,6 +44,9 @@ function refresh() {
     portfolioService
       .refreshPortfolio()
       .then((res: any) => {
+        if (res.length == 0) {
+          history.push("/integrations");
+        }
         dispatch(success(res));
       })
       .catch((error) => {
@@ -113,5 +117,9 @@ function getOpenOrders(exchangeID?: string) {
 }
 
 function FilterPortfolio(exchangeID: string) {
-  return { type: portfolioConstants.FILTER_PORTFOLIOS, exchangeID };
+  return { type: portfolioConstants.FILTER_ID, exchangeID };
+}
+
+function SetFilteredPortfolioData(filteredPortfolioData: IPortfolioDataView) {
+  return { type: portfolioConstants.FILTER_DATA, filteredPortfolioData };
 }

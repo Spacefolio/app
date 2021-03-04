@@ -20,7 +20,6 @@ async function getAll() {
   return await axios
     .get(`${API_DOMAIN}/exchanges`, { headers: requestOptions })
     .then((response) => {
-      console.log(response)
       return response.data;
     })
     .catch((err) => {

@@ -16,8 +16,8 @@ export const ApplicationContainer = styled.div<ApplicationProps>`
   width: 100%;
   justify-content: center;
   margin-top: ${SPACING.NavbarHeight};
+  height: 100%
   padding: 0 ${SPACING.flexCardGap};
-  height: calc(${(props) => window.innerHeight}px - ${SPACING.NavbarHeight});
   @media only screen and (max-width: ${RD.breakpointsmartphone}) {
     height: ${(props) => window.outerHeight}px;
     padding: 0;

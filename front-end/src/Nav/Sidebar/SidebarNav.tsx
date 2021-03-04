@@ -7,10 +7,11 @@ import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter";
 import { Dashboard, Extension, PieChart, Timeline } from "@material-ui/icons";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
 import { AddNewExchangeList } from "../../Exchanges";
+import { RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
 
 interface SidebarNavProps {}
 
-export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
+export const SidebarNav: React.FC<SidebarNavProps> = (...props) => {
   const dispatch = useDispatch();
 
   const isSidebarCollapsed = useSelector(
@@ -24,7 +25,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({}) => {
   );
 
   return (
-    <SidebarContainer isSidebarCollapsed={isSidebarCollapsed}>
+    <SidebarContainer
+      isSidebarCollapsed={isSidebarCollapsed}
+      // isFixed={width <= parseInt(RD.breakpointsmartphone) ? true : false}
+    >
       <SidebarActionItem
         text="Dashboard"
         icon={<Dashboard />}
