@@ -105,7 +105,6 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 
   return (
     <PortfolioWrapper>
-      <Scrollbox>
         <PortfolioSectionWrapper>
           {/* {FilterByExchangeMobile} */}
           <GrowFromZero in={true}>
@@ -131,7 +130,6 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
             <Redirect from={`${path}`} to={`${path}/charts`} />
           </Switch>
         </PortfolioSectionWrapper>
-      </Scrollbox>
     </PortfolioWrapper>
   );
 };

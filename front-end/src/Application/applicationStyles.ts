@@ -26,6 +26,7 @@ export const ApplicationContainer = styled.div<ApplicationProps>`
 
 export const ApplicationFlexContainer = styled.div`
   width: 100%;
+
   ${TimingStyle}
 `;
 export const BodyWrapper = styled.div`
@@ -33,4 +34,5 @@ export const BodyWrapper = styled.div`
   position: relative;
   height: 100%;
   width: 100%;
+  // overflow-x: hidden;
 `;

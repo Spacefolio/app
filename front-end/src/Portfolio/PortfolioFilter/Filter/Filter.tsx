@@ -196,8 +196,8 @@ export const Filter: React.FC<IFilterProps> = ({
       {viewType == "desktop" ? (
         <GrowFromZero in={true}>
           <Table>
-            <TableHead>
-              <TableRow>
+            <TableHead style={{position: "sticky", top: "60px"}}>
+              <TableRow> 
                 <TableCell>Type</TableCell>
                 <TableCell align="right">Amount</TableCell>
                 <TableCell align="right">Price</TableCell>

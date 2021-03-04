@@ -84,9 +84,9 @@ export const MetaPortfolio = () => {
       });
   }, [timeframe, filterId]);
 
-  const [portfolioDate, setPortfolioDate] = useState(null);
+  const [chartDate, setChartDate] = useState(false);
 
-  const [portfolioValue, setPortfolioValue] = useState(null);
+  const [chartValue, setChartValue] = useState(false);
 
   const PortfolioValueSection = () => {
     const [portfolioSelectorVisible, setPortfolioSelectorVisible] = useState(
@@ -136,13 +136,9 @@ export const MetaPortfolio = () => {
     const PortfolioValue = (
       <React.Fragment>
         {data ? (
-          <AnimatedNumber
-            duration={200}
-            delay={300}
-            easing={"linear"}
-            value={portfolioValue ? portfolioValue : data.portfolioTotal.USD}
-            formatValue={(value: number) => `$${value.toFixed(2)}`}
-          />
+          <div id={"PVID"}>
+            {chartValue ? null : data.portfolioTotal.USD.toFixed(2)}
+          </div>
         ) : (
           "loading..."
         )}
@@ -151,7 +147,7 @@ export const MetaPortfolio = () => {
 
     const PortfolioDate = (
       <Typography>
-        {data ? (portfolioDate ? portfolioDate : null) : "loading..."}
+        {data ? <div id={"PDID"}>{chartDate ? "" : ""}</div> : "loading..."}
       </Typography>
     );
 
@@ -225,8 +221,8 @@ export const MetaPortfolio = () => {
       {PortfolioValueSection()}
       <div>
         <PortfolioLineChart
-          setPV={setPortfolioValue}
-          setDate={setPortfolioDate}
+          setPV={setChartValue}
+          setDate={setChartDate}
           data={PortfolioChartData}
           width={chartWidth && chartWidth[0]}
           xAxis={false}
