@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./LoginPage";
 
 import { userActions } from "../_actions";
-import { FlexCard } from "../GlobalStyles";
+import { BaseButton, FlexCard } from "../GlobalStyles";
 import { IRootState } from "../_reducers";
 import {
   Avatar,
@@ -37,7 +37,6 @@ export const LoginPage = () => {
 
   function handleSubmit(e: any) {
     e.preventDefault();
-
     setSubmitted(true);
     if (username && password) {
       dispatch(login(username, password));
@@ -84,9 +83,9 @@ export const LoginPage = () => {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button type="submit" fullWidth variant="contained" color="primary">
+          <BaseButton type="submit">
             Sign In
-          </Button>
+          </BaseButton>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

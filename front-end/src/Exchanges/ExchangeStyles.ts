@@ -46,10 +46,7 @@ export const MyExchangesLineItemContainer = styled(
 )<MyExchangeLineItemProps>`
   font-size: 1rem;
   position: relative;
-  ${(props) =>
-    props.selected
-      ? `border-left: 3px solid ${COLORS.accentBase};`
-      : `margin-left: 3px;`}
+  
 `;
 
 export const MyExchangeEditAreaWrapper = styled.div`

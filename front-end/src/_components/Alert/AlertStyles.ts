@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { InlineDiv } from "../../GlobalStyles";
 import { COLORS } from "../../GlobalStyles/ResponsiveDesign";
 
 export const AlertWrapper = styled.div`
@@ -15,7 +16,7 @@ export const AlertContainer = styled.div`
   border-radius: 5px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   background-color: ${(props: IAlertContainerProps) =>
     props.alertType == "danger" ? COLORS.errorBase : COLORS.accentBase};
   padding: 10px;
@@ -24,7 +25,7 @@ export const AlertContainer = styled.div`
   z-index: 500;
 `;
 
-export const AlertMessage = styled.div`
+export const AlertMessage = styled(InlineDiv)`
   color: white;
   margin-right: 10px;
 `;

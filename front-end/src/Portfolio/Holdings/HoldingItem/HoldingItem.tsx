@@ -1,6 +1,7 @@
-import { TableCell, TableRow } from "@material-ui/core";
+import { Avatar, TableCell, TableRow, Typography } from "@material-ui/core";
 import React from "react";
 import { IPortfolioDataView, IPortfolioItemView } from "../../../../../types";
+import { InlineDiv } from "../../../GlobalStyles";
 import { COLORS } from "../../../GlobalStyles/ResponsiveDesign";
 import {
   DataWrapper,
@@ -31,31 +32,49 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   const NameSection = () => {
     return (
       <TableCell>
-        <img width={"50px"} src={asset.logoUrl} />
-        <div>{asset.name}</div>
+        <InlineDiv>
+          <Avatar src={asset.logoUrl} />
+          <Typography>{asset.name}</Typography>
+        </InlineDiv>
       </TableCell>
     );
   };
 
   const AmountSection = () => {
-    return <TableCell align="right">{amount}</TableCell>;
+    return (
+      <TableCell align="right">
+        <Typography>{amount}</Typography>
+      </TableCell>
+    );
   };
 
   const CurrentPriceSection = () => {
-    return <TableCell align="right">${trimFields(currentPrice, "USD")}</TableCell>;
+    return (
+      <TableCell align="right">
+        <Typography>${trimFields(currentPrice, "USD")}</Typography>
+      </TableCell>
+    );
   };
   const ValueSection = () => {
-    return <TableCell align="right">${trimFields(value.USD, 'USD')}</TableCell>;
+    return (
+      <TableCell align="right">
+        <Typography>${trimFields(value.USD, "USD")}</Typography>
+      </TableCell>
+    );
   };
   const ProfitSection = () => {
     return (
       <TableCell align="right">
-        <div style={{ color: portfolioValueItemStyler(profitTotal.all) }}>
+        <Typography
+          style={{ color: portfolioValueItemStyler(profitTotal.all) }}
+        >
           ${profitTotal.all.toFixed(2)}
-        </div>
-        <div style={{ color: portfolioValueItemStyler(profitPercentage.all) }}>
+        </Typography>
+        <Typography
+          style={{ color: portfolioValueItemStyler(profitPercentage.all) }}
+        >
           {profitPercentage.all.toFixed(2)}%
-        </div>
+        </Typography>
       </TableCell>
     );
   };

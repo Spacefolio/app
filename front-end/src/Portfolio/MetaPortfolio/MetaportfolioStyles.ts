@@ -26,10 +26,10 @@ export const SyncButtonContainer = styled(ClickableDiv)`
 
 export const PortfolioValueWrapper = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: start;
   height: 100px;
-  padding: 1rem;
+  padding: 1rem 10%;
   width: 100%;
 `;
 

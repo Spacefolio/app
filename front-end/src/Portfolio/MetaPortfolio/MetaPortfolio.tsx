@@ -29,7 +29,7 @@ import {
   TimeframeItem,
 } from "../Charts/PChartStyles";
 import { SyncIcon } from "../../_components/Icons/IconStyles";
-import { Avatar, Typography } from "@material-ui/core";
+import { Avatar, Button, IconButton, Typography } from "@material-ui/core";
 import { ListMyExchanges } from "../../Exchanges";
 import moment from "moment";
 import AnimatedNumber from "animated-number-react";
@@ -106,12 +106,13 @@ export const MetaPortfolio = () => {
         ref={ref}
         onClick={() => setPortfolioSelectorVisible(!portfolioSelectorVisible)}
       >
-        <InlineDiv>
-          <ArrowDropDown />
-          <Typography variant={"h4"}>
+        <Button size="large" variant="outlined" color="primary">
+          <InlineDiv>
             {filterId != "" ? data.nickname : "All Portfolios"}
-          </Typography>
-        </InlineDiv>
+            <ArrowDropDown />
+          </InlineDiv>
+        </Button>
+
         <Dropdown
           containerRef={ref}
           isVisible={portfolioSelectorVisible}
@@ -123,18 +124,21 @@ export const MetaPortfolio = () => {
     );
 
     const SyncButtonSection = (
-      <SyncButtonContainer onClick={() => dispatch(portfolioActions.sync())}>
-        <SyncIcon isSyncing={isSyncing} />
+      <Button
+        color="default"
+        startIcon={<SyncIcon isSyncing={isSyncing} />}
+        onClick={() => dispatch(portfolioActions.sync())}
+      >
         Sync
-      </SyncButtonContainer>
+      </Button>
     );
 
     const PortfolioValue = (
       <React.Fragment>
         {data ? (
           <AnimatedNumber
-            duration={300}
-            delay={100}
+            duration={200}
+            delay={300}
             easing={"linear"}
             value={portfolioValue ? portfolioValue : data.portfolioTotal.USD}
             formatValue={(value: number) => `$${value.toFixed(2)}`}
@@ -146,29 +150,25 @@ export const MetaPortfolio = () => {
     );
 
     const PortfolioDate = (
-      <React.Fragment>
-        {data
-          ? portfolioDate
-            ? portfolioDate
-            : moment(Date.now()).format("ll")
-          : "loading..."}
-      </React.Fragment>
+      <Typography>
+        {data ? (portfolioDate ? portfolioDate : null) : "loading..."}
+      </Typography>
     );
 
     const ProfitPercentage = (
-      <React.Fragment>
+      <Typography>
         {data ? `(${data.profitPercentage.USD.toFixed(2)}%)` : "loading..."}
-      </React.Fragment>
+      </Typography>
     );
 
     const ProfitTotal = (
-      <React.Fragment>
+      <Typography>
         {data ? `$${data.profitTotal.USD.toFixed(2)}` : "loading..."}
-      </React.Fragment>
+      </Typography>
     );
 
     const ProfitDirection = (
-      <React.Fragment>
+      <Typography>
         {data ? (
           data.profitTotal.USD > 0 ? (
             <ArrowDropUp />
@@ -178,11 +178,15 @@ export const MetaPortfolio = () => {
         ) : (
           "loading..."
         )}
-      </React.Fragment>
+      </Typography>
     );
 
     return (
       <PortfolioValueWrapper style={{ width: `${chartWidth}px` }}>
+        <PortfolioValueColumn style={{ alignItems: "start" }}>
+          {CurrentPortfolio}
+          {SyncButtonSection}
+        </PortfolioValueColumn>
         <PortfolioValueColumn>
           <Typography variant={"h4"}>
             <InlineDiv>
@@ -194,10 +198,6 @@ export const MetaPortfolio = () => {
             {ProfitDirection} {ProfitTotal} {ProfitPercentage}
           </PortfolioProfitSection>
           {PortfolioDate}
-        </PortfolioValueColumn>
-        <PortfolioValueColumn>
-          <InlineDiv>{CurrentPortfolio}</InlineDiv>
-          {SyncButtonSection}
         </PortfolioValueColumn>
       </PortfolioValueWrapper>
     );

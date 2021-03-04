@@ -74,7 +74,8 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
     return (
       <TableCellStyled>
         <InlineDiv>
-          <Avatar>{decideTransactionIcon(type)}</Avatar> {symbol}
+          <Avatar>{decideTransactionIcon(type)}</Avatar>{" "}
+          <Typography>{symbol}</Typography>
         </InlineDiv>
       </TableCellStyled>
     );
@@ -86,7 +87,8 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
         <FlexWrap align="flex-end">
           <Typography variant="button">{renameTradeType()}</Typography>
           <InlineDiv align="flex-end">
-            {trimFields(amount, symbol)} {symbol}
+            <Typography>{trimFields(amount, symbol)}</Typography>
+            <Typography>{symbol}</Typography>
           </InlineDiv>
         </FlexWrap>
 
@@ -94,9 +96,10 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
           <React.Fragment>
             <Typography variant="button">
               {type == "buy" ? "With" : "For "}
-            </Typography>{" "}
+            </Typography>
             <InlineDiv align="flex-end">
-              {trimFields(quoteAmount, quoteSymbol)} {quoteSymbol}
+              <Typography>{trimFields(quoteAmount, quoteSymbol)}</Typography>
+              <Typography>{quoteSymbol}</Typography>
             </InlineDiv>
           </React.Fragment>
         ) : null}
@@ -107,7 +110,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
   const PriceSection = () => {
     return (
       <TableCellStyled align="right">
-        ${trimFields(price, "USD")}
+        <Typography>${trimFields(price, "USD")}</Typography>
       </TableCellStyled>
     );
   };
@@ -115,7 +118,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
   const ValueSection = () => {
     return (
       <TableCellStyled align="right">
-        ${trimFields(value, "USD")}
+        <Typography>${trimFields(value, "USD")}</Typography>
       </TableCellStyled>
     );
   };
@@ -123,10 +126,13 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
   const ExchangeNameSection = () => {
     return (
       <TableCellStyled align="right">
-        <InlineDiv align="flex-end">{exchangeName}</InlineDiv>
         <InlineDiv align="flex-end">
-          {" "}
-          - {symbol}/{quoteSymbol}
+          <Typography>{exchangeName}</Typography>
+        </InlineDiv>
+        <InlineDiv align="flex-end">
+          <Typography>
+            {symbol}/{quoteSymbol}
+          </Typography>
         </InlineDiv>
       </TableCellStyled>
     );
@@ -137,11 +143,12 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
       <TableCellStyled align="right">
         {fee ? (
           <React.Fragment>
-            {trimFields(fee.cost, fee.currency)} {fee.currency}
-            {fee.rate ? <div>{fee.rate}%</div> : null}
+            <Typography>{trimFields(fee.cost, fee.currency)}</Typography>{" "}
+            <Typography>{fee.currency}</Typography>
+            {fee.rate ? <Typography>{fee.rate}%</Typography> : null}
           </React.Fragment>
         ) : (
-          "-"
+          <Typography>{"-"}</Typography>
         )}
       </TableCellStyled>
     );
