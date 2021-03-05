@@ -94,6 +94,23 @@ export const Filter: React.FC<IFilterProps> = ({
               </InlineDiv>
             </TableCellStyled>
           </TableRow>
+          {viewType == "desktop" ? (
+            <TableRowStyled>
+              <TableCellStyled>Type</TableCellStyled>
+              <TableCellStyled align="right">Amount</TableCellStyled>
+              <TableCellStyled align="right">Price</TableCellStyled>
+              <TableCellStyled align="right">Value</TableCellStyled>
+              <TableCellStyled align="right">Exchange/Pair</TableCellStyled>
+              <TableCellStyled align="right">Fee</TableCellStyled>
+            </TableRowStyled>
+          ) : (
+            <TableRowStyled>
+              <TableCellStyled>Type</TableCellStyled>
+              <TableCellStyled align="right">Amount</TableCellStyled>
+              <TableCellStyled align="right">Price</TableCellStyled>
+              <TableCellStyled align="right">Value</TableCellStyled>
+            </TableRowStyled>
+          )}
 
           {/* <GrowFromZero in={true}> */}
           {GetItemsAtDate(sortedShit, key)}
@@ -196,14 +213,14 @@ export const Filter: React.FC<IFilterProps> = ({
       {viewType == "desktop" ? (
         <GrowFromZero in={true}>
           <Table>
-            <TableHead style={{position: "sticky", top: "60px"}}>
-              <TableRow> 
-                <TableCell>Type</TableCell>
-                <TableCell align="right">Amount</TableCell>
-                <TableCell align="right">Price</TableCell>
-                <TableCell align="right">Value</TableCell>
-                <TableCell align="right">Exchange/Pair</TableCell>
-                <TableCell align="right">Fee</TableCell>
+            <TableHead style={{ position: "sticky", top: "60px" }}>
+              <TableRow style={{ display: "none" }}>
+                <TableCell></TableCell>
+                <TableCell align="right"></TableCell>
+                <TableCell align="right"></TableCell>
+                <TableCell align="right"></TableCell>
+                <TableCell align="right"></TableCell>
+                <TableCell align="right"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{RenderLineItems()}</TableBody>

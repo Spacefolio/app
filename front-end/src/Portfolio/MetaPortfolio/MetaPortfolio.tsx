@@ -31,8 +31,6 @@ import {
 import { SyncIcon } from "../../_components/Icons/IconStyles";
 import { Avatar, Button, IconButton, Typography } from "@material-ui/core";
 import { ListMyExchanges } from "../../Exchanges";
-import moment from "moment";
-import AnimatedNumber from "animated-number-react";
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
@@ -45,7 +43,7 @@ export const MetaPortfolio = () => {
     (state: any) => state.portfolio.recalculatingPortfolio
   );
 
-  const data: IPortfolioDataView = useSelector(
+  const filteredPortfolioData: IPortfolioDataView = useSelector(
     (state: IRootState) => state.portfolio.filteredPortfolioData
   );
 
@@ -108,7 +106,7 @@ export const MetaPortfolio = () => {
       >
         <Button size="large" variant="outlined" color="primary">
           <InlineDiv>
-            {filterId != "" ? data.nickname : "All Portfolios"}
+            {filterId != "" ? filteredPortfolioData.nickname : "All Portfolios"}
             <ArrowDropDown />
           </InlineDiv>
         </Button>
@@ -135,9 +133,9 @@ export const MetaPortfolio = () => {
 
     const PortfolioValue = (
       <React.Fragment>
-        {data ? (
+        {filteredPortfolioData != null ? (
           <div id={"PVID"}>
-            {chartValue ? null : data.portfolioTotal.USD.toFixed(2)}
+            {chartValue ? null : filteredPortfolioData.portfolioTotal.USD.toFixed(2)}
           </div>
         ) : (
           "loading..."
@@ -147,26 +145,26 @@ export const MetaPortfolio = () => {
 
     const PortfolioDate = (
       <Typography>
-        {data ? <div id={"PDID"}>{chartDate ? "" : ""}</div> : "loading..."}
+        {filteredPortfolioData != null ? <div id={"PDID"}>{chartDate ? "" : ""}</div> : "loading..."}
       </Typography>
     );
 
     const ProfitPercentage = (
       <Typography>
-        {data ? `(${data.profitPercentage.USD.toFixed(2)}%)` : "loading..."}
+        {filteredPortfolioData != null ? `(${filteredPortfolioData.profitPercentage.USD.toFixed(2)}%)` : "loading..."}
       </Typography>
     );
 
     const ProfitTotal = (
       <Typography>
-        {data ? `$${data.profitTotal.USD.toFixed(2)}` : "loading..."}
-      </Typography>
+        {filteredPortfolioData != null ? `$${filteredPortfolioData.profitTotal.USD.toFixed(2)}` : "loading..."}
+      </Typography> 
     );
 
     const ProfitDirection = (
       <Typography>
-        {data ? (
-          data.profitTotal.USD > 0 ? (
+        {filteredPortfolioData != null ? (
+          filteredPortfolioData.profitTotal.USD > 0 ? (
             <ArrowDropUp />
           ) : (
             <ArrowDropDown />
@@ -190,7 +188,7 @@ export const MetaPortfolio = () => {
               {RefreshButton}
             </InlineDiv>
           </Typography>
-          <PortfolioProfitSection value={data && data.profitTotal.USD}>
+          <PortfolioProfitSection value={filteredPortfolioData && filteredPortfolioData.profitTotal.USD}>
             {ProfitDirection} {ProfitTotal} {ProfitPercentage}
           </PortfolioProfitSection>
           {PortfolioDate}

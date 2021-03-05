@@ -21,6 +21,7 @@ import { applicationViewActions } from "../_actions/applicationView.actions";
 import { RD } from "../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
 import { MobileNav } from "../Nav/Sidebar/BottomNav";
+import { Profile } from "../Profile";
 
 export const Application = () => {
   const dispatch = useDispatch();
@@ -82,6 +83,9 @@ export const Application = () => {
               </Route>
               <Route path={`/dashboard`}>
                 <Dashboard />
+              </Route>
+              <Route path={'/profile'}>
+                <Profile/>
               </Route>
               <Redirect to="/dashboard" />
             </Switch>

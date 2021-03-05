@@ -14,14 +14,14 @@ import { CircularProgress, Grow, LinearProgress } from "@material-ui/core";
 export const Transactions = () => {
   const dispatch = useDispatch();
 
-  const [sortAscending, setSortAscending] = useState(true);
+  const [sortAscending, setSortAscending] = useState(false);
   const filteredPortfolioData: IPortfolioDataView = useSelector(
     (state: IRootState) => state.portfolio.filteredPortfolioData
   );
 
   return (
     <React.Fragment>
-      {filteredPortfolioData ? (
+      {filteredPortfolioData != null ? (
         <Filter
           data={filteredPortfolioData.transactionViewItems}
           sortAscending={sortAscending}

@@ -62,7 +62,8 @@
     "styled-components": "^5.2.1",
     "typeface-roboto": "^1.1.13",
     "types": "^0.1.1",
-    "url-loader": "^4.1.1"
+    "url-loader": "^4.1.1",
+    "websocket": "^1.0.33"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",

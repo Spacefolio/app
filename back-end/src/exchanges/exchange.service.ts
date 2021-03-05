@@ -1,653 +1,800 @@
-import { IUserDocument, User } from '../users/user.model';
-import { IExchangeAccountRequest, exchangeType, IExchangeAccountView, IPortfolioDataView, IPortfolioItemView, ITransactionItemView } from '../../../types';
-import { ExchangeAccount, IExchangeAccount, IExchangeAccountDocument, IHoldingsHistory, IHoldingSlice, IHoldingSnapshot, ITimeslice } from './exchange.model';
-import ccxt, { Balances, Exchange } from 'ccxt';
-import { IPortfolioItem } from '../portfolios/portfolio.model';
-import { ITransaction, ITransactionDocument, Transaction } from '../transactions/transaction.model';
-import { randNum } from '../../exchangeDataDetailed';
-import { ccxtService } from '../_helpers/ccxt.service';
-import { IOrder, IOrderDocument, orderSchema } from '../transactions/order.model';
-import { convertTransactionToTransactionView, createTransactionViewItems, getConversionRate, saveTransactionViewItems } from '../transactions/transactionView';
-import { fiat } from '../coindata/historical.service';
-import { coindataService } from '../coindata/coindata.service';
+import { IUserDocument, User } from "../users/user.model";
+import {
+  IExchangeAccountRequest,
+  exchangeType,
+  IExchangeAccountView,
+  IPortfolioDataView,
+  IPortfolioItemView,
+  ITransactionItemView,
+} from "../../../types";
+import {
+  ExchangeAccount,
+  IExchangeAccount,
+  IExchangeAccountDocument,
+  IHoldingsHistory,
+  IHoldingSlice,
+  IHoldingSnapshot,
+  ITimeslice,
+} from "./exchange.model";
+import ccxt, { Balances, Exchange } from "ccxt";
+import { IPortfolioItem } from "../portfolios/portfolio.model";
+import {
+  ITransaction,
+  ITransactionDocument,
+  Transaction,
+} from "../transactions/transaction.model";
+import { randNum } from "../../exchangeDataDetailed";
+import { ccxtService } from "../_helpers/ccxt.service";
+import {
+  IOrder,
+  IOrderDocument,
+  orderSchema,
+} from "../transactions/order.model";
+import {
+  convertTransactionToTransactionView,
+  createTransactionViewItems,
+  getConversionRate,
+  saveTransactionViewItems,
+} from "../transactions/transactionView";
+import { fiat } from "../coindata/historical.service";
+import { coindataService } from "../coindata/coindata.service";
 
 export const exchangeService = {
-	getAll,
-	getById,
-	create,
-	update,
-	delete: _delete,
-	getRequiredCredentials,
-	getExchangesData,
-	getExchangeData,
-	syncAllExchangesData,
-	syncExchangeData,
+  getAll,
+  getById,
+  create,
+  update,
+  delete: _delete,
+  getRequiredCredentials,
+  getExchangesData,
+  getExchangeData,
+  syncAllExchangesData,
+  syncExchangeData,
 };
 
 async function getAll(id: string) {
-	const user = await User.findById(id).populate('linkedExchanges');
+  const user = await User.findById(id).populate("linkedExchanges");
 
-	if (!user) {
-		throw 'User not Found';
-	}
+  if (!user) {
+    throw "User not Found";
+  }
 
-	return user.linkedExchanges;
+  return user.linkedExchanges;
 }
 
 async function getById(exchangeId: string) {
-	const exchange = await ExchangeAccount.findById(exchangeId);
-	if (!exchange) {
-		throw 'Exchange not found';
-	}
+  const exchange = await ExchangeAccount.findById(exchangeId);
+  if (!exchange) {
+    throw "Exchange not found";
+  }
 
-	return exchange;
+  return exchange;
 }
 
 async function create(userId: string, exchangeParam: IExchangeAccountRequest) {
-	const user = await User.findById(userId);
+  const user = await User.findById(userId);
 
-	// verify connection to exchange
-	const Exchange = ccxtService.loadExchange(exchangeParam);
-	await ccxtService.verifyConnectionToExchange(Exchange);
+  // verify connection to exchange
+  const Exchange = ccxtService.loadExchange(exchangeParam);
+  await ccxtService.verifyConnectionToExchange(Exchange);
 
-	const exchangeObject = new ExchangeAccount(exchangeParam);
-	const savedExchange = await exchangeObject.save();
+  const exchangeObject = new ExchangeAccount(exchangeParam);
+  const savedExchange = await exchangeObject.save();
 
-	user.linkedExchanges.push(savedExchange.id);
+  user.linkedExchanges.push(savedExchange.id);
 
-	// save user
-	user.save(function (err: any, user: any) {
-		if (err) {
-			console.log(err);
-			throw 'Bad Request';
-		}
-	});
+  // save user
+  user.save(function (err: any, user: any) {
+    if (err) {
+      console.log(err);
+      throw "Bad Request";
+    }
+  });
 
-	return savedExchange;
+  return savedExchange;
 }
 
-async function updatePortfolioItems(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument, orders: IOrder[], transactions: ITransaction[]) {
-	const balances = await exchange.fetchBalance().catch((err) => {
-		throw err;
-	});
+async function updatePortfolioItems(
+  exchange: Exchange,
+  exchangeAccountDocument: IExchangeAccountDocument,
+  orders: IOrder[],
+  transactions: ITransaction[]
+) {
+  const balances = await exchange.fetchBalance().catch((err) => {
+    throw err;
+  });
 
-	var exchangeAccount:IExchangeAccount = exchangeAccountDocument.toObject();
-	var holdingsHistory = await getHoldingsHistory(exchangeAccountDocument, exchange, orders, transactions);
-	var neededBalances: { symbol: string; balance: ccxt.Balance; holdingHistory: IHoldingSnapshot[]}[] = [];
+  var exchangeAccount: IExchangeAccount = exchangeAccountDocument.toObject();
+  var holdingsHistory = await getHoldingsHistory(
+    exchangeAccountDocument,
+    exchange,
+    orders,
+    transactions
+  );
+  var neededBalances: {
+    symbol: string;
+    balance: ccxt.Balance;
+    holdingHistory: IHoldingSnapshot[];
+  }[] = [];
 
-	const thingsToRemove = ['info', 'free', 'used', 'total'];
+  const thingsToRemove = ["info", "free", "used", "total"];
 
-	for (var [key, value] of Object.entries(balances)) {
-		if (thingsToRemove.includes(key)) continue;
-		if (!holdingsHistory[key]) continue;
-		neededBalances.push({ symbol: key, balance: value, holdingHistory: holdingsHistory[key] });
-	}
+  for (var [key, value] of Object.entries(balances)) {
+    if (thingsToRemove.includes(key)) continue;
+    if (!holdingsHistory[key]) continue;
+    neededBalances.push({
+      symbol: key,
+      balance: value,
+      holdingHistory: holdingsHistory[key],
+    });
+  }
 
-	const portfolioItems = await createPortfolioItems(neededBalances);
-	exchangeAccountDocument.portfolioItems = portfolioItems;
-	return portfolioItems;
+  const portfolioItems = await createPortfolioItems(neededBalances);
+  exchangeAccountDocument.portfolioItems = portfolioItems;
+  return portfolioItems;
 }
 
-async function getHoldingsHistory(exchangeAccountDocument: IExchangeAccountDocument, exchange: ccxt.Exchange, orders: IOrder[], transactions: ITransaction[]) {
-	var holdingsHistory: IHoldingsHistory = {};
-	
-	for (let i = 0; i < exchangeAccountDocument.portfolioItems.length; i++)
-	{
-		let item = exchangeAccountDocument.portfolioItems[i];
-		holdingsHistory[item.asset.symbol] = item.holdingHistory;
-	}
+async function getHoldingsHistory(
+  exchangeAccountDocument: IExchangeAccountDocument,
+  exchange: ccxt.Exchange,
+  orders: IOrder[],
+  transactions: ITransaction[]
+) {
+  var holdingsHistory: IHoldingsHistory = {};
 
-	var mergedList = [...orders, ...transactions].sort((a,b) => a.timestamp - b.timestamp);
+  for (let i = 0; i < exchangeAccountDocument.portfolioItems.length; i++) {
+    let item = exchangeAccountDocument.portfolioItems[i];
+    holdingsHistory[item.asset.symbol] = item.holdingHistory;
+  }
 
-	for (let i = 0; i < mergedList.length; i++)
-	{
-		let item = mergedList[i];
+  var mergedList = [...orders, ...transactions].sort(
+    (a, b) => a.timestamp - b.timestamp
+  );
 
-		if (item.hasOwnProperty("side"))
-		{
-			let order = item as IOrder;
-			await addOrderSnapshotToHistory(order, exchange, holdingsHistory);
-		}
-		else
-		{
-			let transaction = item as ITransaction
-			await addTransactionSnapshotToHistory(transaction, exchange, holdingsHistory);
-		}
-	}
+  for (let i = 0; i < mergedList.length; i++) {
+    let item = mergedList[i];
 
-	return holdingsHistory;
+    if (item.hasOwnProperty("side")) {
+      let order = item as IOrder;
+      await addOrderSnapshotToHistory(order, exchange, holdingsHistory);
+    } else {
+      let transaction = item as ITransaction;
+      await addTransactionSnapshotToHistory(
+        transaction,
+        exchange,
+        holdingsHistory
+      );
+    }
+  }
+
+  return holdingsHistory;
 }
 
-async function addTransactionSnapshotToHistory(transaction: ITransaction, exchange: ccxt.Exchange, holdingsHistory: IHoldingsHistory) {
-	let currency = transaction.currency;
-	let amount = transaction.amount;
-	let timestamp = transaction.timestamp;
-	let priceInUsd = await getConversionRate(exchange, currency, 'USD', timestamp);
+async function addTransactionSnapshotToHistory(
+  transaction: ITransaction,
+  exchange: ccxt.Exchange,
+  holdingsHistory: IHoldingsHistory
+) {
+  let currency = transaction.currency;
+  let amount = transaction.amount;
+  let timestamp = transaction.timestamp;
+  let priceInUsd = await getConversionRate(
+    exchange,
+    currency,
+    "USD",
+    timestamp
+  );
 
-	let snapshot = {
-		timestamp: transaction.timestamp,
-		price: { USD: 0 },
-		amountBought: 0,
-		amountSold: 0,
-		totalAmountBought: 0,
-		totalAmountSold: 0,
-		totalValueReceived: 0,
-		totalValueInvested: 0,
-	};
+  let snapshot = {
+    timestamp: transaction.timestamp,
+    price: { USD: 0 },
+    amountBought: 0,
+    amountSold: 0,
+    totalAmountBought: 0,
+    totalAmountSold: 0,
+    totalValueReceived: 0,
+    totalValueInvested: 0,
+  };
 
-	let lastSnapshot = { ...snapshot };
+  let lastSnapshot = { ...snapshot };
 
-	if (!holdingsHistory[currency]) {
-		holdingsHistory[currency] = [];
-	}
+  if (!holdingsHistory[currency]) {
+    holdingsHistory[currency] = [];
+  } else {
+    let length = holdingsHistory[currency].length;
+    if (length > 0) lastSnapshot = holdingsHistory[currency][length - 1];
+  }
 
-	else {
-		let length = holdingsHistory[currency].length;
-		if (length > 0)
-			lastSnapshot = holdingsHistory[currency][length - 1];
-	}
+  var fee = transaction.fee ? transaction.fee.cost : 0;
 
-	var fee = (transaction.fee) ? transaction.fee.cost : 0;
+  if (transaction.type == "deposit") {
+    snapshot.totalAmountBought = lastSnapshot.totalAmountBought + amount;
+    snapshot.totalAmountSold = lastSnapshot.totalAmountSold;
+    snapshot.amountBought = amount;
+    snapshot.amountSold = 0;
+    snapshot.totalValueInvested =
+      lastSnapshot.totalValueInvested + amount * priceInUsd;
+    snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
+    snapshot.price.USD = priceInUsd;
+  } else {
+    snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
+    snapshot.totalAmountSold = lastSnapshot.totalAmountSold + amount + fee;
+    snapshot.amountBought = 0;
+    snapshot.amountSold = amount + fee;
+    snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
+    snapshot.totalValueReceived =
+      lastSnapshot.totalValueReceived + (amount - fee) * priceInUsd;
+    snapshot.price.USD = priceInUsd;
+  }
 
-	if (transaction.type == 'deposit') {
-		snapshot.totalAmountBought = lastSnapshot.totalAmountBought + amount;
-		snapshot.totalAmountSold = lastSnapshot.totalAmountSold;
-		snapshot.amountBought = amount;
-		snapshot.amountSold = 0;
-		snapshot.totalValueInvested = lastSnapshot.totalValueInvested + (amount * priceInUsd);
-		snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
-		snapshot.price.USD = priceInUsd;
-	}
-
-	else {
-		snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
-		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + amount + fee;
-		snapshot.amountBought = 0;
-		snapshot.amountSold = amount + fee;
-		snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
-		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + ((amount-fee) * priceInUsd);
-		snapshot.price.USD = priceInUsd;
-	}
-
-	holdingsHistory[currency].push(snapshot);
+  holdingsHistory[currency].push(snapshot);
 }
 
-async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange, holdingsHistory: IHoldingsHistory) {
-	let symbols = order.symbol.split('/');
-	let baseCurrency = symbols[0];
-	let quoteCurrency = symbols[1];
-	let fiatValue = fiat(quoteCurrency);
-	let quoteIsFiat = fiatValue != 0;
-	let quoteCurrencyInUsd = fiatValue;
+async function addOrderSnapshotToHistory(
+  order: IOrder,
+  exchange: ccxt.Exchange,
+  holdingsHistory: IHoldingsHistory
+) {
+  let symbols = order.symbol.split("/");
+  let baseCurrency = symbols[0];
+  let quoteCurrency = symbols[1];
+  let fiatValue = fiat(quoteCurrency);
+  let quoteIsFiat = fiatValue != 0;
+  let quoteCurrencyInUsd = fiatValue;
 
-	if (!quoteIsFiat) {
-		quoteCurrencyInUsd = await getConversionRate(exchange, quoteCurrency, 'USD', order.timestamp);
-	}
+  if (!quoteIsFiat) {
+    quoteCurrencyInUsd = await getConversionRate(
+      exchange,
+      quoteCurrency,
+      "USD",
+      order.timestamp
+    );
+  }
 
-	let snapshot = {
-		timestamp: order.timestamp,
-		price: { USD: 0 },
-		amountBought: 0,
-		amountSold: 0,
-		totalAmountBought: 0,
-		totalAmountSold: 0,
-		totalValueReceived: 0,
-		totalValueInvested: 0,
-	};
+  let snapshot = {
+    timestamp: order.timestamp,
+    price: { USD: 0 },
+    amountBought: 0,
+    amountSold: 0,
+    totalAmountBought: 0,
+    totalAmountSold: 0,
+    totalValueReceived: 0,
+    totalValueInvested: 0,
+  };
 
-	let lastSnapshot = { ...snapshot };
+  let lastSnapshot = { ...snapshot };
 
-	if (!holdingsHistory[baseCurrency]) {
-		holdingsHistory[baseCurrency] = [];
-	}
-	else {
-		let length = holdingsHistory[baseCurrency].length;
-		if (length > 0)
-			lastSnapshot = holdingsHistory[baseCurrency][length - 1];
-	}
+  if (!holdingsHistory[baseCurrency]) {
+    holdingsHistory[baseCurrency] = [];
+  } else {
+    let length = holdingsHistory[baseCurrency].length;
+    if (length > 0) lastSnapshot = holdingsHistory[baseCurrency][length - 1];
+  }
 
-	let orderCost = order.cost + order.fee.cost;
+  let orderCost = order.cost + order.fee.cost;
 
-	if (order.side == 'buy') {
-		snapshot.totalAmountBought = lastSnapshot.totalAmountBought + order.filled;
-		snapshot.totalAmountSold = lastSnapshot.totalAmountSold;
-		snapshot.amountBought = order.filled;
-		snapshot.amountSold = 0;
-		snapshot.totalValueInvested = lastSnapshot.totalValueInvested + (orderCost * quoteCurrencyInUsd);
-		snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
-		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : order.cost/order.filled * quoteCurrencyInUsd;
-	}
-	else {
-		snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
-		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + order.filled;
-		snapshot.amountBought = 0;
-		snapshot.amountSold = order.filled;
-		snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
-		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + ((order.cost - order.fee.cost) * quoteCurrencyInUsd);
-		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : order.cost/order.filled * quoteCurrencyInUsd;
-	}
+  if (order.side == "buy") {
+    snapshot.totalAmountBought = lastSnapshot.totalAmountBought + order.filled;
+    snapshot.totalAmountSold = lastSnapshot.totalAmountSold;
+    snapshot.amountBought = order.filled;
+    snapshot.amountSold = 0;
+    snapshot.totalValueInvested =
+      lastSnapshot.totalValueInvested + orderCost * quoteCurrencyInUsd;
+    snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
+    snapshot.price.USD = order.price
+      ? order.price * quoteCurrencyInUsd
+      : (order.cost / order.filled) * quoteCurrencyInUsd;
+  } else {
+    snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
+    snapshot.totalAmountSold = lastSnapshot.totalAmountSold + order.filled;
+    snapshot.amountBought = 0;
+    snapshot.amountSold = order.filled;
+    snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
+    snapshot.totalValueReceived =
+      lastSnapshot.totalValueReceived +
+      (order.cost - order.fee.cost) * quoteCurrencyInUsd;
+    snapshot.price.USD = order.price
+      ? order.price * quoteCurrencyInUsd
+      : (order.cost / order.filled) * quoteCurrencyInUsd;
+  }
 
-	let snapshotQuote = {
-		timestamp: order.timestamp,
-		price: { USD: 0 },
-		amountBought: 0,
-		amountSold: 0,
-		totalAmountBought: 0,
-		totalAmountSold: 0,
-		totalValueReceived: 0,
-		totalValueInvested: 0,
-	};
+  let snapshotQuote = {
+    timestamp: order.timestamp,
+    price: { USD: 0 },
+    amountBought: 0,
+    amountSold: 0,
+    totalAmountBought: 0,
+    totalAmountSold: 0,
+    totalValueReceived: 0,
+    totalValueInvested: 0,
+  };
 
-	let lastSnapshotQuote = { ...snapshotQuote };
+  let lastSnapshotQuote = { ...snapshotQuote };
 
-	if (!holdingsHistory[quoteCurrency]) {
-		holdingsHistory[quoteCurrency] = [];
-	}
-	else {
-		let length = holdingsHistory[quoteCurrency].length;
-		if (length > 0)
-			lastSnapshotQuote = holdingsHistory[quoteCurrency][length - 1];
-	}
+  if (!holdingsHistory[quoteCurrency]) {
+    holdingsHistory[quoteCurrency] = [];
+  } else {
+    let length = holdingsHistory[quoteCurrency].length;
+    if (length > 0)
+      lastSnapshotQuote = holdingsHistory[quoteCurrency][length - 1];
+  }
 
-	if (order.side == 'buy') // count as a sell of the quote currency
-	{
-		snapshotQuote.totalAmountBought = lastSnapshotQuote.totalAmountBought;
-		snapshotQuote.totalAmountSold = lastSnapshotQuote.totalAmountSold + orderCost;
-		snapshotQuote.amountBought = 0;
-		snapshotQuote.amountSold = orderCost;
-		snapshotQuote.totalValueInvested = lastSnapshotQuote.totalValueInvested;
-		snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived + (order.cost * quoteCurrencyInUsd);
-		snapshotQuote.price.USD = quoteCurrencyInUsd;
-	}
-	else
-	{ // count as a buy of the quote currency
-		snapshotQuote.totalAmountBought = lastSnapshotQuote.totalAmountBought + order.cost - (order.fee.cost);
-		snapshotQuote.totalAmountSold = lastSnapshotQuote.totalAmountSold;
-		snapshotQuote.amountBought = order.cost - (order.fee.cost);
-		snapshotQuote.amountSold = 0;
-		snapshotQuote.totalValueInvested = lastSnapshotQuote.totalValueInvested + (order.cost * quoteCurrencyInUsd);
-		snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived;
-		snapshotQuote.price.USD = quoteCurrencyInUsd;
-	}
+  if (order.side == "buy") {
+    // count as a sell of the quote currency
+    snapshotQuote.totalAmountBought = lastSnapshotQuote.totalAmountBought;
+    snapshotQuote.totalAmountSold =
+      lastSnapshotQuote.totalAmountSold + orderCost;
+    snapshotQuote.amountBought = 0;
+    snapshotQuote.amountSold = orderCost;
+    snapshotQuote.totalValueInvested = lastSnapshotQuote.totalValueInvested;
+    snapshotQuote.totalValueReceived =
+      lastSnapshotQuote.totalValueReceived + order.cost * quoteCurrencyInUsd;
+    snapshotQuote.price.USD = quoteCurrencyInUsd;
+  } else {
+    // count as a buy of the quote currency
+    snapshotQuote.totalAmountBought =
+      lastSnapshotQuote.totalAmountBought + order.cost - order.fee.cost;
+    snapshotQuote.totalAmountSold = lastSnapshotQuote.totalAmountSold;
+    snapshotQuote.amountBought = order.cost - order.fee.cost;
+    snapshotQuote.amountSold = 0;
+    snapshotQuote.totalValueInvested =
+      lastSnapshotQuote.totalValueInvested + order.cost * quoteCurrencyInUsd;
+    snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived;
+    snapshotQuote.price.USD = quoteCurrencyInUsd;
+  }
 
-	holdingsHistory[baseCurrency].push(snapshot);
-	holdingsHistory[quoteCurrency].push(snapshotQuote);
+  holdingsHistory[baseCurrency].push(snapshot);
+  holdingsHistory[quoteCurrency].push(snapshotQuote);
 }
 
-async function updateTransactions(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument) {
-	//var time = Date.now();
-	const ccxtTransactions = await exchange.fetchTransactions(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {}).catch((err) => {
-		throw err;
-	});
-	//console.log("Fetch transactions from exchange: ", Date.now() - time);
-	//time = Date.now();
-	var transactionsPojo: ITransaction[] = [];
+async function updateTransactions(
+  exchange: Exchange,
+  exchangeAccountDocument: IExchangeAccountDocument
+) {
+  //var time = Date.now();
+  const ccxtTransactions = await exchange
+    .fetchTransactions(
+      undefined,
+      exchangeAccountDocument.lastSyncedDate.valueOf(),
+      undefined,
+      {}
+    )
+    .catch((err) => {
+      throw err;
+    });
+  //console.log("Fetch transactions from exchange: ", Date.now() - time);
+  //time = Date.now();
+  var transactionsPojo: ITransaction[] = [];
 
-	const transactions = await ccxtService.createTransactions(ccxtTransactions);
-	//console.log("create transactions: ", Date.now() - time);
-	//time = Date.now();
-	for (let i = 0; i < transactions.length; i++)
-	{
-		exchangeAccountDocument.transactions.push(transactions[i]);
-		transactionsPojo.push(transactions[i].toObject());
-	}
+  const transactions = await ccxtService.createTransactions(ccxtTransactions);
+  //console.log("create transactions: ", Date.now() - time);
+  //time = Date.now();
+  for (let i = 0; i < transactions.length; i++) {
+    exchangeAccountDocument.transactions.push(transactions[i]);
+    transactionsPojo.push(transactions[i].toObject());
+  }
 
-	//console.log("push new transactions: ", Date.now() - time);
-	//time = Date.now();
+  //console.log("push new transactions: ", Date.now() - time);
+  //time = Date.now();
 
-	return transactionsPojo;
+  return transactionsPojo;
 }
 
-async function updateOrders(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument) {
-	var closedOrders: IOrder[] = [];
+async function updateOrders(
+  exchange: Exchange,
+  exchangeAccountDocument: IExchangeAccountDocument
+) {
+  var closedOrders: IOrder[] = [];
 
-	const ccxtOrders = await exchange.fetchOrders(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {}).catch((err) => {
-		throw err;
-	});
+  const ccxtOrders = await exchange
+    .fetchOrders(
+      undefined,
+      exchangeAccountDocument.lastSyncedDate.valueOf(),
+      undefined,
+      {}
+    )
+    .catch((err) => {
+      throw err;
+    });
 
-	const orders = await ccxtService.createOrders(ccxtOrders);
+  const orders = await ccxtService.createOrders(ccxtOrders);
 
-	for (var i = 0; i < orders.length; i++) {
-		if (orders[i].status == 'open') {
-			exchangeAccountDocument.openOrders.push(orders[i]);
-		} else if (orders[i].status == 'closed') {
-			exchangeAccountDocument.orders.push(orders[i]);
-			closedOrders.push(orders[i].toObject());
-		}
-	}
+  for (var i = 0; i < orders.length; i++) {
+    if (orders[i].status == "open") {
+      exchangeAccountDocument.openOrders.push(orders[i]);
+    } else if (orders[i].status == "closed") {
+      exchangeAccountDocument.orders.push(orders[i]);
+      closedOrders.push(orders[i].toObject());
+    }
+  }
 
-	return closedOrders;
+  return closedOrders;
 }
 
-async function createPortfolioItems(balances: { symbol: string; balance: ccxt.Balance, holdingHistory: IHoldingSnapshot[]}[]): Promise<IPortfolioItem[]> {
-	const portfolioItems: IPortfolioItem[] = [];
+async function createPortfolioItems(
+  balances: {
+    symbol: string;
+    balance: ccxt.Balance;
+    holdingHistory: IHoldingSnapshot[];
+  }[]
+): Promise<IPortfolioItem[]> {
+  const portfolioItems: IPortfolioItem[] = [];
 
-	for (var i = 0; i < balances.length; i++) {
-		let length = balances[i].holdingHistory.length;
-		let last = balances[i].holdingHistory[length - 1]
-		let averageBuyPrice = last.totalValueInvested / last.totalAmountBought;
-		let averageSellPrice = last.totalValueReceived / last.totalAmountSold;
+  for (var i = 0; i < balances.length; i++) {
+    let length = balances[i].holdingHistory.length;
+    let last = balances[i].holdingHistory[length - 1];
+    let averageBuyPrice = last.totalValueInvested / last.totalAmountBought;
+    let averageSellPrice = last.totalValueReceived / last.totalAmountSold;
 
-		const item: IPortfolioItem = {
-			asset: {
-				assetId: balances[i].symbol,
-				symbol: balances[i].symbol,
-				name: balances[i].symbol,
-				logoUrl: 'https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png',
-			},
-			balance: balances[i].balance,
-			averageBuyPrice: { USD: averageBuyPrice },
-			averageSellPrice: { USD: averageSellPrice },
-			amountSold: last.totalAmountSold,
-			amountBought: last.totalAmountBought,
-			holdingHistory: balances[i].holdingHistory
-		};
+    const item: IPortfolioItem = {
+      asset: {
+        assetId: balances[i].symbol,
+        symbol: balances[i].symbol,
+        name: balances[i].symbol,
+        logoUrl:
+          "https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png",
+      },
+      balance: balances[i].balance,
+      averageBuyPrice: { USD: averageBuyPrice },
+      averageSellPrice: { USD: averageSellPrice },
+      amountSold: last.totalAmountSold,
+      amountBought: last.totalAmountBought,
+      holdingHistory: balances[i].holdingHistory,
+    };
 
-		portfolioItems.push(item);
-	}
+    portfolioItems.push(item);
+  }
 
-	return portfolioItems;
+  return portfolioItems;
 }
 
-async function update(userId: string, exchangeId: string, exchangeParam: IExchangeAccountRequest) {
-	const user = await User.findById(userId);
+async function update(
+  userId: string,
+  exchangeId: string,
+  exchangeParam: IExchangeAccountRequest
+) {
+  const user = await User.findById(userId);
 
-	// validate
-	if (!user) throw 'User not found';
+  // validate
+  if (!user) throw "User not found";
 
-	const exchange = await ExchangeAccount.findById(exchangeId);
+  const exchange = await ExchangeAccount.findById(exchangeId);
 
-	if (!exchange) throw 'Exchange account not found';
+  if (!exchange) throw "Exchange account not found";
 
-	// copy exchangeParam properties to exchange
-	Object.assign(exchange, exchangeParam);
+  // copy exchangeParam properties to exchange
+  Object.assign(exchange, exchangeParam);
 
-	return await exchange.save();
+  return await exchange.save();
 }
 
 async function _delete(userId: string, exchangeId: string) {
-	console.log(userId, exchangeId);
-	var user = await User.findById(userId);
+  console.log(userId, exchangeId);
+  var user = await User.findById(userId);
 
-	if (!user) throw 'User not found';
+  if (!user) throw "User not found";
 
-	const updatedArray = user.linkedExchanges.filter((item) => {
-		return item != exchangeId;
-	});
+  const updatedArray = user.linkedExchanges.filter((item) => {
+    return item != exchangeId;
+  });
 
-	user.linkedExchanges = updatedArray;
+  user.linkedExchanges = updatedArray;
 
-	const exchange = await ExchangeAccount.findByIdAndRemove(exchangeId);
+  const exchange = await ExchangeAccount.findByIdAndRemove(exchangeId);
 
-	await user.save();
+  await user.save();
 }
 
 async function getRequiredCredentials(exchangeType: exchangeType) {
-	return ccxtService.getRequiredCredentials(exchangeType);
+  return ccxtService.getRequiredCredentials(exchangeType);
 }
 
 async function getExchangesData(userId: string) {
-	const user = await User.findById(userId);
-	// validate
-	if (!user) throw 'User not found';
+  const user = await User.findById(userId);
+  // validate
+  if (!user) throw "User not found";
 
-	let portfolioData: IPortfolioDataView[] = [];
+  let portfolioData: IPortfolioDataView[] = [];
 
-	for (var i = 0; i < user.linkedExchanges.length; i++) {
-		const exchangeDocument = await ExchangeAccount.findById(user.linkedExchanges[i]);
+  for (var i = 0; i < user.linkedExchanges.length; i++) {
+    const exchangeDocument = await ExchangeAccount.findById(
+      user.linkedExchanges[i]
+    );
 
-		if (!exchangeDocument) throw 'No exchange account was found with the specified id';
+    if (!exchangeDocument)
+      throw "No exchange account was found with the specified id";
 
-		const exchange = ccxtService.loadExchange(exchangeDocument);
-		const portfolioDataItem = await createPortfolioData(exchange, exchangeDocument);
-		portfolioData.push(portfolioDataItem);
-	}
+    const exchange = ccxtService.loadExchange(exchangeDocument);
+    const portfolioDataItem = await createPortfolioData(
+      exchange,
+      exchangeDocument
+    );
+    portfolioData.push(portfolioDataItem);
+  }
 
-	return portfolioData;
+  return portfolioData;
 }
 
 async function getExchangeData(userId: string, exchangeId: string) {
-	const user = await User.findById(userId);
-	if (!user) throw 'User not found';
+  const user = await User.findById(userId);
+  if (!user) throw "User not found";
 
-	if (!user.linkedExchanges.includes(exchangeId)) {
-		throw 'The specified exchange account was not found for this user';
-	}
+  if (!user.linkedExchanges.includes(exchangeId)) {
+    throw "The specified exchange account was not found for this user";
+  }
 
-	const exchangeDocument = await ExchangeAccount.findById(exchangeId);
+  const exchangeDocument = await ExchangeAccount.findById(exchangeId);
 
-	if (!exchangeDocument) throw 'No exchange account was found with the specified id';
+  if (!exchangeDocument)
+    throw "No exchange account was found with the specified id";
 
-	const exchange = ccxtService.loadExchange(exchangeDocument);
+  const exchange = ccxtService.loadExchange(exchangeDocument);
 
-	return await createPortfolioData(exchange, exchangeDocument);
+  return await createPortfolioData(exchange, exchangeDocument);
 }
 
 async function syncAllExchangesData(userId: string) {
-	// updateOrders
-	// updateTransactions
-	// check all exchanges to see if there is new data for the user's
-	// update the database with new information
+  // updateOrders
+  // updateTransactions
+  // check all exchanges to see if there is new data for the user's
+  // update the database with new information
 
-	const user = await User.findById(userId);
-	// validate
-	if (!user) throw 'User not found';
+  const user = await User.findById(userId);
+  // validate
+  if (!user) throw "User not found";
 
-	let portfolioData: IPortfolioDataView[] = [];
+  let portfolioData: IPortfolioDataView[] = [];
 
-	for (var i = 0; i < user.linkedExchanges.length; i++) {
-		const exchangeDocument = await ExchangeAccount.findById(user.linkedExchanges[i]);
+  for (var i = 0; i < user.linkedExchanges.length; i++) {
+    const exchangeDocument = await ExchangeAccount.findById(
+      user.linkedExchanges[i]
+    );
 
-		if (!exchangeDocument) throw 'No exchange account was found with the specified id';
+    if (!exchangeDocument)
+      throw "No exchange account was found with the specified id";
 
-		const exchange = ccxtService.loadExchange(exchangeDocument);
-		const portfolioDataItem = await syncExchangeData(exchangeDocument.id, exchange).catch((err) => {
-			throw err;
-		});
+    const exchange = ccxtService.loadExchange(exchangeDocument);
+    const portfolioDataItem = await syncExchangeData(
+      exchangeDocument.id,
+      exchange
+    ).catch((err) => {
+      throw err;
+    });
 
-		portfolioData.push(portfolioDataItem);
-	}
+    portfolioData.push(portfolioDataItem);
+  }
 
-	return portfolioData;
+  return portfolioData;
 }
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {
-	//console.log(Date.now());
-	const lastSynced = new Date();
-	//var lastItem = lastSynced;
-	const exchangeAccountDocument = await exchangeService.getById(exchangeId);
-	//console.log("Get exchange account document: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
-	if (!exchangeAccountDocument) {
-		throw 'Exchange account not found';
-	}
+  //console.log(Date.now());
+  const lastSynced = new Date();
+  //var lastItem = lastSynced;
+  const exchangeAccountDocument = await exchangeService.getById(exchangeId);
+  //console.log("Get exchange account document: ", Date.now() - lastItem.valueOf());
+  //lastItem = new Date();
+  if (!exchangeAccountDocument) {
+    throw "Exchange account not found";
+  }
 
-	const transactions: ITransaction[] = await updateTransactions(exchange, exchangeAccountDocument);
-	//console.log("Update transactions: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
-	const orders: IOrder[] = await updateOrders(exchange, exchangeAccountDocument);
-	//console.log("Update orders: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
-	const portfolioItems: IPortfolioItem[] = await updatePortfolioItems(exchange, exchangeAccountDocument, orders, transactions);
-	//console.log("Update portfolio items ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+  const transactions: ITransaction[] = await updateTransactions(
+    exchange,
+    exchangeAccountDocument
+  );
+  //console.log("Update transactions: ", Date.now() - lastItem.valueOf());
+  //lastItem = new Date();
+  const orders: IOrder[] = await updateOrders(
+    exchange,
+    exchangeAccountDocument
+  );
+  //console.log("Update orders: ", Date.now() - lastItem.valueOf());
+  //lastItem = new Date();
+  const portfolioItems: IPortfolioItem[] = await updatePortfolioItems(
+    exchange,
+    exchangeAccountDocument,
+    orders,
+    transactions
+  );
+  //console.log("Update portfolio items ", Date.now() - lastItem.valueOf());
+  //lastItem = new Date();
 
-	const newOrdersCount = orders.length;
-	const newTransactionsCount = transactions.length;
-  await saveTransactionViewItems(exchange, exchangeAccountDocument, newOrdersCount, newTransactionsCount);
-	//console.log("save transaction view items: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
-	await saveHoldingsTimeslices(exchange, exchangeAccountDocument);
-	//console.log("save holdings timeslices: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+  const newOrdersCount = orders.length;
+  const newTransactionsCount = transactions.length;
+  await saveTransactionViewItems(
+    exchange,
+    exchangeAccountDocument,
+    newOrdersCount,
+    newTransactionsCount
+  );
+  //console.log("save transaction view items: ", Date.now() - lastItem.valueOf());
+  //lastItem = new Date();
+  await saveHoldingsTimeslices(exchange, exchangeAccountDocument);
+  //console.log("save holdings timeslices: ", Date.now() - lastItem.valueOf());
+  //lastItem = new Date();
 
-	exchangeAccountDocument.lastSyncedDate = lastSynced;
+  exchangeAccountDocument.lastSyncedDate = lastSynced;
 
-	const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => {
-		throw err;
-	});
-	//console.log("save exchange account document back to mongodb: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+  const savedExchangeAccount = await exchangeAccountDocument
+    .save()
+    .catch((err) => {
+      throw err;
+    });
+  //console.log("save exchange account document back to mongodb: ", Date.now() - lastItem.valueOf());
+  //lastItem = new Date();
 
-	const portfolioData = createPortfolioData(exchange, exchangeAccountDocument);
-	//console.log("Create portfoliodata: ", Date.now() - lastItem.valueOf());
-	return portfolioData;
+  const portfolioData = createPortfolioData(exchange, exchangeAccountDocument);
+  //console.log("Create portfoliodata: ", Date.now() - lastItem.valueOf());
+  return portfolioData;
 }
 
 export interface ITimeslices {
-	[key: string]: ITimeslice
+  [key: string]: ITimeslice;
 }
 
-async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument) {
-	let timeslices: ITimeslices = {};
-	let allTimeHoldingSlices: IHoldingSlice[] = [];
+async function saveHoldingsTimeslices(
+  ccxtExchange: ccxt.Exchange,
+  exchange: IExchangeAccountDocument
+) {
+  let timeslices: ITimeslices = {};
+  let allTimeHoldingSlices: IHoldingSlice[] = [];
 
-	let now = Date.now();
-	let endDate = now + (86400000 - (now % 86400000)); // start of tomorrow
+  let now = Date.now();
+  let endDate = now + (86400000 - (now % 86400000)); // start of tomorrow
 
-	let earliestTime = endDate;
+  let earliestTime = endDate;
 
-	for (let i = 0; i < exchange.portfolioItems.length; i++)
-	{
-		let item = exchange.portfolioItems[i];
-		let asset = item.asset.symbol;
-		let holdingHistory = item.holdingHistory;
+  for (let i = 0; i < exchange.portfolioItems.length; i++) {
+    let item = exchange.portfolioItems[i];
+    let asset = item.asset.symbol;
+    let holdingHistory = item.holdingHistory;
 
-		let holdingSlice = { asset: asset, amount: 0, price: 0, value: 0, snapshots: holdingHistory};
-		allTimeHoldingSlices.push(holdingSlice);
-	}
+    let holdingSlice = {
+      asset: asset,
+      amount: 0,
+      price: 0,
+      value: 0,
+      snapshots: holdingHistory,
+    };
+    allTimeHoldingSlices.push(holdingSlice);
+  }
 
-	if (exchange.lastSyncedDate.valueOf() > 0) // just pick up where we left off since we've synced before
-	{
-		Object.entries(exchange.timeslices).forEach(([key, value]:[string, ITimeslice]) => {
-			timeslices[value.start] = value;
-			earliestTime = value.start;
-		});
-	}
-	else { // this is the first time ever syncing
-		for (let i = 0; i < allTimeHoldingSlices.length; i++)
-		{
-			let slice = allTimeHoldingSlices[i];
+  if (exchange.lastSyncedDate.valueOf() > 0) {
+    // just pick up where we left off since we've synced before
+    Object.entries(exchange.timeslices).forEach(
+      ([key, value]: [string, ITimeslice]) => {
+        timeslices[value.start] = value;
+        earliestTime = value.start;
+      }
+    );
+  } else {
+    // this is the first time ever syncing
+    for (let i = 0; i < allTimeHoldingSlices.length; i++) {
+      let slice = allTimeHoldingSlices[i];
 
-			if (slice.snapshots[0].timestamp < earliestTime)
-			{
-				earliestTime = slice.snapshots[0].timestamp;
-			}
-		}
-	}
+      if (slice.snapshots[0].timestamp < earliestTime) {
+        earliestTime = slice.snapshots[0].timestamp;
+      }
+    }
+  }
 
-	const startDate = (earliestTime - (earliestTime % 86400000));
-	
-	let currentSnapshot: number[] = [];
-	let lastPrice: number[] = [];
-	let lastAmount: number[] = [];
-	for (let i = 0; i < allTimeHoldingSlices.length; i++)
-	{
-		currentSnapshot[i] = 0;
-		lastPrice[i] = 0;
-		lastAmount[i] = 0;
-	}
+  const startDate = earliestTime - (earliestTime % 86400000);
 
-	for (let day = startDate; day < endDate; day+=86400000)
-	{
-		let timeslice: ITimeslice = {
-			start: day,
-			holdings: {},
-			value: 0
-		};
+  let currentSnapshot: number[] = [];
+  let lastPrice: number[] = [];
+  let lastAmount: number[] = [];
+  for (let i = 0; i < allTimeHoldingSlices.length; i++) {
+    currentSnapshot[i] = 0;
+    lastPrice[i] = 0;
+    lastAmount[i] = 0;
+  }
 
-		for (let holding = 0; holding < allTimeHoldingSlices.length; holding++)
-		{
-			let slice = allTimeHoldingSlices[holding];
-			let snapsInThisSlice: IHoldingSnapshot[] = [];
+  for (let day = startDate; day < endDate; day += 86400000) {
+    let timeslice: ITimeslice = {
+      start: day,
+      holdings: {},
+      value: 0,
+    };
 
-			for (let i = currentSnapshot[holding]; i < slice.snapshots.length; i++)
-			{
-				let snap = slice.snapshots[i];
-				let snapDay = snap.timestamp - (snap.timestamp % 86400000);
+    for (let holding = 0; holding < allTimeHoldingSlices.length; holding++) {
+      let slice = allTimeHoldingSlices[holding];
+      let snapsInThisSlice: IHoldingSnapshot[] = [];
 
-				if (snapDay < day)
-				{
-					lastAmount[holding] = snap.totalAmountBought - snap.totalAmountSold;
-					lastPrice[holding] = snap.price.USD;
-					currentSnapshot[holding]++;
-				}
-				else if (snapDay == day)
-				{
-					snapsInThisSlice.push(snap);
-					lastAmount[holding] = snap.totalAmountBought - snap.totalAmountSold;
-					lastPrice[holding] = snap.price.USD;
-					currentSnapshot[holding]++;
-				}
-				else { break; }
-			}
+      for (let i = currentSnapshot[holding]; i < slice.snapshots.length; i++) {
+        let snap = slice.snapshots[i];
+        let snapDay = snap.timestamp - (snap.timestamp % 86400000);
 
-			let value = lastAmount[holding] * lastPrice[holding];
+        if (snapDay < day) {
+          lastAmount[holding] = snap.totalAmountBought - snap.totalAmountSold;
+          lastPrice[holding] = snap.price.USD;
+          currentSnapshot[holding]++;
+        } else if (snapDay == day) {
+          snapsInThisSlice.push(snap);
+          lastAmount[holding] = snap.totalAmountBought - snap.totalAmountSold;
+          lastPrice[holding] = snap.price.USD;
+          currentSnapshot[holding]++;
+        } else {
+          break;
+        }
+      }
 
-			let holdingSlice: IHoldingSlice = {
-				asset: slice.asset,
-				amount: lastAmount[holding],
-				price: lastPrice[holding],
-				value: value,
-				snapshots: snapsInThisSlice
-			};
+      let value = lastAmount[holding] * lastPrice[holding];
 
-			timeslice.holdings[slice.asset] = holdingSlice;
-			timeslice.value += value;
-		}
+      let holdingSlice: IHoldingSlice = {
+        asset: slice.asset,
+        amount: lastAmount[holding],
+        price: lastPrice[holding],
+        value: value,
+        snapshots: snapsInThisSlice,
+      };
 
-		timeslices[day] = timeslice;
-	}
+      timeslice.holdings[slice.asset] = holdingSlice;
+      timeslice.value += value;
+    }
 
-	exchange.timeslices = timeslices;
+    timeslices[day] = timeslice;
+  }
+
+  exchange.timeslices = timeslices;
 }
 
-async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IExchangeAccountDocument) {
-	var exchangeAccountJson = exchangeAccount.toJSON();
-	delete exchangeAccountJson.portfolioItems;
+async function createPortfolioData(
+  exchange: ccxt.Exchange,
+  exchangeAccount: IExchangeAccountDocument
+) {
+  var exchangeAccountJson = exchangeAccount.toJSON();
+  delete exchangeAccountJson.portfolioItems;
 
-	var totalValue = 0;
-	var totalProfit = 0;
-	var totalInvested = 0;
-	var totalProfitPercentage = 0;
+  var totalValue = 0;
+  var totalProfit = 0;
+  var totalInvested = 0;
+  var totalProfitPercentage = 0;
 
-	const formattedPortfolioItems: IPortfolioItemView[] = await Promise.all(
-		exchangeAccount.portfolioItems.map(async (item) => {
-			let length = item.holdingHistory.length;
-			let last = item.holdingHistory[length-1];
-			const currentPrice = await getConversionRate(exchange, item.asset.symbol, 'USD');
+  const formattedPortfolioItems: IPortfolioItemView[] = await Promise.all(
+    exchangeAccount.portfolioItems.map(async (item) => {
+      let length = item.holdingHistory.length;
+      let last = item.holdingHistory[length - 1];
+      const currentPrice = await getConversionRate(
+        exchange,
+        item.asset.symbol,
+        "USD"
+      );
       var currentValue = item.balance.total * currentPrice;
-			let profitAllTime = last.totalValueReceived - last.totalValueInvested + currentValue;
-			
-			totalProfit += profitAllTime;
-			totalValue += currentValue;
-			totalInvested += (item.amountBought * item.averageBuyPrice.USD);
+      let profitAllTime =
+        last.totalValueReceived - last.totalValueInvested + currentValue;
 
-			const profitPercentageAllTime = (profitAllTime / (last.totalValueInvested) * 100);
+      totalProfit += profitAllTime;
+      totalValue += currentValue;
+      totalInvested += item.amountBought * item.averageBuyPrice.USD;
+
+      const profitPercentageAllTime =
+        (profitAllTime / last.totalValueInvested) * 100;
       //const profit24Hour = (amountSoldInTheLast24Hours * averageSellInTheLast24Hours) - (value24HoursAgo * howMuchIHad24HoursAgo) + currentValue
       const profit24Hour = randNum();
-			return {
-				asset: item.asset,
-				amount: item.balance.total,
-				value: { USD: currentValue },
-				profitTotal: { all: profitAllTime, h24: profit24Hour},
-				currentPrice: currentPrice,
-				profitPercentage: {
-					all: profitPercentageAllTime,
-					h24: randNum()
-				},
-				holdingHistory: item.holdingHistory
-			};
-		})
-	);
+      return {
+        asset: item.asset,
+        amount: item.balance.total,
+        value: { USD: currentValue },
+        profitTotal: { all: profitAllTime, h24: profit24Hour },
+        currentPrice: currentPrice,
+        profitPercentage: {
+          all: profitPercentageAllTime,
+          h24: randNum(),
+        },
+        holdingHistory: item.holdingHistory,
+      };
+    })
+  );
 
-	let portfolioData: IPortfolioDataView = {
-		...exchangeAccountJson,
-		portfolioItems: formattedPortfolioItems,
-		profitPercentage: { USD: (((totalValue + totalProfit) - totalInvested) / totalInvested) * 100 },
-		portfolioTotal: { USD: totalValue },
-		profitTotal: { USD: totalProfit },
-	};
+  let portfolioData: IPortfolioDataView = {
+    ...exchangeAccountJson,
+    portfolioItems: formattedPortfolioItems,
+    profitPercentage: {
+      USD: ((totalValue + totalProfit - totalInvested) / totalInvested) * 100,
+    },
+    portfolioTotal: { USD: totalValue },
+    profitTotal: { USD: totalProfit },
+  };
 
-	return portfolioData;
+  return portfolioData;
 }
