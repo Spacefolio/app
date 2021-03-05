@@ -13,6 +13,7 @@ export interface IPortfolioDataView {
     apiSecret: string;
     passphrase: string;
   };
+  logoUrl: string;
   orders: IOpenOrderItemView[];
   transactionViewItems: ITransactionItemView[];
   transactions: ITransaction[];
@@ -27,11 +28,11 @@ export interface IPortfolioDataView {
 export interface IPortfolioItemView {
   id?: string;
   asset: IAsset;
-  amount: number,
+  amount: number;
   value: { USD: number };
-  profitTotal: { all: number; h24: number; };
+  profitTotal: { all: number; h24: number };
   currentPrice: number;
-  profitPercentage: { all: number; h24: number; };
+  profitPercentage: { all: number; h24: number };
 }
 
 export interface IAsset {
@@ -72,7 +73,15 @@ export interface IOpenOrderItemView {
 }
 
 export type timeframe = "24H" | "1W" | "1M" | "3M" | "6M" | "1Y" | "ALL";
-export enum timespan { H24="24H", W1="1W", M1="1M", M3="3M", M6="6M", Y1="1Y", ALL="ALL" };
+export enum timespan {
+  H24 = "24H",
+  W1 = "1W",
+  M1 = "1M",
+  M3 = "3M",
+  M6 = "6M",
+  Y1 = "1Y",
+  ALL = "ALL",
+}
 
 export interface IPortfolioLineChartItem {
   T: number; //UNIX timestamp of the plot point to be use as the x axis

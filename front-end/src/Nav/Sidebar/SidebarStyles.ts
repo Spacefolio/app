@@ -1,4 +1,5 @@
 import { Card, Drawer, SwipeableDrawer } from "@material-ui/core";
+import { Polymer } from "@material-ui/icons";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { IViewType } from "../../../../types";
@@ -19,29 +20,34 @@ interface IDesktopWrapperProps {
   isSidebarCollapsed: Boolean;
 }
 
+export const SidebarSpacer = styled.div`
+  height: 100%;
+`;
+
+export const AlgonexLogo = styled(Polymer)`
+  fill: ${COLORS.primaryBase} !important; 
+`;
+
 export const SidebarContainer = styled.div<IDesktopWrapperProps>`
   display: flex;
   justify-content: start;
   box-shadow: 5px 10px 25px -24px;
   overflow: hidden;
   flex-direction: column;
-  background-color: ${COLORS.primaryLight4};
+  position: sticky;
+  top: 0;
+  background-color: #2e2e2e;
   flex-shrink: 0;
-  height: 100%;
+  height: 100vh;
+  * {
+    color: white;
+  }
   width: ${(props: any) =>
     props.isSidebarCollapsed ? SPACING.NavbarHeight : SPACING.sidebarWidth};
-
-  @media (max-width: ${RD.breakpointtablet}) {
-    ${(props) =>
-      `position: fixed; width: ${
-        props.isSidebarCollapsed ? "0px" : SPACING.sidebarWidth
-      };`}
-  }
 
   align-items: ${(props: any) =>
     props.isSidebarCollapsed ? "center" : "start"};
   z-index: 1;
-  padding-top: ${SPACING.NavbarHeight};
   ${TimingStyle}
 `;
 
@@ -55,7 +61,6 @@ export const SidebarDrawer = styled(SwipeableDrawer)`
   justify-content: start;
   box-shadow: 5px 10px 25px -24px;
   flex-direction: column;
-  background-color: ${COLORS.primaryLight4};
   height: 100vh;
   width: ${SPACING.sidebarWidth};
   align-items: start;
@@ -77,7 +82,6 @@ interface ILinkTextProps {
 export const LinkText = styled(BaseText)<ILinkTextProps>`
   font-size: 1.2em;
   display: flex;
-  color: black;
   margin-left: ${SPACING.NavbarHeight};
   cursor: pointer;
   align-items: center;
@@ -95,7 +99,7 @@ interface ITabContentContainerProps {
 }
 export const TabSubContentContainer = styled.div<ITabContentContainerProps>`
   ${TimingStyle}
-  ${(props) => (props.isActiveTab ? `height: 300px;` : `height: 0px;`)}
+  ${(props) => (props.isActiveTab ? `height: 200px;` : `height: 0px;`)}
   background-color: ${COLORS.primaryLight3};
   width: 100%;
 `;

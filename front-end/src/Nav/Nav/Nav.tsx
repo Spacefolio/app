@@ -27,6 +27,8 @@ import {
 } from "@material-ui/core";
 import { COLORS } from "../../GlobalStyles/ResponsiveDesign";
 import { ArrowDropDown } from "@material-ui/icons";
+import { ListMyExchanges } from "../../Exchanges";
+import { IPortfolioDataView } from "../../../../types";
 
 interface Props {
   window?: () => Window;
@@ -61,6 +63,10 @@ export const Nav = () => {
     (state: IRootState) => state.applicationView.isSidebarCollapsed
   );
 
+  const filteredPortfolioData: IPortfolioDataView = useSelector(
+    (state: IRootState) => state.portfolio.filteredPortfolioData
+  );
+
   const history = useHistory();
 
   const { logout } = userActions;
@@ -70,23 +76,39 @@ export const Nav = () => {
   const AlgonexLogo = (
     <NavLogoArea>
       <BrandTextLink to="/dashboard">
-        <Typography style={{ color: "black" }} variant={"h4"}>
-          Algonex
-        </Typography>
+        <Typography variant={"h4"}>Algonex</Typography>
       </BrandTextLink>
     </NavLogoArea>
+  );
+
+  const accountDropdown = (
+    <Dropdown
+    
+      isVisible={accountDropdownVisible}
+      setVisiblity={setAccountDropdownVisible}
+      containerRef={container}
+    >
+      <MenuList>
+        <ListMyExchanges enableEditing={false} />
+        <MenuItem
+          onClick={() => {
+            dispatch(logout());
+            location.reload();
+          }}
+        >
+          Logout
+        </MenuItem>
+      </MenuList>
+    </Dropdown>
   );
 
   const DesktopNav = (
     <NavContainer>
       <ToggleSidebar
-        onClick={() =>
-          dispatch(applicationViewActions.toggleSidebar())
-        }
+        onClick={() => dispatch(applicationViewActions.toggleSidebar())}
       >
         <ArrowIcon direction={!isSidebarCollapsed ? "right" : "down"} />
       </ToggleSidebar>
-      {AlgonexLogo}
       <NavFlexSpacer />
 
       <NavAccountContainer
@@ -96,31 +118,11 @@ export const Nav = () => {
         }}
       >
         <InlineDiv>
+          <Avatar src={filteredPortfolioData.logoUrl} />
           {user.firstName} {user.lastName}
           <ArrowDropDown />
         </InlineDiv>
-        {accountDropdownVisible && (
-          <Dropdown
-            isVisible={accountDropdownVisible}
-            setVisiblity={setAccountDropdownVisible}
-            containerRef={container}
-          >
-            <MenuList>
-              <MenuItem onClick={() => history.push("/profile")}>
-                Profile
-              </MenuItem>
-              <MenuItem>Subscription</MenuItem>
-              <MenuItem
-                onClick={() => {
-                  dispatch(logout());
-                  location.reload();
-                }}
-              >
-                Logout
-              </MenuItem>
-            </MenuList>
-          </Dropdown>
-        )}
+        {accountDropdownVisible && accountDropdown}
       </NavAccountContainer>
     </NavContainer>
   );
@@ -143,28 +145,7 @@ export const Nav = () => {
             <Avatar />
             <ArrowDropDown />
           </InlineDiv>
-          {accountDropdownVisible && (
-            <Dropdown
-              isVisible={accountDropdownVisible}
-              setVisiblity={setAccountDropdownVisible}
-              containerRef={container}
-            >
-              <MenuList>
-                <MenuItem onClick={() => history.push("/profile")}>
-                  Profile
-                </MenuItem>
-                <MenuItem>Subscription</MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    dispatch(logout());
-                    location.reload();
-                  }}
-                >
-                  Logout
-                </MenuItem>
-              </MenuList>
-            </Dropdown>
-          )}
+          {accountDropdownVisible && accountDropdown}
         </NavAccountContainer>
       </NavContainer>
     </HideOnScroll>

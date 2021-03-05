@@ -21,6 +21,7 @@ import { Modal } from "../_components";
 import {
   Avatar,
   ListItemAvatar,
+  MenuItem,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -42,7 +43,7 @@ export function AddNewExchangeList() {
   return (
     <AddExchangeWrapper>
       <TextField
-        style={{ width: "100%" }}
+        style={{ width:"100%"}}
         name="search"
         autoComplete={"off"}
         placeholder="search"
@@ -109,8 +110,8 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
   );
   const dispatch = useDispatch();
   return (
-    <MyExchangesListContainer>
-      <MyExchangesLineItemContainer
+    <React.Fragment>
+      {/* <MenuItem
         button={true}
         selected={portfolioFilterID == ""}
         key={"AllAssets"}
@@ -122,7 +123,7 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
           </Avatar>
         </ListItemAvatar>
         <MyExchangeNameWrapper>All Portfolios</MyExchangeNameWrapper>
-      </MyExchangesLineItemContainer>
+      </MenuItem> */}
       {userLinkedExchanges.length != 0
         ? userLinkedExchanges.map((item: IExchangeAccountView) => {
             return (
@@ -134,6 +135,6 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
             );
           })
         : "You have no linked accounts... You should add one above"}
-    </MyExchangesListContainer>
+    </React.Fragment>
   );
 };

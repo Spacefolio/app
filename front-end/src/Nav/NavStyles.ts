@@ -18,8 +18,9 @@ export const NavContainer = styled.div`
   font-size: 1em;
   ${CenteredFlexBox}
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
-  z-index: 2;
-  position: fixed;
+  z-index: 5;
+  position: sticky;
+  top:0;
   background-color: white;
   width: 100%;
   height: ${SPACING.NavbarHeight};

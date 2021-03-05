@@ -5,23 +5,24 @@ import {
   ResizeTransition,
   TimingStyle,
 } from "../GlobalStyles";
+import { IViewType } from "../../../types";
 
 interface ApplicationProps {
-  viewType: "mobile" | "desktop";
-  width: number;
+  isSidebarCollapsed: boolean;
+  viewType: IViewType;
 }
 
 export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
+  flex-direction: column;
   width: 100%;
-  justify-content: center;
-  margin-top: ${SPACING.NavbarHeight};
-  height: 100%
-  padding: 0 ${SPACING.flexCardGap};
+  align-items: center;
+  height: 100%;
   @media only screen and (max-width: ${RD.breakpointsmartphone}) {
-    height: ${(props) => window.outerHeight}px;
+    height: ${window.outerHeight}px;
     padding: 0;
   }
+  ${TimingStyle}
 `;
 
 export const ApplicationFlexContainer = styled.div`
@@ -32,7 +33,6 @@ export const ApplicationFlexContainer = styled.div`
 export const BodyWrapper = styled.div`
   display: flex;
   position: relative;
-  height: 100%;
+
   width: 100%;
-  // overflow-x: hidden;
 `;

@@ -26,7 +26,7 @@ import { Profile } from "../Profile";
 export const Application = () => {
   const dispatch = useDispatch();
 
-  const [ref, { width }] = useDimensions();
+  const [AppContainerRef, { width: appWidth }] = useDimensions();
 
   const applicationWidth = useSelector(
     (state: IRootState) => state.applicationView.applicationContainerWidth
@@ -64,18 +64,22 @@ export const Application = () => {
   var lastWidth: number;
 
   useEffect(() => {
-    dispatch(applicationViewActions.UpdateApplicationWidth(width));
-    if (lastWidth > width) {
+    dispatch(applicationViewActions.UpdateApplicationWidth(appWidth));
+    if (lastWidth > appWidth) {
       dispatch(applicationViewActions.toggleSidebar());
     }
-  }, [width, isSidebarCollapsed]);
+  }, [appWidth, isSidebarCollapsed]);
 
   return (
     <React.Fragment>
-      <Nav />
-      <BodyWrapper>
-        {viewType == "mobile" ? <MobileNav /> : <SidebarNav />}
-        <ApplicationContainer width={width} viewType={viewType} ref={ref}>
+      
+      <BodyWrapper style={{marginBottom: viewType == 'mobile' ? '50px': '0px'}}>
+        {viewType == "desktop" && <SidebarNav />}
+        <ApplicationContainer
+          viewType={viewType}
+          isSidebarCollapsed={isSidebarCollapsed}
+          ref={AppContainerRef}
+        ><Nav/>
           <ApplicationFlexContainer style={flexSizing()}>
             <Switch>
               <Route path={`/portfolio`}>
@@ -84,14 +88,15 @@ export const Application = () => {
               <Route path={`/dashboard`}>
                 <Dashboard />
               </Route>
-              <Route path={'/profile'}>
-                <Profile/>
+              <Route path={"/profile"}>
+                <Profile />
               </Route>
               <Redirect to="/dashboard" />
             </Switch>
           </ApplicationFlexContainer>
         </ApplicationContainer>
       </BodyWrapper>
+      {viewType == "mobile" && <MobileNav />}
     </React.Fragment>
   );
 };

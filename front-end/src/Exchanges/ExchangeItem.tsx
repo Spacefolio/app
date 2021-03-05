@@ -22,6 +22,7 @@ import {
   Avatar,
   ListItemAvatar,
   ListItemSecondaryAction,
+  MenuItem,
 } from "@material-ui/core";
 import { GrowFromZero, SvgWrapperButton } from "../GlobalStyles";
 import { Delete, Edit, Work } from "@material-ui/icons";
@@ -108,7 +109,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
 
   return (
     <React.Fragment>
-      <MyExchangesLineItemContainer
+      <MenuItem
         button={true}
         key={data.id}
         selected={portfolioFilterID == data.id}
@@ -125,7 +126,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
             {DeleteButtonSection}
           </ModifyContainer>
         )}
-      </MyExchangesLineItemContainer>
+      </MenuItem>
       <Modal
         visible={editExchangeVisible}
         dismiss={() => setEditExchangeVisible(false)}

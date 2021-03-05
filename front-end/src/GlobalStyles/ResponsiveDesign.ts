@@ -34,7 +34,7 @@ export const COLORS = {
   infoDark2: "#0064ba",
 };
 export const SPACING = {
-  sidebarWidth: "300px",
+  sidebarWidth: "200px",
   flexCardGap: "1rem",
   NavbarHeight: "60px",
 };
