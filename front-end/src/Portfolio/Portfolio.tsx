@@ -20,22 +20,14 @@ interface IPortfolioProps {}
 
 export const Portfolio: React.FC<IPortfolioProps> = () => {
   const dispatch = useDispatch();
-  const portfolioData = useSelector(
-    (state: IRootState) => state.portfolio.portfolioData
-  );
-  const width = useSelector(
-    (state: IRootState) => state.applicationView.applicationContainerWidth
-  );
+
   const [value, setValue] = useState(0);
+
   const { path } = useRouteMatch("/portfolio");
 
   const history = useHistory();
 
   const location = useLocation();
-
-  useEffect(() => {
-    !portfolioData && dispatch(portfolioActions.refresh());
-  }, [portfolioData]);
 
   useEffect(() => {
     switch (location.pathname) {

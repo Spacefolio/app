@@ -36,6 +36,8 @@ export const NavAccountContainer = styled.div`
 `;
 
 export const ToggleSidebar = styled(SvgWrapperButton)`
+position: absolute;
+left: 0;
   height: 5rem;
   width: 5rem;
 `;

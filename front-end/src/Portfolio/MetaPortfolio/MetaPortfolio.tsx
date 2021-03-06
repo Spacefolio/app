@@ -94,7 +94,9 @@ export const MetaPortfolio = () => {
     const ref = useRef();
 
     const RefreshButton = (
-      <SvgWrapperButton onClick={() => dispatch(portfolioActions.refresh())}>
+      <SvgWrapperButton
+        onClick={() => dispatch(portfolioActions.refresh(filterId, true))}
+      >
         <SyncIcon isSyncing={isRefreshing} />
       </SvgWrapperButton>
     );
@@ -135,7 +137,9 @@ export const MetaPortfolio = () => {
       <React.Fragment>
         {filteredPortfolioData != null ? (
           <div id={"PVID"}>
-            {chartValue ? null : filteredPortfolioData.portfolioTotal.USD.toFixed(2)}
+            {chartValue
+              ? null
+              : filteredPortfolioData.portfolioTotal.USD.toFixed(2)}
           </div>
         ) : (
           "loading..."
@@ -145,20 +149,28 @@ export const MetaPortfolio = () => {
 
     const PortfolioDate = (
       <Typography>
-        {filteredPortfolioData != null ? <div id={"PDID"}>{chartDate ? "" : ""}</div> : "loading..."}
+        {filteredPortfolioData != null ? (
+          <div id={"PDID"}>{chartDate ? "" : ""}</div>
+        ) : (
+          "loading..."
+        )}
       </Typography>
     );
 
     const ProfitPercentage = (
       <Typography>
-        {filteredPortfolioData != null ? `(${filteredPortfolioData.profitPercentage.USD.toFixed(2)}%)` : "loading..."}
+        {filteredPortfolioData != null
+          ? `(${filteredPortfolioData.profitPercentage.USD.toFixed(2)}%)`
+          : "loading..."}
       </Typography>
     );
 
     const ProfitTotal = (
       <Typography>
-        {filteredPortfolioData != null ? `$${filteredPortfolioData.profitTotal.USD.toFixed(2)}` : "loading..."}
-      </Typography> 
+        {filteredPortfolioData != null
+          ? `$${filteredPortfolioData.profitTotal.USD.toFixed(2)}`
+          : "loading..."}
+      </Typography>
     );
 
     const ProfitDirection = (
@@ -188,7 +200,11 @@ export const MetaPortfolio = () => {
               {RefreshButton}
             </InlineDiv>
           </Typography>
-          <PortfolioProfitSection value={filteredPortfolioData && filteredPortfolioData.profitTotal.USD}>
+          <PortfolioProfitSection
+            value={
+              filteredPortfolioData && filteredPortfolioData.profitTotal.USD
+            }
+          >
             {ProfitDirection} {ProfitTotal} {ProfitPercentage}
           </PortfolioProfitSection>
           {PortfolioDate}

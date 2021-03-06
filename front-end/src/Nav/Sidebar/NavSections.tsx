@@ -21,14 +21,12 @@ interface ISidebarActionItemProps {
   children?: React.ReactNode;
   icon: React.ReactNode;
   linkUri: string;
-  bottom?: string;
 }
 export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
   text,
   children,
   icon,
   linkUri,
-  bottom,
 }) => {
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed

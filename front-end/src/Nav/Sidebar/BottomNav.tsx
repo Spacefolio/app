@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { SidebarContainer } from "./SidebarStyles";
+import { BottomNavbar, SidebarContainer } from "./SidebarStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import value from "*.png";
@@ -9,7 +9,8 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { useHistory, useLocation, useRouteMatch } from "react-router";
-import { Dashboard, Extension, PieChart, Timeline } from "@material-ui/icons";
+import { Dashboard, Extension, PieChart, Settings, Timeline } from "@material-ui/icons";
+import { COLORS } from "../../GlobalStyles/ResponsiveDesign";
 
 interface BottomNavProps {}
 
@@ -47,19 +48,21 @@ export const MobileNav: React.FC<BottomNavProps> = ({}) => {
     }
   }, []);
 
+  
+
   return (
-    <BottomNavigation
+    <BottomNavbar
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue);
       }}
       showLabels
-      style={{ width: "100%", position: "fixed", bottom: "0px" }}
     >
       <BottomNavigationAction
         label="Portfolio"
         icon={<PieChart />}
         onClick={() => history.push("/portfolio")}
+        classes={{ selected: 'my-class-name' }}
       />
       <BottomNavigationAction
         label="Dashboard"
@@ -72,10 +75,10 @@ export const MobileNav: React.FC<BottomNavProps> = ({}) => {
         onClick={() => history.push("/bots")}
       />
       <BottomNavigationAction
-        label="Integrations"
-        icon={<Extension />}
-        onClick={() => history.push("/bots")}
+        label="Settings"
+        icon={<Settings />}
+        onClick={() => history.push("/settings")}
       />
-    </BottomNavigation>
+    </BottomNavbar>
   );
 };

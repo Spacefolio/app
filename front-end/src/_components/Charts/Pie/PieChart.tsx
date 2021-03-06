@@ -15,24 +15,23 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
   size,
   id,
 }) => {
-  const portfolioItems = useSelector(
-    (state: IRootState) => state.portfolio.portfolioData
+  const filteredPortfolioData = useSelector(
+    (state: IRootState) => state.portfolio.filteredPortfolioData
   );
 
   useEffect(() => {
-    portfolioItems.length > 0 ? drawChart() : null;
-  }, [portfolioItems]);
+    filteredPortfolioData && drawChart();
+  }, [filteredPortfolioData]);
 
   function drawChart() {
     d3.select(`#${id}1`).remove();
 
-    const data = portfolioItems[0].portfolioItems.map(
+    const data = filteredPortfolioData.portfolioItems.map(
       (item: IPortfolioItemView) => {
         return item.value.USD;
       }
     );
 
-    console.log(data);
     var group: any = d3
       .select(`#${id}`)
       .append("svg")
@@ -64,7 +63,7 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
 
   return (
     <div id={`${id}`}>
-      {!portfolioItems && (
+      {!filteredPortfolioData && (
         <div
           style={{
             display: "flex",

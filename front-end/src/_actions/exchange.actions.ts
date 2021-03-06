@@ -112,15 +112,17 @@ function getRef() {
   }
 }
 
-function _delete(id: string) {
+function _delete(id: string, filterId: string) {
   console.log("action", id);
   return (dispatch: any) => {
     dispatch(request(id));
 
     exchangeService.delete(id).then((res) => {
       dispatch(success(id));
-      dispatch(portfolioActions.FilterPortfolio(""));
-      dispatch(portfolioActions.refresh());
+      if (id == filterId) {
+        dispatch(portfolioActions.FilterPortfolio(""));
+        dispatch(portfolioActions.refresh());
+      }
     });
     dispatch(alertActions.success("Deleted")).catch((error: any) =>
       dispatch(failure(id, error.toString()))

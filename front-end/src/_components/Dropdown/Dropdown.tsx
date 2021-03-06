@@ -39,7 +39,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   return (
     <React.Fragment>
       <GrowFromZero in={isVisible}>
-        <DDWrapper>{children}</DDWrapper>
+        <DDWrapper style={{right: '0'}} >{children}</DDWrapper>
       </GrowFromZero>
     </React.Fragment>
   );

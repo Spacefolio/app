@@ -20,20 +20,30 @@ import { ClickableDiv } from "../GlobalStyles";
 import { Modal } from "../_components";
 import {
   Avatar,
+  createStyles,
   ListItemAvatar,
+  makeStyles,
   MenuItem,
   TextField,
+  Theme,
   Typography,
 } from "@material-ui/core";
-import { AccountBalanceWallet } from "@material-ui/icons";
+import { AccountBalanceWallet, Add } from "@material-ui/icons";
+import { useHistory } from "react-router";
+import { deepOrange, deepPurple } from "@material-ui/core/colors";
+import { COLORS } from "../GlobalStyles/ResponsiveDesign";
 
 export function AddNewExchangeList() {
   const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef);
+
   const [searchFilter, setSearchFilter] = useState("");
+
   const [addExchangeVisible, setAddExchangeVisible] = useState(false);
+
   const [addExchangeData, setAddExchangeData] = useState<IExchangeReference>(
     null
   );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,7 +53,7 @@ export function AddNewExchangeList() {
   return (
     <AddExchangeWrapper>
       <TextField
-        style={{ width:"100%"}}
+        style={{ width: "100%" }}
         name="search"
         autoComplete={"off"}
         placeholder="search"
@@ -102,13 +112,33 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
     dispatch(exchangeActions.getRef());
   }, []);
   const loadingExchanges = useSelector((state: any) => state.exchanges.loading);
+
   const userLinkedExchanges: IExchangeAccountView[] = useSelector(
     (state: IRootState) => state.exchanges.exchanges
   );
+
   const portfolioFilterID = useSelector(
     (state: IRootState) => state.portfolio.filterId
   );
+
   const dispatch = useDispatch();
+
+  const [addExchangeVisible, setAddExchangeVisible] = useState(false);
+
+  const history = useHistory();
+
+  const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    blend: {
+      color: COLORS.darkBase,
+      backgroundColor: 'white',
+      border: `${COLORS.darkBase} solid 2px`,
+    },
+  }),
+);
+
+const classes = useStyles();
+
   return (
     <React.Fragment>
       {/* <MenuItem
@@ -124,17 +154,28 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
         </ListItemAvatar>
         <MyExchangeNameWrapper>All Portfolios</MyExchangeNameWrapper>
       </MenuItem> */}
-      {userLinkedExchanges.length != 0
-        ? userLinkedExchanges.map((item: IExchangeAccountView) => {
-            return (
-              <ExchangeItem
-                enableEditing={enableEditing}
-                key={item.nickname}
-                data={item}
-              />
-            );
-          })
-        : "You have no linked accounts... You should add one above"}
+      {userLinkedExchanges.length != 0 &&
+        userLinkedExchanges.map((item: IExchangeAccountView) => {
+          return (
+            <ExchangeItem
+              enableEditing={enableEditing}
+              key={item.nickname}
+              data={item}
+            />
+          );
+        })}
+      <MenuItem
+        button={true}
+        key={"AddExchange"}
+        onClick={() => history.push("/settings")}
+      >
+        <ListItemAvatar>
+          <Avatar className={classes.blend}>
+            <Add />
+          </Avatar>
+        </ListItemAvatar>
+        <Typography>Add Exchange</Typography>
+      </MenuItem>
     </React.Fragment>
   );
 };

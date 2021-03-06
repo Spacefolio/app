@@ -1,5 +1,6 @@
 import { authHeader } from "../_helpers";
 import {
+  ICachedPortfolioDataView,
   IExchangeAccountRequest,
   IExchangeAccountView,
   IPortfolioDataView,
@@ -24,36 +25,92 @@ async function syncPortfolio() {
   };
 
   return await axios
-    .post<IPortfolioDataView>(
+    .post<IPortfolioDataView[]>(
       `${API_DOMAIN}/portfolios/sync`,
       {},
       { headers: requestOptions }
     )
     .then((response) => {
-      localStorage.setItem("Portfolio", JSON.stringify(response.data));
+      localStorage.setItem(
+        "Portfolio",
+        JSON.stringify(
+          response.data.map((item: IPortfolioDataView) => {
+            return { ...item, lastRefresh: Date.now() };
+          })
+        )
+      );
       return response.data;
     })
     .catch((err) => {
       throw err;
     });
 }
-async function refreshPortfolio() {
+
+async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
   const Authorization = authHeader().Authorization;
   const requestOptions = {
     Authorization: Authorization,
   };
 
-  return await axios
-    .get(`${API_DOMAIN}/portfolios/`, {
-      headers: requestOptions,
-    })
-    .then((response) => {
-      localStorage.setItem("Portfolio", JSON.stringify(response.data));
-      return response.data;
-    })
-    .catch((err) => {
-      throw err;
-    });
+  let CachedPortfolios: ICachedPortfolioDataView[] = await JSON.parse(
+    localStorage.getItem("Portfolio")
+  );
+
+  
+  
+  if (CachedPortfolios) {
+    let CachedPortfolio: ICachedPortfolioDataView = CachedPortfolios.filter(
+      (portfolioItem: ICachedPortfolioDataView) => {
+ 
+        return portfolioItem.id == portfolioFilterId;
+      }
+    )[0];
+
+    if (
+      CachedPortfolio &&
+      Date.now() - CachedPortfolio.lastRefresh < 30000 &&
+      !manual
+    ) {
+      return CachedPortfolio;
+    } else {
+      return await axios
+        .get<IPortfolioDataView>(
+          `${API_DOMAIN}/portfolios/${portfolioFilterId}`,
+          {
+            headers: requestOptions,
+          }
+        )
+        .then((response) => {
+          localStorage.setItem(
+            "Portfolio",
+            JSON.stringify(
+              CachedPortfolios.map(
+                (portfolioItem: ICachedPortfolioDataView) => {
+                  return portfolioItem.id == portfolioFilterId
+                    ? { ...response.data, lastRefresh: Date.now() }
+                    : portfolioItem;
+                }
+              )
+            )
+          );
+          return response.data;
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }
+  } else {
+    return await axios
+      .get(`${API_DOMAIN}/portfolios/${portfolioFilterId}`, {
+        headers: requestOptions,
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
 }
 
 // async function getPortfolioData(timeframe: string, exchangeId: string) {

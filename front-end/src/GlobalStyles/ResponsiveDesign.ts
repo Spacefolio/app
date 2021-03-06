@@ -32,6 +32,7 @@ export const COLORS = {
   infoLight1: "#51b0ff",
   infoDark1: "#007cd6",
   infoDark2: "#0064ba",
+  darkBase: '#2e2e2e',
 };
 export const SPACING = {
   sidebarWidth: "200px",

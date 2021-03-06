@@ -21,7 +21,9 @@ import { applicationViewActions } from "../_actions/applicationView.actions";
 import { RD } from "../GlobalStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
 import { MobileNav } from "../Nav/Sidebar/BottomNav";
-import { Profile } from "../Profile";
+import { Settings } from "../Settings";
+import { GrowFromZero } from "../GlobalStyles";
+import { portfolioActions } from "../_actions";
 
 export const Application = () => {
   const dispatch = useDispatch();
@@ -39,6 +41,8 @@ export const Application = () => {
   const viewType = useSelector(
     (state: IRootState) => state.applicationView.currentViewType
   );
+
+  const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
   const flexSizing = () => {
     if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
@@ -70,30 +74,38 @@ export const Application = () => {
     }
   }, [appWidth, isSidebarCollapsed]);
 
+  useEffect(() => {
+    dispatch(portfolioActions.refresh(filterId));
+  }, []);
+
   return (
     <React.Fragment>
-      
-      <BodyWrapper style={{marginBottom: viewType == 'mobile' ? '50px': '0px'}}>
+      <BodyWrapper
+        style={{ marginBottom: viewType == "mobile" ? "50px" : "0px" }}
+      >
         {viewType == "desktop" && <SidebarNav />}
         <ApplicationContainer
           viewType={viewType}
           isSidebarCollapsed={isSidebarCollapsed}
           ref={AppContainerRef}
-        ><Nav/>
-          <ApplicationFlexContainer style={flexSizing()}>
-            <Switch>
-              <Route path={`/portfolio`}>
-                <Portfolio />
-              </Route>
-              <Route path={`/dashboard`}>
-                <Dashboard />
-              </Route>
-              <Route path={"/profile"}>
-                <Profile />
-              </Route>
-              <Redirect to="/dashboard" />
-            </Switch>
-          </ApplicationFlexContainer>
+        >
+          <Nav />
+          <GrowFromZero in={true}>
+            <ApplicationFlexContainer style={flexSizing()}>
+              <Switch>
+                <Route path={`/portfolio`}>
+                  <Portfolio />
+                </Route>
+                <Route path={`/dashboard`}>
+                  <Dashboard />
+                </Route>
+                <Route path={"/settings"}>
+                  <Settings />
+                </Route>
+                <Redirect to="/dashboard" />
+              </Switch>
+            </ApplicationFlexContainer>
+          </GrowFromZero>
         </ApplicationContainer>
       </BodyWrapper>
       {viewType == "mobile" && <MobileNav />}

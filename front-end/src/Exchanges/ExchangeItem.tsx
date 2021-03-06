@@ -39,14 +39,20 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
   const dispatch = useDispatch();
 
   const [logoUrl, setLogoUrl] = useState("");
+
   const [editExchangeVisible, setEditExchangeVisible] = useState(false);
+
   const exchangeRef = useSelector(
     (state: IRootState) => state.exchanges.exchangeRef
   );
+
   const portfolioFilterID = useSelector(
     (state: IRootState) => state.portfolio.filterId
   );
+
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
   useEffect(() => {
     const targetRef: IExchangeReference = exchangeRef.filter(
@@ -60,7 +66,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
 
   function handleClose(shouldDelete: boolean) {
     if (shouldDelete) {
-      dispatch(exchangeActions.delete(data.id));
+      dispatch(exchangeActions.delete(data.id, filterId));
     } else {
       setIsDeleteOpen(false);
     }

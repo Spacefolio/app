@@ -33,7 +33,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
       <SidebarActionItem
         text="ALGONEX"
         icon={<AlgonexLogo />}
-        linkUri="/"
+        linkUri="/dashboard"
       ></SidebarActionItem>
 
       <SidebarActionItem
@@ -54,11 +54,11 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
         linkUri="/bots"
       ></SidebarActionItem>
 
-      <SidebarActionItem
+      {/* <SidebarActionItem
         text="Integrations"
         icon={<Extension />}
         linkUri="/bots"
-      ></SidebarActionItem>
+      ></SidebarActionItem> */}
 
       <SidebarSpacer/>
 
