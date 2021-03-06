@@ -77,21 +77,24 @@ export function fiat(symbol: string)
 
 export async function loadHourlyData(symbol: string)
 {
-  const coinId = coindataService.getCoinId(symbol);
+  const coinId = await coindataService.getCoinId(symbol);
   const now = Date.now() / 1000;
 
   var toTimestamp = now;
   let lastHour = now - (now % 3600);
   var fromTimestamp = lastHour - 691200; // subtract 8 days (in seconds) to get one week ago
 
-  var hourlyDataJson = await axios.get<IHistoricalDataResponse>(`https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=${fromTimestamp}&to=${toTimestamp}`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err; });
+  var hourlyDataJson = await axios.get<IHistoricalDataResponse>(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart/range?vs_currency=usd&from=${fromTimestamp}&to=${toTimestamp}`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err; });
 
-  const hourlyData = new HourlyData( { symbol });
+  var hourlyData = await HourlyData.findOne({ symbol });
+  if (!hourlyData) {
+    hourlyData = new HourlyData( { symbol });
+  }
 
   for (let i = 0; i < hourlyDataJson.prices.length; i++)
   {
     let timestamp: number = hourlyDataJson.prices[i][0];
-    let hour = timestamp % 3600 >= 1600 ? timestamp + (3600 - (timestamp % 3600)) : timestamp - (timestamp % 3600); // round to nearest hour
+    let hour = timestamp % 3600000 >= 1800000 ? timestamp + (3600000 - (timestamp % 3600000)) : timestamp - (timestamp % 3600000); // round to nearest hour
     hourlyData.prices.push({ hour, price: hourlyDataJson.prices[i][1] });
   }
 
@@ -102,6 +105,20 @@ export async function loadHourlyData(symbol: string)
 export async function getHourlyData(symbol: string, from: number, to: number) : Promise<IHourlyPrice[]>
 {
   var hourlyPrices: IHourlyPrice[] = [];
+  
+  from = from - (from % 3600000); // round down to nearest hour
+  to = to - (to % 3600000);
+
+  if (fiat(symbol))
+  {
+    for (let i = from; i < to; i += 3600000)
+    {
+      hourlyPrices.push({ hour: i, price: 1 });
+    }
+
+    return hourlyPrices;
+  }
+  
   var hourlyData = await HourlyData.findOne({ symbol });
   if (!hourlyData)
   {
@@ -109,9 +126,6 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
     hourlyData = await HourlyData.findOne({ symbol });
     if (!hourlyData) throw `Could not fetch hourly price data for symbol '${symbol}'. [1]`;
   }
-
-  from = from - (from % 3600000); // round down to nearest hour
-  to = to - (to % 3600000);
 
   var startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from);
   var lastHour = hourlyData.prices[hourlyData.prices.length - 1].hour;

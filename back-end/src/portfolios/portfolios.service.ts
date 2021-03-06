@@ -166,9 +166,6 @@ async function splitSlices(slices: ITimeslice[], pieces: number, previousSlice?:
 	let lastAmount: { [key: string]: number } = {};
 	let lastPrice: { [key: string]: number } = {};
 
-  const startHour = slices[0].start;
-  const endHour = slices[0].start + slices.length * 24 * 3600000;
-
 	if (previousSlice) {
 		for (let [key, value] of Object.entries(previousSlice.holdings)) {
 			lastAmount[key] = value.amount;
@@ -188,12 +185,19 @@ async function splitSlices(slices: ITimeslice[], pieces: number, previousSlice?:
 		let slice = slices[currentSlice];
 		let sliceStart = slice.start;
 		let holdingSlices: IHoldingSlice[] = [];
-    let hourlyPrices: { [key: string]:IHourlyPrice[] } = {};
+
+    let startHour = slice.start;
+    let endHour = slice.start + (24 * 3600000);
+    let now = Date.now();
+    now = now - (now % 3600000);
+    if (endHour > now)
+    {
+      endHour = now;
+    }
 
 		for (var [key, value] of Object.entries(slice.holdings)) {
 			holdingSlices.push(value);
 			currentSnapshot[key] = 0;
-      hourlyPrices[key] = await getHourlyData(key, sliceStart, slice.start + 86400000);      
 		}
 
 		for (let i = 1; i <= pieces; i++) {
