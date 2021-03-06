@@ -16,7 +16,12 @@ import {
   NavLogoArea,
   ToggleSidebar,
 } from "../NavStyles";
-import { BaseLink, ClickableDiv, InlineDiv } from "../../GlobalStyles";
+import {
+  BaseLink,
+  ClickableDiv,
+  InlineDiv,
+  SvgWrapperButton,
+} from "../../GlobalStyles";
 import {
   Avatar,
   ListItemAvatar,
@@ -27,10 +32,12 @@ import {
   Typography,
   useScrollTrigger,
 } from "@material-ui/core";
-import { COLORS } from "../../GlobalStyles/ResponsiveDesign";
+import { COLORS, RD } from "../../GlobalStyles/ResponsiveDesign";
 import { ArrowDropDown, ExitToApp } from "@material-ui/icons";
 import { ListMyExchanges } from "../../Exchanges";
 import { IPortfolioDataView } from "../../../../types";
+import { AlgonexLogo, SidebarIconContainer } from "../Sidebar/SidebarStyles";
+import useMedia from "use-media";
 
 interface Props {
   window?: () => Window;
@@ -57,10 +64,6 @@ export const Nav = () => {
 
   const [exchangesPopupVisible, setExchangesPopupVisible] = useState(false);
 
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
-
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed
   );
@@ -69,19 +72,13 @@ export const Nav = () => {
     (state: IRootState) => state.portfolio.filteredPortfolioData
   );
 
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
+
   const history = useHistory();
 
   const { logout } = userActions;
 
   const container = useRef();
-
-  const AlgonexLogo = (
-    <NavLogoArea>
-      <BrandTextLink to="/dashboard">
-        <Typography variant={"h4"}>Algonex</Typography>
-      </BrandTextLink>
-    </NavLogoArea>
-  );
 
   const accountDropdown = (
     <Dropdown
@@ -143,7 +140,13 @@ export const Nav = () => {
   const MobileNav = (
     <HideOnScroll>
       <NavContainer>
-        {AlgonexLogo}
+        <NavLogoArea>
+          <BrandTextLink to="/dashboard">
+            <SvgWrapperButton>
+              <AlgonexLogo />
+            </SvgWrapperButton>
+          </BrandTextLink>
+        </NavLogoArea>
         <NavAccountContainer
           ref={container}
           onClick={() => {
@@ -155,7 +158,12 @@ export const Nav = () => {
           }}
         >
           <InlineDiv>
-            <Avatar />
+            <Avatar
+              style={{ color: "white", backgroundColor: COLORS.primaryBase }}
+            >
+              {user.firstName[0]}
+              {user.lastName[0]}
+            </Avatar>
             <ArrowDropDown />
           </InlineDiv>
           {accountDropdownVisible && accountDropdown}
@@ -164,9 +172,5 @@ export const Nav = () => {
     </HideOnScroll>
   );
 
-  return (
-    <React.Fragment>
-      {viewType == "desktop" ? DesktopNav : MobileNav}
-    </React.Fragment>
-  );
+  return <React.Fragment>{isMobile ? MobileNav : DesktopNav}</React.Fragment>;
 };

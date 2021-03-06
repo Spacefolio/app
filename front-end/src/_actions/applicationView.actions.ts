@@ -3,7 +3,6 @@ import { applicationViewConstants } from "../_constants/applicationView.constant
 
 export const applicationViewActions = {
   toggleSidebar,
-  UpdateApplicationWidth,
 };
 
 function toggleSidebar(manualToggle?: boolean) {
@@ -15,14 +14,5 @@ function toggleSidebar(manualToggle?: boolean) {
       type: applicationViewConstants.TOGGLE_SIDEBAR_DESKTOP,
       manualToggle,
     };
-  }
-}
-
-function UpdateApplicationWidth(width: number) {
-  return (dispatch: any) => {
-    dispatch(update(width));
-  };
-  function update(width: number) {
-    return { type: applicationViewConstants.UPDATE_APPLICATION_WIDTH, width };
   }
 }

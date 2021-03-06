@@ -36,15 +36,6 @@ export function applicationView(
         ...state,
         isSidebarVisible: action.manualToggle ? true : !state.isSidebarVisible,
       };
-    case applicationViewConstants.UPDATE_APPLICATION_WIDTH:
-      return {
-        ...state,
-        applicationContainerWidth: action.width,
-        currentViewType:
-          window.innerWidth > parseInt(RD.breakpointsmartphone)
-            ? "desktop"
-            : "mobile",
-      };
 
     default:
       return state;

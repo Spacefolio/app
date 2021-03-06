@@ -10,17 +10,16 @@ import {
 } from "@material-ui/core";
 import { useHistory, useLocation, useRouteMatch } from "react-router";
 import { Dashboard, Extension, PieChart, Settings, Timeline } from "@material-ui/icons";
-import { COLORS } from "../../GlobalStyles/ResponsiveDesign";
+import { COLORS, RD } from "../../GlobalStyles/ResponsiveDesign";
+import useMedia from "use-media";
 
 interface BottomNavProps {}
 
 export const MobileNav: React.FC<BottomNavProps> = ({}) => {
   const dispatch = useDispatch();
 
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
-
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
+  
   const isSidebarVisible = useSelector(
     (state: IRootState) => state.applicationView.isSidebarVisible
   );

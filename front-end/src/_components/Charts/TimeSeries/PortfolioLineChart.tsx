@@ -7,6 +7,8 @@ import { IRootState } from "../../../_reducers";
 import { useSelector } from "react-redux";
 import { NONAME } from "dns";
 import { ViewLoading } from "../..";
+import { COLORS, RD } from "../../../GlobalStyles/ResponsiveDesign";
+import useMedia from "use-media";
 
 interface PortfolioLineChartProps {
   setPV?: React.Dispatch<any>;
@@ -31,9 +33,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
   yAxis = false,
   data,
 }) => {
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
 
   useEffect(() => {
     data.length > 0 && drawBasicChart();
@@ -97,6 +97,27 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .scaleLinear()
       .range([chartHeight, 0])
       .domain([yMinValue, yMaxValue]);
+
+    var areaGradient = svg
+      .append("defs")
+      .append("linearGradient")
+      .attr("id", "areaGradient")
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "0%")
+      .attr("y2", "100%");
+
+    areaGradient
+      .append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", COLORS.accentBase)
+      .attr("stop-opacity", 0.6);
+
+    areaGradient
+      .append("stop")
+      .attr("offset", "80%")
+      .attr("stop-color", "white")
+      .attr("stop-opacity", 0);
 
     //create xAxis component
     const styledXAxis = d3
@@ -165,13 +186,13 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 
     var totalLength = path.node().getTotalLength();
 
-    path
-      .attr("stroke-dasharray", totalLength + " " + totalLength)
-      .attr("stroke-dashoffset", totalLength)
-      .transition()
-      .duration(1000)
-      // .ease(easement)
-      .attr("stroke-dashoffset", 0);
+    // path
+    //   .attr("stroke-dasharray", totalLength + " " + totalLength)
+    //   .attr("stroke-dashoffset", totalLength)
+    //   .transition()
+    //   .duration(1000)
+    //   // .ease(easement)
+    //   .attr("stroke-dashoffset", 0);
 
     // .style("filter", "url(#glow)");
 
@@ -190,7 +211,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .attr("y2", height * 2);
 
     function handleMove(xPos: number) {
-      const bisect = d3.bisector((d: any) => d.T).left;
+      const bisect = d3.bisector((d: any) => d.T).center;
       const x0 = bisect(data, xScale.invert(xPos));
       const d0 = data[x0];
       focus
@@ -258,13 +279,13 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .style("cursor", "crosshair")
       .style("opacity", 0);
 
-    viewType == "mobile" &&
+    isMobile &&
       listenerBox
         .on("touchstart", touchmove, false)
         .on("touchmove", touchmove)
         .on("touchend", mouseout);
 
-    viewType == "desktop" &&
+    !isMobile &&
       listenerBox
         .on("mouseover", mouseover)
         .on("mouseout", mouseout)
@@ -275,8 +296,6 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
     <div
       style={{
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
         padding: 0,
         margin: 0,
         width: `${width}px`,
@@ -286,7 +305,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       {!(data.length > 0) ? (
         <ViewLoading />
       ) : (
-        <div style={{}} id={`${id}`}></div>
+        <div id={`${id}`}></div>
       )}
     </div>
   );

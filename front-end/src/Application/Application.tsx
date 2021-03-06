@@ -24,55 +24,39 @@ import { MobileNav } from "../Nav/Sidebar/BottomNav";
 import { Settings } from "../Settings";
 import { GrowFromZero } from "../GlobalStyles";
 import { portfolioActions } from "../_actions";
+import useMedia from "use-media";
 
 export const Application = () => {
   const dispatch = useDispatch();
-
-  const [AppContainerRef, { width: appWidth }] = useDimensions();
-
-  const applicationWidth = useSelector(
-    (state: IRootState) => state.applicationView.applicationContainerWidth
-  );
 
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed
   );
 
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
-
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
-  const flexSizing = () => {
-    if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
-      return { maxWidth: RD.widthmonitor };
-    } else if (
-      applicationWidth < parseInt(RD.breakpointmonitor) &&
-      applicationWidth >= parseInt(RD.breakpointlaptop)
-    ) {
-      return { maxWidth: RD.widthlaptop };
-    } else if (
-      applicationWidth < parseInt(RD.breakpointlaptop) &&
-      applicationWidth >= parseInt(RD.breakpointtablet)
-    ) {
-      return { maxWidth: RD.widthtablet };
-    } else if (
-      applicationWidth < parseInt(RD.breakpointtablet) &&
-      applicationWidth >= parseInt(RD.breakpointsmartphone)
-    ) {
-      return { maxWidth: "100%" };
-    }
-  };
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
 
-  var lastWidth: number;
-
-  useEffect(() => {
-    dispatch(applicationViewActions.UpdateApplicationWidth(appWidth));
-    if (lastWidth > appWidth) {
-      dispatch(applicationViewActions.toggleSidebar());
-    }
-  }, [appWidth, isSidebarCollapsed]);
+  // const flexSizing = () => {
+  //   if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
+  //     return { maxWidth: RD.widthmonitor };
+  //   } else if (
+  //     applicationWidth < parseInt(RD.breakpointmonitor) &&
+  //     applicationWidth >= parseInt(RD.breakpointlaptop)
+  //   ) {
+  //     return { maxWidth: RD.widthlaptop };
+  //   } else if (
+  //     applicationWidth < parseInt(RD.breakpointlaptop) &&
+  //     applicationWidth >= parseInt(RD.breakpointtablet)
+  //   ) {
+  //     return { maxWidth: RD.widthtablet };
+  //   } else if (
+  //     applicationWidth < parseInt(RD.breakpointtablet) &&
+  //     applicationWidth >= parseInt(RD.breakpointsmartphone)
+  //   ) {
+  //     return { maxWidth: "100%" };
+  //   }
+  // };
 
   useEffect(() => {
     dispatch(portfolioActions.refresh(filterId));
@@ -80,18 +64,18 @@ export const Application = () => {
 
   return (
     <React.Fragment>
-      <BodyWrapper
-        style={{ marginBottom: viewType == "mobile" ? "50px" : "0px" }}
-      >
-        {viewType == "desktop" && <SidebarNav />}
+      <BodyWrapper style={{ marginBottom: isMobile ? "50px" : "0px" }}>
+        {!isMobile && <SidebarNav />}
         <ApplicationContainer
-          viewType={viewType}
+          isMobile={isMobile}
           isSidebarCollapsed={isSidebarCollapsed}
-          ref={AppContainerRef}
         >
           <Nav />
           <GrowFromZero in={true}>
-            <ApplicationFlexContainer style={flexSizing()}>
+            <ApplicationFlexContainer
+              isMobile={isMobile}
+              isSidebarCollapsed={isSidebarCollapsed}
+            >
               <Switch>
                 <Route path={`/portfolio`}>
                   <Portfolio />
@@ -108,7 +92,7 @@ export const Application = () => {
           </GrowFromZero>
         </ApplicationContainer>
       </BodyWrapper>
-      {viewType == "mobile" && <MobileNav />}
+      {isMobile && <MobileNav />}
     </React.Fragment>
   );
 };

@@ -15,6 +15,7 @@ import { IRootState } from "../_reducers";
 import { FlexCard, GrowFromZero, Scrollbox } from "../GlobalStyles";
 import { Tabs, Tab, Paper } from "@material-ui/core";
 import { useState } from "react";
+import { SPACING } from "../GlobalStyles/ResponsiveDesign";
 
 interface IPortfolioProps {}
 
@@ -96,19 +97,15 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
   //   ) : null;
 
   return (
-    <PortfolioWrapper>
-        <PortfolioSectionWrapper>
+    <GrowFromZero in={true}>
+      <PortfolioWrapper>
+        <React.Fragment>
           {/* {FilterByExchangeMobile} */}
-          <GrowFromZero in={true}>
-            <FlexCard
-              style={{
-                padding: 0,
-                borderRadius: ".5rem",
-              }}
-            >
-              <MetaPortfolio />
-            </FlexCard>
-          </GrowFromZero>
+
+          <FlexCard>
+            <MetaPortfolio />
+          </FlexCard>
+
           {PortfolioTabs}
           <Switch>
             <Route exact path={`${path}/charts`} component={Charts} />
@@ -121,7 +118,8 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
             <Route exact path={`${path}/holdings`} component={Holdings} />
             <Redirect from={`${path}`} to={`${path}/charts`} />
           </Switch>
-        </PortfolioSectionWrapper>
-    </PortfolioWrapper>
+        </React.Fragment>
+      </PortfolioWrapper>
+    </GrowFromZero>
   );
 };

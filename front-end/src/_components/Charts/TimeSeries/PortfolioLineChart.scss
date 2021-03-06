@@ -1,7 +1,7 @@
 .line {
-  fill: none;
-  stroke: var(--primary-base);
-  stroke-width: 3;
+  // fill: blue;
+  stroke: var(--accent-base);
+  stroke-width: 2;
 }
 .focus-circle {
   fill: var(--primary-base);
@@ -33,5 +33,5 @@
 }
 .x{
   stroke: var(--accent-base);
-  stroke-width: 3;
+  stroke-width: 1;
 }

@@ -13,11 +13,9 @@ import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
 import { IRootState } from "../../_reducers";
+import useDimensions from "react-use-dimensions";
 
-import {
-  CalculateMainChartSize,
-  timeFrameSelectors,
-} from "../../_helpers/PortfolioHelperFunctions";
+import { timeFrameSelectors } from "../../_helpers/PortfolioHelperFunctions";
 import {
   ArrowDropDown,
   ArrowDropUp,
@@ -47,13 +45,7 @@ export const MetaPortfolio = () => {
     (state: IRootState) => state.portfolio.filteredPortfolioData
   );
 
-  const applicationWidth = useSelector(
-    (state: IRootState) => state.applicationView.applicationContainerWidth
-  );
-
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
+  const [chartContainerRef, { width: chartContainerWidth }] = useDimensions();
 
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
@@ -61,16 +53,7 @@ export const MetaPortfolio = () => {
 
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
 
-  const [chartWidth, setChartWidth] = useState(
-    CalculateMainChartSize(applicationWidth, viewType)
-  );
-
   useEffect(() => {
-    setChartWidth(CalculateMainChartSize(applicationWidth, viewType));
-  }, [applicationWidth]);
-
-  useEffect(() => {
-    setPortfolioChartData([]);
     portfolioService
       .getPortfolioChartData(timeframe, filterId)
       .then((res) => {
@@ -136,11 +119,14 @@ export const MetaPortfolio = () => {
     const PortfolioValue = (
       <React.Fragment>
         {filteredPortfolioData != null ? (
-          <div id={"PVID"}>
-            {chartValue
-              ? null
-              : filteredPortfolioData.portfolioTotal.USD.toFixed(2)}
-          </div>
+          <InlineDiv>
+            <Typography variant="h5">$</Typography>
+            <div id={"PVID"}>
+              {chartValue
+                ? null
+                : filteredPortfolioData.portfolioTotal.USD.toFixed(2)}
+            </div>
+          </InlineDiv>
         ) : (
           "loading..."
         )}
@@ -188,18 +174,21 @@ export const MetaPortfolio = () => {
     );
 
     return (
-      <PortfolioValueWrapper style={{ width: `${chartWidth}px` }}>
-        <PortfolioValueColumn style={{ alignItems: "start" }}>
+      <PortfolioValueWrapper>
+        {/* <PortfolioValueColumn style={{ alignItems: "start" }}>
           {CurrentPortfolio}
           {SyncButtonSection}
-        </PortfolioValueColumn>
+        </PortfolioValueColumn> */}
         <PortfolioValueColumn>
           <Typography variant={"h4"}>
             <InlineDiv>
               {PortfolioValue}
-              {RefreshButton}
+              {PortfolioDate}
+              {/* {RefreshButton} */}
             </InlineDiv>
           </Typography>
+        </PortfolioValueColumn>
+        <PortfolioValueColumn>
           <PortfolioProfitSection
             value={
               filteredPortfolioData && filteredPortfolioData.profitTotal.USD
@@ -207,7 +196,6 @@ export const MetaPortfolio = () => {
           >
             {ProfitDirection} {ProfitTotal} {ProfitPercentage}
           </PortfolioProfitSection>
-          {PortfolioDate}
         </PortfolioValueColumn>
       </PortfolioValueWrapper>
     );
@@ -233,19 +221,25 @@ export const MetaPortfolio = () => {
   return (
     <MetaPortfolioWrapper>
       {PortfolioValueSection()}
-      <div>
+      <div
+        ref={chartContainerRef}
+        style={{
+          width: "100%",
+          overflow: "hidden",
+        }}
+      >
+        {TimeframeSelectorBar}
         <PortfolioLineChart
           setPV={setChartValue}
           setDate={setChartDate}
           data={PortfolioChartData}
-          width={chartWidth && chartWidth[0]}
-          xAxis={false}
+          width={chartContainerWidth}
+          xAxis={true}
           timeframe={timeframe}
           yAxis={false}
-          height={chartWidth && chartWidth[1]}
+          height={400}
           id={"PCardChart"}
         />
-        {TimeframeSelectorBar}
       </div>
     </MetaPortfolioWrapper>
   );

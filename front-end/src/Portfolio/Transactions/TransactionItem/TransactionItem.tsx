@@ -22,6 +22,8 @@ import {
 } from "../../PortfolioFilter/Filter/FilterStyles";
 import { IRootState } from "../../../_reducers";
 import { useSelector } from "react-redux";
+import useMedia from "use-media";
+import { RD } from "../../../GlobalStyles/ResponsiveDesign";
 
 interface ITransactionItemProps {
   item: ITransactionItemView;
@@ -50,9 +52,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
 
   const dateString = new Date(date).toDateString();
 
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
 
   const isTrade = () =>
     type == "withdrawal" || type == "deposit" ? false : true;
@@ -157,7 +157,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
   return (
     <React.Fragment>
       <TableRowStyled key={quoteAmount * value * amount - price}>
-        {viewType == "mobile" ? (
+        {isMobile ? (
           <React.Fragment>
             {TypeSection()}
             {AmountSection()}

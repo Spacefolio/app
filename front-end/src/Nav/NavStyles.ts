@@ -12,6 +12,7 @@ export const NavLogoArea = styled(ClickableDiv)`
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
 `;
 export const NavContainer = styled.div`
   font-weight: 500;
@@ -20,7 +21,7 @@ export const NavContainer = styled.div`
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
   z-index: 5;
   position: sticky;
-  top:0;
+  top: 0;
   background-color: white;
   width: 100%;
   height: ${SPACING.NavbarHeight};
@@ -36,8 +37,8 @@ export const NavAccountContainer = styled.div`
 `;
 
 export const ToggleSidebar = styled(SvgWrapperButton)`
-position: absolute;
-left: 0;
+  position: absolute;
+  left: 0;
   height: 5rem;
   width: 5rem;
 `;
@@ -45,6 +46,7 @@ left: 0;
 export const BrandingContainer = styled.div``;
 
 export const BrandTextLink = styled(BaseLink)`
+  font-size: 2rem;
   $:hover {
     color: var(--accent-color);
   }

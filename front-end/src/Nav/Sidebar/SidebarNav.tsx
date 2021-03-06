@@ -9,6 +9,7 @@ import { applicationViewActions } from "../../_actions/applicationView.actions";
 import { AddNewExchangeList } from "../../Exchanges";
 import { RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
 import { Avatar } from "@material-ui/core";
+import useMedia from "use-media";
 
 interface SidebarNavProps {}
 
@@ -18,12 +19,8 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed
   );
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
-  const width = useSelector(
-    (state: IRootState) => state.applicationView.applicationContainerWidth
-  );
+
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
 
   return (
     <SidebarContainer
