@@ -32,7 +32,6 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
       }
     );
 
-    console.log(data);
     var group: any = d3
       .select(`#${id}`)
       .append("svg")

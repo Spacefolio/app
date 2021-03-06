@@ -34,8 +34,8 @@ async function syncPortfolio() {
       localStorage.setItem(
         "Portfolio",
         JSON.stringify(
-          response.data.map((item) => {
-            return { item, lastRefresh: Date.now() };
+          response.data.map((item: IPortfolioDataView) => {
+            return { ...item, lastRefresh: Date.now() };
           })
         )
       );
@@ -52,36 +52,45 @@ async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
     Authorization: Authorization,
   };
 
-  let CachedPortfolios: ICachedPortfolioDataView[] = JSON.parse(
+  let CachedPortfolios: ICachedPortfolioDataView[] = await JSON.parse(
     localStorage.getItem("Portfolio")
   );
 
+  
+  
   if (CachedPortfolios) {
     let CachedPortfolio: ICachedPortfolioDataView = CachedPortfolios.filter(
       (portfolioItem: ICachedPortfolioDataView) => {
+ 
         return portfolioItem.id == portfolioFilterId;
       }
     )[0];
+
     if (
       CachedPortfolio &&
-     ( Date.now() - CachedPortfolio.lastRefresh) < 30000 &&
+      Date.now() - CachedPortfolio.lastRefresh < 30000 &&
       !manual
     ) {
       return CachedPortfolio;
     } else {
       return await axios
-        .get(`${API_DOMAIN}/portfolios/${portfolioFilterId}`, {
-          headers: requestOptions,
-        })
+        .get<IPortfolioDataView>(
+          `${API_DOMAIN}/portfolios/${portfolioFilterId}`,
+          {
+            headers: requestOptions,
+          }
+        )
         .then((response) => {
           localStorage.setItem(
             "Portfolio",
             JSON.stringify(
-              CachedPortfolios.map((portfolioItem: IPortfolioDataView) => {
-                return portfolioItem.id == portfolioFilterId
-                  ? { ...response.data, lastRefresh: Date.now() }
-                  : portfolioItem;
-              })
+              CachedPortfolios.map(
+                (portfolioItem: ICachedPortfolioDataView) => {
+                  return portfolioItem.id == portfolioFilterId
+                    ? { ...response.data, lastRefresh: Date.now() }
+                    : portfolioItem;
+                }
+              )
             )
           );
           return response.data;
