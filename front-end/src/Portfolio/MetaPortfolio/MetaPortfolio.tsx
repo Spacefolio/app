@@ -13,11 +13,9 @@ import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
 import { IRootState } from "../../_reducers";
+import useDimensions from "react-use-dimensions";
 
-import {
-  CalculateMainChartSize,
-  timeFrameSelectors,
-} from "../../_helpers/PortfolioHelperFunctions";
+import { timeFrameSelectors } from "../../_helpers/PortfolioHelperFunctions";
 import {
   ArrowDropDown,
   ArrowDropUp,
@@ -47,13 +45,7 @@ export const MetaPortfolio = () => {
     (state: IRootState) => state.portfolio.filteredPortfolioData
   );
 
-  const applicationWidth = useSelector(
-    (state: IRootState) => state.applicationView.applicationContainerWidth
-  );
-
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
+  const [chartContainerRef, { width: chartContainerWidth }] = useDimensions();
 
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
@@ -61,16 +53,7 @@ export const MetaPortfolio = () => {
 
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
 
-  const [chartWidth, setChartWidth] = useState(
-    CalculateMainChartSize(applicationWidth, viewType)
-  );
-
   useEffect(() => {
-    setChartWidth(CalculateMainChartSize(applicationWidth, viewType));
-  }, [applicationWidth]);
-
-  useEffect(() => {
-    setPortfolioChartData([]);
     portfolioService
       .getPortfolioChartData(timeframe, filterId)
       .then((res) => {
@@ -137,7 +120,7 @@ export const MetaPortfolio = () => {
       <React.Fragment>
         {filteredPortfolioData != null ? (
           <InlineDiv>
-            <Typography variant="h5">Portfolio Value: $</Typography>
+            <Typography variant="h5">$</Typography>
             <div id={"PVID"}>
               {chartValue
                 ? null
@@ -238,17 +221,23 @@ export const MetaPortfolio = () => {
   return (
     <MetaPortfolioWrapper>
       {PortfolioValueSection()}
-      <div style={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}>
+      <div
+        ref={chartContainerRef}
+        style={{
+          width: "100%",
+          overflow: "hidden",
+        }}
+      >
         {TimeframeSelectorBar}
         <PortfolioLineChart
           setPV={setChartValue}
           setDate={setChartDate}
           data={PortfolioChartData}
-          width={chartWidth && chartWidth[0]}
-          xAxis={false}
+          width={chartContainerWidth}
+          xAxis={true}
           timeframe={timeframe}
           yAxis={false}
-          height={chartWidth && chartWidth[1]}
+          height={400}
           id={"PCardChart"}
         />
       </div>

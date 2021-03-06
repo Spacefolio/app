@@ -26,6 +26,10 @@ import {
 } from "@material-ui/core";
 import { IRootState } from "../../../_reducers";
 import { useSelector } from "react-redux";
+import { List, WindowScroller } from "react-virtualized";
+import "react-virtualized/styles.css";
+import useMedia from "use-media";
+import { RD } from "../../../GlobalStyles/ResponsiveDesign";
 
 interface IFilterProps {
   data: any;
@@ -47,9 +51,7 @@ export const Filter: React.FC<IFilterProps> = ({
   const [toDate, setToDate] = useState<Date>();
   const [transactionType, setTransactionType] = useState<string>("All Types");
 
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
 
   useEffect(() => {}, []);
 
@@ -94,7 +96,7 @@ export const Filter: React.FC<IFilterProps> = ({
               </InlineDiv>
             </TableCellStyled>
           </TableRow>
-          {viewType == "desktop" ? (
+          {!isMobile ? (
             <TableRowStyled>
               <TableCellStyled>Type</TableCellStyled>
               <TableCellStyled align="right">Amount</TableCellStyled>
@@ -210,36 +212,32 @@ export const Filter: React.FC<IFilterProps> = ({
         {/* {AssetSearchSection()} */}
         {/* {TransactionTypeSelector()} */}
       </FilterWrapper>
-      {viewType == "desktop" ? (
-        <GrowFromZero in={true}>
-          <Table>
-            <TableHead style={{ position: "sticky", top: "60px" }}>
-              <TableRow style={{ display: "none" }}>
-                <TableCell></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{RenderLineItems()}</TableBody>
-          </Table>
-        </GrowFromZero>
+      {!isMobile ? (
+        <Table>
+          <TableHead style={{ position: "sticky", top: "60px" }}>
+            <TableRow style={{ display: "none" }}>
+              <TableCell></TableCell>
+              <TableCell align="right"></TableCell>
+              <TableCell align="right"></TableCell>
+              <TableCell align="right"></TableCell>
+              <TableCell align="right"></TableCell>
+              <TableCell align="right"></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{RenderLineItems()}</TableBody>
+        </Table>
       ) : (
-        <GrowFromZero in={true}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Type</TableCell>
-                <TableCell align="right">Amount</TableCell>
-                <TableCell align="right">Price</TableCell>
-                <TableCell align="right">Value</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{RenderLineItems()}</TableBody>
-          </Table>
-        </GrowFromZero>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Type</TableCell>
+              <TableCell align="right">Amount</TableCell>
+              <TableCell align="right">Price</TableCell>
+              <TableCell align="right">Value</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{RenderLineItems()}</TableBody>
+        </Table>
       )}
     </React.Fragment>
   );

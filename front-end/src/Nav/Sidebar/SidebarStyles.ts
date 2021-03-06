@@ -1,4 +1,9 @@
-import { BottomNavigation, Card, Drawer, SwipeableDrawer } from "@material-ui/core";
+import {
+  BottomNavigation,
+  Card,
+  Drawer,
+  SwipeableDrawer,
+} from "@material-ui/core";
 import { Polymer } from "@material-ui/icons";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -25,6 +30,8 @@ export const SidebarSpacer = styled.div`
 `;
 
 export const AlgonexLogo = styled(Polymer)`
+  height: 100%;
+  width: 100%;
   fill: ${COLORS.primaryBase} !important;
 `;
 
@@ -120,8 +127,7 @@ export const BottomNavbar = styled(BottomNavigation)`
   position: fixed;
   bottom: 0px;
   background-color: #2e2e2e;
-  *{
+  * {
     color: white !important;
   }
-
 `;

@@ -9,25 +9,49 @@ import { IViewType } from "../../../types";
 
 interface ApplicationProps {
   isSidebarCollapsed: boolean;
-  viewType: IViewType;
+  isMobile: boolean;
+}
+
+function sidebarWidthCalculator(
+  width: string,
+  isMobile: boolean,
+  isSidebarCollapsed: boolean
+) {
+  const widthNum: number = parseInt(width);
+  if (isMobile) {
+    return widthNum;
+  } else {
+    if (isSidebarCollapsed) {
+      return widthNum - parseInt(SPACING.NavbarHeight);
+    } else {
+      return widthNum - parseInt(SPACING.sidebarWidth);
+    }
+  }
 }
 
 export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
+
   flex-direction: column;
-  width: 100%;
-  align-items: center;
+  width: ${(props) => {
+    if (props.isSidebarCollapsed) {
+      return `calc(100% - ${SPACING.NavbarHeight});`;
+    } else {
+      return `calc(100% - ${SPACING.sidebarWidth});`;
+    }
+  }};
   height: 100%;
-  @media only screen and (max-width: ${RD.breakpointsmartphone}) {
-    height: ${window.outerHeight}px;
-    padding: 0;
+  @media (max-width: ${RD.breakpointsmartphone}) {
+    width: 100%;
   }
   ${TimingStyle}
 `;
 
-export const ApplicationFlexContainer = styled.div`
+export const ApplicationFlexContainer = styled.div<ApplicationProps>`
+  overflow-x: hidden;
+  padding: ${(props) => (props.isMobile ? "0;" : "1rem")};
   width: 100%;
-
+  max-width: ${RD.widthmonitor};
   ${TimingStyle}
 `;
 export const BodyWrapper = styled.div`

@@ -7,7 +7,8 @@ import { IRootState } from "../../../_reducers";
 import { useSelector } from "react-redux";
 import { NONAME } from "dns";
 import { ViewLoading } from "../..";
-import { COLORS } from "../../../GlobalStyles/ResponsiveDesign";
+import { COLORS, RD } from "../../../GlobalStyles/ResponsiveDesign";
+import useMedia from "use-media";
 
 interface PortfolioLineChartProps {
   setPV?: React.Dispatch<any>;
@@ -32,9 +33,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
   yAxis = false,
   data,
 }) => {
-  const viewType = useSelector(
-    (state: IRootState) => state.applicationView.currentViewType
-  );
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
 
   useEffect(() => {
     data.length > 0 && drawBasicChart();
@@ -187,13 +186,13 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 
     var totalLength = path.node().getTotalLength();
 
-    path
-      .attr("stroke-dasharray", totalLength + " " + totalLength)
-      .attr("stroke-dashoffset", totalLength)
-      .transition()
-      .duration(1000)
-      // .ease(easement)
-      .attr("stroke-dashoffset", 0);
+    // path
+    //   .attr("stroke-dasharray", totalLength + " " + totalLength)
+    //   .attr("stroke-dashoffset", totalLength)
+    //   .transition()
+    //   .duration(1000)
+    //   // .ease(easement)
+    //   .attr("stroke-dashoffset", 0);
 
     // .style("filter", "url(#glow)");
 
@@ -212,7 +211,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .attr("y2", height * 2);
 
     function handleMove(xPos: number) {
-      const bisect = d3.bisector((d: any) => d.T).left;
+      const bisect = d3.bisector((d: any) => d.T).center;
       const x0 = bisect(data, xScale.invert(xPos));
       const d0 = data[x0];
       focus
@@ -280,13 +279,13 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .style("cursor", "crosshair")
       .style("opacity", 0);
 
-    viewType == "mobile" &&
+    isMobile &&
       listenerBox
         .on("touchstart", touchmove, false)
         .on("touchmove", touchmove)
         .on("touchend", mouseout);
 
-    viewType == "desktop" &&
+    !isMobile &&
       listenerBox
         .on("mouseover", mouseover)
         .on("mouseout", mouseout)
@@ -297,19 +296,16 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
     <div
       style={{
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
         padding: 0,
         margin: 0,
         width: `${width}px`,
         height: `${height}px`,
-        
       }}
     >
       {!(data.length > 0) ? (
         <ViewLoading />
       ) : (
-        <div style={{}} id={`${id}`}></div>
+        <div id={`${id}`}></div>
       )}
     </div>
   );

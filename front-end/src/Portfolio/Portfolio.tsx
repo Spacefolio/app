@@ -97,28 +97,29 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
   //   ) : null;
 
   return (
-    <PortfolioWrapper>
-      <React.Fragment>
-        {/* {FilterByExchangeMobile} */}
-        <GrowFromZero in={true}>
-          <FlexCard
-            style={{
-              padding: `0 ${SPACING.flexCardGap}`,
-              borderRadius: ".5rem",
-            }}
-          >
+    <GrowFromZero in={true}>
+      <PortfolioWrapper>
+        <React.Fragment>
+          {/* {FilterByExchangeMobile} */}
+
+          <FlexCard>
             <MetaPortfolio />
           </FlexCard>
-        </GrowFromZero>
-        {PortfolioTabs}
-        <Switch>
-          <Route exact path={`${path}/charts`} component={Charts} />
-          <Route exact path={`${path}/transactions`} component={Transactions} />
-          <Route exact path={`${path}/orders`} component={OpenOrders} />
-          <Route exact path={`${path}/holdings`} component={Holdings} />
-          <Redirect from={`${path}`} to={`${path}/charts`} />
-        </Switch>
-      </React.Fragment>
-    </PortfolioWrapper>
+
+          {PortfolioTabs}
+          <Switch>
+            <Route exact path={`${path}/charts`} component={Charts} />
+            <Route
+              exact
+              path={`${path}/transactions`}
+              component={Transactions}
+            />
+            <Route exact path={`${path}/orders`} component={OpenOrders} />
+            <Route exact path={`${path}/holdings`} component={Holdings} />
+            <Redirect from={`${path}`} to={`${path}/charts`} />
+          </Switch>
+        </React.Fragment>
+      </PortfolioWrapper>
+    </GrowFromZero>
   );
 };
