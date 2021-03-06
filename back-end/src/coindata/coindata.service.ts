@@ -4,6 +4,7 @@ import { Coin, ICoinMarketData } from "./coindata.model";
 export const coindataService = {
   fetchCoinMarketData,
   getCoinMarketData,
+  getCoinId
 };
 
 async function fetchCoinMarketData()
@@ -18,6 +19,14 @@ async function fetchCoinMarketData()
   }
 
   return {};
+}
+
+async function getCoinId(symbol: string)
+{
+  let symbolLower = symbol.toLowerCase();
+  var coinId = await Coin.findOne({ symbol: symbolLower });
+  if (!coinId) throw `Could not find coin with symbol '${symbolLower}'.`;
+  return coinId.id;
 }
 
 async function getCoinMarketData(symbol: string)
@@ -52,19 +61,7 @@ async function fetchCurrentPrice(coinId: string) : Promise<number>
 
 export async function getCurrentPrice(symbol: string)
 {
-  let symbolLower = symbol.toLowerCase();
-  var coinData = await Coin.findOne({ symbol: symbolLower });
-  
-  if (!coinData)
-  {
-    let coin = await Coin.findOne()
-    if (!coin)
-    {
-      await fetchCoinMarketData();
-      coinData = await Coin.findOne({ symbol: symbolLower });
-    }
-    if (!coinData) { throw `Failed to fetch coin market data for symbol '${symbol}'`; }
-  }
+  let coinData = await getCoinDataDocument(symbol);
 
   if (coinData.currentPrice.lastUpdated < (Date.now() - 3000))
   {
@@ -75,6 +72,21 @@ export async function getCurrentPrice(symbol: string)
   }
 
   return coinData.currentPrice.USD;
+}
+
+async function getCoinDataDocument(symbol: string) {
+  let symbolLower = symbol.toLowerCase();
+  var coinData = await Coin.findOne({ symbol: symbolLower });
+
+  if (!coinData) {
+    let coin = await Coin.findOne();
+    if (!coin) {
+      await fetchCoinMarketData();
+      coinData = await Coin.findOne({ symbol: symbolLower });
+    }
+    if (!coinData) { throw `Failed to fetch coin market data for symbol '${symbol}'`; }
+  }
+  return coinData;
 }
 
 async function fetchAllCoinsMarketData(page:number = 1) : Promise<ICoinMarketData[]>

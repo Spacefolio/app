@@ -5,6 +5,11 @@ export interface IHistoricalDataDocument extends mongoose.Document {
   prices: Array<IDailyPrice>;
 }
 
+export interface IHourlyDataDocument extends mongoose.Document {
+  symbol: string;
+  prices: Array<IHourlyPrice>;
+}
+
 /*
 export interface IDailyCandleDocument extends mongoose.Document {
   day: number;
@@ -47,14 +52,29 @@ export interface IDailyPrice {
   price: number;
 }
 
+export interface IHourlyPrice
+{
+  hour: number;
+  price: number;
+}
+
 export interface IHistoricalData {
   symbol: string;
   prices: Array<IDailyPrice>;
 }
 
+export interface IHourlyData {
+  symbol: string;
+  prices: Array<IHourlyPrice>;
+}
+
 export interface IHistoricalDataModel
   extends mongoose.Model<IHistoricalDataDocument> {
   build(attr: IHistoricalData): IHistoricalDataDocument;
+}
+
+export interface IHourlyDataModel extends mongoose.Model<IHourlyDataDocument> {
+  build(attr: IHourlyData): IHourlyDataDocument;
 }
 
 /*
@@ -78,6 +98,11 @@ export const dailyCandleSchema = new mongoose.Schema(
 );
 */
 
+export const hourlyPriceSchema = new mongoose.Schema({
+  hour: Number,
+  price: Number
+});
+
 export const dailyPriceSchema = new mongoose.Schema({
   timestamp: Number,
   price: Number
@@ -97,9 +122,25 @@ historicalDataSchema.set("toJSON", {
   },
 });
 
+const hourlyDataSchema = new mongoose.Schema({
+  symbol: String,
+  prices: [hourlyPriceSchema]
+});
+
+historicalDataSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (ret) {
+    delete ret._id;
+    delete ret.hash;
+  },
+});
+
 const HistoricalData = mongoose.model<
   IHistoricalDataDocument,
   IHistoricalDataModel
 >("historical-value", historicalDataSchema);
 
-export { HistoricalData };
+const HourlyData = mongoose.model<IHourlyDataDocument, IHourlyDataModel>("hourly-prices", hourlyDataSchema);
+
+export { HistoricalData, HourlyData };

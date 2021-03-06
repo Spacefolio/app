@@ -1,7 +1,7 @@
 import axios from "axios";
 import moment from "moment";
 import { coindataService } from "./coindata.service";
-import { HistoricalData } from "./historical.model";
+import { HistoricalData, HourlyData, IHourlyPrice } from "./historical.model";
 
 interface IHistoricalCandleResponse {
   day: number;
@@ -21,7 +21,7 @@ interface IHistoricalCandleResponse {
 }
 
 interface IHistoricalDataResponse {
-  prices: [ number, number ][]; // day and price
+  prices: [ number, number ][]; // time and price
 }
 
 interface ITickerResponse {
@@ -46,7 +46,8 @@ interface ITickerResponse {
   timestamp: number;
 }
 
-export async function loadHistoricalDataToDb(symbol: string, coinId: string) {
+export async function loadHistoricalDataToDb(symbol: string) {
+  let coinId = await coindataService.getCoinId(symbol);
 
   var historicalDataJson = await axios.get<IHistoricalDataResponse>(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=10000`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
 
@@ -74,14 +75,72 @@ export function fiat(symbol: string)
   }
 }
 
+export async function loadHourlyData(symbol: string)
+{
+  const coinId = coindataService.getCoinId(symbol);
+  const now = Date.now() / 1000;
+
+  var toTimestamp = now;
+  let lastHour = now - (now % 3600);
+  var fromTimestamp = lastHour - 691200; // subtract 8 days (in seconds) to get one week ago
+
+  var hourlyDataJson = await axios.get<IHistoricalDataResponse>(`https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=usd&from=${fromTimestamp}&to=${toTimestamp}`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err; });
+
+  const hourlyData = new HourlyData( { symbol });
+
+  for (let i = 0; i < hourlyDataJson.prices.length; i++)
+  {
+    let timestamp: number = hourlyDataJson.prices[i][0];
+    let hour = timestamp % 3600 >= 1600 ? timestamp + (3600 - (timestamp % 3600)) : timestamp - (timestamp % 3600); // round to nearest hour
+    hourlyData.prices.push({ hour, price: hourlyDataJson.prices[i][1] });
+  }
+
+  const savedData = await hourlyData.save().then((res) => res.toJSON()).catch((err) => { console.log(err); });
+  return savedData;
+}
+
+export async function getHourlyData(symbol: string, from: number, to: number) : Promise<IHourlyPrice[]>
+{
+  var hourlyPrices: IHourlyPrice[] = [];
+  var hourlyData = await HourlyData.findOne({ symbol });
+  if (!hourlyData)
+  {
+    await loadHourlyData(symbol);
+    hourlyData = await HourlyData.findOne({ symbol });
+    if (!hourlyData) throw `Could not fetch hourly price data for symbol '${symbol}'. [1]`;
+  }
+
+  from = from - (from % 3600000); // round down to nearest hour
+  to = to - (to % 3600000);
+
+  var startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from);
+  var lastHour = hourlyData.prices[hourlyData.prices.length - 1].hour;
+
+  if (startIndex == -1 || lastHour < to)
+  {
+    hourlyData = await loadHourlyData(symbol);
+    startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from);
+    lastHour = hourlyData.prices[hourlyData.prices.length - 1].hour;
+    if (startIndex == -1 || lastHour < to) throw `Could not fetch hourly price data for symbol '${symbol}'. [2]`;
+  }
+
+  var endIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == to);
+  if (endIndex == -1) throw `Could not fetch hourly price data for symbol '${symbol}'. [3]`;
+
+  for (let i = startIndex; i < endIndex; i++)
+  {
+    hourlyPrices.push(hourlyData.prices[i]);
+  }
+
+  return hourlyPrices;
+}
+
 export async function getHistoricalData(symbol: string, timestamp: number) : Promise<number>
 {
   var symbols = symbol.split('/');
   var historicalData = await HistoricalData.findOne({ symbol: symbols[0] });
   if (!historicalData) {
-    let coinData = await coindataService.getCoinMarketData(symbols[0]);
-    if (!coinData) throw `Could not find coin data for symbol '${symbols[0]}'.`;
-    historicalData = await loadHistoricalDataToDb(symbols[0], coinData.id);
+    historicalData = await loadHistoricalDataToDb(symbols[0]);
     if (!historicalData) {
       return 1;
     }
