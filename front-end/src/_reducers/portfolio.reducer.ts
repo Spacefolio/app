@@ -1,5 +1,6 @@
 import { portfolioConstants } from "../_constants";
 import {
+  ICachedPortfolioDataView,
   IOpenOrderItemView,
   IPortfolioDataView,
   ITransactionItemView,
@@ -15,31 +16,40 @@ interface IPortfolioAction {
 export interface IPortfolioState {
   syncingPortfolio: boolean;
   recalculatingPortfolio: boolean;
-  portfolioData: IPortfolioDataView[];
+  PortfolioData: IPortfolioDataView[];
   filterId: string;
   filteredPortfolioData: IPortfolioDataView;
 }
 
-const FilterPortfolio = (
-  exchangeID: string,
-  portfolioData: IPortfolioDataView[]
-) => {
-  return exchangeID != ""
-    ? portfolioData.filter((portfolio: IPortfolioDataView) => {
-        console.log("function", portfolio.id, exchangeID, portfolioData[0]);
-        return portfolio.id == exchangeID;
-      })[0]
-    : portfolioData[0];
-};
-let Portfolio = JSON.parse(localStorage.getItem("Portfolio"));
+const CachedPortfolios: ICachedPortfolioDataView[] = JSON.parse(
+  localStorage.getItem("Portfolio")
+);
+
+var portfolioState,
+  portfolioId: string,
+  CachedFilteredPortfolio: IPortfolioDataView;
+
+if (CachedPortfolios) {
+  console.log("Cached Portfolios", CachedPortfolios);
+
+  // portfolioState = JSON.parse(localStorage.getItem("portfolioConfig"));
+
+  portfolioId = "";
+
+  CachedFilteredPortfolio = CachedPortfolios.filter(
+    (item: IPortfolioDataView) => item.id == portfolioId
+  )[0];
+}
 
 export function portfolio(
   state: IPortfolioState = {
     syncingPortfolio: false,
     recalculatingPortfolio: false,
-    portfolioData: Portfolio ? Portfolio : [],
-    filteredPortfolioData: Portfolio && FilterPortfolio("", Portfolio),
-    filterId: "",
+    PortfolioData: CachedPortfolios ? CachedPortfolios : [],
+    filteredPortfolioData: CachedFilteredPortfolio
+      ? CachedFilteredPortfolio
+      : null,
+    filterId: portfolioId ? portfolioId : "",
   },
   action: IPortfolioAction
 ) {
@@ -55,10 +65,6 @@ export function portfolio(
         ...state,
         portfolioData: action.portfolioData,
         syncingPortfolio: false,
-        filteredPortfolioData: FilterPortfolio(
-          state.filterId,
-          action.portfolioData
-        ),
       };
     case portfolioConstants.SYNC_FAILURE:
       return {
@@ -97,17 +103,11 @@ export function portfolio(
     case portfolioConstants.REFRESH_REQUEST:
       return {
         ...state,
-        // portfolioData: [],
         recalculatingPortfolio: true,
       };
     case portfolioConstants.REFRESH_SUCCESS:
       return {
         ...state,
-        portfolioData: action.portfolioData,
-        filteredPortfolioData: FilterPortfolio(
-          state.filterId,
-          action.portfolioData
-        ),
         recalculatingPortfolio: false,
       };
     case portfolioConstants.REFRESH_FAILURE:
@@ -119,10 +119,11 @@ export function portfolio(
       return {
         ...state,
         filterId: action.exchangeID,
-        filteredPortfolioData: FilterPortfolio(
-          action.exchangeID,
-          state.portfolioData
-        ),
+      };
+    case portfolioConstants.FILTER_DATA:
+      return {
+        ...state,
+        filteredPortfolioData: action.filteredPortfolioData,
       };
 
     default:

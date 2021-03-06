@@ -512,7 +512,7 @@ async function getExchangesData(userId: string) {
     portfolioData.push(portfolioDataItem);
   }
 
-  return portfolioData;
+  return portfolioData[0];
 }
 
 async function getExchangeData(userId: string, exchangeId: string) {

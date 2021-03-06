@@ -20,8 +20,8 @@ function login(username: string, password: string) {
     userService.login(username, password).then(
       (user) => {
         dispatch(success(user));
-        dispatch(portfolioActions.refresh());
-        history.push("/");
+        dispatch(portfolioActions.sync());
+        history.push("/dashboard");
       },
       (error) => {
         dispatch(failure(error.toString()));

@@ -16,6 +16,7 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
+import { TableCellStyled } from "../PortfolioFilter/Filter/FilterStyles";
 
 export const Holdings = () => {
   const dispatch = useDispatch();
@@ -41,11 +42,11 @@ export const Holdings = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Asset</TableCell>
-                  <TableCell align="right">Amount</TableCell>
-                  <TableCell align="right">Price</TableCell>
-                  <TableCell align="right">Value</TableCell>
-                  <TableCell align="right">Profit</TableCell>
+                  <TableCellStyled>Asset</TableCellStyled>
+                  <TableCellStyled align="right">Amount</TableCellStyled>
+                  <TableCellStyled align="right">Price</TableCellStyled>
+                  <TableCellStyled align="right">Value</TableCellStyled>
+                  <TableCellStyled align="right">Profit</TableCellStyled>
                 </TableRow>
               </TableHead>
               <TableBody>

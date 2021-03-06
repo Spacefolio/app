@@ -7,9 +7,9 @@ import { history } from "../_helpers";
 export const portfolioActions = {
   sync,
   refresh,
-  SetFilteredPortfolioData,
   getOpenOrders,
   FilterPortfolio,
+  SetFilteredPortfolioData,
 };
 
 function sync() {
@@ -19,6 +19,7 @@ function sync() {
       .syncPortfolio()
       .then((res: any) => {
         dispatch(success(res));
+        dispatch(refresh());
         dispatch(alertActions.success("Sync Complete"));
       })
       .catch((error) => {
@@ -38,15 +39,13 @@ function sync() {
   }
 }
 
-function refresh() {
+function refresh(portfolioId: string = "", manual: boolean = false) {
   return (dispatch: any) => {
     dispatch(request());
     portfolioService
-      .refreshPortfolio()
+      .refreshPortfolio(portfolioId, manual)
       .then((res: any) => {
-        if (res.length == 0) {
-          history.push("/integrations");
-        }
+        dispatch(SetFilteredPortfolioData(res));
         dispatch(success(res));
       })
       .catch((error) => {
@@ -116,8 +115,14 @@ function getOpenOrders(exchangeID?: string) {
   }
 }
 
-function FilterPortfolio(exchangeID: string) {
-  return { type: portfolioConstants.FILTER_ID, exchangeID };
+function FilterPortfolio(portfolioId: string) {
+  return (dispatch: any) => {
+    dispatch(portfolioActions.refresh(portfolioId));
+    dispatch(request(portfolioId));
+  };
+  function request(portfolioId: string) {
+    return { type: portfolioConstants.FILTER_ID, exchangeID: portfolioId };
+  }
 }
 
 function SetFilteredPortfolioData(filteredPortfolioData: IPortfolioDataView) {

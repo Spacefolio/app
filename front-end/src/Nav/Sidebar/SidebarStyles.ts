@@ -1,4 +1,4 @@
-import { Card, Drawer, SwipeableDrawer } from "@material-ui/core";
+import { BottomNavigation, Card, Drawer, SwipeableDrawer } from "@material-ui/core";
 import { Polymer } from "@material-ui/icons";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -25,7 +25,7 @@ export const SidebarSpacer = styled.div`
 `;
 
 export const AlgonexLogo = styled(Polymer)`
-  fill: ${COLORS.primaryBase} !important; 
+  fill: ${COLORS.primaryBase} !important;
 `;
 
 export const SidebarContainer = styled.div<IDesktopWrapperProps>`
@@ -36,7 +36,7 @@ export const SidebarContainer = styled.div<IDesktopWrapperProps>`
   flex-direction: column;
   position: sticky;
   top: 0;
-  background-color: #2e2e2e;
+  background-color: ${COLORS.darkBase};
   flex-shrink: 0;
   height: 100vh;
   * {
@@ -114,3 +114,14 @@ export const SidebarIconContainer = styled.div<ITabContentContainerProps>`
   ${CenteredFlexBox}
 `;
 export const SidebarDetailsButton = styled(SvgWrapperButton)``;
+
+export const BottomNavbar = styled(BottomNavigation)`
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+  background-color: #2e2e2e;
+  *{
+    color: white !important;
+  }
+
+`;

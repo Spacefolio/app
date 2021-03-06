@@ -19,6 +19,8 @@ import {
 import { BaseLink, ClickableDiv, InlineDiv } from "../../GlobalStyles";
 import {
   Avatar,
+  ListItemAvatar,
+  ListItemIcon,
   MenuItem,
   MenuList,
   Slide,
@@ -26,7 +28,7 @@ import {
   useScrollTrigger,
 } from "@material-ui/core";
 import { COLORS } from "../../GlobalStyles/ResponsiveDesign";
-import { ArrowDropDown } from "@material-ui/icons";
+import { ArrowDropDown, ExitToApp } from "@material-ui/icons";
 import { ListMyExchanges } from "../../Exchanges";
 import { IPortfolioDataView } from "../../../../types";
 
@@ -83,7 +85,6 @@ export const Nav = () => {
 
   const accountDropdown = (
     <Dropdown
-    
       isVisible={accountDropdownVisible}
       setVisiblity={setAccountDropdownVisible}
       containerRef={container}
@@ -95,8 +96,20 @@ export const Nav = () => {
             dispatch(logout());
             location.reload();
           }}
+          button={true}
         >
-          Logout
+          <ListItemAvatar>
+            <Avatar
+              style={{
+                color: COLORS.darkBase,
+                backgroundColor: "white",
+                border: `${COLORS.darkBase} solid 2px`,
+              }}
+            >
+              <ExitToApp />
+            </Avatar>
+          </ListItemAvatar>
+          <Typography>Logout</Typography>
         </MenuItem>
       </MenuList>
     </Dropdown>
@@ -107,7 +120,7 @@ export const Nav = () => {
       <ToggleSidebar
         onClick={() => dispatch(applicationViewActions.toggleSidebar())}
       >
-        <ArrowIcon direction={!isSidebarCollapsed ? "right" : "down"} />
+        <ArrowIcon direction={!isSidebarCollapsed ? "left" : "right"} />
       </ToggleSidebar>
       <NavFlexSpacer />
 
@@ -118,7 +131,7 @@ export const Nav = () => {
         }}
       >
         <InlineDiv>
-          <Avatar src={filteredPortfolioData.logoUrl} />
+          {/* <Avatar src={filteredPortfolioData.logoUrl} /> */}
           {user.firstName} {user.lastName}
           <ArrowDropDown />
         </InlineDiv>

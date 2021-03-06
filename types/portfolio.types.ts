@@ -25,6 +25,30 @@ export interface IPortfolioDataView {
   holdingHistory: IHoldingSnapshot[];
 }
 
+export interface ICachedPortfolioDataView {
+  name: string;
+  id: string;
+  nickname: string;
+  addedDate: Date | string;
+  exchangeType: exchangeType;
+  apiInfo: {
+    apiKey: string;
+    apiSecret: string;
+    passphrase: string;
+  };
+  logoUrl: string;
+  orders: IOpenOrderItemView[];
+  transactionViewItems: ITransactionItemView[];
+  transactions: ITransaction[];
+  openOrders: IOpenOrderItemView[];
+  portfolioItems: IPortfolioItemView[];
+  profitPercentage: { USD: number };
+  portfolioTotal: { USD: number };
+  profitTotal: { USD: number };
+  holdingHistory: IHoldingSnapshot[];
+  lastRefresh: number;
+}
+
 export interface IPortfolioItemView {
   id?: string;
   asset: IAsset;
