@@ -28,22 +28,22 @@ export const trimFields = (value: number, currencyType: string) => {
 
 export function CalculateMainChartSize(width: number, ViewType: IViewType) {
   if (width >= parseInt(RD.breakpointmonitor)) {
-    return [1200, 400];
+    return [1880, 400];
   } else if (
     width < parseInt(RD.breakpointmonitor) &&
     width >= parseInt(RD.breakpointlaptop)
   ) {
-    return [1000, 400];
+    return [1420, 400];
   } else if (
     width < parseInt(RD.breakpointlaptop) &&
     width >= parseInt(RD.breakpointtablet)
   ) {
-    return [800, 400];
+    return [960, 400];
   } else if (
     width < parseInt(RD.breakpointtablet) &&
     width >= parseInt(RD.breakpointsmartphone)
   ) {
-    return [630, 400];
+    return [width - 50, 400];
   } else if (
     width < parseInt(RD.breakpointsmartphone) &&
     ViewType == "mobile"

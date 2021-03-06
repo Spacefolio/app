@@ -136,11 +136,14 @@ export const MetaPortfolio = () => {
     const PortfolioValue = (
       <React.Fragment>
         {filteredPortfolioData != null ? (
-          <div id={"PVID"}>
-            {chartValue
-              ? null
-              : filteredPortfolioData.portfolioTotal.USD.toFixed(2)}
-          </div>
+          <InlineDiv>
+            <Typography variant="h5">Portfolio Value: $</Typography>
+            <div id={"PVID"}>
+              {chartValue
+                ? null
+                : filteredPortfolioData.portfolioTotal.USD.toFixed(2)}
+            </div>
+          </InlineDiv>
         ) : (
           "loading..."
         )}
@@ -188,18 +191,21 @@ export const MetaPortfolio = () => {
     );
 
     return (
-      <PortfolioValueWrapper style={{ width: `${chartWidth}px` }}>
-        <PortfolioValueColumn style={{ alignItems: "start" }}>
+      <PortfolioValueWrapper>
+        {/* <PortfolioValueColumn style={{ alignItems: "start" }}>
           {CurrentPortfolio}
           {SyncButtonSection}
-        </PortfolioValueColumn>
+        </PortfolioValueColumn> */}
         <PortfolioValueColumn>
           <Typography variant={"h4"}>
             <InlineDiv>
               {PortfolioValue}
-              {RefreshButton}
+              {PortfolioDate}
+              {/* {RefreshButton} */}
             </InlineDiv>
           </Typography>
+        </PortfolioValueColumn>
+        <PortfolioValueColumn>
           <PortfolioProfitSection
             value={
               filteredPortfolioData && filteredPortfolioData.profitTotal.USD
@@ -207,7 +213,6 @@ export const MetaPortfolio = () => {
           >
             {ProfitDirection} {ProfitTotal} {ProfitPercentage}
           </PortfolioProfitSection>
-          {PortfolioDate}
         </PortfolioValueColumn>
       </PortfolioValueWrapper>
     );
@@ -233,7 +238,8 @@ export const MetaPortfolio = () => {
   return (
     <MetaPortfolioWrapper>
       {PortfolioValueSection()}
-      <div>
+      <div style={{ border: "1px solid rgba(0, 0, 0, 0.2)" }}>
+        {TimeframeSelectorBar}
         <PortfolioLineChart
           setPV={setChartValue}
           setDate={setChartDate}
@@ -245,7 +251,6 @@ export const MetaPortfolio = () => {
           height={chartWidth && chartWidth[1]}
           id={"PCardChart"}
         />
-        {TimeframeSelectorBar}
       </div>
     </MetaPortfolioWrapper>
   );

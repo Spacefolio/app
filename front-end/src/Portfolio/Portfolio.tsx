@@ -15,6 +15,7 @@ import { IRootState } from "../_reducers";
 import { FlexCard, GrowFromZero, Scrollbox } from "../GlobalStyles";
 import { Tabs, Tab, Paper } from "@material-ui/core";
 import { useState } from "react";
+import { SPACING } from "../GlobalStyles/ResponsiveDesign";
 
 interface IPortfolioProps {}
 
@@ -97,31 +98,27 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 
   return (
     <PortfolioWrapper>
-        <PortfolioSectionWrapper>
-          {/* {FilterByExchangeMobile} */}
-          <GrowFromZero in={true}>
-            <FlexCard
-              style={{
-                padding: 0,
-                borderRadius: ".5rem",
-              }}
-            >
-              <MetaPortfolio />
-            </FlexCard>
-          </GrowFromZero>
-          {PortfolioTabs}
-          <Switch>
-            <Route exact path={`${path}/charts`} component={Charts} />
-            <Route
-              exact
-              path={`${path}/transactions`}
-              component={Transactions}
-            />
-            <Route exact path={`${path}/orders`} component={OpenOrders} />
-            <Route exact path={`${path}/holdings`} component={Holdings} />
-            <Redirect from={`${path}`} to={`${path}/charts`} />
-          </Switch>
-        </PortfolioSectionWrapper>
+      <React.Fragment>
+        {/* {FilterByExchangeMobile} */}
+        <GrowFromZero in={true}>
+          <FlexCard
+            style={{
+              padding: `0 ${SPACING.flexCardGap}`,
+              borderRadius: ".5rem",
+            }}
+          >
+            <MetaPortfolio />
+          </FlexCard>
+        </GrowFromZero>
+        {PortfolioTabs}
+        <Switch>
+          <Route exact path={`${path}/charts`} component={Charts} />
+          <Route exact path={`${path}/transactions`} component={Transactions} />
+          <Route exact path={`${path}/orders`} component={OpenOrders} />
+          <Route exact path={`${path}/holdings`} component={Holdings} />
+          <Redirect from={`${path}`} to={`${path}/charts`} />
+        </Switch>
+      </React.Fragment>
     </PortfolioWrapper>
   );
 };

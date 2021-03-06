@@ -5,14 +5,14 @@ import {
   ClickableDiv,
   InlineDiv,
 } from "../../GlobalStyles";
-import { COLORS, RD } from "../../GlobalStyles/ResponsiveDesign";
+import { COLORS, RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
 
 export const MetaPortfolioWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: center;
+  padding-top: ${SPACING.flexCardGap};
 `;
 
 export const MetaPortfolioChartWrapper = styled.div`
@@ -57,9 +57,11 @@ export const PortfolioName = styled(BaseDiv)`
 
 export const PortfolioValueColumn = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  // border: 1px solid black;
+  justify-content: space-evenly;
+  align-items: start;
 `;
 
 export const MetaPortfolioTimeframeSelector = styled(ClickableDiv)`

@@ -2,10 +2,7 @@ import styled from "styled-components";
 import { RD, SPACING } from "../GlobalStyles/ResponsiveDesign";
 
 export const PortfolioWrapper = styled.div`
-  padding: 8px 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-top: ${SPACING.flexCardGap};
   height: 100%;
   width: 100%;
 `;
@@ -69,4 +66,3 @@ export const DataLabelItemWrapper = styled.div`
   text-align: right;
   width: 100%;
 `;
-

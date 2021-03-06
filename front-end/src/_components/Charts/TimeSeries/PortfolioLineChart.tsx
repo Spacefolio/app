@@ -7,6 +7,7 @@ import { IRootState } from "../../../_reducers";
 import { useSelector } from "react-redux";
 import { NONAME } from "dns";
 import { ViewLoading } from "../..";
+import { COLORS } from "../../../GlobalStyles/ResponsiveDesign";
 
 interface PortfolioLineChartProps {
   setPV?: React.Dispatch<any>;
@@ -97,6 +98,27 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .scaleLinear()
       .range([chartHeight, 0])
       .domain([yMinValue, yMaxValue]);
+
+    var areaGradient = svg
+      .append("defs")
+      .append("linearGradient")
+      .attr("id", "areaGradient")
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "0%")
+      .attr("y2", "100%");
+
+    areaGradient
+      .append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", COLORS.accentBase)
+      .attr("stop-opacity", 0.6);
+
+    areaGradient
+      .append("stop")
+      .attr("offset", "80%")
+      .attr("stop-color", "white")
+      .attr("stop-opacity", 0);
 
     //create xAxis component
     const styledXAxis = d3
@@ -281,6 +303,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
         margin: 0,
         width: `${width}px`,
         height: `${height}px`,
+        
       }}
     >
       {!(data.length > 0) ? (

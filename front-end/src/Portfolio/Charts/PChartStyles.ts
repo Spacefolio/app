@@ -23,7 +23,7 @@ export const DashboardWrapper = styled(BaseGrid)`
 
 export const TimeFrameSelectorContainer = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-end;
   align-items: center;
   width: 100%;
 `;
