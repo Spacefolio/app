@@ -18,11 +18,11 @@ import {
 } from "./applicationStyles";
 import useDimensions from "react-use-dimensions";
 import { applicationViewActions } from "../_actions/applicationView.actions";
-import { RD } from "../GlobalStyles/ResponsiveDesign";
+import { RD } from "../AlgonexStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
-import { MobileNav } from "../Nav/Sidebar/BottomNav";
+import { MobileNav } from "../Nav/BottomNav/BottomNav";
 import { Settings } from "../Settings";
-import { GrowFromZero } from "../GlobalStyles";
+import { GrowFromZero } from "../AlgonexStyles";
 import { portfolioActions } from "../_actions";
 import useMedia from "use-media";
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MetaPortfolioWrapper,
@@ -15,19 +15,19 @@ import { portfolioService } from "../../_services";
 import { IRootState } from "../../_reducers";
 import useDimensions from "react-use-dimensions";
 
-import { timeFrameSelectors } from "../../_helpers/PortfolioHelperFunctions";
+import { timeFrameSelectors } from "../../_helpers/formatters";
 import {
   ArrowDropDown,
   ArrowDropUp,
   DateRangeTwoTone,
 } from "@material-ui/icons";
-import { SvgWrapperButton, InlineDiv } from "../../GlobalStyles";
+import { SvgWrapperButton, InlineDiv } from "../../AlgonexStyles";
 import {
   TimeFrameSelectorContainer,
   TimeframeItem,
 } from "../Charts/PChartStyles";
-import { SyncIcon } from "../../_components/Icons/IconStyles";
-import { Avatar, Button, IconButton, Typography } from "@material-ui/core";
+import { SyncIcon } from "../../AlgonexStyles/IconStyles";
+import { Button, Typography } from "@material-ui/core";
 import { ListMyExchanges } from "../../Exchanges";
 
 export const MetaPortfolio = () => {
@@ -74,7 +74,7 @@ export const MetaPortfolio = () => {
       false
     );
 
-    const ref = useRef();
+    const ref: MutableRefObject<undefined> = useRef();
 
     const RefreshButton = (
       <SvgWrapperButton

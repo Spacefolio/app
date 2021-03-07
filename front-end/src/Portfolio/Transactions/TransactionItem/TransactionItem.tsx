@@ -4,7 +4,7 @@ import {
   decideTransactionIcon,
   SellTransactionIcon,
 } from "../../../_components";
-import { trimFields } from "../../../_helpers/PortfolioHelperFunctions";
+import { ReformatCurrencyValue } from "../../../_helpers/formatters";
 import { TabItem } from "../../portfolioStyles";
 import {
   DataWrapper,
@@ -13,9 +13,9 @@ import {
   LabelWrapper,
   MobileWrapper,
   TransactionDesktopWrapper,
-} from "../../../GlobalStyles/TabularStyles";
+} from "../../../AlgonexStyles/TabularStyles";
 import { Avatar, TableRow, Typography } from "@material-ui/core";
-import { FlexWrap, InlineDiv } from "../../../GlobalStyles";
+import { FlexWrap, InlineDiv } from "../../../AlgonexStyles";
 import {
   TableCellStyled,
   TableRowStyled,
@@ -23,7 +23,7 @@ import {
 import { IRootState } from "../../../_reducers";
 import { useSelector } from "react-redux";
 import useMedia from "use-media";
-import { RD } from "../../../GlobalStyles/ResponsiveDesign";
+import { RD } from "../../../AlgonexStyles/ResponsiveDesign";
 
 interface ITransactionItemProps {
   item: ITransactionItemView;
@@ -87,7 +87,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
         <FlexWrap align="flex-end">
           <Typography variant="button">{renameTradeType()}</Typography>
           <InlineDiv align="flex-end">
-            <Typography>{trimFields(amount, symbol)}</Typography>
+            <Typography>{ReformatCurrencyValue(amount, symbol)}</Typography>
             <Typography>{symbol}</Typography>
           </InlineDiv>
         </FlexWrap>
@@ -98,7 +98,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
               {type == "buy" ? "With" : "For "}
             </Typography>
             <InlineDiv align="flex-end">
-              <Typography>{trimFields(quoteAmount, quoteSymbol)}</Typography>
+              <Typography>{ReformatCurrencyValue(quoteAmount, quoteSymbol)}</Typography>
               <Typography>{quoteSymbol}</Typography>
             </InlineDiv>
           </React.Fragment>
@@ -110,7 +110,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
   const PriceSection = () => {
     return (
       <TableCellStyled align="right">
-        <Typography>${trimFields(price, "USD")}</Typography>
+        <Typography>${ReformatCurrencyValue(price, "USD")}</Typography>
       </TableCellStyled>
     );
   };
@@ -118,7 +118,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
   const ValueSection = () => {
     return (
       <TableCellStyled align="right">
-        <Typography>${trimFields(value, "USD")}</Typography>
+        <Typography>${ReformatCurrencyValue(value, "USD")}</Typography>
       </TableCellStyled>
     );
   };
@@ -143,7 +143,7 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
       <TableCellStyled align="right">
         {fee ? (
           <React.Fragment>
-            <Typography>{trimFields(fee.cost, fee.currency)}</Typography>{" "}
+            <Typography>{ReformatCurrencyValue(fee.cost, fee.currency)}</Typography>{" "}
             <Typography>{fee.currency}</Typography>
             {fee.rate ? <Typography>{fee.rate}%</Typography> : null}
           </React.Fragment>

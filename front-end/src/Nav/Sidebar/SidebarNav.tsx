@@ -1,15 +1,14 @@
 import React from "react";
-import { AlgonexLogo, SidebarActionArea, SidebarContainer, SidebarSpacer } from "./SidebarStyles";
+import { SidebarContainer, SidebarSpacer } from "./Styles";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
-import { SidebarActionItem } from "./NavSections";
-import { ExchangeSidebarFilter } from "./ExchangeSidebarFilter";
-import { Dashboard, Extension, PieChart, Polymer, Settings, Timeline } from "@material-ui/icons";
-import { applicationViewActions } from "../../_actions/applicationView.actions";
-import { AddNewExchangeList } from "../../Exchanges";
-import { RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
-import { Avatar } from "@material-ui/core";
+import { SidebarActionItem } from "./ActionItem/ActionItem";
+import { Dashboard, PieChart, Settings, Timeline } from "@material-ui/icons";
+
+import { RD, } from "../../AlgonexStyles/ResponsiveDesign";
+
 import useMedia from "use-media";
+import { AlgonexLogo } from "../../AlgonexStyles";
 
 interface SidebarNavProps {}
 
@@ -50,12 +49,6 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
         icon={<Timeline />}
         linkUri="/bots"
       ></SidebarActionItem>
-
-      {/* <SidebarActionItem
-        text="Integrations"
-        icon={<Extension />}
-        linkUri="/bots"
-      ></SidebarActionItem> */}
 
       <SidebarSpacer/>
 

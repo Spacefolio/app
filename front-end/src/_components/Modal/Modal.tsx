@@ -1,7 +1,7 @@
 import React from "react";
 import { CloseButton, ModalBg, ModalBoxSetup, ModalWrapper } from "./ModalStyles";
 
-import { GrowFromZero, SvgWrapperButton } from "../../GlobalStyles";
+import { GrowFromZero, SvgWrapperButton } from "../../AlgonexStyles";
 import { Close } from "@material-ui/icons";
 
 interface ModalProps {

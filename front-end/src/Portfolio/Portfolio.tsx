@@ -12,10 +12,10 @@ import { PortfolioWrapper, PortfolioSectionWrapper } from "./portfolioStyles";
 import { MetaPortfolio, Transactions, OpenOrders, Holdings, Charts } from ".";
 import { portfolioActions } from "../_actions";
 import { IRootState } from "../_reducers";
-import { FlexCard, GrowFromZero, Scrollbox } from "../GlobalStyles";
+import { FlexCard, GrowFromZero, Scrollbox } from "../AlgonexStyles";
 import { Tabs, Tab, Paper } from "@material-ui/core";
 import { useState } from "react";
-import { SPACING } from "../GlobalStyles/ResponsiveDesign";
+import { SPACING } from "../AlgonexStyles/ResponsiveDesign";
 
 interface IPortfolioProps {}
 

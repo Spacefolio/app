@@ -10,7 +10,7 @@ import { Alert } from "../_components";
 import "typeface-roboto";
 import "./App.scss";
 import { AppContainer } from "./appStyles";
-import "../GlobalStyles/variables.scss";
+import "../AlgonexStyles/variables.scss";
 import { CssBaseline } from "@material-ui/core";
 
 export const App = () => {

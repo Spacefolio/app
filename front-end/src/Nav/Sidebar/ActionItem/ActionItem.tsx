@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ArrowIcon } from "../../_components/Icons";
+import { ArrowIcon } from "../../../_components/Icons";
 import {
   LinkText,
   LinkWrapper,
@@ -7,14 +7,14 @@ import {
   SidebarDetailsButton,
   SidebarIconContainer,
   TabSubContentContainer,
-} from "./SidebarStyles";
+} from "../Styles";
 import { Route, useHistory, useLocation, useRouteMatch } from "react-router";
 import { useState } from "react";
 import { link } from "fs/promises";
 import { useSelector } from "react-redux";
-import { IRootState } from "../../_reducers";
-import { CheckCurrentPage } from "../../_helpers/navigation";
-import { SvgWrapperButton, Scrollbox } from "../../GlobalStyles";
+import { IRootState } from "../../../_reducers";
+import { SvgWrapperButton, Scrollbox } from "../../../AlgonexStyles";
+import { useCheckCurrentLocation } from "../../../Hooks/useCheckCurrentLocation";
 
 interface ISidebarActionItemProps {
   text: string;
@@ -31,30 +31,27 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed
   );
+
   const history = useHistory();
+
   const [subIsVisible, setSubIsVisible] = useState(false);
-  const location = useLocation();
-  const [isCurrentPage, setIsCurrentPage] = useState(
-    CheckCurrentPage(location, linkUri)
-  );
+
+  const isCurrentPage = useCheckCurrentLocation(linkUri);
 
   useEffect(() => {
     if (isSidebarCollapsed) {
       setSubIsVisible(false);
-      setIsCurrentPage(CheckCurrentPage(location, linkUri));
     } else {
-      setIsCurrentPage(CheckCurrentPage(location, linkUri));
       if (isCurrentPage) {
       } else {
         setSubIsVisible(false);
       }
     }
-  }, [isSidebarCollapsed, location]);
+  }, [isSidebarCollapsed]);
 
   const handleClick = () => {
     if (!isCurrentPage) {
       history.push(linkUri);
-      
     } else {
       !isSidebarCollapsed && setSubIsVisible(!subIsVisible);
     }
@@ -64,7 +61,9 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
     <React.Fragment>
       <LinkWrapper>
         <SidebarTab onClick={() => handleClick()}>
-          <SidebarIconContainer isActiveTab={isCurrentPage}>{icon}</SidebarIconContainer>
+          <SidebarIconContainer isActiveTab={isCurrentPage}>
+            {icon}
+          </SidebarIconContainer>
           <LinkText>{text}</LinkText>
         </SidebarTab>
         {children && (

@@ -24,7 +24,7 @@ import {
   ListItemSecondaryAction,
   MenuItem,
 } from "@material-ui/core";
-import { GrowFromZero, SvgWrapperButton } from "../GlobalStyles";
+import { GrowFromZero, SvgWrapperButton } from "../AlgonexStyles";
 import { Delete, Edit, Work } from "@material-ui/icons";
 
 interface ExchangeItemProps {

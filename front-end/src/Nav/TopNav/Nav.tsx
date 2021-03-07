@@ -17,11 +17,12 @@ import {
   ToggleSidebar,
 } from "../NavStyles";
 import {
+  AlgonexLogo,
   BaseLink,
   ClickableDiv,
   InlineDiv,
   SvgWrapperButton,
-} from "../../GlobalStyles";
+} from "../../AlgonexStyles";
 import {
   Avatar,
   ListItemAvatar,
@@ -32,11 +33,10 @@ import {
   Typography,
   useScrollTrigger,
 } from "@material-ui/core";
-import { COLORS, RD } from "../../GlobalStyles/ResponsiveDesign";
+import { COLORS, RD } from "../../AlgonexStyles/ResponsiveDesign";
 import { ArrowDropDown, ExitToApp } from "@material-ui/icons";
 import { ListMyExchanges } from "../../Exchanges";
 import { IPortfolioDataView } from "../../../../types";
-import { AlgonexLogo, SidebarIconContainer } from "../Sidebar/SidebarStyles";
 import useMedia from "use-media";
 
 interface Props {

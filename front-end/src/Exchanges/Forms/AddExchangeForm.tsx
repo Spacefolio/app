@@ -6,7 +6,7 @@ import {
   IExchangeReference,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { BaseButton } from "../../GlobalStyles";
+import { BaseButton } from "../../AlgonexStyles";
 import { ExchangeForm, ExchangeFormRow } from "./ExchangeFormStyles";
 import { Avatar, TextField, Typography } from "@material-ui/core";
 

@@ -1,7 +1,6 @@
 import { Sync } from "@material-ui/icons";
 import styled from "styled-components";
-import { BaseSvg, ClickableSvg, TimingStyle } from "../../GlobalStyles";
-import { spinAnimation } from "../../GlobalStyles/Animations";
+import { spinAnimation } from "./Animations";
 
 interface ISyncIconProps {
   isSyncing?: boolean;

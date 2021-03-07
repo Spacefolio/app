@@ -4,8 +4,8 @@ import {
   CenteredFlexBox,
   ClickableDiv,
   InlineDiv,
-} from "../../GlobalStyles";
-import { COLORS, RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
+} from "../../AlgonexStyles";
+import { COLORS, RD, SPACING } from "../../AlgonexStyles/ResponsiveDesign";
 
 export const MetaPortfolioWrapper = styled.div`
   width: 100%;

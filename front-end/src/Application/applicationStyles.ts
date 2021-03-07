@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { RD, SPACING } from "../GlobalStyles/ResponsiveDesign";
+import { RD, SPACING } from "../AlgonexStyles/ResponsiveDesign";
 import {
   CenteredFlexBox,
   ResizeTransition,
   TimingStyle,
-} from "../GlobalStyles";
+} from "../AlgonexStyles";
 import { IViewType } from "../../../types";
 
 interface ApplicationProps {
@@ -31,7 +31,6 @@ function sidebarWidthCalculator(
 
 export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
-
   flex-direction: column;
   width: ${(props) => {
     if (props.isSidebarCollapsed) {
@@ -57,6 +56,6 @@ export const ApplicationFlexContainer = styled.div<ApplicationProps>`
 export const BodyWrapper = styled.div`
   display: flex;
   position: relative;
-
+  height: 100%;
   width: 100%;
 `;

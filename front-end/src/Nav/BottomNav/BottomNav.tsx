@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BottomNavbar, SidebarContainer } from "./SidebarStyles";
+import { BottomNavbar } from "../../AlgonexStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import value from "*.png";
@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { useHistory, useLocation, useRouteMatch } from "react-router";
 import { Dashboard, Extension, PieChart, Settings, Timeline } from "@material-ui/icons";
-import { COLORS, RD } from "../../GlobalStyles/ResponsiveDesign";
+import { COLORS, RD } from "../../AlgonexStyles/ResponsiveDesign";
 import useMedia from "use-media";
 
 interface BottomNavProps {}

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { RD, SPACING } from "../GlobalStyles/ResponsiveDesign";
+import { RD, SPACING } from "../AlgonexStyles/ResponsiveDesign";
 
 export const PortfolioWrapper = styled.div`
   margin-top: ${SPACING.flexCardGap};

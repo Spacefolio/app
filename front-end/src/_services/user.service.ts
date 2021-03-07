@@ -11,7 +11,7 @@ export const userService = {
 };
 
 async function login(username: string, password: string) {
-  const requestOptions = {
+  const requestOptions: RequestInit = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
@@ -34,7 +34,7 @@ function logout() {
 }
 
 async function getById(id: string) {
-  const requestOptions = {
+  const requestOptions: RequestInit = {
     method: "GET",
     headers: authHeader(),
   };
@@ -44,7 +44,7 @@ async function getById(id: string) {
 }
 
 async function register(user: INewUser) {
-  const requestOptions = {
+  const requestOptions: RequestInit = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
@@ -55,7 +55,7 @@ async function register(user: INewUser) {
 }
 
 async function update(user: IUser) {
-  const requestOptions = {
+  const requestOptions: RequestInit = {
     method: "PUT",
     headers: { ...authHeader(), "Content-Type": "application/json" },
     body: JSON.stringify(user),

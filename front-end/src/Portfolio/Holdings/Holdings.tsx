@@ -3,9 +3,9 @@ import { HoldingItem } from "./HoldingItem/HoldingItem";
 import { IPortfolioDataView, IPortfolioItemView } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
 import { ILabelObject, LabelSorter } from "../Transactions/LabelSorter";
-import { SPACING } from "../../GlobalStyles/ResponsiveDesign";
+import { SPACING } from "../../AlgonexStyles/ResponsiveDesign";
 import { IRootState } from "../../_reducers";
-import { FlexCard, GrowFromZero } from "../../GlobalStyles";
+import { FlexCard, GrowFromZero } from "../../AlgonexStyles";
 import { ViewLoading } from "../../_components";
 import {
   Paper,
@@ -19,7 +19,6 @@ import {
 import { TableCellStyled } from "../PortfolioFilter/Filter/FilterStyles";
 
 export const Holdings = () => {
-  const dispatch = useDispatch();
 
   const portfolioData: IPortfolioDataView = useSelector(
     (state: IRootState) => state.portfolio.filteredPortfolioData

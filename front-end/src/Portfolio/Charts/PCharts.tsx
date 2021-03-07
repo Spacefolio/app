@@ -10,7 +10,7 @@ import { portfolioService } from "../../_services";
 import { timeframe } from "../../../../types";
 import { PortfolioPieChart } from "../../_components/Charts/Pie/PieChart";
 import { IRootState } from "../../_reducers";
-import { FlexCard, GrowFromZero } from "../../GlobalStyles";
+import { FlexCard, GrowFromZero } from "../../AlgonexStyles";
 
 export const Charts = () => {
   const dispatch = useDispatch();

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./LoginPage";
 
 import { userActions } from "../_actions";
-import { BaseButton, FlexCard } from "../GlobalStyles";
+import { BaseButton, FlexCard } from "../AlgonexStyles";
 import { IRootState } from "../_reducers";
 import {
   Avatar,

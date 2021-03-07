@@ -10,7 +10,7 @@ import {
 import { IRootState } from "../../_reducers";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import { Close } from "@material-ui/icons";
-import { SvgWrapperButton } from "../../GlobalStyles";
+import { SvgWrapperButton } from "../../AlgonexStyles";
 
 export const Alert = () => {
   const dispatch = useDispatch();

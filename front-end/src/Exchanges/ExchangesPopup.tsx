@@ -16,7 +16,7 @@ import {
   MyExchangeWrapper,
 } from "./ExchangeStyles";
 
-import { ClickableDiv } from "../GlobalStyles";
+import { ClickableDiv } from "../AlgonexStyles";
 import { Modal } from "../_components";
 import {
   Avatar,
@@ -31,7 +31,7 @@ import {
 import { AccountBalanceWallet, Add } from "@material-ui/icons";
 import { useHistory } from "react-router";
 import { deepOrange, deepPurple } from "@material-ui/core/colors";
-import { COLORS } from "../GlobalStyles/ResponsiveDesign";
+import { COLORS } from "../AlgonexStyles/ResponsiveDesign";
 
 export function AddNewExchangeList() {
   const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef);
@@ -40,9 +40,7 @@ export function AddNewExchangeList() {
 
   const [addExchangeVisible, setAddExchangeVisible] = useState(false);
 
-  const [addExchangeData, setAddExchangeData] = useState<IExchangeReference>(
-    null
-  );
+  const [addExchangeData, setAddExchangeData] = useState<IExchangeReference>();
 
   const dispatch = useDispatch();
 
@@ -128,16 +126,16 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
   const history = useHistory();
 
   const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    blend: {
-      color: COLORS.darkBase,
-      backgroundColor: 'white',
-      border: `${COLORS.darkBase} solid 2px`,
-    },
-  }),
-);
+    createStyles({
+      blend: {
+        color: COLORS.darkBase,
+        backgroundColor: "white",
+        border: `${COLORS.darkBase} solid 2px`,
+      },
+    })
+  );
 
-const classes = useStyles();
+  const classes = useStyles();
 
   return (
     <React.Fragment>

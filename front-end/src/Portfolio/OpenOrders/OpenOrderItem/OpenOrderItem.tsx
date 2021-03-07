@@ -11,7 +11,7 @@ import {
   FixedInline,
   LabelWrapper,
   MobileWrapper,
-} from "../../../GlobalStyles/TabularStyles";
+} from "../../../AlgonexStyles/TabularStyles";
 
 interface IOrderItemProps {
   item: IOpenOrderItemView;

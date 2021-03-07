@@ -7,16 +7,8 @@ import {
 } from "@material-ui/core";
 import { style } from "d3";
 import styled from "styled-components";
-import {
-  BaseSearchBar,
-  BaseSvg,
-  CenteredFlexBox,
-  ClickableDiv,
-  ClickableSvg,
-  FlexCard,
-  TimingStyle,
-} from "../GlobalStyles";
-import { COLORS, SPACING } from "../GlobalStyles/ResponsiveDesign";
+import { BaseSearchBar, CenteredFlexBox, TimingStyle } from "../AlgonexStyles";
+import { COLORS, SPACING } from "../AlgonexStyles/ResponsiveDesign";
 
 export const MyExchangesContainer = styled.div`
   display: flex;
@@ -46,7 +38,6 @@ export const MyExchangesLineItemContainer = styled(
 )<MyExchangeLineItemProps>`
   font-size: 1rem;
   position: relative;
-  
 `;
 
 export const MyExchangeEditAreaWrapper = styled.div`
@@ -64,21 +55,19 @@ export const AddExchangeWrapper = styled.div`
   width: 100%;
 `;
 
-export const ExchangeSearchBar = styled(BaseSearchBar)`
-    
-`;
+export const ExchangeSearchBar = styled(BaseSearchBar)``;
 
 export const ModifyContainer = styled(ListItemSecondaryAction)`
   ${CenteredFlexBox}
 `;
 
-export const AddExchangeItem = styled(Card)` 
+export const AddExchangeItem = styled(Card)`
   width: 12rem;
   display: flex;
   justify-content: start;
   align-items: center;
   margin: 5px;
-  padding: .5rem;
+  padding: 0.5rem;
   border: solid white 3px;
   cursor: pointer;
   * {

@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseButton, ClickableSvg } from "../../GlobalStyles";
+import { BaseButton, ClickableSvg } from "../../AlgonexStyles";
 
 interface ISvgProps {
   style?: object;

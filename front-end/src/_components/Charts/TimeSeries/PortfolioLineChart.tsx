@@ -7,7 +7,7 @@ import { IRootState } from "../../../_reducers";
 import { useSelector } from "react-redux";
 import { NONAME } from "dns";
 import { ViewLoading } from "../..";
-import { COLORS, RD } from "../../../GlobalStyles/ResponsiveDesign";
+import { COLORS, RD } from "../../../AlgonexStyles/ResponsiveDesign";
 import useMedia from "use-media";
 
 interface PortfolioLineChartProps {
@@ -36,7 +36,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
   const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
 
   useEffect(() => {
-    data.length > 0 && drawBasicChart();
+    data && drawBasicChart();
   }, [data, width, height]);
 
   const margin = {
@@ -175,7 +175,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .line()
       .x((d: any) => xScale(d.T))
       .y((d: any) => yScale(d.USD))
-      .curve(d3.curveLinear);
+      .curve(d3.curveMonotoneX);
 
     //append line inside the svg component
     var path = svg
@@ -239,7 +239,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       d3.select("#PDID").html(valueDate);
     }
 
-    function mousemove(event: any) {
+    function mousemove(event: MouseEvent) {
       event.preventDefault();
       const xPos = d3.pointer(event, this)[0];
       handleMove(xPos);
@@ -302,11 +302,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
         height: `${height}px`,
       }}
     >
-      {!(data.length > 0) ? (
-        <ViewLoading />
-      ) : (
-        <div id={`${id}`}></div>
-      )}
+      {!(data.length > 0) ? <ViewLoading /> : <div id={`${id}`}></div>}
     </div>
   );
 };

@@ -1,41 +1,23 @@
-import {
-  BottomNavigation,
-  Card,
-  Drawer,
-  SwipeableDrawer,
-} from "@material-ui/core";
 import { Polymer } from "@material-ui/icons";
-import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { IViewType } from "../../../../types";
 import {
-  BaseSvg,
-  BaseText,
   CenteredFlexBox,
   ClickableDiv,
   ClickableSvg,
   FadeoutAnimation,
   SvgWrapperButton,
   TimingStyle,
-} from "../../GlobalStyles";
-import { COLORS, RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
-import { ArrowIcon } from "../../_components";
-
-interface IDesktopWrapperProps {
-  isSidebarCollapsed: Boolean;
-}
+} from "../../AlgonexStyles";
+import { COLORS, RD, SPACING } from "../../AlgonexStyles/ResponsiveDesign";
 
 export const SidebarSpacer = styled.div`
   height: 100%;
 `;
 
-export const AlgonexLogo = styled(Polymer)`
-  height: 100%;
-  width: 100%;
-  fill: ${COLORS.primaryBase} !important;
-`;
-
-export const SidebarContainer = styled.div<IDesktopWrapperProps>`
+interface ISidebarContainerProps {
+  isSidebarCollapsed: boolean;
+}
+export const SidebarContainer = styled.div<ISidebarContainerProps>`
   display: flex;
   justify-content: start;
   box-shadow: 5px 10px 25px -24px;
@@ -63,17 +45,6 @@ export const SidebarActionArea = styled.div`
   padding: 0;
 `;
 
-export const SidebarDrawer = styled(SwipeableDrawer)`
-  display: flex;
-  justify-content: start;
-  box-shadow: 5px 10px 25px -24px;
-  flex-direction: column;
-  height: 100vh;
-  width: ${SPACING.sidebarWidth};
-  align-items: start;
-  ${TimingStyle}
-`;
-
 export const LinkWrapper = styled.div`
   cursor: pointer;
   display: flex;
@@ -83,10 +54,7 @@ export const LinkWrapper = styled.div`
   flex-wrap: none;
 `;
 
-interface ILinkTextProps {
-  isVisible?: boolean;
-}
-export const LinkText = styled(BaseText)<ILinkTextProps>`
+export const LinkText = styled.div`
   font-size: 1.2em;
   display: flex;
   margin-left: ${SPACING.NavbarHeight};
@@ -121,13 +89,3 @@ export const SidebarIconContainer = styled.div<ITabContentContainerProps>`
   ${CenteredFlexBox}
 `;
 export const SidebarDetailsButton = styled(SvgWrapperButton)``;
-
-export const BottomNavbar = styled(BottomNavigation)`
-  width: 100%;
-  position: fixed;
-  bottom: 0px;
-  background-color: #2e2e2e;
-  * {
-    color: white !important;
-  }
-`;

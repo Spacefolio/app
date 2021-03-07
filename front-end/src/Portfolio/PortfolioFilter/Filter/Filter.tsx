@@ -13,7 +13,7 @@ import {
   IDropdownItem,
 } from "../../../_components/Dropdown/Dropdown";
 import DatePicker from "react-datepicker";
-import { FlexCard, GrowFromZero, InlineDiv } from "../../../GlobalStyles";
+import { FlexCard, GrowFromZero, InlineDiv } from "../../../AlgonexStyles";
 import {
   Grow,
   LinearProgress,
@@ -29,7 +29,7 @@ import { useSelector } from "react-redux";
 import { List, WindowScroller } from "react-virtualized";
 import "react-virtualized/styles.css";
 import useMedia from "use-media";
-import { RD } from "../../../GlobalStyles/ResponsiveDesign";
+import { RD } from "../../../AlgonexStyles/ResponsiveDesign";
 
 interface IFilterProps {
   data: any;

@@ -2,7 +2,6 @@ import { portfolioConstants } from "../_constants";
 import { portfolioService } from "../_services";
 import { alertActions } from "./alert.actions";
 import { IPortfolioDataView, ITransactionItemView } from "../../../types";
-import { history } from "../_helpers";
 
 export const portfolioActions = {
   sync,

@@ -1,15 +1,15 @@
 import { Avatar, TableCell, TableRow, Typography } from "@material-ui/core";
 import React from "react";
 import { IPortfolioDataView, IPortfolioItemView } from "../../../../../types";
-import { InlineDiv } from "../../../GlobalStyles";
-import { COLORS } from "../../../GlobalStyles/ResponsiveDesign";
+import { InlineDiv } from "../../../AlgonexStyles";
+import { COLORS } from "../../../AlgonexStyles/ResponsiveDesign";
 import {
   DataWrapper,
   DesktopWrapper,
   HoldingDesktopWrapper,
   MobileWrapper,
-} from "../../../GlobalStyles/TabularStyles";
-import { trimFields } from "../../../_helpers/PortfolioHelperFunctions";
+} from "../../../AlgonexStyles/TabularStyles";
+import { ReformatCurrencyValue } from "../../../_helpers/formatters";
 
 interface HoldingItemProps {
   portfolioItem: IPortfolioItemView;
@@ -51,14 +51,14 @@ export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   const CurrentPriceSection = () => {
     return (
       <TableCell align="right">
-        <Typography>${trimFields(currentPrice, "USD")}</Typography>
+        <Typography>${ReformatCurrencyValue(currentPrice, "USD")}</Typography>
       </TableCell>
     );
   };
   const ValueSection = () => {
     return (
       <TableCell align="right">
-        <Typography>${trimFields(value.USD, "USD")}</Typography>
+        <Typography>${ReformatCurrencyValue(value.USD, "USD")}</Typography>
       </TableCell>
     );
   };

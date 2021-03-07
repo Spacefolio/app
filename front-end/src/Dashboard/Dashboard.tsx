@@ -4,7 +4,7 @@ import { DashboardWrapper } from "./DashboardStyles";
 import { PortfolioLineChart } from "../_components";
 import { alertActions } from "../_actions";
 import { portfolioService } from "../_services";
-import { FlexCard } from "../GlobalStyles";
+import { FlexCard } from "../AlgonexStyles";
 import { AddNewExchangeList } from "../Exchanges";
 import { Typography } from "@material-ui/core";
 import { IRootState } from "../_reducers";

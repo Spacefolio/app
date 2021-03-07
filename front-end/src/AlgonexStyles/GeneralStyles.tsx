@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router-dom";
 import React from "react";
 import { COLORS, TIMING } from "./ResponsiveDesign";
 import styled from "styled-components";
+import { Polymer } from "@material-ui/icons";
 export const TimingStyle = `
 transition: ${TIMING.transitionTime};
 `;
@@ -36,9 +37,6 @@ export const ClickableSvg = styled(BaseSvg)`
   &:hover {
     fill: ${COLORS.accentBase};
   }
-  ${TimingStyle}
-`;
-export const BaseText = styled.div`
   ${TimingStyle}
 `;
 export const Scrollbox = styled.div`
@@ -124,4 +122,10 @@ export const FlexWrap = styled(InlineDiv)`
   white-space: none;
   flex-wrap: wrap;
   gap: 5px;
+`;
+
+export const AlgonexLogo = styled(Polymer)`
+  height: 100%;
+  width: 100%;
+  fill: ${COLORS.primaryBase} !important;
 `;

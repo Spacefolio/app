@@ -5,8 +5,8 @@ import {
   ClickableDiv,
   ClickableSvg,
   SvgWrapperButton,
-} from "../GlobalStyles";
-import { COLORS, SPACING } from "../GlobalStyles/ResponsiveDesign";
+} from "../AlgonexStyles";
+import { COLORS, SPACING } from "../AlgonexStyles/ResponsiveDesign";
 
 export const NavLogoArea = styled(ClickableDiv)`
   display: flex;

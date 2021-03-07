@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { COLORS, RD, SPACING } from "../../GlobalStyles/ResponsiveDesign";
-import { BaseGrid, CenteredFlexBox, ClickableDiv } from "../../GlobalStyles";
+import { COLORS, RD, SPACING } from "../../AlgonexStyles/ResponsiveDesign";
+import { BaseGrid, CenteredFlexBox, ClickableDiv } from "../../AlgonexStyles";
 import { Paper } from "@material-ui/core";
 
 export const DashboardWrapper = styled(BaseGrid)`
