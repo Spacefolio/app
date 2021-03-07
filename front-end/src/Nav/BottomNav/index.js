@@ -1,1 +1,2 @@
-export * from './BottomNavComponents'
+
+export * from './BottomNav';

@@ -7,7 +7,7 @@ import {
   PortfolioName,
   PortfolioValueColumn,
   PortfolioProfitSection,
-} from "./MetaportfolioStyles";
+} from "./Styles";
 import { Dropdown, Modal, PortfolioLineChart } from "../../_components";
 import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView, timeframe } from "../../../../types";
@@ -25,7 +25,7 @@ import { SvgWrapperButton, InlineDiv } from "../../AlgonexStyles";
 import {
   TimeFrameSelectorContainer,
   TimeframeItem,
-} from "../Charts/PChartStyles";
+} from "../Charts/Styles";
 import { SyncIcon } from "../../AlgonexStyles/IconStyles";
 import { Button, Typography } from "@material-ui/core";
 import { ListMyExchanges } from "../../Exchanges";
@@ -76,14 +76,6 @@ export const MetaPortfolio = () => {
 
     const ref: MutableRefObject<undefined> = useRef();
 
-    const RefreshButton = (
-      <SvgWrapperButton
-        onClick={() => dispatch(portfolioActions.refresh(filterId, true))}
-      >
-        <SyncIcon isSyncing={isRefreshing} />
-      </SvgWrapperButton>
-    );
-
     const CurrentPortfolio = (
       <PortfolioName
         ref={ref}
@@ -104,16 +96,6 @@ export const MetaPortfolio = () => {
           <ListMyExchanges enableEditing={false} />
         </Dropdown>
       </PortfolioName>
-    );
-
-    const SyncButtonSection = (
-      <Button
-        color="default"
-        startIcon={<SyncIcon isSyncing={isSyncing} />}
-        onClick={() => dispatch(portfolioActions.sync())}
-      >
-        Sync
-      </Button>
     );
 
     const PortfolioValue = (

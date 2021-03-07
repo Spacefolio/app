@@ -1,6 +1,6 @@
 import { Container } from "@material-ui/core";
 import React from "react";
-import { FullsizeContainer } from "./PlaceholderStyles";
+import { FullsizeContainer } from "./Styles";
 
 interface DashboardNoExchangesProps {}
 

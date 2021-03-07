@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { BottomNavbar } from "../../AlgonexStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import value from "*.png";
@@ -9,20 +8,19 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { useHistory, useLocation, useRouteMatch } from "react-router";
-import { Dashboard, Extension, PieChart, Settings, Timeline } from "@material-ui/icons";
-import { COLORS, RD } from "../../AlgonexStyles/ResponsiveDesign";
-import useMedia from "use-media";
+import {
+  Dashboard,
+  Extension,
+  PieChart,
+  Settings,
+  Timeline,
+} from "@material-ui/icons";
+import { BottomNavbar } from "./Styles";
 
 interface BottomNavProps {}
 
 export const MobileNav: React.FC<BottomNavProps> = ({}) => {
   const dispatch = useDispatch();
-
-  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
-  
-  const isSidebarVisible = useSelector(
-    (state: IRootState) => state.applicationView.isSidebarVisible
-  );
 
   const location = useLocation();
 
@@ -47,12 +45,10 @@ export const MobileNav: React.FC<BottomNavProps> = ({}) => {
     }
   }, []);
 
-  
-
   return (
     <BottomNavbar
       value={value}
-      onChange={(event, newValue) => {
+      onChange={(event: any, newValue: number) => {
         setValue(newValue);
       }}
       showLabels
@@ -61,7 +57,7 @@ export const MobileNav: React.FC<BottomNavProps> = ({}) => {
         label="Portfolio"
         icon={<PieChart />}
         onClick={() => history.push("/portfolio")}
-        classes={{ selected: 'my-class-name' }}
+        classes={{ selected: "my-class-name" }}
       />
       <BottomNavigationAction
         label="Dashboard"

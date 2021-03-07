@@ -4,9 +4,7 @@ import { IExchangeAccountView, IExchangeReference } from "../../../types";
 import { EditExchangeForm } from "./Forms";
 import { exchangeActions, portfolioActions } from "../_actions";
 import { useDispatch, useSelector } from "react-redux";
-import { STATES } from "mongoose";
 import { IRootState } from "../_reducers";
-import { TabItem } from "../Portfolio/portfolioStyles";
 import {
   ModifyContainer,
   MyExchangeNameWrapper,
@@ -21,8 +19,8 @@ import {
   Button,
   Avatar,
   ListItemAvatar,
-  ListItemSecondaryAction,
   MenuItem,
+  Portal,
 } from "@material-ui/core";
 import { GrowFromZero, SvgWrapperButton } from "../AlgonexStyles";
 import { Delete, Edit, Work } from "@material-ui/icons";
@@ -77,29 +75,33 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
         <Delete />
       </SvgWrapperButton>
 
-      <Dialog
-        open={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{`Unlink ${data.name} from your account`}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Removing an integration from Algonex is permanent. Restoring it to
-            your account will require you to re-enter your API keys. Do you wish
-            to continue?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleClose(false)} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={() => handleClose(true)} color="primary">
-            Continue
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {isDeleteOpen && (
+        <Portal>
+          <Dialog
+            open={isDeleteOpen}
+            onClose={() => setIsDeleteOpen(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{`Unlink ${data.name} from your account`}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Removing an integration from Algonex is permanent. Restoring it
+                to your account will require you to re-enter your API keys. Do
+                you wish to continue?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => handleClose(false)} color="secondary">
+                Cancel
+              </Button>
+              <Button onClick={() => handleClose(true)} color="primary">
+                Continue
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Portal>
+      )}
     </React.Fragment>
   );
 

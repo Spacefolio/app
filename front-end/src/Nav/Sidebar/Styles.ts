@@ -17,6 +17,7 @@ export const SidebarSpacer = styled.div`
 interface ISidebarContainerProps {
   isSidebarCollapsed: boolean;
 }
+
 export const SidebarContainer = styled.div<ISidebarContainerProps>`
   display: flex;
   justify-content: start;
@@ -39,53 +40,3 @@ export const SidebarContainer = styled.div<ISidebarContainerProps>`
   z-index: 1;
   ${TimingStyle}
 `;
-
-export const SidebarActionArea = styled.div`
-  margin: 0;
-  padding: 0;
-`;
-
-export const LinkWrapper = styled.div`
-  cursor: pointer;
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: start;
-  flex-wrap: none;
-`;
-
-export const LinkText = styled.div`
-  font-size: 1.2em;
-  display: flex;
-  margin-left: ${SPACING.NavbarHeight};
-  cursor: pointer;
-  align-items: center;
-  height: 100%;
-`;
-
-export const SidebarTab = styled(ClickableDiv)`
-  display: flex;
-  width: 100%;
-  height: ${SPACING.NavbarHeight};
-`;
-
-interface ITabContentContainerProps {
-  isActiveTab: boolean;
-}
-export const TabSubContentContainer = styled.div<ITabContentContainerProps>`
-  ${TimingStyle}
-  ${(props) => (props.isActiveTab ? `height: 200px;` : `height: 0px;`)}
-  background-color: ${COLORS.primaryLight3};
-  width: 100%;
-`;
-export const SidebarIconContainer = styled.div<ITabContentContainerProps>`
-  height: 100%;
-  padding: 1em;
-  svg {
-    ${(props) => props.isActiveTab && `fill: ${COLORS.accentBase};`}
-  }
-  width: ${SPACING.NavbarHeight};
-  position: absolute;
-  ${CenteredFlexBox}
-`;
-export const SidebarDetailsButton = styled(SvgWrapperButton)``;

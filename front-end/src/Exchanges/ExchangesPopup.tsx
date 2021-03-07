@@ -33,71 +33,6 @@ import { useHistory } from "react-router";
 import { deepOrange, deepPurple } from "@material-ui/core/colors";
 import { COLORS } from "../AlgonexStyles/ResponsiveDesign";
 
-export function AddNewExchangeList() {
-  const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef);
-
-  const [searchFilter, setSearchFilter] = useState("");
-
-  const [addExchangeVisible, setAddExchangeVisible] = useState(false);
-
-  const [addExchangeData, setAddExchangeData] = useState<IExchangeReference>();
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(exchangeActions.getRef());
-  }, []);
-
-  return (
-    <AddExchangeWrapper>
-      <TextField
-        style={{ width: "100%" }}
-        name="search"
-        autoComplete={"off"}
-        placeholder="search"
-        value={searchFilter}
-        onChange={(e: any) => setSearchFilter(e.target.value)}
-        id="outlined-search"
-        label="Filter Exchanges"
-        type="search"
-        variant="outlined"
-      />
-      <AddExchangeGrid>
-        {exchangeRef &&
-          exchangeRef
-            .filter((item: IExchangeReference) => {
-              if (searchFilter != "") {
-                return item.name
-                  .toLowerCase()
-                  .startsWith(searchFilter.toLowerCase());
-              } else return true;
-            })
-            .map((item: IExchangeReference) => {
-              return (
-                <AddExchangeItem
-                  key={item.id}
-                  onClick={() => {
-                    setAddExchangeVisible(true);
-                    setAddExchangeData(item);
-                  }}
-                >
-                  <Avatar src={item.logoUrl} />
-                  <Typography variant={"button"}>{item.name}</Typography>
-                </AddExchangeItem>
-              );
-            })}
-      </AddExchangeGrid>
-
-      <Modal
-        visible={addExchangeVisible}
-        dismiss={() => setAddExchangeVisible(false)}
-      >
-        <AddExchangeForm exchangeRefInfo={addExchangeData} />
-      </Modal>
-    </AddExchangeWrapper>
-  );
-}
-
 interface IListMyExchangesProps {
   enableEditing: boolean;
 }
@@ -139,7 +74,7 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
 
   return (
     <React.Fragment>
-      {/* <MenuItem
+      <MenuItem
         button={true}
         selected={portfolioFilterID == ""}
         key={"AllAssets"}
@@ -151,7 +86,7 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
           </Avatar>
         </ListItemAvatar>
         <MyExchangeNameWrapper>All Portfolios</MyExchangeNameWrapper>
-      </MenuItem> */}
+      </MenuItem>
       {userLinkedExchanges.length != 0 &&
         userLinkedExchanges.map((item: IExchangeAccountView) => {
           return (
@@ -165,7 +100,7 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
       <MenuItem
         button={true}
         key={"AddExchange"}
-        onClick={() => history.push("/settings")}
+        onClick={() => setAddExchangeVisible(true)}
       >
         <ListItemAvatar>
           <Avatar className={classes.blend}>

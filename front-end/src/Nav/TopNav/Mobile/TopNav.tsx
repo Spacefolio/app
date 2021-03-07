@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useHistory } from "react-router-dom";
-import { userActions } from "../../_actions";
-import { ArrowIcon, Dropdown, IDropdownItem } from "../../_components";
-import { applicationViewActions } from "../../_actions/applicationView.actions";
-import { IRootState } from "../../_reducers";
+import { userActions } from "../../../_actions";
+import { ArrowIcon, Dropdown, IDropdownItem } from "../../../_components";
+import { applicationViewActions } from "../../../_actions/applicationView.actions";
+import { IRootState } from "../../../_reducers";
 import {
   BrandingContainer,
   BrandTextLink,
@@ -15,14 +15,14 @@ import {
   NavFlexSpacer,
   NavLogoArea,
   ToggleSidebar,
-} from "../NavStyles";
+} from "./Styles";
 import {
   AlgonexLogo,
   BaseLink,
   ClickableDiv,
   InlineDiv,
   SvgWrapperButton,
-} from "../../AlgonexStyles";
+} from "../../../AlgonexStyles";
 import {
   Avatar,
   ListItemAvatar,
@@ -33,10 +33,10 @@ import {
   Typography,
   useScrollTrigger,
 } from "@material-ui/core";
-import { COLORS, RD } from "../../AlgonexStyles/ResponsiveDesign";
+import { COLORS, RD } from "../../../AlgonexStyles/ResponsiveDesign";
 import { ArrowDropDown, ExitToApp } from "@material-ui/icons";
-import { ListMyExchanges } from "../../Exchanges";
-import { IPortfolioDataView } from "../../../../types";
+import { ListMyExchanges } from "../../../Exchanges";
+import { IPortfolioDataView } from "../../../../../types";
 import useMedia from "use-media";
 
 interface Props {
@@ -55,7 +55,7 @@ function HideOnScroll(props: Props) {
   );
 }
 
-export const Nav = () => {
+export const MobileTopNav = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: IRootState) => state.authentication.user);
@@ -112,32 +112,7 @@ export const Nav = () => {
     </Dropdown>
   );
 
-  const DesktopNav = (
-    <NavContainer>
-      <ToggleSidebar
-        onClick={() => dispatch(applicationViewActions.toggleSidebar())}
-      >
-        <ArrowIcon direction={!isSidebarCollapsed ? "left" : "right"} />
-      </ToggleSidebar>
-      <NavFlexSpacer />
-
-      <NavAccountContainer
-        ref={container}
-        onClick={() => {
-          setAccountDropdownVisible(!accountDropdownVisible);
-        }}
-      >
-        <InlineDiv>
-          {/* <Avatar src={filteredPortfolioData.logoUrl} /> */}
-          {user.firstName} {user.lastName}
-          <ArrowDropDown />
-        </InlineDiv>
-        {accountDropdownVisible && accountDropdown}
-      </NavAccountContainer>
-    </NavContainer>
-  );
-
-  const MobileNav = (
+  return (
     <HideOnScroll>
       <NavContainer>
         <NavLogoArea>
@@ -171,6 +146,4 @@ export const Nav = () => {
       </NavContainer>
     </HideOnScroll>
   );
-
-  return <React.Fragment>{isMobile ? MobileNav : DesktopNav}</React.Fragment>;
 };

@@ -1,30 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Router,
-  Route,
-  Switch,
-  useRouteMatch,
-  Redirect,
-} from "react-router-dom";
-
+import { Route, Switch, Redirect } from "react-router-dom";
 import { Portfolio } from "../Portfolio";
 import { Dashboard } from "../Dashboard";
-import { Nav, SidebarNav } from "../Nav";
+import { MobileNav, MobileTopNav, DesktopTopNav, SidebarNav } from "../Nav";
 import {
   ApplicationContainer,
   ApplicationFlexContainer,
   BodyWrapper,
-} from "./applicationStyles";
-import useDimensions from "react-use-dimensions";
-import { applicationViewActions } from "../_actions/applicationView.actions";
+} from "./Styles";
 import { RD } from "../AlgonexStyles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
-import { MobileNav } from "../Nav/BottomNav/BottomNav";
 import { Settings } from "../Settings";
 import { GrowFromZero } from "../AlgonexStyles";
 import { portfolioActions } from "../_actions";
 import useMedia from "use-media";
+import { Container } from "@material-ui/core";
 
 export const Application = () => {
   const dispatch = useDispatch();
@@ -36,27 +27,6 @@ export const Application = () => {
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
   const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
-
-  // const flexSizing = () => {
-  //   if (applicationWidth >= parseInt(RD.breakpointmonitor)) {
-  //     return { maxWidth: RD.widthmonitor };
-  //   } else if (
-  //     applicationWidth < parseInt(RD.breakpointmonitor) &&
-  //     applicationWidth >= parseInt(RD.breakpointlaptop)
-  //   ) {
-  //     return { maxWidth: RD.widthlaptop };
-  //   } else if (
-  //     applicationWidth < parseInt(RD.breakpointlaptop) &&
-  //     applicationWidth >= parseInt(RD.breakpointtablet)
-  //   ) {
-  //     return { maxWidth: RD.widthtablet };
-  //   } else if (
-  //     applicationWidth < parseInt(RD.breakpointtablet) &&
-  //     applicationWidth >= parseInt(RD.breakpointsmartphone)
-  //   ) {
-  //     return { maxWidth: "100%" };
-  //   }
-  // };
 
   useEffect(() => {
     dispatch(portfolioActions.refresh(filterId));
@@ -70,7 +40,7 @@ export const Application = () => {
           isMobile={isMobile}
           isSidebarCollapsed={isSidebarCollapsed}
         >
-          <Nav />
+          {isMobile ? <MobileTopNav /> : <DesktopTopNav />}
           <GrowFromZero in={true}>
             <ApplicationFlexContainer
               isMobile={isMobile}

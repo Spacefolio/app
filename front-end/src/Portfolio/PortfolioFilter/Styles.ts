@@ -1,6 +1,6 @@
 import { TableCell, TableRow } from "@material-ui/core";
 import styled from "styled-components";
-import { TimingStyle } from "../../../AlgonexStyles";
+import { TimingStyle } from "../../AlgonexStyles";
 
 export const FilterWrapper = styled.div`
   margin: 10px 0;

@@ -4,10 +4,9 @@ import {
   LinkText,
   LinkWrapper,
   SidebarTab,
-  SidebarDetailsButton,
   SidebarIconContainer,
   TabSubContentContainer,
-} from "../Styles";
+} from "./Styles";
 import { Route, useHistory, useLocation, useRouteMatch } from "react-router";
 import { useState } from "react";
 import { link } from "fs/promises";
@@ -22,6 +21,7 @@ interface ISidebarActionItemProps {
   icon: React.ReactNode;
   linkUri: string;
 }
+
 export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
   text,
   children,

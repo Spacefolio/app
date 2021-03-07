@@ -12,23 +12,6 @@ interface ApplicationProps {
   isMobile: boolean;
 }
 
-function sidebarWidthCalculator(
-  width: string,
-  isMobile: boolean,
-  isSidebarCollapsed: boolean
-) {
-  const widthNum: number = parseInt(width);
-  if (isMobile) {
-    return widthNum;
-  } else {
-    if (isSidebarCollapsed) {
-      return widthNum - parseInt(SPACING.NavbarHeight);
-    } else {
-      return widthNum - parseInt(SPACING.sidebarWidth);
-    }
-  }
-}
-
 export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
   flex-direction: column;

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { HoldingItem } from "./HoldingItem/HoldingItem";
 import { IPortfolioDataView, IPortfolioItemView } from "../../../../types";
-import { useDispatch, useSelector } from "react-redux";
-import { ILabelObject, LabelSorter } from "../Transactions/LabelSorter";
-import { SPACING } from "../../AlgonexStyles/ResponsiveDesign";
+import {  useSelector } from "react-redux";
+
 import { IRootState } from "../../_reducers";
-import { FlexCard, GrowFromZero } from "../../AlgonexStyles";
+import {  GrowFromZero } from "../../AlgonexStyles";
 import { ViewLoading } from "../../_components";
 import {
   Paper,
@@ -16,7 +15,7 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { TableCellStyled } from "../PortfolioFilter/Filter/FilterStyles";
+import { TableCellStyled } from "../PortfolioFilter/Styles";
 
 export const Holdings = () => {
 

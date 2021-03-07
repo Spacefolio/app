@@ -184,8 +184,6 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .attr("class", "line")
       .attr("d", line);
 
-    var totalLength = path.node().getTotalLength();
-
     // path
     //   .attr("stroke-dasharray", totalLength + " " + totalLength)
     //   .attr("stroke-dashoffset", totalLength)

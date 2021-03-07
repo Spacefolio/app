@@ -5,7 +5,7 @@ import { IRootState } from "../../_reducers";
 import { SidebarActionItem } from "./ActionItem/ActionItem";
 import { Dashboard, PieChart, Settings, Timeline } from "@material-ui/icons";
 
-import { RD, } from "../../AlgonexStyles/ResponsiveDesign";
+import { RD } from "../../AlgonexStyles/ResponsiveDesign";
 
 import useMedia from "use-media";
 import { AlgonexLogo } from "../../AlgonexStyles";
@@ -50,7 +50,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
         linkUri="/bots"
       ></SidebarActionItem>
 
-      <SidebarSpacer/>
+      <SidebarSpacer />
 
       <SidebarActionItem
         text="Settings"

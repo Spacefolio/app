@@ -4,7 +4,7 @@ import {
   DashboardWrapper,
   TimeframeItem,
   TimeFrameSelectorContainer,
-} from "./PChartStyles";
+} from "./Styles";
 import { alertActions } from "../../_actions";
 import { portfolioService } from "../../_services";
 import { timeframe } from "../../../../types";
@@ -15,12 +15,10 @@ import { FlexCard, GrowFromZero } from "../../AlgonexStyles";
 export const Charts = () => {
   const dispatch = useDispatch();
 
-  const applicationWidth = useSelector(
-    (state: IRootState) => state.applicationView.applicationContainerWidth
-  );
-
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
+
   const [PortfolioChartData, setPortfolioChartData] = useState([]);
+  
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
 
   useEffect(() => {

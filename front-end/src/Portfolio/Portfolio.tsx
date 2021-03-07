@@ -8,14 +8,11 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { PortfolioWrapper, PortfolioSectionWrapper } from "./portfolioStyles";
+import { PortfolioWrapper } from "./Styles";
 import { MetaPortfolio, Transactions, OpenOrders, Holdings, Charts } from ".";
-import { portfolioActions } from "../_actions";
-import { IRootState } from "../_reducers";
 import { FlexCard, GrowFromZero, Scrollbox } from "../AlgonexStyles";
 import { Tabs, Tab, Paper } from "@material-ui/core";
 import { useState } from "react";
-import { SPACING } from "../AlgonexStyles/ResponsiveDesign";
 
 interface IPortfolioProps {}
 
@@ -76,32 +73,11 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
     </Tabs>
   );
 
-  // const FilterByExchangeDesktop =
-  //   width > parseInt(RD.breakpointtablet) ? (
-  //     <PortfolioSidebarWrapper>
-  //       <ExchangeSidebarFilter />
-  //     </PortfolioSidebarWrapper>
-  //   ) : null;
-
-  // const FilterByExchangeMobile =
-  //   width <= parseInt(RD.breakpointtablet) ? (
-  //     <FlexCard
-  //       style={{
-  //         marginBottom: SPACING.flexCardGap,
-  //         width: "100%",
-  //         alignItems: "center",
-  //       }}
-  //     >
-  //       <ExchangeSidebarFilter />
-  //     </FlexCard>
-  //   ) : null;
-
   return (
     <GrowFromZero in={true}>
       <PortfolioWrapper>
         <React.Fragment>
-          {/* {FilterByExchangeMobile} */}
-
+          
           <FlexCard>
             <MetaPortfolio />
           </FlexCard>

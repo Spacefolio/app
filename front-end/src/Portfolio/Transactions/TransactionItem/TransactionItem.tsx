@@ -2,26 +2,14 @@ import React from "react";
 import { ITransactionItemView } from "../../../../../types";
 import {
   decideTransactionIcon,
-  SellTransactionIcon,
 } from "../../../_components";
 import { ReformatCurrencyValue } from "../../../_helpers/formatters";
-import { TabItem } from "../../portfolioStyles";
-import {
-  DataWrapper,
-  DesktopWrapper,
-  FixedInline,
-  LabelWrapper,
-  MobileWrapper,
-  TransactionDesktopWrapper,
-} from "../../../AlgonexStyles/TabularStyles";
 import { Avatar, TableRow, Typography } from "@material-ui/core";
 import { FlexWrap, InlineDiv } from "../../../AlgonexStyles";
 import {
   TableCellStyled,
   TableRowStyled,
-} from "../../PortfolioFilter/Filter/FilterStyles";
-import { IRootState } from "../../../_reducers";
-import { useSelector } from "react-redux";
+} from "../../PortfolioFilter/Styles";
 import useMedia from "use-media";
 import { RD } from "../../../AlgonexStyles/ResponsiveDesign";
 
@@ -49,8 +37,6 @@ export const TransactionItem: React.FC<ITransactionItemProps> = ({
     price,
     fee,
   } = transactionItem;
-
-  const dateString = new Date(date).toDateString();
 
   const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
 

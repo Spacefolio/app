@@ -1,12 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DashboardWrapper } from "./DashboardStyles";
-import { PortfolioLineChart } from "../_components";
-import { alertActions } from "../_actions";
-import { portfolioService } from "../_services";
+import { DashboardWrapper } from "./Styles";
 import { FlexCard } from "../AlgonexStyles";
-import { AddNewExchangeList } from "../Exchanges";
-import { Typography } from "@material-ui/core";
 import { IRootState } from "../_reducers";
 import { MetaPortfolio } from "../Portfolio";
 import { DashboardNoExchanges } from "../_components/Placeholders";
@@ -34,7 +29,6 @@ export const Dashboard = () => {
           </FlexCard>
           <FlexCard style={{ gridArea: "two", flexDirection: "column" }}>
             {/* <Typography variant={"h4"}>Add Integrations</Typography> */}
-            <AddNewExchangeList />
           </FlexCard>
           <FlexCard style={{ gridArea: "three", flexDirection: "column" }}>
             {/* <Typography variant={"h4"}></Typography> */}

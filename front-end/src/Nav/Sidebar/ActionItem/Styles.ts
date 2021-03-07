@@ -21,7 +21,10 @@ export const LinkWrapper = styled.div`
   flex-wrap: none;
 `;
 
-export const LinkText = styled.div``;
+export const LinkText = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 export const SidebarTab = styled(ClickableDiv)`
   display: flex;

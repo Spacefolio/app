@@ -9,7 +9,6 @@ import { useState } from "react";
 import { Filter, ViewLoading } from "../../_components";
 
 import { IRootState } from "../../_reducers";
-import { CircularProgress, Grow, LinearProgress } from "@material-ui/core";
 
 export const Transactions = () => {
   const dispatch = useDispatch();
