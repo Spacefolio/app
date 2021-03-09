@@ -10,7 +10,7 @@ router.post("/register", register);
 //router.get('/', getAll);
 router.get("/current", getCurrent);
 router.get("/:id", getById);
-router.get("/registrationCheck", checkRegistration);
+router.get("/registration-check", checkRegistration);
 // router.put('/:id', update);
 //router.delete('/:id', _delete);
 
