@@ -122,9 +122,14 @@ export interface IExchangeAccount {
 exchangeAccountSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (doc: IExchangeAccountDocument, ret) {
+  transform: function (doc: IExchangeAccountDocument, ret: any) {
     delete ret._id;
     delete ret.hash;
+    delete ret.orders;
+    delete ret.transactions;
+    delete ret.openOrders;
+    delete ret.timeslices;
+    delete ret.lastSyncedDate;
   },
 });
 

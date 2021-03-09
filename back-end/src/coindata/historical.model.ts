@@ -116,7 +116,7 @@ const historicalDataSchema = new mongoose.Schema({
 historicalDataSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (ret) {
+  transform: function (ret: any) {
     delete ret._id;
     delete ret.hash;
   },
@@ -130,7 +130,7 @@ const hourlyDataSchema = new mongoose.Schema({
 historicalDataSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (ret) {
+  transform: function (ret: any) {
     delete ret._id;
     delete ret.hash;
   },

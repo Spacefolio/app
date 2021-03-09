@@ -88,7 +88,7 @@ const transactionItemViewSchema = new mongoose.Schema({
 transactionSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (doc: ITransactionDocument, ret) {
+  transform: function (doc: ITransactionDocument, ret: any) {
     delete ret._id;
     delete ret.hash;
   },
@@ -97,7 +97,7 @@ transactionSchema.set("toJSON", {
 feeSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (ret) {
+  transform: function (ret: any) {
     delete ret._id;
     delete ret.hash;
   },

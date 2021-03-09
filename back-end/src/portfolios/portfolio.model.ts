@@ -71,7 +71,7 @@ export interface IPortfolioItem {
 portfolioItemSchema.set('toJSON', {
 	virtuals: true,
 	versionKey: false,
-	transform: function (ret) {
+	transform: function (ret: any) {
 		delete ret._id;
 		delete ret.hash;
 	},
@@ -80,7 +80,7 @@ portfolioItemSchema.set('toJSON', {
 assetSchema.set('toJSON', {
 	virtuals: true,
 	versionKey: false,
-	transform: function (ret) {
+	transform: function (ret: any) {
 		delete ret._id;
 		delete ret.hash;
 	},
@@ -89,7 +89,7 @@ assetSchema.set('toJSON', {
 balanceSchema.set('toJSON', {
 	virtuals: true,
 	versionKey: false,
-	transform: function (ret) {
+	transform: function (ret: any) {
 		delete ret._id;
 		delete ret.hash;
 	},

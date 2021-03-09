@@ -85,7 +85,7 @@ export const coinListItemSchema = new mongoose.Schema({
 coinListItemSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (doc: ICoinListItemDocument, ret) {
+  transform: function (doc: ICoinListItemDocument, ret: any) {
     delete ret._id;
     delete ret.hash;
   },
@@ -124,7 +124,7 @@ export const coinSchema = new mongoose.Schema({
 coinSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (doc: ICoinDocument, ret) {
+  transform: function (doc: ICoinDocument, ret: any) {
     delete ret._id;
     delete ret.hash;
   },

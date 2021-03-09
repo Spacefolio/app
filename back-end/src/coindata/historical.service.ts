@@ -59,7 +59,7 @@ export async function loadHistoricalDataToDb(symbol: string) {
     historicalData.prices.push({ price: historicalDataJson.prices[i][1], timestamp});
   }
 
-  const savedData = await historicalData.save().then((res) => res.toJSON()).catch((err) => { console.log(err); });
+  const savedData = await historicalData.save().then((res) => res).catch((err) => { throw err; });
   return savedData;
 }
 
@@ -98,7 +98,7 @@ export async function loadHourlyData(symbol: string)
     hourlyData.prices.push({ hour, price: hourlyDataJson.prices[i][1] });
   }
 
-  const savedData = await hourlyData.save().then((res) => res.toJSON()).catch((err) => { console.log(err); });
+  const savedData = await hourlyData.save().then((res) => res).catch((err) => { throw err; });
   return savedData;
 }
 

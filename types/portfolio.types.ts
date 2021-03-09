@@ -14,15 +14,12 @@ export interface IPortfolioDataView {
     passphrase: string;
   };
   logoUrl: string;
-  orders: IOpenOrderItemView[];
   transactionViewItems: ITransactionItemView[];
-  transactions: ITransaction[];
   openOrders: IOpenOrderItemView[];
   portfolioItems: IPortfolioItemView[];
   profitPercentage: { USD: number };
   portfolioTotal: { USD: number };
   profitTotal: { USD: number };
-  holdingHistory: IHoldingSnapshot[];
 }
 
 export interface ICachedPortfolioDataView {
