@@ -9,6 +9,7 @@ export const userService = {
   getAll,
   getById,
   create,
+  checkIfRegistered,
   // update,
   // delete: _delete
 };
@@ -38,10 +39,15 @@ async function getById(id: string) {
   return await User.findById(id);
 }
 
+async function checkIfRegistered(email: string): Promise<boolean>
+{
+  return (await User.exists({ email }));
+}
+
 async function create(userParam: IRegisterRequest) {
   // validate
 
-  if (await User.findOne({ username: userParam.email })) {
+  if (await User.findOne({ email: userParam.email })) {
     throw 'Email "' + userParam.email + '" is already taken';
   }
 
@@ -61,26 +67,26 @@ async function create(userParam: IRegisterRequest) {
   });
 }
 
-// async function update(id: string, userParam: IRegisterRequest) {
-//     const user = await User.findById(id);
+async function update(id: string, userParam: IRegisterRequest) {
+    const user = await User.findById(id);
 
-//     // validate
-//     if (!user) throw 'User not found';
-//     if (user.email !== userParam.username && await User.findOne({ username: userParam.username })) {
-//         throw 'Username "' + userParam.username + '" is already taken';
-//     }
+    // validate
+    if (!user) throw 'User not found';
+    if (user.email !== userParam.email && await User.findOne({ email: userParam.email })) {
+        throw 'Username "' + userParam.email + '" is already taken';
+    }
 
-//     // hash password if it was entered
-//     if (userParam.password) {
-//         user.hash = bcrypt.hashSync(userParam.password, 10);
-//     }
+    // hash password if it was entered
+    if (userParam.password) {
+        user.hash = bcrypt.hashSync(userParam.password, 10);
+    }
 
-//     // copy userParam properties to user
-//     Object.assign(user, userParam);
+    // copy userParam properties to user
+    Object.assign(user, userParam);
 
-//     await user.save();
-// }
+    await user.save();
+}
 
-// async function _delete(id: string) {
-//     await User.findByIdAndRemove(id);
-// }
+async function _delete(id: string) {
+    await User.findByIdAndRemove(id);
+}

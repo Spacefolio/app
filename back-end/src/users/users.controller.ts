@@ -10,6 +10,7 @@ router.post("/register", register);
 //router.get('/', getAll);
 router.get("/current", getCurrent);
 router.get("/:id", getById);
+router.get("/registrationCheck", checkRegistration);
 // router.put('/:id', update);
 //router.delete('/:id', _delete);
 
@@ -23,6 +24,12 @@ function authenticate(req: any, res: Response, next: NextFunction) {
         ? res.json(user)
         : res.status(400).json({ message: "Email or password is incorrect" })
     )
+    .catch((err: any) => next(err));
+}
+
+function checkRegistration(req: any, res: Response, next: NextFunction) {
+    userService.checkIfRegistered(req.body.email)
+    .then((registered) => res.json({ registered: registered }))
     .catch((err: any) => next(err));
 }
 
