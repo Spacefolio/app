@@ -11,7 +11,7 @@ router.put('/:id', update);
 router.delete('/:id', _delete);
 router.post('/sync', sync);
 
-router.get("/requiredCredentials/:exchangeType", getRequiredCredentials);
+router.get("/required-credentials/:exchangeType", getRequiredCredentials);
 
 export { router as exchangesRouter };
 
