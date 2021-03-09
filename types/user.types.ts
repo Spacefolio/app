@@ -2,28 +2,32 @@ import { IExchangeAccountView } from './exchange.types';
 
 export interface IUser {
     id: string;
-    username: string;
+    email: string;
     hash: string;
-    firstName: string;
-    lastName: string;
+    firstName?: string;
+    lastName?: string;
     linkedExchanges: IExchangeAccountView[];
 }
 
+export interface IUserView {
+  id: string;
+  email: string;
+  hash: string;
+  firstName?: string;
+  lastName?: string;
+}
+
 export interface INewUser {
-  username: string;
-  firstName: string;
-  lastName: string;
+  email: string;
   password: string;
 }
 
 export interface ILoginRequest {
-    username: string;
+    email: string;
     password: string;
 }
 
 export interface IRegisterRequest {
-    username: string;
+    email: string;
     password: string;
-    firstName: string;
-    lastName: string;
 }

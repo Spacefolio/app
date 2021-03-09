@@ -19,6 +19,7 @@ import { SelectNewIntegration } from "./AddNewSelector";
 import { ButtonSection } from "./Style";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
+import { applicationViewActions } from "../../_actions/applicationView.actions";
 
 interface IAddExchangeProps {}
 
@@ -69,25 +70,25 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
 
   const steps = getSteps();
 
-  const handleNext = () => {
+  const handleClick = () => {
     switch (activeStep) {
       case 0:
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         break;
       case 1:
-        setButtonText("Submit");
+        addExchangeSuccess && setActiveStep(2);
         break;
       case 2:
-        setButtonText("Finish");
+        dispatch(
+          applicationViewActions.setModal(
+            false,
+            null,
+            null
+          )
+        );
         break;
     }
   };
-
-  useEffect(() => {
-    if (addExchangeSuccess && activeStep == 1) {
-      setActiveStep(2);
-    }
-  }, [addExchangeSuccess]);
 
   useEffect(() => {
     switch (activeStep) {
@@ -138,11 +139,11 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
               </BaseButton>
               <BaseButton
                 type={activeStep === 1 ? "submit" : "button"}
-                form={activeStep === 1 && "add-exchange-form"}
+                form={activeStep === 1 ? "add-exchange-form" : ""}
                 disabled={integrationInfo == null}
                 variant="contained"
                 color="primary"
-                onClick={handleNext}
+                onClick={handleClick}
               >
                 {addingExchange ? "Submitting" : buttonText}
               </BaseButton>
@@ -153,3 +154,7 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
     </React.Fragment>
   );
 };
+function dispatch(arg0: { type: string; header: string; modalVisible: boolean; modalComponent: any; }) {
+  throw new Error("Function not implemented.");
+}
+

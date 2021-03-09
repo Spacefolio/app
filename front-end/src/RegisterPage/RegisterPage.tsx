@@ -34,31 +34,27 @@ export const RegisterPage = () => {
 
   const { register } = userActions;
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [user, setUser] = useState<INewUser>({
-    firstName,
-    lastName,
-    username,
+    email,
     password,
   });
 
   useEffect(() => {
-    setUser({ firstName, lastName, username, password });
-  }, [firstName, lastName, username, password]);
+    setUser({ email, password });
+  }, [email, password]);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
     setSubmitted(true);
     if (
-      firstName &&
-      lastName &&
-      username &&
+      // firstName &&
+      // lastName &&
+      email &&
       password &&
       password == passwordCheck
     ) {
@@ -69,16 +65,12 @@ export const RegisterPage = () => {
   return (
     <Container component="main" maxWidth="xs">
       <FormWrapper>
-        <Avatar>
-          <LockOutlined />
-        </Avatar>
-
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
-
+        <div className="g-signin2" data-onsuccess="onSignIn"></div>
         <Form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
+          {/* <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
@@ -113,7 +105,7 @@ export const RegisterPage = () => {
                 helperText={submitted && !lastName && "Last Name is Required."}
               />
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12}>
             <TextField
@@ -121,14 +113,14 @@ export const RegisterPage = () => {
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
               autoFocus
-              value={username}
-              onChange={(e: any) => setUsername(e.target.value)}
-              helperText={submitted && !username && "Username is Required."}
+              value={email}
+              onChange={(e: any) => setEmail(e.target.value)}
+              helperText={submitted && !email && "Email is Required."}
             />
           </Grid>
 

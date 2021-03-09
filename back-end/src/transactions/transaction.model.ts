@@ -30,11 +30,11 @@ export interface ITransactionItemViewDocument extends mongoose.Document {
   quoteSymbol: string;
   logoUrl: string;
   type: "withdrawal" | "deposit" | "sell" | "buy";
-  date: number,
-  amount: number,
-  quoteAmount: number,
-  price: number,
-  value: number,
+  date: number;
+  amount: number;
+  quoteAmount: number;
+  price: number;
+  value: number;
   fee: IFee;
 }
 
@@ -56,8 +56,8 @@ export interface ITransactionModel
 
 export interface ITransactionItemViewModel
   extends mongoose.Model<ITransactionItemViewDocument> {
-    build(attr: ITransactionItemView): ITransactionItemViewDocument
-  }
+  build(attr: ITransactionItemView): ITransactionItemViewDocument;
+}
 
 export interface ITransaction {
   timestamp: number;
@@ -67,7 +67,7 @@ export interface ITransaction {
   amount: number;
   currency: string;
   status: "pending" | "ok";
-  fee: IFee
+  fee: IFee;
 }
 
 const transactionItemViewSchema = new mongoose.Schema({
@@ -75,20 +75,20 @@ const transactionItemViewSchema = new mongoose.Schema({
   symbol: String,
   quoteSymbol: String,
   logoUrl: String,
-  type: { type: String,  enum: ["withdrawal", "deposit", "sell", "buy"] },
+  type: { type: String, enum: ["withdrawal", "deposit", "sell", "buy"] },
   date: Number,
   amount: Number,
   quoteAmount: Number,
   price: Number,
   value: Number,
-  fee: { type: feeSchema }
+  fee: { type: feeSchema },
 });
 
 /* #region   */
 transactionSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (doc: ITransactionDocument, ret) {
+  transform: function (doc: ITransactionDocument, ret: any) {
     delete ret._id;
     delete ret.hash;
   },
@@ -97,7 +97,7 @@ transactionSchema.set("toJSON", {
 feeSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
-  transform: function (ret) {
+  transform: function (ret: any) {
     delete ret._id;
     delete ret.hash;
   },
