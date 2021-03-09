@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { feeSchema, IFee } from "./transaction.model";
 
-
 export interface IOrderDocument extends mongoose.Document {
   timestamp: number;
   datetime: string;
@@ -13,7 +12,7 @@ export interface IOrderDocument extends mongoose.Document {
   remaining: number;
   cost: number;
   status: "open" | "closed" | "canceled";
-  fee: IFee
+  fee: IFee;
 }
 
 const orderSchema = new mongoose.Schema({
@@ -24,14 +23,13 @@ const orderSchema = new mongoose.Schema({
   price: { type: Number },
   amount: { type: Number },
   filled: { type: Number },
-  remaining: { type: Number},
+  remaining: { type: Number },
   cost: { type: Number },
   status: { type: String, enum: ["open", "closed", "canceled"] },
   fee: { type: feeSchema },
 });
 
-export interface IOrderModel
-  extends mongoose.Model<IOrderDocument> {
+export interface IOrderModel extends mongoose.Model<IOrderDocument> {
   build(attr: IOrder): IOrderDocument;
 }
 
@@ -46,7 +44,7 @@ export interface IOrder {
   remaining: number;
   cost: number;
   status: "open" | "closed" | "canceled";
-  fee: IFee
+  fee: IFee;
 }
 
 /* #region   */
@@ -61,9 +59,6 @@ orderSchema.set("toJSON", {
 
 /* #endregion */
 
-const Order = mongoose.model<IOrderDocument, IOrderModel>(
-  "Order",
-  orderSchema
-);
+const Order = mongoose.model<IOrderDocument, IOrderModel>("Order", orderSchema);
 
 export { orderSchema, Order };

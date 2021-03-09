@@ -1,8 +1,9 @@
+import { IUser } from "../../../types";
 import { userConstants } from "../_constants";
 
-interface IUserAuthentication {
+interface IUserAuthenticationActions {
   type: string;
-  user?: any;
+  user?: IUser;
   username?: string;
 }
 
@@ -16,7 +17,7 @@ const initialState = user ? { loggedIn: true, user } : { loggedIn: false };
 
 export function authentication(
   state = initialState,
-  action: IUserAuthentication
+  action: IUserAuthenticationActions
 ) {
   switch (action.type) {
     case userConstants.LOGIN_REQUEST:

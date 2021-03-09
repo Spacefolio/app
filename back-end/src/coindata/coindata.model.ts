@@ -17,69 +17,69 @@ export interface ICoinMarketData {
   market_cap_change_24h: number;
   market_cap_change_percentage: number;
   circulating_supply: number;
-  total_supply: number,
-  max_supply: number,
-  ath: number,
-  ath_change_percentage: number,
-  ath_date: string,
-  atl: number,
-  atl_change_percentage: number,
-  atl_date: string,
+  total_supply: number;
+  max_supply: number;
+  ath: number;
+  ath_change_percentage: number;
+  ath_date: string;
+  atl: number;
+  atl_change_percentage: number;
+  atl_date: string;
   last_updated: string;
 }
 
-export const coinMarketDataSchema = new mongoose.Schema({
-  id: String,
-  symbol: String,
-  name: String,
-  image: String,
-  current_price: Number,
-  market_cap: Number,
-  market_cap_rank: Number,
-  fully_diluted_valuation: Number,
-  total_volume: Number,
-  high_24h: Number,
-  low_24h: Number,
-  price_change_24h: Number,
-  price_change_percentage: Number,
-  market_cap_change_24h: Number,
-  market_cap_change_percentage: Number,
-  circulating_supply: Number,
-  total_supply: Number,
-  max_supply: Number,
-  ath: Number,
-  ath_change_percentage: Number,
-  ath_date: String,
-  atl: Number,
-  atl_change_percentage: Number,
-  atl_date: String,
-  last_updated: String
-}, { id: false });
+export const coinMarketDataSchema = new mongoose.Schema(
+  {
+    id: String,
+    symbol: String,
+    name: String,
+    image: String,
+    current_price: Number,
+    market_cap: Number,
+    market_cap_rank: Number,
+    fully_diluted_valuation: Number,
+    total_volume: Number,
+    high_24h: Number,
+    low_24h: Number,
+    price_change_24h: Number,
+    price_change_percentage: Number,
+    market_cap_change_24h: Number,
+    market_cap_change_percentage: Number,
+    circulating_supply: Number,
+    total_supply: Number,
+    max_supply: Number,
+    ath: Number,
+    ath_change_percentage: Number,
+    ath_date: String,
+    atl: Number,
+    atl_change_percentage: Number,
+    atl_date: String,
+    last_updated: String,
+  },
+  { id: false }
+);
 
-export interface ICoinListItem
-{
+export interface ICoinListItem {
   id: String;
   symbol: String;
   name: String;
 }
 
-export interface ICoinListItemDocument extends mongoose.Document
-{
+export interface ICoinListItemDocument extends mongoose.Document {
   id: String;
   symbol: String;
   name: String;
 }
 
-export interface ICoinDocument extends mongoose.Document
-{
-  currentMarketData: ICoinMarketData,
-  dailyPrices: string
+export interface ICoinDocument extends mongoose.Document {
+  currentMarketData: ICoinMarketData;
+  dailyPrices: string;
 }
 
 export const coinListItemSchema = new mongoose.Schema({
   id: String,
   symbol: String,
-  name: String
+  name: String,
 });
 
 coinListItemSchema.set("toJSON", {
@@ -96,13 +96,12 @@ export interface ICoinListItemModel
   build(attr: ICoinListItem): ICoinListItemDocument;
 }
 
-export interface ICoin
-{
+export interface ICoin {
   id: string;
   symbol: string;
   currentMarketData: ICoinMarketData;
   dailyPrices: string;
-  currentPrice: { USD: number, lastUpdated: number };
+  currentPrice: { USD: number; lastUpdated: number };
 }
 
 export interface ICoinDocument extends mongoose.Document {
@@ -110,16 +109,19 @@ export interface ICoinDocument extends mongoose.Document {
   symbol: string;
   currentMarketData: ICoinMarketData;
   dailyPrices: string;
-  currentPrice: { USD: number, lastUpdated: number };
+  currentPrice: { USD: number; lastUpdated: number };
 }
 
-export const coinSchema = new mongoose.Schema({
-  id: { type: String, unique: true },
-  symbol: { type: String },
-  currentMarketData: coinMarketDataSchema,
-  dailyPrices: { type: Schema.Types.ObjectId, ref: 'historical-value' },
-  currentPrice: { USD: Number, lastUpdated: Number }
-}, { id: false });
+export const coinSchema = new mongoose.Schema(
+  {
+    id: { type: String, unique: true },
+    symbol: { type: String },
+    currentMarketData: coinMarketDataSchema,
+    dailyPrices: { type: Schema.Types.ObjectId, ref: "historical-value" },
+    currentPrice: { USD: Number, lastUpdated: Number },
+  },
+  { id: false }
+);
 
 coinSchema.set("toJSON", {
   virtuals: true,
@@ -131,10 +133,9 @@ coinSchema.set("toJSON", {
 });
 
 export interface ICoinModel extends mongoose.Model<ICoinDocument> {
-  build(attr: ICoin): ICoinDocument
+  build(attr: ICoin): ICoinDocument;
 }
 
-const Coin = mongoose.model<ICoinDocument,
-ICoinModel>("Coin", coinSchema);
+const Coin = mongoose.model<ICoinDocument, ICoinModel>("Coin", coinSchema);
 
 export { Coin };

@@ -1,8 +1,25 @@
 import mongoose, { Schema } from "mongoose";
-import { holdingSnapshotSchema, IPortfolioItem, portfolioItemSchema } from "../portfolios/portfolio.model";
-import { IExchangeAccountView, exchangeType, ITransactionItemView } from "../../../types";
-import { ITransaction, ITransactionDocument, transactionItemViewSchema, transactionSchema } from "../transactions/transaction.model";
-import { IOrder, IOrderDocument, orderSchema } from "../transactions/order.model";
+import {
+  holdingSnapshotSchema,
+  IPortfolioItem,
+  portfolioItemSchema,
+} from "../portfolios/portfolio.model";
+import {
+  IExchangeAccountView,
+  exchangeType,
+  ITransactionItemView,
+} from "../../../types";
+import {
+  ITransaction,
+  ITransactionDocument,
+  transactionItemViewSchema,
+  transactionSchema,
+} from "../transactions/transaction.model";
+import {
+  IOrder,
+  IOrderDocument,
+  orderSchema,
+} from "../transactions/order.model";
 
 export interface IExchangeAccountDocument extends mongoose.Document {
   name: string;
@@ -20,26 +37,24 @@ export interface IExchangeAccountDocument extends mongoose.Document {
   transactions: ITransactionDocument[];
   orders: IOrderDocument[];
   openOrders: IOrderDocument[];
-  transactionViewItems: ITransactionItemView[],
+  transactionViewItems: ITransactionItemView[];
   timeslices: ITimeslices;
   lastSyncedDate: Date;
 }
 
-export interface IHoldingSnapshot
-{
-	timestamp: number;
-	price: { USD: number };
-	amountBought: number;
-	amountSold: number;
-	totalAmountBought: number;
-	totalAmountSold: number;
-	totalValueReceived: number;
-	totalValueInvested: number;
+export interface IHoldingSnapshot {
+  timestamp: number;
+  price: { USD: number };
+  amountBought: number;
+  amountSold: number;
+  totalAmountBought: number;
+  totalAmountSold: number;
+  totalValueReceived: number;
+  totalValueInvested: number;
 }
 
-export interface IHoldingsHistory
-{
-  [key: string]: IHoldingSnapshot[]
+export interface IHoldingsHistory {
+  [key: string]: IHoldingSnapshot[];
 }
 
 const holdingSliceSchema = new mongoose.Schema({
@@ -47,7 +62,7 @@ const holdingSliceSchema = new mongoose.Schema({
   amount: Number,
   price: Number,
   value: Number,
-  snapshots: [holdingSnapshotSchema]
+  snapshots: [holdingSnapshotSchema],
 });
 
 export interface IHoldingSlice {
@@ -59,7 +74,7 @@ export interface IHoldingSlice {
 }
 
 export interface ITimeslices {
-  [key: number]: ITimeslice
+  [key: number]: ITimeslice;
 }
 
 export interface ITimeslice {
@@ -71,7 +86,7 @@ export interface ITimeslice {
 const timesliceSchema = new mongoose.Schema({
   start: Number,
   value: Number,
-  holdings: [holdingSliceSchema]
+  holdings: [holdingSliceSchema],
 });
 
 export interface IExchangeAccountModel
@@ -95,7 +110,7 @@ const exchangeAccountSchema = new mongoose.Schema({
   openOrders: [orderSchema],
   transactionViewItems: [transactionItemViewSchema],
   timeslices: { type: Object },
-  lastSyncedDate: { type: Date, default: 0 }
+  lastSyncedDate: { type: Date, default: 0 },
 });
 
 export interface IExchangeAccount {
