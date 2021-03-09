@@ -40,7 +40,7 @@ export const Dashboard = () => {
             {/* <Typography variant={"h4"}></Typography> */}
           </FlexCard>
         </DashboardWrapper>
-      ) : (
+      ) : ( 
         <DashboardNoExchanges />
       )}
     </React.Fragment>

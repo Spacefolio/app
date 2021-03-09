@@ -135,12 +135,6 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
           </ModifyContainer>
         )}
       </MenuItem>
-      <Modal
-        visible={editExchangeVisible}
-        dismiss={() => setEditExchangeVisible(false)}
-      >
-        <EditExchangeForm exchangeAccountData={data} />
-      </Modal>
     </React.Fragment>
   );
 };

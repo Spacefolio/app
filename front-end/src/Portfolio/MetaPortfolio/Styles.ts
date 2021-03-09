@@ -69,3 +69,25 @@ export const MetaPortfolioTimeframeSelector = styled(ClickableDiv)`
   align-items: center;
   justify-items: center;
 `;
+
+
+export const TimeFrameSelectorContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+`;
+
+interface ITimeFrameItemProps {
+  selected: boolean;
+}
+export const TimeframeItem = styled(ClickableDiv)<ITimeFrameItemProps>`
+  padding: 1rem;
+  min-width: 50px;
+  max-width: 50px;
+  ${CenteredFlexBox}
+  ${(props) =>
+    props.selected
+      ? `color: ${COLORS.accentBase}`
+      : ``}
+`;

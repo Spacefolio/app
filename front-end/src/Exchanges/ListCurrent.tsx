@@ -1,23 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { exchangeActions, portfolioActions } from "../_actions";
-import { AddExchangeForm, EditExchangeForm, ExchangeItem } from "../Exchanges";
+import { AddExchangeForm, EditExchangeForm, ExchangeItem } from ".";
 import { IExchangeAccountView, IExchangeReference } from "../../../types";
-
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../_reducers";
-import {
-  AddExchangeGrid,
-  AddExchangeItem,
-  AddExchangeWrapper,
-  ExchangeSearchBar,
-  MyExchangeNameWrapper,
-  MyExchangesLineItemContainer,
-  MyExchangesListContainer,
-  MyExchangeWrapper,
-} from "./ExchangeStyles";
-
-import { ClickableDiv } from "../AlgonexStyles";
-import { Modal } from "../_components";
+import { MyExchangeNameWrapper } from "./ExchangeStyles";
 import {
   Avatar,
   createStyles,
@@ -30,7 +17,6 @@ import {
 } from "@material-ui/core";
 import { AccountBalanceWallet, Add } from "@material-ui/icons";
 import { useHistory } from "react-router";
-import { deepOrange, deepPurple } from "@material-ui/core/colors";
 import { COLORS } from "../AlgonexStyles/ResponsiveDesign";
 
 interface IListMyExchangesProps {
@@ -97,18 +83,7 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
             />
           );
         })}
-      <MenuItem
-        button={true}
-        key={"AddExchange"}
-        onClick={() => setAddExchangeVisible(true)}
-      >
-        <ListItemAvatar>
-          <Avatar className={classes.blend}>
-            <Add />
-          </Avatar>
-        </ListItemAvatar>
-        <Typography>Add Exchange</Typography>
-      </MenuItem>
+      
     </React.Fragment>
   );
 };

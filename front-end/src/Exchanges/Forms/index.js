@@ -1,2 +1,2 @@
-export * from './AddExchangeForm'
+export * from '../AddNewPopup/AddExchangeForm'
 export * from './EditExchangeForm'

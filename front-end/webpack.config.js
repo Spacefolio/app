@@ -3,6 +3,8 @@ var HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 require("dotenv").config();
 var webpack = require("webpack");
+var Chart = require('chart.js');
+
 
 module.exports = {
   mode: "development",
@@ -55,7 +57,9 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       API_DOMAIN: JSON.stringify(
-        process.env.NODE_ENV == "DEVELOPMENT" ? "http://localhost:4000" : "/api"
+        process.env.NODE_ENV == "DEVELOPMENT"
+          ? "http://192.168.1.134:4000"
+          : "/api"
       ),
     }),
   ],

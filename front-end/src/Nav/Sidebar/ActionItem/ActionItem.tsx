@@ -6,6 +6,7 @@ import {
   SidebarTab,
   SidebarIconContainer,
   TabSubContentContainer,
+  SidebarSubTab,
 } from "./Styles";
 import { Route, useHistory, useLocation, useRouteMatch } from "react-router";
 import { useState } from "react";
@@ -18,8 +19,9 @@ import { useCheckCurrentLocation } from "../../../Hooks/useCheckCurrentLocation"
 interface ISidebarActionItemProps {
   text: string;
   children?: React.ReactNode;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   linkUri: string;
+  disableStyling?: boolean;
 }
 
 export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
@@ -27,6 +29,7 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
   children,
   icon,
   linkUri,
+  disableStyling,
 }) => {
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed
@@ -60,23 +63,63 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
   return (
     <React.Fragment>
       <LinkWrapper>
-        <SidebarTab onClick={() => handleClick()}>
-          <SidebarIconContainer isActiveTab={isCurrentPage}>
-            {icon}
-          </SidebarIconContainer>
+        <SidebarTab
+          disableStyling={disableStyling}
+          isActiveTab={isCurrentPage}
+          onClick={() => handleClick()}
+        >
+          <SidebarIconContainer>{icon}</SidebarIconContainer>
           <LinkText>{text}</LinkText>
+          {children && (
+            <SvgWrapperButton style={{height: "100%"}} onClick={() => setSubIsVisible(!subIsVisible)}>
+              <ArrowIcon
+                style={{ fill: "white" }}
+                direction={subIsVisible ? "up" : "down"}
+              />
+            </SvgWrapperButton>
+          )}
         </SidebarTab>
-        {children && (
-          <SvgWrapperButton onClick={() => setSubIsVisible(!subIsVisible)}>
-            <ArrowIcon direction={subIsVisible ? "up" : "down"} />
-          </SvgWrapperButton>
-        )}
       </LinkWrapper>
       {children && (
         <TabSubContentContainer isActiveTab={subIsVisible}>
-          <Scrollbox>{children}</Scrollbox>
+          {children}
         </TabSubContentContainer>
       )}
     </React.Fragment>
+  );
+};
+
+export const SidebarSubActionItem: React.FC<ISidebarActionItemProps> = ({
+  text,
+  children,
+  icon,
+  linkUri,
+  disableStyling,
+}) => {
+  const { path } = useRouteMatch();
+
+  const truePath = path + linkUri;
+
+  const history = useHistory();
+
+  const isCurrentPage = useCheckCurrentLocation(truePath);
+
+  const handleClick = () => {
+    if (!isCurrentPage) {
+      history.push(truePath);
+    }
+  };
+
+  return (
+    <LinkWrapper>
+      <SidebarSubTab
+        disableStyling={disableStyling}
+        isActiveTab={isCurrentPage}
+        onClick={() => handleClick()}
+      >
+        <SidebarIconContainer>{icon}</SidebarIconContainer>
+        <LinkText>{text}</LinkText>
+      </SidebarSubTab>
+    </LinkWrapper>
   );
 };

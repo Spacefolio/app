@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseButton, ClickableSvg } from "../../AlgonexStyles";
+import { BigWideButton, ClickableSvg } from "../../AlgonexStyles";
 
 interface ISvgProps {
   style?: object;

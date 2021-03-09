@@ -3,6 +3,7 @@ import React from "react";
 import { COLORS, TIMING } from "./ResponsiveDesign";
 import styled from "styled-components";
 import { Polymer } from "@material-ui/icons";
+import { Button } from "@material-ui/core";
 export const TimingStyle = `
 transition: ${TIMING.transitionTime};
 `;
@@ -55,9 +56,10 @@ export const FlexCard = styled.div`
   align-items: center;
   justify-content: center;
   background: white;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   padding: 1rem;
-  box-shadow: 0px 10px 25px -24px;
+  box-shadow: 6px 6px 14px #e3e3e8;
+  overflow: hidden;
   ${TimingStyle};
 `;
 export const BaseSearchBar = styled.input`
@@ -69,7 +71,7 @@ export const BaseSearchBar = styled.input`
   &:focus {
   }
 `;
-export const BaseButton = styled.button`
+export const BigWideButton = styled.button`
   ${CenteredFlexBox}
   width: 100%;
   border-radius: 1rem;
@@ -84,6 +86,14 @@ export const BaseButton = styled.button`
     box-shadow: 0px 15px 25px -17px ${COLORS.accentBase};
   }
 `;
+
+export const BaseButton = styled(Button)`
+  box-shadow: 0px 15px 25px -17px ${COLORS.primaryBase};
+  width: 120px;
+  padding: 10 10px;
+  border-radius: 20px;
+`;
+
 export const FullScreenOverlay = styled.div`
   display: flex;
   position: fixed;
@@ -112,11 +122,6 @@ export const SvgWrapperButton = styled(ClickableDiv)`
   height: 2rem;
   width: 2rem;
   ${CenteredFlexBox}
-  &:hover {
-    ${ClickableSvg} {
-      fill: ${COLORS.accentBase};
-    }
-  }
 `;
 export const FlexWrap = styled(InlineDiv)`
   white-space: none;

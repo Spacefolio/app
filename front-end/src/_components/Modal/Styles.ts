@@ -9,17 +9,35 @@ export const ModalWrapper = styled.div`
   z-index: 4;
   ${CenteredFlexBox}
 `;
-export const ModalBoxSetup = styled.div`
+
+export const ModalHeader = styled.div`
+  display: flex;
+  border-radius: 10px;
+  align-items: center;
+  padding: 1rem;
+  width: 100%;
+  background: whitesmoke;
+  height: 80px;
+`;
+
+export const ModalContent = styled.div`
+  padding: 1rem;
+  padding-top: 0;
+`;
+
+export const ModalBoxSetup = styled.div<{ isMobile: boolean }>`
+  width: 400px;
+  max-height: 600px;
   position: absolute;
-  overflow: hidden;
-  padding: 16px;
+  padding: 0;
   margin: 50px auto;
   box-sizing: border-box;
-  border-radius: 5px;
+  border-radius: 10px;
   z-index: 3;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
   background: white;
-  border: 0.5px solid #e8e8e8;
+  border: 0.5px solid whitesmoke;
+  ${(props) => props.isMobile && `bottom: 0; width: 100%;`}
 `;
 export const ModalBg = styled.div`
   width: 100vw;
@@ -28,7 +46,7 @@ export const ModalBg = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `;
 export const CloseButton = styled(SvgWrapperButton)`
-position: absolute;
-top: 0px;
-right: 0px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
 `;

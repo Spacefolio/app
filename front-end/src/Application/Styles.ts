@@ -15,6 +15,7 @@ interface ApplicationProps {
 export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: ${(props) => {
     if (props.isSidebarCollapsed) {
       return `calc(100% - ${SPACING.NavbarHeight});`;
@@ -30,13 +31,14 @@ export const ApplicationContainer = styled.div<ApplicationProps>`
 `;
 
 export const ApplicationFlexContainer = styled.div<ApplicationProps>`
-  overflow-x: hidden;
-  padding: ${(props) => (props.isMobile ? "0;" : "1rem")};
+  padding: 0 ${SPACING.flexCardGap};
   width: 100%;
-  max-width: ${RD.widthmonitor};
+  height: 100%;
+  max-width: ${RD.widthlaptop};
   ${TimingStyle}
 `;
 export const BodyWrapper = styled.div`
+background: #f3f3f3;
   display: flex;
   position: relative;
   height: 100%;

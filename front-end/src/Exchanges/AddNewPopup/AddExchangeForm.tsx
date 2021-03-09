@@ -6,25 +6,23 @@ import {
   IExchangeReference,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { BaseButton } from "../../AlgonexStyles";
-import { ExchangeForm, ExchangeFormRow } from "./ExchangeFormStyles";
+import { BigWideButton } from "../../AlgonexStyles";
+import { ExchangeFormRow } from "../Forms/ExchangeFormStyles";
 import { Avatar, TextField, Typography } from "@material-ui/core";
 
 interface ExchangeFormProps {
-  exchangeRefInfo: IExchangeReference;
+  integrationInfo: IExchangeReference;
 }
 
 export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
-  exchangeRefInfo,
+  integrationInfo,
 }) => {
-  const addingExchange = useSelector(
-    (state: any) => state.exchanges.addingExchange
-  );
+
   const dispatch = useDispatch();
 
   const [submitted, setSubmitted] = useState(false);
 
-  const [exchangeType, setExchangeType] = useState(exchangeRefInfo.id);
+  const [integrationId, setExchangeType] = useState(integrationInfo.id);
 
   const [apiKey, setApiKey] = useState("");
 
@@ -32,12 +30,12 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
 
   const [passphrase, setPassphrase] = useState("");
 
-  const [name, setName] = useState(exchangeRefInfo.name);
+  const [name, setName] = useState(integrationInfo.name);
 
-  const [nickname, setNickname] = useState(exchangeRefInfo.name);
+  const [nickname, setNickname] = useState(integrationInfo.name);
 
   const [exchange, setExchange] = useState<IExchangeAccountRequest>({
-    exchangeType,
+    exchangeType: integrationId,
     apiInfo: {
       apiKey,
       apiSecret,
@@ -49,7 +47,7 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
 
   useEffect(() => {
     setExchange({
-      exchangeType,
+      exchangeType: integrationId,
       apiInfo: {
         apiKey,
         apiSecret,
@@ -58,7 +56,7 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
       name,
       nickname,
     });
-  }, [exchangeType, apiKey, apiSecret, passphrase, name, nickname]);
+  }, [integrationId, apiKey, apiSecret, passphrase, name, nickname]);
 
   const nicknameCharLimit = 20;
 
@@ -78,18 +76,7 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
   };
 
   return (
-    <ExchangeForm onSubmit={handleSubmit} autoComplete="off">
-      <Typography
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        variant="h6"
-      >
-        Add Integration
-      </Typography>
-
+    <form onSubmit={handleSubmit} autoComplete="off" id='add-exchange-form'>
       <ExchangeFormRow
         style={{
           display: "flex",
@@ -97,14 +84,15 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
           justifyContent: "start",
         }}
       >
-        <Avatar src={exchangeRefInfo.logoUrl} />
-        <Typography variant="h6">{name}</Typography>
+        <Avatar src={integrationInfo.logoUrl} />
+        <Typography>{name}</Typography>
       </ExchangeFormRow>
       <ExchangeFormRow>
         <TextField
+          variant="outlined"
           id="nickname"
           fullWidth
-          label="NICKNAME"
+          label="Nickname"
           value={nickname}
           type="text"
           onChange={(e) => setNickname(e.target.value)}
@@ -116,10 +104,11 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
       </ExchangeFormRow>
       <ExchangeFormRow>
         <TextField
+          variant="outlined"
           required
           id="apikey"
           fullWidth
-          label="API KEY"
+          label="API Key"
           value={apiKey}
           type="text"
           onChange={(e) => setApiKey(e.target.value)}
@@ -128,10 +117,11 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
       </ExchangeFormRow>
       <ExchangeFormRow>
         <TextField
+          variant="outlined"
           required
           id="apisecret"
           fullWidth
-          label="API SECRET"
+          label="API Seccret"
           type="text"
           onChange={(e) => setApiSecret(e.target.value)}
           helperText={submitted && !apiSecret && "First Name is Required."}
@@ -140,19 +130,17 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
       </ExchangeFormRow>
       <ExchangeFormRow>
         <TextField
+          variant="outlined"
           required
           id="passphrase"
           fullWidth
-          label="PASSPHRASE"
+          label="Passphrase"
           value={passphrase}
           type="text"
           onChange={(e) => setPassphrase(e.target.value)}
           helperText={submitted && !passphrase && "First Name is Required."}
         />
       </ExchangeFormRow>
-      <BaseButton type="submit">
-        {addingExchange ? "Submitting..." : "Submit"}
-      </BaseButton>
-    </ExchangeForm>
+    </form>
   );
 };

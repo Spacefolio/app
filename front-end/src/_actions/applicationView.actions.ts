@@ -3,6 +3,7 @@ import { applicationViewConstants } from "../_constants/applicationView.constant
 
 export const applicationViewActions = {
   toggleSidebar,
+  setModal,
 };
 
 function toggleSidebar(manualToggle?: boolean) {
@@ -15,4 +16,17 @@ function toggleSidebar(manualToggle?: boolean) {
       manualToggle,
     };
   }
+}
+
+function setModal(
+  modalVisible: boolean,
+  modalComponent: any,
+  header: string = null
+) {
+  return {
+    type: applicationViewConstants.MODAL,
+    header,
+    modalVisible,
+    modalComponent,
+  };
 }

@@ -2,13 +2,29 @@ import React from "react";
 import { SidebarContainer, SidebarSpacer } from "./Styles";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
-import { SidebarActionItem } from "./ActionItem/ActionItem";
-import { Dashboard, PieChart, Settings, Timeline } from "@material-ui/icons";
+import {
+  SidebarActionItem,
+  SidebarSubActionItem,
+} from "./ActionItem/ActionItem";
+import {
+  Android,
+  Dashboard,
+  Help,
+  PieChart,
+  PieChartOutlined,
+  Settings,
+  Tab,
+  Timeline,
+  TrendingUp,
+} from "@material-ui/icons";
 
 import { RD } from "../../AlgonexStyles/ResponsiveDesign";
 
 import useMedia from "use-media";
 import { AlgonexLogo } from "../../AlgonexStyles";
+import { Tabs } from "@material-ui/core";
+import path from "path";
+import { useHistory } from "react-router";
 
 interface SidebarNavProps {}
 
@@ -19,7 +35,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
     (state: IRootState) => state.applicationView.isSidebarCollapsed
   );
 
-  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
+  const history = useHistory();
 
   return (
     <SidebarContainer
@@ -30,12 +46,19 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
         text="ALGONEX"
         icon={<AlgonexLogo />}
         linkUri="/dashboard"
+        disableStyling={true}
       ></SidebarActionItem>
 
       <SidebarActionItem
         text="Dashboard"
         icon={<Dashboard />}
         linkUri="/dashboard"
+      ></SidebarActionItem>
+
+      <SidebarActionItem
+        text="Trade"
+        icon={<TrendingUp />}
+        linkUri="/trade"
       ></SidebarActionItem>
 
       <SidebarActionItem
@@ -46,12 +69,17 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
 
       <SidebarActionItem
         text="Bots"
-        icon={<Timeline />}
+        icon={<Android />}
         linkUri="/bots"
       ></SidebarActionItem>
 
       <SidebarSpacer />
 
+      <SidebarActionItem
+        text="Help & FAQs"
+        icon={<Help />}
+        linkUri="/settings"
+      ></SidebarActionItem>
       <SidebarActionItem
         text="Settings"
         icon={<Settings />}

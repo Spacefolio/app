@@ -6,8 +6,3 @@ export const ExchangeFormRow = styled.div`
   justify-content: space-between;
   padding: .5rem;
 `;
-
-export const ExchangeForm = styled.form`
-  position: relative;
-  width: 300px;
-`;

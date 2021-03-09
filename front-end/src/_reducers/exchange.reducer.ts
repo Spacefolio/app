@@ -16,6 +16,7 @@ export interface IExchangesState {
   exchanges: IExchangeAccountView[];
   exchangeRef: IExchangeReference[];
   addingExchange: boolean;
+  addExchangeSuccess: boolean;
 }
 
 interface IExchangeAccountState extends IExchangeAccountView {
@@ -23,7 +24,12 @@ interface IExchangeAccountState extends IExchangeAccountView {
 }
 
 export function exchanges(
-  state: IExchangesState = { exchanges: [], exchangeRef: [], addingExchange: false },
+  state: IExchangesState = {
+    exchanges: [],
+    exchangeRef: [],
+    addingExchange: false,
+    addExchangeSuccess: false,
+  },
   action: IExchangeAction
 ) {
   switch (action.type) {
@@ -86,17 +92,18 @@ export function exchanges(
       };
 
     case exchangeConstants.ADDNEW_REQUEST:
-      return { ...state, addingExchange: true };
+      return { ...state, addingExchange: true, addExchangeSuccess: false };
     case exchangeConstants.ADDNEW_SUCCESS:
       console.log(action.exchangeAccount);
-      
+
       return {
         ...state,
+        addExchangeSuccess: true,
         addingExchange: false,
         exchanges: [...state.exchanges, action.exchangeAccount],
       };
     case exchangeConstants.ADDNEW_FAILURE:
-      return { ...state, addingExchange: false };
+      return { ...state, addingExchange: false, addExchangeSuccess: false };
 
     case exchangeConstants.UPDATE_REQUEST:
       return { ...state, addingExchange: true };

@@ -6,8 +6,8 @@ import {
   IExchangeAccountRequest,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { BaseButton } from "../../AlgonexStyles";
-import { ExchangeForm, ExchangeFormRow } from "./ExchangeFormStyles";
+import { BigWideButton } from "../../AlgonexStyles";
+import { ExchangeFormRow } from "./ExchangeFormStyles";
 import {
   makeStyles,
   Theme,
@@ -91,7 +91,7 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
   };
 
   return (
-    <ExchangeForm onSubmit={handleUpdate} autoComplete="off">
+    <form onSubmit={handleUpdate} autoComplete="off">
       <Typography
         style={{
           display: "flex",
@@ -168,9 +168,9 @@ export const EditExchangeForm: React.FC<ExchangeFormProps> = ({
         />
       </ExchangeFormRow>
 
-      <BaseButton type="submit">
+      <BigWideButton type="submit">
         {addingExchange ? "Updating..." : "Update"}
-      </BaseButton>
-    </ExchangeForm>
+      </BigWideButton>
+    </form>
   );
 };

@@ -77,11 +77,6 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
     <GrowFromZero in={true}>
       <PortfolioWrapper>
         <React.Fragment>
-          
-          <FlexCard>
-            <MetaPortfolio />
-          </FlexCard>
-
           {PortfolioTabs}
           <Switch>
             <Route exact path={`${path}/charts`} component={Charts} />

@@ -3,7 +3,12 @@ import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useHistory } from "react-router-dom";
 import { userActions } from "../../../_actions";
-import { ArrowIcon, Dropdown, IDropdownItem } from "../../../_components";
+import {
+  ArrowIcon,
+  Dropdown,
+  IDropdownItem,
+  Modal,
+} from "../../../_components";
 import { applicationViewActions } from "../../../_actions/applicationView.actions";
 import { IRootState } from "../../../_reducers";
 import {
@@ -18,11 +23,14 @@ import {
   ListItemAvatar,
   MenuItem,
   MenuList,
+  Portal,
+  Tab,
+  Tabs,
   Typography,
 } from "@material-ui/core";
 import { COLORS, RD } from "../../../AlgonexStyles/ResponsiveDesign";
-import { ArrowDropDown, ExitToApp } from "@material-ui/icons";
-import { ListMyExchanges } from "../../../Exchanges";
+import { Add, ArrowDropDown, ExitToApp } from "@material-ui/icons";
+import { AddExchangePopup, ListMyExchanges } from "../../../Exchanges";
 import { IPortfolioDataView } from "../../../../../types";
 
 export const DesktopTopNav = () => {
@@ -31,8 +39,6 @@ export const DesktopTopNav = () => {
   const user = useSelector((state: IRootState) => state.authentication.user);
 
   const [accountDropdownVisible, setAccountDropdownVisible] = useState(false);
-
-  const [exchangesPopupVisible, setExchangesPopupVisible] = useState(false);
 
   const filteredPortfolioData: IPortfolioDataView = useSelector(
     (state: IRootState) => state.portfolio.filteredPortfolioData
@@ -56,6 +62,20 @@ export const DesktopTopNav = () => {
     >
       <MenuList>
         <ListMyExchanges enableEditing={false} />
+        <MenuItem
+          button={true}
+          key={"AddExchange"}
+          onClick={() =>
+            dispatch(
+              applicationViewActions.setModal(true, <AddExchangePopup />, 'Add Exchange')
+            )
+          }
+        >
+          <ListItemAvatar>
+            <Add />
+          </ListItemAvatar>
+          <Typography>Add Exchange</Typography>
+        </MenuItem>
         <MenuItem
           onClick={() => {
             dispatch(logout());
@@ -88,7 +108,6 @@ export const DesktopTopNav = () => {
         <ArrowIcon direction={!isSidebarCollapsed ? "left" : "right"} />
       </ToggleSidebar>
       <NavFlexSpacer />
-
       <NavAccountContainer
         ref={container}
         onClick={() => {
@@ -100,7 +119,7 @@ export const DesktopTopNav = () => {
           {user.firstName} {user.lastName}
           <ArrowDropDown />
         </InlineDiv>
-        {accountDropdownVisible && accountDropdown}
+        {accountDropdown}
       </NavAccountContainer>
     </NavContainer>
   );

@@ -60,33 +60,3 @@ export const ExchangeSearchBar = styled(BaseSearchBar)``;
 export const ModifyContainer = styled(ListItemSecondaryAction)`
   ${CenteredFlexBox}
 `;
-
-export const AddExchangeItem = styled(Card)`
-  width: 12rem;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  margin: 5px;
-  padding: 0.5rem;
-  border: solid white 3px;
-  cursor: pointer;
-  * {
-    cursor: pointer;
-  }
-  &:hover {
-    border: solid black 3px;
-  }
-  ${TimingStyle};
-`;
-
-export const AddExchangeGrid = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-  max-height: 400px;
-  min-width: 300px;
-  min-height: 400px;
-`;

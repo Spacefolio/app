@@ -7,6 +7,8 @@ import {
   PortfolioName,
   PortfolioValueColumn,
   PortfolioProfitSection,
+  TimeframeItem,
+  TimeFrameSelectorContainer,
 } from "./Styles";
 import { Dropdown, Modal, PortfolioLineChart } from "../../_components";
 import { alertActions, portfolioActions } from "../../_actions";
@@ -22,10 +24,6 @@ import {
   DateRangeTwoTone,
 } from "@material-ui/icons";
 import { SvgWrapperButton, InlineDiv } from "../../AlgonexStyles";
-import {
-  TimeFrameSelectorContainer,
-  TimeframeItem,
-} from "../Charts/Styles";
 import { SyncIcon } from "../../AlgonexStyles/IconStyles";
 import { Button, Typography } from "@material-ui/core";
 import { ListMyExchanges } from "../../Exchanges";
@@ -49,11 +47,12 @@ export const MetaPortfolio = () => {
 
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
-  const [PortfolioChartData, setPortfolioChartData] = useState([]);
+  const [PortfolioChartData, setPortfolioChartData] = useState<[]>([]);
 
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
 
   useEffect(() => {
+    setPortfolioChartData([]);
     portfolioService
       .getPortfolioChartData(timeframe, filterId)
       .then((res) => {

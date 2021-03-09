@@ -16,6 +16,10 @@ import { GrowFromZero } from "../AlgonexStyles";
 import { portfolioActions } from "../_actions";
 import useMedia from "use-media";
 import { Container } from "@material-ui/core";
+import { Bots } from "../Bots";
+import { Trade } from "../Trade";
+import { Modal } from "../_components";
+import { ThemeProvider } from "styled-components";
 
 export const Application = () => {
   const dispatch = useDispatch();
@@ -34,6 +38,7 @@ export const Application = () => {
 
   return (
     <React.Fragment>
+      <Modal />
       <BodyWrapper style={{ marginBottom: isMobile ? "50px" : "0px" }}>
         {!isMobile && <SidebarNav />}
         <ApplicationContainer
@@ -55,6 +60,12 @@ export const Application = () => {
                 </Route>
                 <Route path={"/settings"}>
                   <Settings />
+                </Route>
+                <Route path={"/bots"}>
+                  <Bots />
+                </Route>
+                <Route path={"/trade"}>
+                  <Trade />
                 </Route>
                 <Redirect to="/dashboard" />
               </Switch>

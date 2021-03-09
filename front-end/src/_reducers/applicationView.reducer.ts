@@ -6,20 +6,26 @@ interface IApplicationViewAcion {
   type: string;
   width: number;
   manualToggle: boolean;
+  modalVisible: boolean;
+  modalComponent: Element;
+  header: string
 }
 
 export interface IApplicationViewState {
   isSidebarCollapsed: boolean;
-  isSidebarVisible: boolean;
   currentViewType: IViewType;
-  applicationContainerWidth?: number;
+  modal: {
+    isVisible: boolean;
+    component: any;
+    header: string;
+  };
 }
 
 export function applicationView(
   state: IApplicationViewState = {
     currentViewType: "desktop",
     isSidebarCollapsed: false,
-    isSidebarVisible: false,
+    modal: { isVisible: false, component: null, header: null },
   },
   action: IApplicationViewAcion
 ) {
@@ -31,10 +37,14 @@ export function applicationView(
           ? true
           : !state.isSidebarCollapsed,
       };
-    case applicationViewConstants.TOGGLE_SIDEBAR_MOBILE:
+    case applicationViewConstants.MODAL:
       return {
         ...state,
-        isSidebarVisible: action.manualToggle ? true : !state.isSidebarVisible,
+        modal: {
+          isVisible: action.modalVisible,
+          component: action.modalComponent,
+          header: action.header,
+        },
       };
 
     default:

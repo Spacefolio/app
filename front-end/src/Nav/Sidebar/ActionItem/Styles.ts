@@ -1,3 +1,4 @@
+import { BaseDiv } from './../../../AlgonexStyles/GeneralStyles';
 import styled from "styled-components";
 import {
   CenteredFlexBox,
@@ -23,32 +24,71 @@ export const LinkWrapper = styled.div`
 
 export const LinkText = styled.div`
   display: flex;
+  margin-left: ${SPACING.NavbarHeight};
   align-items: center;
 `;
 
-export const SidebarTab = styled(ClickableDiv)`
+export const SidebarTab = styled(BaseDiv)<ITabContentContainerProps>`
   display: flex;
   width: 100%;
   height: ${SPACING.NavbarHeight};
+  ${(props) =>
+    props.isActiveTab &&
+    !props.disableStyling &&
+    `box-shadow: inset 3px 0 0 0 ${COLORS.accentBase}; background: #3d3d3d;`}
+  * {
+    ${(props) =>
+      props.isActiveTab &&
+      !props.disableStyling &&
+      `fill: ${COLORS.accentBase}; color: ${COLORS.accentBase};  background: #3d3d3d;`}
+  }
+  &:hover{
+    background: #3d3d3d;
+  }
+`;
+
+export const SidebarSubTab = styled(BaseDiv)<ITabContentContainerProps>`
+  display: flex;
+  width: 100%;
+  margin-left: 10px;
+  color: whitesmoke;
+  height: calc(${SPACING.NavbarHeight} - 15px);
+  ${(props) =>
+    props.isActiveTab &&
+    !props.disableStyling &&
+    `box-shadow: inset 3px 0 0 0 ${COLORS.accentBase}; background: #3d3d3d;`}
+  * {
+    ${(props) =>
+      props.isActiveTab &&
+      !props.disableStyling &&
+      `fill: ${COLORS.accentBase}; background: #3d3d3d;`}
+  }
+  &:hover{
+    background: #3d3d3d;
+  }
 `;
 
 interface ITabContentContainerProps {
   isActiveTab: boolean;
+  disableStyling?: boolean;
 }
 export const TabSubContentContainer = styled.div<ITabContentContainerProps>`
   ${TimingStyle}
-  ${(props) => (props.isActiveTab ? `height: 200px;` : `height: 0px;`)}
-  background-color: ${COLORS.primaryLight3};
+  display: ${(props) => (props.isActiveTab ? "block" : "none")};
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
   width: 100%;
 `;
 
-export const SidebarIconContainer = styled.div<ITabContentContainerProps>`
+export const SidebarIconContainer = styled.div`
   height: 100%;
   padding: 1em;
-  svg {
-    ${(props) => props.isActiveTab && `fill: ${COLORS.accentBase};`}
-  }
+  position: absolute;
   width: ${SPACING.NavbarHeight};
-
+  background: transparent;
   ${CenteredFlexBox}
+`;
+
+export const SidebarDivider = styled.div`
+
 `;

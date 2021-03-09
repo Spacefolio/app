@@ -208,6 +208,12 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       .attr("y1", -height * 2)
       .attr("y2", height * 2);
 
+    const focusCircle = focus
+      .append("circle")
+      .attr("r", 5)
+      .attr("class", "focus-circle")
+      .style("opacity", 1);
+
     function handleMove(xPos: number) {
       const bisect = d3.bisector((d: any) => d.T).center;
       const x0 = bisect(data, xScale.invert(xPos));

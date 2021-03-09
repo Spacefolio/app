@@ -1,37 +1,65 @@
-import React from "react";
-import { CloseButton, ModalBg, ModalBoxSetup, ModalWrapper } from "./ModalStyles";
+import React, { useEffect, useState } from "react";
+import {
+  CloseButton,
+  ModalBg,
+  ModalBoxSetup,
+  ModalContent,
+  ModalHeader,
+  ModalWrapper,
+} from "./Styles";
 
-import { GrowFromZero, SvgWrapperButton } from "../../AlgonexStyles";
+import {
+  GrowFromZero,
+  RD,
+  Scrollbox,
+  SvgWrapperButton,
+} from "../../AlgonexStyles";
 import { Close } from "@material-ui/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { IRootState } from "../../_reducers";
+import { dispatch } from "d3-dispatch";
+import { applicationViewActions } from "../../_actions/applicationView.actions";
+import useMedia from "use-media";
+import { ThemeProvider, Typography } from "@material-ui/core";
+import { theme } from "../../AlgonexStyles/Theme";
 
-interface ModalProps {
-  visible: boolean;
-  dismiss: any;
-  children: any;
-  clickOutsidedismiss?: boolean;
-}
+interface ModalProps {}
 
-export const Modal: React.FC<ModalProps> = ({
-  visible,
-  dismiss,
-  children,
-  clickOutsidedismiss,
-}) => {
+export const Modal: React.FC<ModalProps> = ({}) => {
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
+
+  const { isVisible, component, header } = useSelector(
+    (state: IRootState) => state.applicationView.modal
+  );
+
+  const dispatch = useDispatch();
+
   return (
     <React.Fragment>
-      {visible && (
+      {isVisible && (
         <ModalWrapper>
           <GrowFromZero in={true}>
-            <ModalBoxSetup>
-              <CloseButton onClick={() => dismiss()}>
-                <Close />
-              </CloseButton>
-              {children}
-            </ModalBoxSetup>
+            <ThemeProvider theme={theme}>
+              <ModalBoxSetup isMobile={isMobile}>
+                <ModalHeader>
+                  <Typography>{header.toLocaleUpperCase()}</Typography>
+                </ModalHeader>
+                <ModalContent>
+                  <CloseButton
+                    onClick={() =>
+                      dispatch(applicationViewActions.setModal(false, null))
+                    }
+                  >
+                    <Close />
+                  </CloseButton>
+                  {component}
+                </ModalContent>
+              </ModalBoxSetup>
+            </ThemeProvider>
           </GrowFromZero>
           <ModalBg
             onClick={() => {
-              clickOutsidedismiss && dismiss();
+              dispatch(applicationViewActions.setModal(false, null));
             }}
           />
         </ModalWrapper>

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  DashboardWrapper,
-  TimeframeItem,
-  TimeFrameSelectorContainer,
+  PortfolioCharts,
+
 } from "./Styles";
 import { alertActions } from "../../_actions";
 import { portfolioService } from "../../_services";
@@ -11,6 +10,7 @@ import { timeframe } from "../../../../types";
 import { PortfolioPieChart } from "../../_components/Charts/Pie/PieChart";
 import { IRootState } from "../../_reducers";
 import { FlexCard, GrowFromZero } from "../../AlgonexStyles";
+import { MetaPortfolio } from "..";
 
 export const Charts = () => {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ export const Charts = () => {
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
   const [PortfolioChartData, setPortfolioChartData] = useState([]);
-  
+
   const [timeframe, setTimeframe] = useState<timeframe>("ALL");
 
   useEffect(() => {
@@ -35,17 +35,17 @@ export const Charts = () => {
   }, [timeframe, filterId]);
 
   return (
-    <DashboardWrapper>
-      <GrowFromZero in={true}>
-        <FlexCard style={{ gridArea: "two" }}>
-          <PortfolioPieChart size={300} id="portfolio-pie-chart" />
-        </FlexCard>
-      </GrowFromZero>
-      <GrowFromZero in={true}>
-        <FlexCard style={{ gridArea: "three" }}>
-          {"exchange allocation pie chart"}
-        </FlexCard>
-      </GrowFromZero>
-    </DashboardWrapper>
+    <PortfolioCharts>
+      <FlexCard style={{ gridArea: "one" }}>
+        <MetaPortfolio />
+      </FlexCard>
+      <FlexCard style={{ gridArea: "two" }}>
+        <PortfolioPieChart size={300} id="portfolio-pie-chart" />
+      </FlexCard>
+
+      <FlexCard style={{ gridArea: "three" }}>
+        {"exchange allocation pie chart"}
+      </FlexCard>
+    </PortfolioCharts>
   );
 };
