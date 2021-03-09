@@ -25,7 +25,9 @@ import { FormWrapper } from "./RegistrationStyles";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
+
   const [submitted, setSubmitted] = useState(false);
 
   const loggingIn = useSelector(
@@ -58,13 +60,13 @@ export const LoginPage = () => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
             autoFocus
-            value={dispatch(login(email, password))}
-            onChange={(e: any) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e: any) => setUsername(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -83,7 +85,9 @@ export const LoginPage = () => {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <BigWideButton type="submit">Sign In</BigWideButton>
+          <BigWideButton type="submit">
+            Sign In
+          </BigWideButton>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

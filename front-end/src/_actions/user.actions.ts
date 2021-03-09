@@ -73,6 +73,7 @@ function register(user: INewUser) {
     return { type: userConstants.REGISTER_FAILURE, error };
   }
 }
+
 // function getAll() {
 //     return dispatch => {
 //         dispatch(request());

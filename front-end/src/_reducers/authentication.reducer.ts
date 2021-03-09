@@ -4,7 +4,7 @@ import { userConstants } from "../_constants";
 interface IUserAuthenticationActions {
   type: string;
   user?: IUser;
-  username?: string;
+  email?: string;
 }
 
 export interface IAuthenticationState {
@@ -23,7 +23,7 @@ export function authentication(
     case userConstants.LOGIN_REQUEST:
       return {
         loggingIn: true,
-        user: action.username,
+        user: action.email,
       };
     case userConstants.LOGIN_SUCCESS:
       return {

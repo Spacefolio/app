@@ -8,6 +8,7 @@ export const userService = {
   register,
   getById,
   update,
+  registrationCheck,
 };
 
 async function login(username: string, password: string) {
@@ -51,6 +52,20 @@ async function register(user: INewUser) {
   };
 
   const response = await fetch(`${API_DOMAIN}/users/register`, requestOptions);
+  return handleResponse(response);
+}
+
+async function registrationCheck(email: string) {
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(email),
+  };
+
+  const response = await fetch(
+    `${API_DOMAIN}/usersregistration-check`,
+    requestOptions
+  );
   return handleResponse(response);
 }
 
