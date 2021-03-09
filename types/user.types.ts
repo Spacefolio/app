@@ -12,9 +12,9 @@ export interface IUser {
 export interface IUserView {
   id: string;
   email: string;
-  hash: string;
   firstName?: string;
   lastName?: string;
+  token: string;
 }
 
 export interface INewUser {

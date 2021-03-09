@@ -1,7 +1,7 @@
 ﻿const config = require("config.json");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-import { ILoginRequest, IRegisterRequest } from "../../../types";
+import { ILoginRequest, IRegisterRequest, IUserView } from "../../../types";
 import { User } from "../_helpers/db";
 
 export const userService = {
@@ -13,15 +13,18 @@ export const userService = {
   // delete: _delete
 };
 
-async function authenticate(userRequest: ILoginRequest) {
-  const user = await User.findOne({ email: userRequest.email });
+async function authenticate(userRequest: ILoginRequest): Promise<IUserView> {
+  const user = await User.findOne({ email: userRequest.email }).lean();
   if (user && bcrypt.compareSync(userRequest.password, user.hash)) {
-    const token = jwt.sign({ sub: user.id }, config.secret, {
+    const token = jwt.sign({ sub: user._id }, config.secret, {
       expiresIn: "7d",
     });
     console.log(user);
     return {
-      ...user.toJSON(),
+      id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       token,
     };
   }
