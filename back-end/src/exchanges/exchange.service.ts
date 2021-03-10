@@ -597,7 +597,7 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 	//console.log("save exchange account document back to mongodb: ", Date.now() - lastItem.valueOf());
 	//lastItem = new Date();
 
-	const portfolioData = createPortfolioData(exchange, exchangeAccountDocument);
+	const portfolioData = await createPortfolioData(exchange, exchangeAccountDocument);
 	//console.log("Create portfoliodata: ", Date.now() - lastItem.valueOf());
 	return portfolioData;
 }
