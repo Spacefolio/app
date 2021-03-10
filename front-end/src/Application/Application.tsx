@@ -59,13 +59,13 @@ export const Application = () => {
             isSidebarCollapsed={isSidebarCollapsed}
           >
             <Switch>
-              <Route exact path={`/portfolio`}>
+              <Route path={`/portfolio`}>
                 <Portfolio />
               </Route>
               <Route exact path={`/dashboard`}>
                 <Dashboard />
               </Route>
-              <Route exact path={"/settings"}>
+              <Route path={"/settings"}>
                 <Settings />
               </Route>
               <Route exact path={"/bots"}>

@@ -8,7 +8,9 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --host 0.0.0.0"
+    "start": "webpack-dev-server --host 0.0.0.0",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -78,6 +80,10 @@
     "@babel/preset-env": "^7.4.3",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.12.7",
+    "@storybook/addon-actions": "^6.1.21",
+    "@storybook/addon-essentials": "^6.1.21",
+    "@storybook/addon-links": "^6.1.21",
+    "@storybook/react": "^6.1.21",
     "@types/config": "0.0.38",
     "@types/d3": "^6.3.0",
     "@types/jquery": "^3.5.5",

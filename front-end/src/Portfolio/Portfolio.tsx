@@ -27,6 +27,8 @@ import {
 } from "@material-ui/core";
 import { useState } from "react";
 import { theme } from "../AlgonexStyles/Theme";
+import { ListMyExchanges } from "../Exchanges";
+import { PortfolioSummary } from "./PortfolioSummary";
 
 interface IPortfolioProps {}
 
@@ -35,7 +37,11 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 
   const [value, setValue] = useState(0);
 
-  const [component, setComponent] = useState(<Charts />);
+  const history = useHistory();
+
+  const location = useLocation();
+
+  const path = "/portfolio";
 
   const PortfolioTabs = (
     <StyledTabs
@@ -46,22 +52,22 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
       }}
     >
       <StyledTab
-        onClick={() => setComponent(<Charts />)}
+        onClick={() => history.push(`${path}/charts`)}
         label="Charts"
       ></StyledTab>
-      <Divider orientation="vertical" flexItem />
+
       <StyledTab
-        onClick={() => setComponent(<Holdings />)}
+        onClick={() => history.push(`${path}/holdings`)}
         label="Holdings"
       ></StyledTab>
-      <Divider orientation="vertical" flexItem />
+
       <StyledTab
-        onClick={() => setComponent(<Transactions />)}
+        onClick={() => history.push(`${path}/transactions`)}
         label="Transactions"
       ></StyledTab>
-      <Divider orientation="vertical" flexItem />
+
       <StyledTab
-        onClick={() => setComponent(<OpenOrders />)}
+        onClick={() => history.push(`${path}/openorders`)}
         label="Open Orders"
       ></StyledTab>
     </StyledTabs>
@@ -70,10 +76,27 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
   return (
     <ThemeProvider theme={theme}>
       <PortfolioWrapper>
-        <React.Fragment>
-          {PortfolioTabs}
-          {component}
-        </React.Fragment>
+        {/* <div>
+          <ListMyExchanges enableEditing={false} />
+        </div> */}
+        {/* <CustomFlexCard>{PortfolioTabs}</CustomFlexCard> */}
+        <Switch>
+          <Route exact path={`${path}`}>
+            <PortfolioSummary />
+          </Route>
+          <Route exact path={`${path}/charts`}>
+            <Charts />
+          </Route>
+          <Route exact path={`${path}/holdings`}>
+            <Holdings />
+          </Route>
+          <Route exact path={`${path}/transactions`}>
+            <Transactions />
+          </Route>
+          <Route exact path={`${path}/openorders`}>
+            <OpenOrders />
+          </Route>
+        </Switch>
       </PortfolioWrapper>
     </ThemeProvider>
   );

@@ -17,7 +17,7 @@ import { BaseButton, Scrollbox } from "../../AlgonexStyles";
 import { AddExchangeForm } from "..";
 import { SelectNewIntegration } from "./AddNewSelector";
 import { ButtonSection } from "./Style";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
 
@@ -56,6 +56,8 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
     }
   }
 
+  const dispatch = useDispatch();
+
   const [activeStep, setActiveStep] = React.useState(0);
 
   const [buttonText, setButtonText] = React.useState("");
@@ -76,16 +78,10 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         break;
       case 1:
-        addExchangeSuccess && setActiveStep(2);
         break;
       case 2:
-        dispatch(
-          applicationViewActions.setModal(
-            false,
-            null,
-            null
-          )
-        );
+        console.log(activeStep);
+        dispatch(applicationViewActions.setModal(false, null, null));
         break;
     }
   };
@@ -103,6 +99,12 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
         break;
     }
   }, [activeStep]);
+
+  useEffect(() => {
+    if (activeStep == 1 && addExchangeSuccess) {
+      setActiveStep(2);
+    }
+  }, [addExchangeSuccess]);
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -154,7 +156,11 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
     </React.Fragment>
   );
 };
-function dispatch(arg0: { type: string; header: string; modalVisible: boolean; modalComponent: any; }) {
+function dispatch(arg0: {
+  type: string;
+  header: string;
+  modalVisible: boolean;
+  modalComponent: any;
+}) {
   throw new Error("Function not implemented.");
 }
-

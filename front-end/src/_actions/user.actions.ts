@@ -50,17 +50,17 @@ function register(user: INewUser) {
   return (dispatch: any) => {
     dispatch(request(user));
 
-    userService.register(user).then(
-      (user) => {
+    userService
+      .register(user)
+      .then((user) => {
         dispatch(success(user));
-        history.push("/login");
         dispatch(alertActions.success("Registration successful"));
-      },
-      (error) => {
+        history.push("/");
+      })
+      .catch((error) => {
         dispatch(failure(error.toString()));
         dispatch(alertActions.error(error.toString()));
-      }
-    );
+      });
   };
 
   function request(user: INewUser) {

@@ -43,15 +43,18 @@ export const GetStarted = () => {
 
   const dispatch = useDispatch();
 
+  function CheckEmail() {
+    userService
+      .registrationCheck(email)
+      .then((res) => setIsEmailRegistered(res.registered));
+  }
+
   function handleSubmit(e: any) {
     e.preventDefault();
 
     setSubmitted(true);
-
     if (formType == "CheckRegistration" && emailTester(email)) {
-      userService
-        .registrationCheck(email)
-        .then((res) => setIsEmailRegistered(res.registered));
+      CheckEmail();
     } else if (formType == "login" && emailTester(email) && password) {
       dispatch(userActions.login({ email, password }));
     } else if (
@@ -116,7 +119,7 @@ export const GetStarted = () => {
               id="email"
               label="Email"
               type="email"
-              autoComplete="email"
+              autoComplete={formType != "CheckRegistration" ? "email" : "none"}
               autoFocus
               value={email}
               onChange={(e: any) => setEmail(e.target.value)}
