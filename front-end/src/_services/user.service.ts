@@ -1,6 +1,6 @@
 import axios from "axios";
 import { authHeader } from "../_helpers";
-import { INewUser, IUser } from "../../../types";
+import { ILoginRequest, INewUser, IUser } from "../../../types";
 
 export const userService = {
   login,
@@ -11,22 +11,22 @@ export const userService = {
   registrationCheck,
 };
 
-async function login(username: string, password: string) {
+async function login(user: ILoginRequest) {
   const requestOptions: RequestInit = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify(user),
   };
 
   const response = await fetch(
     `${API_DOMAIN}/users/authenticate`,
     requestOptions
   );
-  const user = await handleResponse(response);
+  const userData = await handleResponse(response);
   // store user details and jwt token in local storage to keep user logged in between page refreshes
-  localStorage.setItem("user", JSON.stringify(user));
+  localStorage.setItem("user", JSON.stringify(userData));
 
-  return user;
+  return userData;
 }
 
 function logout() {
@@ -59,11 +59,11 @@ async function registrationCheck(email: string) {
   const requestOptions: RequestInit = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(email),
+    body: email,
   };
 
   const response = await fetch(
-    `${API_DOMAIN}/usersregistration-check`,
+    `${API_DOMAIN}/registration-check`,
     requestOptions
   );
   return handleResponse(response);
