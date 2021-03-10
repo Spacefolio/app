@@ -1,4 +1,4 @@
-﻿import { IUserView } from './../../../types/user.types';
+﻿import { IUserView } from "./../../../types/user.types";
 import { Router, Request, Response, NextFunction } from "express";
 import { IUser } from "../../../types";
 import { userService } from "./user.service";
@@ -10,7 +10,7 @@ router.post("/register", register);
 //router.get('/', getAll);
 router.get("/current", getCurrent);
 router.get("/:id", getById);
-router.get("/registration-check", checkRegistration);
+router.post("/registration-check", checkRegistration);
 // router.put('/:id', update);
 //router.delete('/:id', _delete);
 
@@ -28,7 +28,8 @@ function authenticate(req: any, res: Response, next: NextFunction) {
 }
 
 function checkRegistration(req: any, res: Response, next: NextFunction) {
-    userService.checkIfRegistered(req.body.email)
+  userService
+    .checkIfRegistered(req.body.email)
     .then((registered) => res.json({ registered: registered }))
     .catch((err: any) => next(err));
 }

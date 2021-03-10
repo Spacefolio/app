@@ -65,8 +65,31 @@ export const GetStarted = () => {
   }
 
   useEffect(() => {
-    if (isEmailRegistered != undefined)
-      isEmailRegistered ? setFormType("login") : setFormType("register");
+    email == null && setFormType("CheckRegistration");
+    if (formType == "login") {
+      setHeaderText("Login");
+      setHeaderSubText("Enter your password to login");
+    }
+    if (formType == "register") {
+      setHeaderText("Sign Up");
+      setHeaderSubText("Enter and confirm your password to sign up");
+    }
+    if (formType == "CheckRegistration") {
+      setHeaderText("Enter Email");
+      setHeaderSubText(
+        "Enter your account email address to login or a new one to register an account"
+      );
+    }
+  }, [formType, email]);
+
+  useEffect(() => {
+    if (isEmailRegistered != undefined) {
+      if (isEmailRegistered) {
+        setFormType("login");
+      } else {
+        setFormType("register");
+      }
+    }
   }, [isEmailRegistered]);
 
   const emailTester = (email: string) => {

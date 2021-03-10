@@ -56,17 +56,14 @@ async function register(user: INewUser) {
 }
 
 async function registrationCheck(email: string) {
-  const requestOptions: RequestInit = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: email,
-  };
-
-  const response = await fetch(
-    `${API_DOMAIN}/registration-check`,
-    requestOptions
-  );
-  return handleResponse(response);
+  return await axios
+    .post(`${API_DOMAIN}/users/registration-check`, { email })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      throw err;
+    });
 }
 
 async function update(user: IUser) {
