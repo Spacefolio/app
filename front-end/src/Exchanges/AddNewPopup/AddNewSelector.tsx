@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { exchangeActions } from "../../_actions";
-import { IExchangeReference } from "../../../../types";
+import { IIntegrationInfo } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
@@ -35,7 +35,7 @@ export const SelectNewIntegration: React.FC<ISelectIntegrationProps> = ({
     dispatch(exchangeActions.getRef());
   }, []);
 
-  const handleClick = (item: IExchangeReference) => {
+  const handleClick = (item: IIntegrationInfo) => {
     if (selectedIntegration == item.id) {
       setSelectedIntegration("");
     } else {
@@ -64,14 +64,14 @@ export const SelectNewIntegration: React.FC<ISelectIntegrationProps> = ({
      
           {exchangeRef &&
             exchangeRef
-              .filter((item: IExchangeReference) => {
+              .filter((item: IIntegrationInfo) => {
                 if (searchFilter) {
                   return item.name
                     .toLowerCase()
                     .startsWith(searchFilter.toLowerCase());
                 } else return true;
               })
-              .map((item: IExchangeReference) => {
+              .map((item: IIntegrationInfo) => {
                 return (
                   <ListItem
                     style={{

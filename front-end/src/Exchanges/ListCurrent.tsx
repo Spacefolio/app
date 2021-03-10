@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { exchangeActions, portfolioActions } from "../_actions";
 import { AddExchangeForm, EditExchangeForm, ExchangeItem } from ".";
-import { IExchangeAccountView, IExchangeReference } from "../../../types";
+import { IExchangeAccountView, IIntegrationInfo } from "../../../types";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../_reducers";
 import { MyExchangeNameWrapper } from "./ExchangeStyles";

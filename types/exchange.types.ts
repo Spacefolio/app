@@ -36,7 +36,7 @@ export type exchangeType =
   | "hitbtc"
   | "coinbase";
 
-export interface IExchangeReference {
+export interface IIntegrationInfo {
   id: exchangeType;
   name: string;
   logoUrl: string;

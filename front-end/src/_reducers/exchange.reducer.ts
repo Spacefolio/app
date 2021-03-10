@@ -1,5 +1,5 @@
 import { exchangeConstants } from "../_constants";
-import { IExchangeAccountView, IExchangeReference } from "../../../types";
+import { IExchangeAccountView, IIntegrationInfo } from "../../../types";
 import { exchangeActions, portfolioActions } from "../_actions";
 import { IRootState } from ".";
 
@@ -14,7 +14,7 @@ interface IExchangeAction {
 
 export interface IExchangesState {
   exchanges: IExchangeAccountView[];
-  exchangeRef: IExchangeReference[];
+  exchangeRef: IIntegrationInfo[];
   addingExchange: boolean;
   addExchangeSuccess: boolean;
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { portfolioActions } from "../../_actions";
 
-import { IExchangeAccountView, IExchangeReference } from "../../../../types";
+import { IExchangeAccountView, IIntegrationInfo } from "../../../../types";
 
 import {
   Button,
@@ -28,7 +28,7 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
     return ["Choose an Integration", "Enter Credentials", "Finished"];
   }
 
-  const [integrationInfo, setIntegrationInfo] = useState<IExchangeReference>(
+  const [integrationInfo, setIntegrationInfo] = useState<IIntegrationInfo>(
     null
   );
 

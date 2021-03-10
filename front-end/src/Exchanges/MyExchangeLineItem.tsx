@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "../_components";
-import { IExchangeAccountView, IExchangeReference } from "../../../types";
+import { IExchangeAccountView, IIntegrationInfo } from "../../../types";
 import { EditExchangeForm } from "./Forms";
 import { exchangeActions, portfolioActions } from "../_actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,8 +53,8 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
   useEffect(() => {
-    const targetRef: IExchangeReference = exchangeRef.filter(
-      (refItem: IExchangeReference) => {
+    const targetRef: IIntegrationInfo = exchangeRef.filter(
+      (refItem: IIntegrationInfo) => {
         return refItem.id === data.exchangeType;
       }
     )[0];

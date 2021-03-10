@@ -3,7 +3,7 @@ import { exchangeActions } from "../../_actions";
 import {
   IExchangeAccountRequest,
   IExchangeAccountView,
-  IExchangeReference,
+  IIntegrationInfo,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
 import { BigWideButton } from "../../AlgonexStyles";
@@ -11,7 +11,7 @@ import { ExchangeFormRow } from "../Forms/ExchangeFormStyles";
 import { Avatar, TextField, Typography } from "@material-ui/core";
 
 interface ExchangeFormProps {
-  integrationInfo: IExchangeReference;
+  integrationInfo: IIntegrationInfo;
 }
 
 export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
