@@ -23,6 +23,10 @@ export const ApplicationContainer = styled.div<ApplicationProps>`
       return `calc(100% - ${SPACING.sidebarWidth});`;
     }
   }};
+  ${(props) =>
+    props.isMobile &&
+    !props.isSidebarCollapsed &&
+    "opacity: .2;"}
   height: 100%;
   @media (max-width: ${RD.breakpointsmartphone}) {
     width: 100%;
@@ -38,7 +42,7 @@ export const ApplicationFlexContainer = styled.div<ApplicationProps>`
   ${TimingStyle}
 `;
 export const BodyWrapper = styled.div`
-background: #f3f3f3;
+  background: #f3f3f3;
   display: flex;
   position: relative;
   height: 100%;

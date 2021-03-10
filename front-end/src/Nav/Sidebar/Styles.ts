@@ -16,6 +16,7 @@ export const SidebarSpacer = styled.div`
 
 interface ISidebarContainerProps {
   isSidebarCollapsed: boolean;
+  isMobile: boolean;
 }
 
 export const SidebarContainer = styled.div<ISidebarContainerProps>`
@@ -28,15 +29,21 @@ export const SidebarContainer = styled.div<ISidebarContainerProps>`
   top: 0;
   background-color: ${COLORS.darkBase};
   flex-shrink: 0;
+  z-index: 4;
   height: 100vh;
   * {
     color: white;
   }
   width: ${(props: any) =>
-    props.isSidebarCollapsed ? SPACING.NavbarHeight : SPACING.sidebarWidth};
+    props.isSidebarCollapsed
+      ? props.isMobile
+        ? "0"
+        : SPACING.NavbarHeight
+      : SPACING.sidebarWidth};
+
+  ${(props) => props.isMobile && `position: fixed; left: 0;`}
 
   align-items: ${(props: any) =>
     props.isSidebarCollapsed ? "center" : "start"};
-  z-index: 1;
   ${TimingStyle}
 `;

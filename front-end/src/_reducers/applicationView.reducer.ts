@@ -8,7 +8,7 @@ interface IApplicationViewAcion {
   manualToggle: boolean;
   modalVisible: boolean;
   modalComponent: Element;
-  header: string
+  header: string;
 }
 
 export interface IApplicationViewState {
@@ -33,9 +33,10 @@ export function applicationView(
     case applicationViewConstants.TOGGLE_SIDEBAR_DESKTOP:
       return {
         ...state,
-        isSidebarCollapsed: action.manualToggle
-          ? true
-          : !state.isSidebarCollapsed,
+        isSidebarCollapsed:
+          action.manualToggle != undefined
+            ? action.manualToggle
+            : !state.isSidebarCollapsed,
       };
     case applicationViewConstants.MODAL:
       return {

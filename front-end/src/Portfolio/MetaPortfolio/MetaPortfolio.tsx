@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   MetaPortfolioWrapper,
   PortfolioValueWrapper,
-  SyncButtonContainer,
   PortfolioName,
   PortfolioValueColumn,
   PortfolioProfitSection,
@@ -16,17 +15,11 @@ import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
 import { IRootState } from "../../_reducers";
 import useDimensions from "react-use-dimensions";
-
 import { timeFrameSelectors } from "../../_helpers/formatters";
-import {
-  ArrowDropDown,
-  ArrowDropUp,
-  DateRangeTwoTone,
-} from "@material-ui/icons";
-import { SvgWrapperButton, InlineDiv } from "../../AlgonexStyles";
-import { SyncIcon } from "../../AlgonexStyles/IconStyles";
+import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
 import { Button, Typography } from "@material-ui/core";
 import { ListMyExchanges } from "../../Exchanges";
+import { InlineDiv } from "../../AlgonexStyles";
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
@@ -115,33 +108,33 @@ export const MetaPortfolio = () => {
     );
 
     const PortfolioDate = (
-      <Typography>
+      <React.Fragment>
         {filteredPortfolioData != null ? (
           <div id={"PDID"}>{chartDate ? "" : ""}</div>
         ) : (
           "loading..."
         )}
-      </Typography>
+      </React.Fragment>
     );
 
     const ProfitPercentage = (
-      <Typography>
+      <React.Fragment>
         {filteredPortfolioData != null
           ? `(${filteredPortfolioData.profitPercentage.USD.toFixed(2)}%)`
           : "loading..."}
-      </Typography>
+      </React.Fragment>
     );
 
     const ProfitTotal = (
-      <Typography>
+      <React.Fragment>
         {filteredPortfolioData != null
           ? `$${filteredPortfolioData.profitTotal.USD.toFixed(2)}`
           : "loading..."}
-      </Typography>
+      </React.Fragment>
     );
 
     const ProfitDirection = (
-      <Typography>
+      <React.Fragment>
         {filteredPortfolioData != null ? (
           filteredPortfolioData.profitTotal.USD > 0 ? (
             <ArrowDropUp />
@@ -151,7 +144,7 @@ export const MetaPortfolio = () => {
         ) : (
           "loading..."
         )}
-      </Typography>
+      </React.Fragment>
     );
 
     return (
@@ -161,13 +154,13 @@ export const MetaPortfolio = () => {
           {SyncButtonSection}
         </PortfolioValueColumn> */}
         <PortfolioValueColumn>
-          <Typography variant={"h4"}>
-            <InlineDiv>
+          <InlineDiv>
+            <Typography variant={"h4"}>
               {PortfolioValue}
               {PortfolioDate}
               {/* {RefreshButton} */}
-            </InlineDiv>
-          </Typography>
+            </Typography>
+          </InlineDiv>
         </PortfolioValueColumn>
         <PortfolioValueColumn>
           <PortfolioProfitSection

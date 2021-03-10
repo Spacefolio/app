@@ -67,7 +67,11 @@ export const DesktopTopNav = () => {
           key={"AddExchange"}
           onClick={() =>
             dispatch(
-              applicationViewActions.setModal(true, <AddExchangePopup />, 'Add Exchange')
+              applicationViewActions.setModal(
+                true,
+                <AddExchangePopup />,
+                "Add Exchange"
+              )
             )
           }
         >
@@ -116,7 +120,7 @@ export const DesktopTopNav = () => {
       >
         <InlineDiv>
           {/* <Avatar src={filteredPortfolioData.logoUrl} /> */}
-          {user.firstName} {user.lastName}
+          Hi, {user.firstname}
           <ArrowDropDown />
         </InlineDiv>
         {accountDropdown}

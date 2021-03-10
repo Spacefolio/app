@@ -34,7 +34,7 @@ import {
   useScrollTrigger,
 } from "@material-ui/core";
 import { COLORS, RD } from "../../../AlgonexStyles/ResponsiveDesign";
-import { ArrowDropDown, ExitToApp } from "@material-ui/icons";
+import { ArrowDropDown, ExitToApp, Menu } from "@material-ui/icons";
 import { ListMyExchanges } from "../../../Exchanges";
 import { IPortfolioDataView } from "../../../../../types";
 import useMedia from "use-media";
@@ -115,6 +115,11 @@ export const MobileTopNav = () => {
   return (
     <HideOnScroll>
       <NavContainer>
+        <ToggleSidebar
+          onClick={() => dispatch(applicationViewActions.toggleSidebar())}
+        >
+          <Menu />
+        </ToggleSidebar>
         <NavLogoArea>
           <BrandTextLink to="/dashboard">
             <SvgWrapperButton>
@@ -136,10 +141,10 @@ export const MobileTopNav = () => {
             <Avatar
               style={{ color: "white", backgroundColor: COLORS.primaryBase }}
             >
-              {user.firstName[0]}
-              {user.lastName[0]}
+              {user.firstname
+                ? user.firstname
+                : user.email[0].toUpperCase() + user.email[1].toUpperCase()}
             </Avatar>
-            <ArrowDropDown />
           </InlineDiv>
           {accountDropdownVisible && accountDropdown}
         </NavAccountContainer>

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  PortfolioCharts,
-
-} from "./Styles";
+import { PortfolioCharts } from "./Styles";
 import { alertActions } from "../../_actions";
 import { portfolioService } from "../../_services";
 import { timeframe } from "../../../../types";

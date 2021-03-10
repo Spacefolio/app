@@ -13,7 +13,7 @@ import { useState } from "react";
 import { link } from "fs/promises";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../_reducers";
-import { SvgWrapperButton, Scrollbox } from "../../../AlgonexStyles";
+import { SvgWrapperButton, Scrollbox, SPACING } from "../../../AlgonexStyles";
 import { useCheckCurrentLocation } from "../../../Hooks/useCheckCurrentLocation";
 
 interface ISidebarActionItemProps {
@@ -21,7 +21,7 @@ interface ISidebarActionItemProps {
   children?: React.ReactNode;
   icon?: React.ReactNode;
   linkUri: string;
-  disableStyling?: boolean;
+  Branding?: boolean;
 }
 
 export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
@@ -29,7 +29,7 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
   children,
   icon,
   linkUri,
-  disableStyling,
+  Branding,
 }) => {
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed
@@ -64,14 +64,17 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
     <React.Fragment>
       <LinkWrapper>
         <SidebarTab
-          disableStyling={disableStyling}
+          Branding={Branding}
           isActiveTab={isCurrentPage}
           onClick={() => handleClick()}
         >
           <SidebarIconContainer>{icon}</SidebarIconContainer>
           <LinkText>{text}</LinkText>
           {children && (
-            <SvgWrapperButton style={{height: "100%"}} onClick={() => setSubIsVisible(!subIsVisible)}>
+            <SvgWrapperButton
+              style={{ height: "100%" }}
+              onClick={() => setSubIsVisible(!subIsVisible)}
+            >
               <ArrowIcon
                 style={{ fill: "white" }}
                 direction={subIsVisible ? "up" : "down"}
@@ -94,7 +97,7 @@ export const SidebarSubActionItem: React.FC<ISidebarActionItemProps> = ({
   children,
   icon,
   linkUri,
-  disableStyling,
+  Branding,
 }) => {
   const { path } = useRouteMatch();
 
@@ -113,7 +116,7 @@ export const SidebarSubActionItem: React.FC<ISidebarActionItemProps> = ({
   return (
     <LinkWrapper>
       <SidebarSubTab
-        disableStyling={disableStyling}
+        Branding={Branding}
         isActiveTab={isCurrentPage}
         onClick={() => handleClick()}
       >

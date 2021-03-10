@@ -20,11 +20,12 @@ import {
 
 import { RD } from "../../AlgonexStyles/ResponsiveDesign";
 
-import useMedia from "use-media";
+import { useMedia } from "use-media";
 import { AlgonexLogo } from "../../AlgonexStyles";
 import { Tabs } from "@material-ui/core";
 import path from "path";
 import { useHistory } from "react-router";
+import { ModalWrapper } from "../../_components/Modal/Styles";
 
 interface SidebarNavProps {}
 
@@ -35,18 +36,21 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
     (state: IRootState) => state.applicationView.isSidebarCollapsed
   );
 
+  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
+
   const history = useHistory();
 
   return (
     <SidebarContainer
       isSidebarCollapsed={isSidebarCollapsed}
+      isMobile={isMobile}
       // isFixed={width <= parseInt(RD.breakpointsmartphone) ? true : false}
     >
       <SidebarActionItem
         text="ALGONEX"
         icon={<AlgonexLogo />}
         linkUri="/dashboard"
-        disableStyling={true}
+        Branding={true}
       ></SidebarActionItem>
 
       <SidebarActionItem

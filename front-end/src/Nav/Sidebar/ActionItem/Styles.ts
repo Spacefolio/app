@@ -1,4 +1,4 @@
-import { BaseDiv } from './../../../AlgonexStyles/GeneralStyles';
+import { BaseDiv } from "./../../../AlgonexStyles/GeneralStyles";
 import styled from "styled-components";
 import {
   CenteredFlexBox,
@@ -31,18 +31,20 @@ export const LinkText = styled.div`
 export const SidebarTab = styled(BaseDiv)<ITabContentContainerProps>`
   display: flex;
   width: 100%;
-  height: ${SPACING.NavbarHeight};
+  height: ${SPACING.sidebarHeight};
   ${(props) =>
     props.isActiveTab &&
-    !props.disableStyling &&
+    !props.Branding &&
     `box-shadow: inset 3px 0 0 0 ${COLORS.accentBase}; background: #3d3d3d;`}
   * {
     ${(props) =>
       props.isActiveTab &&
-      !props.disableStyling &&
+      !props.Branding &&
       `fill: ${COLORS.accentBase}; color: ${COLORS.accentBase};  background: #3d3d3d;`}
   }
-  &:hover{
+  ${(props) =>
+    props.Branding && `height: ${parseInt(SPACING.sidebarHeight) * 2}px;`}
+  &:hover {
     background: #3d3d3d;
   }
 `;
@@ -55,22 +57,22 @@ export const SidebarSubTab = styled(BaseDiv)<ITabContentContainerProps>`
   height: calc(${SPACING.NavbarHeight} - 15px);
   ${(props) =>
     props.isActiveTab &&
-    !props.disableStyling &&
+    !props.Branding &&
     `box-shadow: inset 3px 0 0 0 ${COLORS.accentBase}; background: #3d3d3d;`}
   * {
     ${(props) =>
       props.isActiveTab &&
-      !props.disableStyling &&
+      !props.Branding &&
       `fill: ${COLORS.accentBase}; background: #3d3d3d;`}
   }
-  &:hover{
+  &:hover {
     background: #3d3d3d;
   }
 `;
 
 interface ITabContentContainerProps {
   isActiveTab: boolean;
-  disableStyling?: boolean;
+  Branding?: boolean;
 }
 export const TabSubContentContainer = styled.div<ITabContentContainerProps>`
   ${TimingStyle}
@@ -89,6 +91,4 @@ export const SidebarIconContainer = styled.div`
   ${CenteredFlexBox}
 `;
 
-export const SidebarDivider = styled.div`
-
-`;
+export const SidebarDivider = styled.div``;

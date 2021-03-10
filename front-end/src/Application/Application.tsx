@@ -20,6 +20,8 @@ import { Bots } from "../Bots";
 import { Trade } from "../Trade";
 import { Modal } from "../_components";
 import { ThemeProvider } from "styled-components";
+import { BottomNavbar } from "../Nav/BottomNav/Styles";
+import { applicationViewActions } from "../_actions/applicationView.actions";
 
 export const Application = () => {
   const dispatch = useDispatch();
@@ -39,41 +41,44 @@ export const Application = () => {
   return (
     <React.Fragment>
       <Modal />
-      <BodyWrapper style={{ marginBottom: isMobile ? "50px" : "0px" }}>
-        {!isMobile && <SidebarNav />}
+      <BodyWrapper>
+        <SidebarNav />
         <ApplicationContainer
           isMobile={isMobile}
           isSidebarCollapsed={isSidebarCollapsed}
+          onClick={() => {
+            if (isMobile && !isSidebarCollapsed) {
+              dispatch(applicationViewActions.toggleSidebar(true));
+            }
+          }}
         >
           {isMobile ? <MobileTopNav /> : <DesktopTopNav />}
-          <GrowFromZero in={true}>
-            <ApplicationFlexContainer
-              isMobile={isMobile}
-              isSidebarCollapsed={isSidebarCollapsed}
-            >
-              <Switch>
-                <Route path={`/portfolio`}>
-                  <Portfolio />
-                </Route>
-                <Route path={`/dashboard`}>
-                  <Dashboard />
-                </Route>
-                <Route path={"/settings"}>
-                  <Settings />
-                </Route>
-                <Route path={"/bots"}>
-                  <Bots />
-                </Route>
-                <Route path={"/trade"}>
-                  <Trade />
-                </Route>
-                <Redirect to="/dashboard" />
-              </Switch>
-            </ApplicationFlexContainer>
-          </GrowFromZero>
+
+          <ApplicationFlexContainer
+            isMobile={isMobile}
+            isSidebarCollapsed={isSidebarCollapsed}
+          >
+            <Switch>
+              <Route exact path={`/portfolio`}>
+                <Portfolio />
+              </Route>
+              <Route exact path={`/dashboard`}>
+                <Dashboard />
+              </Route>
+              <Route exact path={"/settings"}>
+                <Settings />
+              </Route>
+              <Route exact path={"/bots"}>
+                <Bots />
+              </Route>
+              <Route exact path={"/trade"}>
+                <Trade />
+              </Route>
+              <Redirect to="/dashboard" />
+            </Switch>
+          </ApplicationFlexContainer>
         </ApplicationContainer>
       </BodyWrapper>
-      {isMobile && <MobileNav />}
     </React.Fragment>
   );
 };

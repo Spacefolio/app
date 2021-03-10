@@ -21,28 +21,7 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 
   const [value, setValue] = useState(0);
 
-  const { path } = useRouteMatch("/portfolio");
-
-  const history = useHistory();
-
-  const location = useLocation();
-
-  useEffect(() => {
-    switch (location.pathname) {
-      case path + "/charts":
-        setValue(0);
-        break;
-      case path + "/holdings":
-        setValue(1);
-        break;
-      case path + "/transactions":
-        setValue(2);
-        break;
-      case path + "/orders":
-        setValue(3);
-        break;
-    }
-  }, []);
+  const [component, setComponent] = useState(<Charts />);
 
   const PortfolioTabs = (
     <Tabs
@@ -50,47 +29,31 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
       indicatorColor="primary"
       textColor="primary"
       onChange={(e, val) => {
-        console.log(e, val);
         setValue(val);
       }}
     >
-      <Tab onClick={() => history.push(path + "/charts")} label="Charts"></Tab>
+      <Tab onClick={() => setComponent(<Charts />)} label="Charts"></Tab>
+
+      <Tab onClick={() => setComponent(<Holdings />)} label="Holdings"></Tab>
 
       <Tab
-        onClick={() => history.push(path + "/holdings")}
-        label="Holdings"
-      ></Tab>
-
-      <Tab
-        onClick={() => history.push(path + "/transactions")}
+        onClick={() => setComponent(<Transactions />)}
         label="Transactions"
       ></Tab>
 
       <Tab
-        onClick={() => history.push(path + "/orders")}
+        onClick={() => setComponent(<OpenOrders />)}
         label="Open Orders"
       ></Tab>
     </Tabs>
   );
 
   return (
-    <GrowFromZero in={true}>
-      <PortfolioWrapper>
-        <React.Fragment>
-          {PortfolioTabs}
-          <Switch>
-            <Route exact path={`${path}/charts`} component={Charts} />
-            <Route
-              exact
-              path={`${path}/transactions`}
-              component={Transactions}
-            />
-            <Route exact path={`${path}/orders`} component={OpenOrders} />
-            <Route exact path={`${path}/holdings`} component={Holdings} />
-            <Redirect from={`${path}`} to={`${path}/charts`} />
-          </Switch>
-        </React.Fragment>
-      </PortfolioWrapper>
-    </GrowFromZero>
+    <PortfolioWrapper>
+      <React.Fragment>
+        {PortfolioTabs}
+        {component}
+      </React.Fragment>
+    </PortfolioWrapper>
   );
 };
