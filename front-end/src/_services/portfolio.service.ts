@@ -42,7 +42,7 @@ async function syncPortfolio() {
       return response.data;
     })
     .catch((err) => {
-      throw err;
+      handleErr(err);
     });
 }
 
@@ -56,12 +56,9 @@ async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
     localStorage.getItem("Portfolio")
   );
 
-  
-  
   if (CachedPortfolios) {
     let CachedPortfolio: ICachedPortfolioDataView = CachedPortfolios.filter(
       (portfolioItem: ICachedPortfolioDataView) => {
- 
         return portfolioItem.id == portfolioFilterId;
       }
     )[0];
@@ -96,7 +93,7 @@ async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
           return response.data;
         })
         .catch((err) => {
-          throw err;
+          handleErr(err);
         });
     }
   } else {
@@ -108,7 +105,7 @@ async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
         return response.data;
       })
       .catch((err) => {
-        throw err;
+        handleErr(err);
       });
   }
 }
@@ -151,7 +148,7 @@ async function getTransactionData(exchangeID?: string) {
       return response.data;
     })
     .catch((err) => {
-      throw err;
+      handleErr(err);
     });
 }
 
@@ -172,7 +169,7 @@ async function getOpenOrdersData(exchangeID?: string) {
       return response.data;
     })
     .catch((err) => {
-      throw err;
+      handleErr(err);
     });
 }
 
@@ -265,6 +262,11 @@ async function getPortfolioChartData(
       return response.data;
     })
     .catch((err) => {
-      return data;
+      handleErr(err);
     });
+}
+
+function handleErr(err: any) {
+  console.log(JSON.parse(err.message));
+  return err.message;
 }

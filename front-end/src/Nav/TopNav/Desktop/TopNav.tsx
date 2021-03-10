@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useHistory } from "react-router-dom";
-import { userActions } from "../../../_actions";
+import { portfolioActions, userActions } from "../../../_actions";
 import {
   ArrowIcon,
   Dropdown,
@@ -32,6 +32,7 @@ import { COLORS, RD } from "../../../AlgonexStyles/ResponsiveDesign";
 import { Add, ArrowDropDown, ExitToApp } from "@material-ui/icons";
 import { AddExchangePopup, ListMyExchanges } from "../../../Exchanges";
 import { IPortfolioDataView } from "../../../../../types";
+import { SyncIcon } from "../../../AlgonexStyles/IconStyles";
 
 export const DesktopTopNav = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,14 @@ export const DesktopTopNav = () => {
 
   const filteredPortfolioData: IPortfolioDataView = useSelector(
     (state: IRootState) => state.portfolio.filteredPortfolioData
+  );
+
+  const isSyncing = useSelector(
+    (state: any) => state.portfolio.syncingPortfolio
+  );
+
+  const isRefreshing = useSelector(
+    (state: any) => state.portfolio.recalculatingPortfolio
   );
 
   const isSidebarCollapsed = useSelector(
@@ -112,6 +121,22 @@ export const DesktopTopNav = () => {
         <ArrowIcon direction={!isSidebarCollapsed ? "left" : "right"} />
       </ToggleSidebar>
       <NavFlexSpacer />
+      <InlineDiv>
+        {DEV_SERVER == "DEVELOPMENT" && (
+          <div>
+            sync
+            <SyncIcon
+              onClick={() => dispatch(portfolioActions.sync())}
+              isSyncing={isSyncing}
+            />
+            refresh
+            <SyncIcon
+              onClick={() => dispatch(portfolioActions.refresh())}
+              isSyncing={isRefreshing}
+            />
+          </div>
+        )}
+      </InlineDiv>
       <NavAccountContainer
         ref={container}
         onClick={() => {

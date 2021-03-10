@@ -60,6 +60,7 @@ module.exports = {
           ? process.env.DEV_SERVER_IP || "http://localhost:4000"
           : "/api"
       ),
+      DEV_SERVER: JSON.stringify(process.env.NODE_ENV),
     }),
   ],
   devServer: {

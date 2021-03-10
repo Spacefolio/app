@@ -24,14 +24,6 @@ import { InlineDiv } from "../../AlgonexStyles";
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();
 
-  const isSyncing = useSelector(
-    (state: any) => state.portfolio.syncingPortfolio
-  );
-
-  const isRefreshing = useSelector(
-    (state: any) => state.portfolio.recalculatingPortfolio
-  );
-
   const filteredPortfolioData: IPortfolioDataView = useSelector(
     (state: IRootState) => state.portfolio.filteredPortfolioData
   );

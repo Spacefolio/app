@@ -22,7 +22,7 @@ function sync() {
         dispatch(alertActions.success("Sync Complete"));
       })
       .catch((error) => {
-        dispatch(failure(error.toString()));
+        dispatch(failure());
         dispatch(alertActions.error(error.toString()));
       });
   };
@@ -33,8 +33,8 @@ function sync() {
   function success(portfolioData: IPortfolioDataView[]) {
     return { type: portfolioConstants.SYNC_SUCCESS, portfolioData };
   }
-  function failure(error: any) {
-    return { type: portfolioConstants.SYNC_FAILURE, error };
+  function failure() {
+    return { type: portfolioConstants.SYNC_FAILURE };
   }
 }
 
@@ -48,7 +48,7 @@ function refresh(portfolioId: string = "", manual: boolean = false) {
         dispatch(success(res));
       })
       .catch((error) => {
-        dispatch(failure(error.toString()));
+        dispatch(failure());
         dispatch(alertActions.error(error.toString()));
       });
   };
@@ -59,8 +59,8 @@ function refresh(portfolioId: string = "", manual: boolean = false) {
   function success(portfolioData: IPortfolioDataView[]) {
     return { type: portfolioConstants.REFRESH_SUCCESS, portfolioData };
   }
-  function failure(error: any) {
-    return { type: portfolioConstants.REFRESH_FAILURE, error };
+  function failure() {
+    return { type: portfolioConstants.REFRESH_FAILURE };
   }
 }
 
