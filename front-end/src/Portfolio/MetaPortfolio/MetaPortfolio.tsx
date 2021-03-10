@@ -119,7 +119,7 @@ export const MetaPortfolio = () => {
 
     const ProfitPercentage = (
       <React.Fragment>
-        {filteredPortfolioData != null
+        {filteredPortfolioData.hasOwnProperty("profitPercentage")
           ? `(${filteredPortfolioData.profitPercentage.toFixed(2)}%)`
           : "loading..."}
       </React.Fragment>
@@ -127,7 +127,7 @@ export const MetaPortfolio = () => {
 
     const ProfitTotal = (
       <React.Fragment>
-        {filteredPortfolioData != null
+        {filteredPortfolioData.hasOwnProperty("profitTotal")
           ? `$${filteredPortfolioData.profitTotal.USD.toFixed(2)}`
           : "loading..."}
       </React.Fragment>
@@ -135,7 +135,7 @@ export const MetaPortfolio = () => {
 
     const ProfitDirection = (
       <React.Fragment>
-        {filteredPortfolioData != null ? (
+        {filteredPortfolioData.hasOwnProperty("profitTotal") ? (
           filteredPortfolioData.profitTotal.USD > 0 ? (
             <ArrowDropUp />
           ) : (
