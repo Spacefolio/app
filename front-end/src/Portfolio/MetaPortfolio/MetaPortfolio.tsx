@@ -135,7 +135,7 @@ export const MetaPortfolio = () => {
 
     const ProfitDirection = (
       <React.Fragment>
-        {filteredPortfolioData.portfolioTotal != null ? (
+        {filteredPortfolioData.profitTotal != null ? (
           filteredPortfolioData.profitTotal.USD > 0 ? (
             <ArrowDropUp />
           ) : (
