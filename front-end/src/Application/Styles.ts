@@ -15,6 +15,7 @@ interface ApplicationProps {
 export const ApplicationContainer = styled.div<ApplicationProps>`
   display: flex;
   flex-direction: column;
+  position: relative;
   align-items: center;
   width: ${(props) => {
     if (props.isSidebarCollapsed) {
