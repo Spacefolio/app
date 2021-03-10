@@ -5,13 +5,13 @@ import { history } from "../_helpers";
 import { alertActions } from "../_actions";
 import { PrivateRoute } from "../_components";
 import { Application } from "../Application";
-import { LoginPage, RegisterPage } from "../RegisterPage";
 import { Alert } from "../_components";
 import "typeface-roboto";
 import "./App.scss";
 import { AppContainer } from "./appStyles";
 import "../AlgonexStyles/variables.scss";
 import { CssBaseline } from "@material-ui/core";
+import { GetStarted } from "../RegisterPage/GetStarted";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -29,8 +29,7 @@ export const App = () => {
         <Alert />
         <Router history={history}>
           <Switch>
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/register" component={RegisterPage} />
+            <Route exact path="/login" component={GetStarted} />
             <PrivateRoute path="/" component={Application} />
             <Redirect from="*" to="" />
           </Switch>

@@ -2,7 +2,7 @@ import { userConstants } from "../_constants";
 import { userService } from "../_services";
 import { alertActions, portfolioActions } from ".";
 import { history } from "../_helpers";
-import { INewUser, IUser } from "../../../types";
+import { ILoginRequest, INewUser, IUser } from "../../../types";
 import { Redirect } from "react-router";
 
 export const userActions = {
@@ -13,11 +13,11 @@ export const userActions = {
   // delete: _delete
 };
 
-function login(username: string, password: string) {
+function login(user: ILoginRequest) {
   return (dispatch: any) => {
-    dispatch(request(username));
+    dispatch(request(user.email));
 
-    userService.login(username, password).then(
+    userService.login(user).then(
       (user) => {
         dispatch(success(user));
         dispatch(portfolioActions.sync());
@@ -30,8 +30,8 @@ function login(username: string, password: string) {
     );
   };
 
-  function request(username: string) {
-    return { type: userConstants.LOGIN_REQUEST, username };
+  function request(email: string) {
+    return { type: userConstants.LOGIN_REQUEST, email };
   }
   function success(user: any) {
     return { type: userConstants.LOGIN_SUCCESS, user };

@@ -1,103 +1,103 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import "./LoginPage";
+// import React from "react";
+// import { useState, useEffect } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { userActions } from "../_actions";
+// import { BigWideButton, FlexCard } from "../AlgonexStyles";
+// import { IRootState } from "../_reducers";
+// import {
+//   Avatar,
+//   Box,
+//   Button,
+//   Checkbox,
+//   Container,
+//   CssBaseline,
+//   FormControlLabel,
+//   Grid,
+//   Link,
+//   makeStyles,
+//   TextField,
+//   Typography,
+// } from "@material-ui/core";
+// import { LockOutlined } from "@material-ui/icons";
+// import { FormWrapper } from "./RegistrationStyles";
 
-import { userActions } from "../_actions";
-import { BigWideButton, FlexCard } from "../AlgonexStyles";
-import { IRootState } from "../_reducers";
-import {
-  Avatar,
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  CssBaseline,
-  FormControlLabel,
-  Grid,
-  Link,
-  makeStyles,
-  TextField,
-  Typography,
-} from "@material-ui/core";
-import { LockOutlined } from "@material-ui/icons";
-import { FormWrapper } from "./RegistrationStyles";
+// export const LoginPage = () => {
+//   const [email, setEmail] = useState("");
 
-export const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+//   const [password, setPassword] = useState("");
 
-  const loggingIn = useSelector(
-    (state: IRootState) => state.authentication.loggedIn
-  );
-  const dispatch = useDispatch();
+//   const [submitted, setSubmitted] = useState(false);
 
-  const { login } = userActions;
+//   const loggingIn = useSelector(
+//     (state: IRootState) => state.authentication.loggedIn
+//   );
+//   const dispatch = useDispatch();
 
-  function handleSubmit(e: any) {
-    e.preventDefault();
-    setSubmitted(true);
-    if (email && password) {
-      dispatch(login(email, password));
-    }
-  }
+//   const { login } = userActions;
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <FormWrapper>
-        <Avatar>
-          <LockOutlined />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={dispatch(login(email, password))}
-            onChange={(e: any) => setEmail(e.target.value)}
-          />
-          <TextField
-            variant="outlined"
-            required
-            fullWidth
-            margin="normal"
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e: any) => setPassword(e.target.value)}
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <BigWideButton type="submit">Sign In</BigWideButton>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/register" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </FormWrapper>
-    </Container>
-  );
-};
+//   function handleSubmit(e: any) {
+//     e.preventDefault();
+//     setSubmitted(true);
+//     if (email && password) {
+//       dispatch(login(email, password));
+//     }
+//   }
+
+//   return (
+//     <Container component="main" maxWidth="xs">
+//       <FormWrapper>
+//         <Avatar>
+//           <LockOutlined />
+//         </Avatar>
+//         <Typography component="h1" variant="h5">
+//           Sign in
+//         </Typography>
+//         <form onSubmit={handleSubmit}>
+//           <TextField
+//             variant="outlined"
+//             margin="normal"
+//             required
+//             fullWidth
+//             id="email"
+//             label="Email"
+//             name="email"
+//             autoComplete="email"
+//             autoFocus
+//             value={email}
+//             onChange={(e: any) => setEmail(e.target.value)}
+//           />
+//           <TextField
+//             variant="outlined"
+//             required
+//             fullWidth
+//             margin="normal"
+//             name="password"
+//             label="Password"
+//             type="password"
+//             id="password"
+//             autoComplete="current-password"
+//             value={password}
+//             onChange={(e: any) => setPassword(e.target.value)}
+//           />
+//           <FormControlLabel
+//             control={<Checkbox value="remember" color="primary" />}
+//             label="Remember me"
+//           />
+//           <BigWideButton type="submit">Sign In</BigWideButton>
+//           <Grid container>
+//             <Grid item xs>
+//               <Link href="#" variant="body2">
+//                 Forgot password?
+//               </Link>
+//             </Grid>
+//             <Grid item>
+//               <Link href="/register" variant="body2">
+//                 {"Don't have an account? Sign Up"}
+//               </Link>
+//             </Grid>
+//           </Grid>
+//         </form>
+//       </FormWrapper>
+//     </Container>
+//   );
+// };
