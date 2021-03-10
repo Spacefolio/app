@@ -45,15 +45,21 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
         setValue(val);
       }}
     >
-      <StyledTab onClick={() => setComponent(<Charts />)} label="Charts"></StyledTab>
+      <StyledTab
+        onClick={() => setComponent(<Charts />)}
+        label="Charts"
+      ></StyledTab>
       <Divider orientation="vertical" flexItem />
-      <StyledTab onClick={() => setComponent(<Holdings />)} label="Holdings"></StyledTab>
+      <StyledTab
+        onClick={() => setComponent(<Holdings />)}
+        label="Holdings"
+      ></StyledTab>
       <Divider orientation="vertical" flexItem />
       <StyledTab
         onClick={() => setComponent(<Transactions />)}
         label="Transactions"
       ></StyledTab>
- <Divider orientation="vertical" flexItem />
+      <Divider orientation="vertical" flexItem />
       <StyledTab
         onClick={() => setComponent(<OpenOrders />)}
         label="Open Orders"

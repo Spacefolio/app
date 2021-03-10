@@ -68,7 +68,7 @@ export const MetaPortfolio = () => {
 
     const ref: MutableRefObject<undefined> = useRef();
 
-    const CurrentPortfolio = (
+    const CurrentPortfolio = () => (
       <PortfolioName
         ref={ref}
         onClick={() => setPortfolioSelectorVisible(!portfolioSelectorVisible)}
@@ -90,7 +90,7 @@ export const MetaPortfolio = () => {
       </PortfolioName>
     );
 
-    const PortfolioValue = (
+    const PortfolioValue = () => (
       <React.Fragment>
         {filteredPortfolioData.portfolioTotal != null ? (
           <InlineDiv>
@@ -107,7 +107,7 @@ export const MetaPortfolio = () => {
       </React.Fragment>
     );
 
-    const PortfolioDate = (
+    const PortfolioDate = () => (
       <React.Fragment>
         {filteredPortfolioData != null ? (
           <div id={"PDID"}>{chartDate ? "" : ""}</div>
@@ -117,7 +117,7 @@ export const MetaPortfolio = () => {
       </React.Fragment>
     );
 
-    const ProfitPercentage = (
+    const ProfitPercentage = () => (
       <React.Fragment>
         {filteredPortfolioData.profitPercentage != null
           ? `(${filteredPortfolioData.profitPercentage.toFixed(2)}%)`
@@ -125,7 +125,7 @@ export const MetaPortfolio = () => {
       </React.Fragment>
     );
 
-    const ProfitTotal = (
+    const ProfitTotal = () => (
       <React.Fragment>
         {filteredPortfolioData.profitTotal != null
           ? `$${filteredPortfolioData.profitTotal.USD.toFixed(2)}`
@@ -133,7 +133,7 @@ export const MetaPortfolio = () => {
       </React.Fragment>
     );
 
-    const ProfitDirection = (
+    const ProfitDirection = () => (
       <React.Fragment>
         {filteredPortfolioData.profitTotal != null ? (
           filteredPortfolioData.profitTotal.USD > 0 ? (
@@ -148,9 +148,9 @@ export const MetaPortfolio = () => {
     );
 
     return (
-      <PortfolioValueWrapper>
+      <React.Fragment>
         {filteredPortfolioData != null ? (
-          <React.Fragment>
+          <PortfolioValueWrapper>
             {/* <PortfolioValueColumn style={{ alignItems: "start" }}>
           {CurrentPortfolio}
           {SyncButtonSection}
@@ -158,8 +158,8 @@ export const MetaPortfolio = () => {
             <PortfolioValueColumn>
               <InlineDiv>
                 <Typography variant={"h4"}>
-                  {PortfolioValue}
-                  {PortfolioDate}
+                  {PortfolioValue()}
+                  {PortfolioDate()}
                   {/* {RefreshButton} */}
                 </Typography>
               </InlineDiv>
@@ -170,14 +170,14 @@ export const MetaPortfolio = () => {
                   filteredPortfolioData && filteredPortfolioData.profitTotal.USD
                 }
               >
-                {ProfitDirection} {ProfitTotal} {ProfitPercentage}
+                {ProfitDirection()} {ProfitTotal()} {ProfitPercentage()}
               </PortfolioProfitSection>
             </PortfolioValueColumn>
-          </React.Fragment>
+          </PortfolioValueWrapper>
         ) : (
           "loading..."
         )}
-      </PortfolioValueWrapper>
+      </React.Fragment>
     );
   };
 
