@@ -53,26 +53,30 @@ async function get(userId: string, exchangeId: string) {
 		});
 }
 
-async function getMetaportfolioChart(userId: string, timespan: timespan) {
+async function getMetaportfolioChart(userId: string, timeframe: timespan) {
 	var user = await userService.getById(userId);
 	if (!user) throw 'user not found';
 
 	let timeslices: ITimeslices = {};
 
 	for (let exchangeId of user.linkedExchanges) {
-		const exchangeDocument = await exchangeService.getById(exchangeId);
+		const chartData = await getPortfolioChart(userId, exchangeId, timeframe);
 
-		Object.entries(exchangeDocument.timeslices).forEach(([timestamp, timeslice]: [string, ITimeslice]) => {
-			if (!timeslices[timeslice.start]) {
-				timeslices[timeslice.start] = timeslice;
-			} else {
-				timeslices[timeslice.start].value += timeslice.value;
+		for (let i = 0; i < chartData.length; i++)
+		{
+			if (!timeslices[chartData[i]])
+			{
+				timeslices[chartData[i].T] = chartData[i].USD;
 			}
-		});
+			else
+			{
+				timeslices[chartData[i].T] += chartData[i].USD;
+			}
+		}
 	}
 
-	return Object.entries(timeslices).map(([timestamp, timeslice]: [string, ITimeslice]) => {
-		return { T: timeslice.start, USD: timeslice.value };
+	return Object.entries(timeslices).map(([timestamp, value]: [string, ITimeslice]) => {
+		return { T: timestamp, USD: value };
 	});
 }
 
@@ -81,6 +85,8 @@ async function getPortfolioChart(userId: string, portfolioId: string, timeframe:
 
 	const { timeslices } = exchange;
 
+	if (!timeslices) { return []; }
+	
 	let timeslicesAll = Object.entries(timeslices).map(([timestamp, timeslice]: [string, ITimeslice]) => {
 		return timeslice;
 	});

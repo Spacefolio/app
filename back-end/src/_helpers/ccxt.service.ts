@@ -33,7 +33,7 @@ function loadExchange(
     apiKey: exchangeAccount.apiInfo.apiKey,
     secret: exchangeAccount.apiInfo.apiSecret,
     password: exchangeAccount.apiInfo.passphrase,
-    timeout: 500,
+    timeout: 2000,
     enableRateLimit: false,
   });
 
@@ -42,7 +42,7 @@ function loadExchange(
 
 async function verifyConnectionToExchange(exchange: Exchange) {
   exchange.checkRequiredCredentials();
-  return await exchange.fetchBalance();
+  //return await exchange.fetchBalance();
 }
 
 async function createTransactions(

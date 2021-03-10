@@ -120,7 +120,7 @@ export const MetaPortfolio = () => {
     const ProfitPercentage = (
       <React.Fragment>
         {filteredPortfolioData != null
-          ? `(${filteredPortfolioData.profitPercentage.USD.toFixed(2)}%)`
+          ? `(${filteredPortfolioData.profitPercentage.toFixed(2)}%)`
           : "loading..."}
       </React.Fragment>
     );
