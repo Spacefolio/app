@@ -10,7 +10,12 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { PortfolioWrapper } from "./Styles";
 import { MetaPortfolio, Transactions, OpenOrders, Holdings, Charts } from ".";
-import { FlexCard, GrowFromZero, Scrollbox } from "../AlgonexStyles";
+import {
+  CustomFlexCard,
+  FlexCard,
+  GrowFromZero,
+  Scrollbox,
+} from "../AlgonexStyles";
 import { Tabs, Tab, Paper, ThemeProvider, Card } from "@material-ui/core";
 import { useState } from "react";
 import { theme } from "../AlgonexStyles/Theme";
@@ -33,11 +38,6 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
       onChange={(e, val) => {
         setValue(val);
       }}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "start",
-      }}
     >
       <Tab onClick={() => setComponent(<Charts />)} label="Charts"></Tab>
 
@@ -59,7 +59,9 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
     <ThemeProvider theme={theme}>
       <PortfolioWrapper>
         <React.Fragment>
-          <Card style={{ position: "sticky", top: 0, flexShrink: 0, height: "100%" }}>{PortfolioTabs}</Card>
+          <CustomFlexCard style={{ maxWidth: "250px", flexShrink: 0 }}>
+            {PortfolioTabs}
+          </CustomFlexCard>
           <div style={{ padding: 0, margin: 0, width: "100%" }}>
             {component}
           </div>

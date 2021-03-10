@@ -50,17 +50,22 @@ export const BaseGrid = styled.div`
   display: grid;
   ${TimingStyle}
 `;
-export const FlexCard = styled.div`
-  width: 100%;
+
+export const CustomFlexCard = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
   background: white;
   border-radius: 0.5rem;
-  padding: 1rem;
   box-shadow: 6px 6px 14px #e3e3e8;
   overflow: hidden;
   ${TimingStyle};
+`;
+
+export const FlexCard = styled(CustomFlexCard)`
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+
 `;
 export const BaseSearchBar = styled.input`
   cursor: pointer
