@@ -1,4 +1,5 @@
 import { createMuiTheme } from "@material-ui/core";
+import { blue } from "@material-ui/core/colors";
 import { COLORS } from ".";
 
 export const theme = createMuiTheme({
@@ -20,13 +21,13 @@ export const theme = createMuiTheme({
     },
     MuiTab: {
       root: {
-        height: "80px",
         textTransform: "none",
+        hover: {
+          background: "blue",
+        },
       },
       wrapper: {
         cursor: "pointer",
-        justifyContent: "start",
-        alignItems: "start",
       },
     },
     MuiButton: {

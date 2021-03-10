@@ -17,7 +17,7 @@ export interface IPortfolioDataView {
   transactionViewItems: ITransactionItemView[];
   openOrders: IOpenOrderItemView[];
   portfolioItems: IPortfolioItemView[];
-  profitPercentage: { USD: number };
+  profitPercentage: number;
   portfolioTotal: { USD: number };
   profitTotal: { USD: number };
 }
@@ -39,7 +39,7 @@ export interface ICachedPortfolioDataView {
   transactions: ITransaction[];
   openOrders: IOpenOrderItemView[];
   portfolioItems: IPortfolioItemView[];
-  profitPercentage: { USD: number };
+  profitPercentage: number;
   portfolioTotal: { USD: number };
   profitTotal: { USD: number };
   holdingHistory: IHoldingSnapshot[];

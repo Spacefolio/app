@@ -8,7 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { PortfolioWrapper } from "./Styles";
+import { PortfolioWrapper, StyledTab, StyledTabs } from "./Styles";
 import { MetaPortfolio, Transactions, OpenOrders, Holdings, Charts } from ".";
 import {
   CustomFlexCard,
@@ -16,7 +16,15 @@ import {
   GrowFromZero,
   Scrollbox,
 } from "../AlgonexStyles";
-import { Tabs, Tab, Paper, ThemeProvider, Card } from "@material-ui/core";
+import {
+  Tabs,
+  Tab,
+  Paper,
+  ThemeProvider,
+  Card,
+  makeStyles,
+  Divider,
+} from "@material-ui/core";
 import { useState } from "react";
 import { theme } from "../AlgonexStyles/Theme";
 
@@ -30,41 +38,35 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
   const [component, setComponent] = useState(<Charts />);
 
   const PortfolioTabs = (
-    <Tabs
-      orientation="vertical"
+    <StyledTabs
       value={value}
       indicatorColor="primary"
-      textColor="primary"
       onChange={(e, val) => {
         setValue(val);
       }}
     >
-      <Tab onClick={() => setComponent(<Charts />)} label="Charts"></Tab>
-
-      <Tab onClick={() => setComponent(<Holdings />)} label="Holdings"></Tab>
-
-      <Tab
+      <StyledTab onClick={() => setComponent(<Charts />)} label="Charts"></StyledTab>
+      <Divider orientation="vertical" flexItem />
+      <StyledTab onClick={() => setComponent(<Holdings />)} label="Holdings"></StyledTab>
+      <Divider orientation="vertical" flexItem />
+      <StyledTab
         onClick={() => setComponent(<Transactions />)}
         label="Transactions"
-      ></Tab>
-
-      <Tab
+      ></StyledTab>
+ <Divider orientation="vertical" flexItem />
+      <StyledTab
         onClick={() => setComponent(<OpenOrders />)}
         label="Open Orders"
-      ></Tab>
-    </Tabs>
+      ></StyledTab>
+    </StyledTabs>
   );
 
   return (
     <ThemeProvider theme={theme}>
       <PortfolioWrapper>
         <React.Fragment>
-          <CustomFlexCard style={{ maxWidth: "250px", flexShrink: 0 }}>
-            {PortfolioTabs}
-          </CustomFlexCard>
-          <div style={{ padding: 0, margin: 0, width: "100%" }}>
-            {component}
-          </div>
+          {PortfolioTabs}
+          {component}
         </React.Fragment>
       </PortfolioWrapper>
     </ThemeProvider>

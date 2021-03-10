@@ -57,7 +57,7 @@ module.exports = {
     new webpack.DefinePlugin({
       API_DOMAIN: JSON.stringify(
         process.env.NODE_ENV == "DEVELOPMENT"
-          ? "http://192.168.1.134:4000"
+          ? process.env.DEV_SERVER_IP || "http://localhost:4000"
           : "/api"
       ),
     }),
