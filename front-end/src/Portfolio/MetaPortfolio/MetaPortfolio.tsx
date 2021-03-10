@@ -92,7 +92,7 @@ export const MetaPortfolio = () => {
 
     const PortfolioValue = (
       <React.Fragment>
-        {filteredPortfolioData != null ? (
+        {filteredPortfolioData.portfolioTotal != null ? (
           <InlineDiv>
             <Typography variant="h5">$</Typography>
             <div id={"PVID"}>
@@ -119,7 +119,7 @@ export const MetaPortfolio = () => {
 
     const ProfitPercentage = (
       <React.Fragment>
-        {filteredPortfolioData.hasOwnProperty("profitPercentage")
+        {filteredPortfolioData.profitPercentage != null
           ? `(${filteredPortfolioData.profitPercentage.toFixed(2)}%)`
           : "loading..."}
       </React.Fragment>
@@ -127,7 +127,7 @@ export const MetaPortfolio = () => {
 
     const ProfitTotal = (
       <React.Fragment>
-        {filteredPortfolioData.hasOwnProperty("profitTotal")
+        {filteredPortfolioData.profitTotal != null
           ? `$${filteredPortfolioData.profitTotal.USD.toFixed(2)}`
           : "loading..."}
       </React.Fragment>
@@ -135,7 +135,7 @@ export const MetaPortfolio = () => {
 
     const ProfitDirection = (
       <React.Fragment>
-        {filteredPortfolioData.hasOwnProperty("profitTotal") ? (
+        {filteredPortfolioData.portfolioTotal != null ? (
           filteredPortfolioData.profitTotal.USD > 0 ? (
             <ArrowDropUp />
           ) : (
@@ -149,28 +149,34 @@ export const MetaPortfolio = () => {
 
     return (
       <PortfolioValueWrapper>
-        {/* <PortfolioValueColumn style={{ alignItems: "start" }}>
+        {filteredPortfolioData != null ? (
+          <React.Fragment>
+            {/* <PortfolioValueColumn style={{ alignItems: "start" }}>
           {CurrentPortfolio}
           {SyncButtonSection}
         </PortfolioValueColumn> */}
-        <PortfolioValueColumn>
-          <InlineDiv>
-            <Typography variant={"h4"}>
-              {PortfolioValue}
-              {PortfolioDate}
-              {/* {RefreshButton} */}
-            </Typography>
-          </InlineDiv>
-        </PortfolioValueColumn>
-        <PortfolioValueColumn>
-          <PortfolioProfitSection
-            value={
-              filteredPortfolioData && filteredPortfolioData.profitTotal.USD
-            }
-          >
-            {ProfitDirection} {ProfitTotal} {ProfitPercentage}
-          </PortfolioProfitSection>
-        </PortfolioValueColumn>
+            <PortfolioValueColumn>
+              <InlineDiv>
+                <Typography variant={"h4"}>
+                  {PortfolioValue}
+                  {PortfolioDate}
+                  {/* {RefreshButton} */}
+                </Typography>
+              </InlineDiv>
+            </PortfolioValueColumn>
+            <PortfolioValueColumn>
+              <PortfolioProfitSection
+                value={
+                  filteredPortfolioData && filteredPortfolioData.profitTotal.USD
+                }
+              >
+                {ProfitDirection} {ProfitTotal} {ProfitPercentage}
+              </PortfolioProfitSection>
+            </PortfolioValueColumn>
+          </React.Fragment>
+        ) : (
+          "loading..."
+        )}
       </PortfolioValueWrapper>
     );
   };
