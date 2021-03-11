@@ -64,7 +64,7 @@ async function getMetaportfolioChart(userId: string, timeframe: timespan) {
 
 		for (let i = 0; i < chartData.length; i++)
 		{
-			if (!timeslices[chartData[i]])
+			if (!timeslices[chartData[i].T])
 			{
 				timeslices[chartData[i].T] = chartData[i].USD;
 			}
@@ -86,7 +86,7 @@ async function getPortfolioChart(userId: string, portfolioId: string, timeframe:
 	const { timeslices } = exchange;
 
 	if (!timeslices) { return []; }
-	
+
 	let timeslicesAll = Object.entries(timeslices).map(([timestamp, timeslice]: [string, ITimeslice]) => {
 		return timeslice;
 	});
@@ -130,9 +130,10 @@ async function getPortfolioChart(userId: string, portfolioId: string, timeframe:
 	let span: number = 0;
 
 	if (timeframe == timespan.W1) {
-		if (timeslicesAll.length < 8) { span = timeslicesAll.length }
-    span = 7;
+		span = 7;
 		pieces = 4;
+		if (timeslicesAll.length < 8) { span = timeslicesAll.length }
+    
 	} else if (timeframe == timespan.H24) {
     if (timeslicesAll.length < 1)
     {
@@ -142,7 +143,7 @@ async function getPortfolioChart(userId: string, portfolioId: string, timeframe:
       for (let i = 0; i < 24; i++)
       {
         hour -= 3600000;
-        hourlyData.push({ T: hour, USD: 0 });
+        hourlyData[i] = ({ T: hour, USD: 0 });
       }
       return hourlyData;
     }
@@ -156,6 +157,11 @@ async function getPortfolioChart(userId: string, portfolioId: string, timeframe:
 
 	for (let i = timeslicesAll.length - span; i < timeslicesAll.length; i++) {
 		slicesToSplit.push(timeslicesAll[i]);
+	}
+
+	if (slicesToSplit.length < 1)
+	{
+		return [];
 	}
 
 	let slices = await splitSlices(slicesToSplit, pieces, previousSlice);

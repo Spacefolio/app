@@ -554,7 +554,7 @@ async function syncAllExchangesData(userId: string) {
 		portfolioData.push(portfolioDataItem);
 	}
 
-	return portfolioData;
+	return portfolioData[0];
 }
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {
