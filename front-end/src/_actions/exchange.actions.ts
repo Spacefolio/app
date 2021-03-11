@@ -120,8 +120,8 @@ function _delete(id: string, filterId: string) {
     exchangeService.delete(id).then((res) => {
       dispatch(success(id));
       if (id == filterId) {
-        dispatch(portfolioActions.FilterPortfolio(""));
-        dispatch(portfolioActions.refresh());
+        dispatch(portfolioActions.FilterPortfolio("ALL"));
+        dispatch(portfolioActions.refresh("ALL"));
       }
     });
     dispatch(alertActions.success("Deleted")).catch((error: any) =>

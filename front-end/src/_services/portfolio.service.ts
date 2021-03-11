@@ -31,6 +31,7 @@ async function syncPortfolio() {
       { headers: requestOptions }
     )
     .then((response) => {
+      //write the synced portfolio data into the users browser to cache it
       localStorage.setItem(
         "Portfolio",
         JSON.stringify(
@@ -46,17 +47,20 @@ async function syncPortfolio() {
     });
 }
 
+//refresh a specific portfolio with the current price data
 async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
   const Authorization = authHeader().Authorization;
   const requestOptions = {
     Authorization: Authorization,
   };
 
+  //check the browser for any cached portfolio data
   let CachedPortfolios: ICachedPortfolioDataView[] = await JSON.parse(
     localStorage.getItem("Portfolio")
   );
 
   if (CachedPortfolios) {
+    //check if the specific portfolio the user is trying to refresh is already loaded in the cache
     let CachedPortfolio: ICachedPortfolioDataView = CachedPortfolios.filter(
       (portfolioItem: ICachedPortfolioDataView) => {
         return portfolioItem.id == portfolioFilterId;
@@ -68,16 +72,21 @@ async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
       Date.now() - CachedPortfolio.lastRefresh < 30000 &&
       !manual
     ) {
+      //if the specific portfolio was housed in the cache and its been less than 30 seconds since last refresh then serve the cached data
       return CachedPortfolio;
     } else {
+      //refresh portfolio from server
       return await axios
         .get<IPortfolioDataView>(
-          `${API_DOMAIN}/portfolios/${portfolioFilterId}`,
+          `${API_DOMAIN}/portfolios${
+            portfolioFilterId != "ALL" ? "/" + portfolioFilterId : ""
+          }`,
           {
             headers: requestOptions,
           }
         )
         .then((response) => {
+          //append the portfolio that was just fetched into the browser cache
           localStorage.setItem(
             "Portfolio",
             JSON.stringify(
@@ -97,10 +106,16 @@ async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
         });
     }
   } else {
+    //if there were no portfolios in the cache at all then fetch the one requested and return it
     return await axios
-      .get(`${API_DOMAIN}/portfolios/${portfolioFilterId}`, {
-        headers: requestOptions,
-      })
+      .get(
+        `${API_DOMAIN}/portfolios${
+          portfolioFilterId != "ALL" ? "/" + portfolioFilterId : ""
+        }`,
+        {
+          headers: requestOptions,
+        }
+      )
       .then((response) => {
         return response.data;
       })
@@ -267,6 +282,5 @@ async function getPortfolioChartData(
 }
 
 function handleErr(err: any) {
-  console.log(JSON.parse(err.message));
-  return err.message;
+  throw err;
 }

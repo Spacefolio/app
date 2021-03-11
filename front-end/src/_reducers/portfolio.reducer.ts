@@ -34,7 +34,7 @@ if (CachedPortfolios) {
 
   // portfolioState = JSON.parse(localStorage.getItem("portfolioConfig"));
 
-  portfolioId = "";
+  portfolioId = "ALL";
 
   CachedFilteredPortfolio = CachedPortfolios.filter(
     (item: IPortfolioDataView) => item.id == portfolioId
@@ -49,7 +49,7 @@ export function portfolio(
     filteredPortfolioData: CachedFilteredPortfolio
       ? CachedFilteredPortfolio
       : null,
-    filterId: portfolioId ? portfolioId : "",
+    filterId: portfolioId ? portfolioId : "ALL",
   },
   action: IPortfolioAction
 ) {
@@ -57,7 +57,6 @@ export function portfolio(
     case portfolioConstants.SYNC_REQUEST:
       return {
         ...state,
-        // filterId: '',
         syncingPortfolio: true,
       };
     case portfolioConstants.SYNC_SUCCESS:

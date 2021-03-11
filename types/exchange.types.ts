@@ -19,9 +19,15 @@ export interface IExchangeAccountView {
 
 export interface IExchangeAccountRequest {
   apiInfo: {
-    apiKey: string;
-    apiSecret: string;
-    passphrase: string;
+    apiKey?: string;
+    apiSecret?: string;
+    passphrase?: string;
+    uid?: string;
+    login?: string;
+    twofa?: string;
+    privateKey?: string;
+    walletAddress?: string;
+    token?: string;
   };
   name: string;
   nickname?: string;

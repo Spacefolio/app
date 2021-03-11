@@ -18,7 +18,7 @@ function sync() {
       .syncPortfolio()
       .then((res: any) => {
         dispatch(success(res));
-        dispatch(refresh());
+        dispatch(refresh("ALL"));
         dispatch(alertActions.success("Sync Complete"));
       })
       .catch((error) => {
@@ -38,7 +38,7 @@ function sync() {
   }
 }
 
-function refresh(portfolioId: string = "", manual: boolean = false) {
+function refresh(portfolioId: string, manual: boolean = false) {
   return (dispatch: any) => {
     dispatch(request());
     portfolioService

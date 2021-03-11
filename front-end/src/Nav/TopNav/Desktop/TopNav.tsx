@@ -131,7 +131,9 @@ export const DesktopTopNav = () => {
             />
             refresh
             <SyncIcon
-              onClick={() => dispatch(portfolioActions.refresh())}
+              onClick={() =>
+                dispatch(portfolioActions.refresh(filteredPortfolioData.id))
+              }
               isSyncing={isRefreshing}
             />
           </div>
