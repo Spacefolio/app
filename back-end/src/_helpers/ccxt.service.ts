@@ -73,7 +73,7 @@ async function createOrders(
   return orders;
 }
 
-const supportedExchanges = [
+const supportedExchanges: IIntegrationInfo[] = [
   {
       "id": "coinbase",
       "name": "Coinbase",
