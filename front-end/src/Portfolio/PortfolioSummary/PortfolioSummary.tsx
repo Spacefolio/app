@@ -5,7 +5,7 @@ import { IPortfolioItem } from "../../../../back-end/src/portfolios/portfolio.mo
 import { IPortfolioDataView } from "../../../../types";
 import { theme } from "../../AlgonexStyles/Theme";
 import { IRootState } from "../../_reducers";
-import { PortfolioSummaryItem } from "./PortfolioSummary copy";
+import { PortfolioSummaryItem } from "./PortfolioSummaryItem";
 import { SummaryWrapper } from "./Styles";
 
 export const PortfolioSummary = () => {

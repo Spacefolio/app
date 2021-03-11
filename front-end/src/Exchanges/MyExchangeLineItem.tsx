@@ -36,8 +36,6 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  const [logoUrl, setLogoUrl] = useState("");
-
   const [editExchangeVisible, setEditExchangeVisible] = useState(false);
 
   const portfolioFilterID = useSelector(
@@ -110,7 +108,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
         onClick={() => dispatch(portfolioActions.FilterPortfolio(data.id))}
       >
         <ListItemAvatar>
-          <Avatar src={logoUrl} />
+          <Avatar src={data.logoUrl} />
         </ListItemAvatar>
         <MyExchangeNameWrapper>{data.nickname}</MyExchangeNameWrapper>
 

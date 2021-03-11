@@ -13,7 +13,7 @@ export interface IPortfolioDataView {
     apiSecret: string;
     passphrase: string;
   };
-  logoUrl: string;
+  logoUrl?: string;
   transactionViewItems: ITransactionItemView[];
   openOrders: IOpenOrderItemView[];
   portfolioItems: IPortfolioItemView[];
@@ -33,7 +33,7 @@ export interface ICachedPortfolioDataView {
     apiSecret: string;
     passphrase: string;
   };
-  logoUrl: string;
+  logoUrl?: string;
   orders: IOpenOrderItemView[];
   transactionViewItems: ITransactionItemView[];
   transactions: ITransaction[];

@@ -55,6 +55,7 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
       uid,
       walletAddress,
     },
+    logoUrl: integrationInfo.logoUrl,
     name,
     nickname,
   });
@@ -73,6 +74,7 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
         walletAddress,
       },
       name,
+      logoUrl: integrationInfo.logoUrl,
       nickname,
     });
   }, [integrationId, apiKey, apiSecret, passphrase, name, nickname]);
