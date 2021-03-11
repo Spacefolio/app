@@ -79,7 +79,7 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
         {/* <div>
           <ListMyExchanges enableEditing={false} />
         </div> */}
-        {/* <CustomFlexCard>{PortfolioTabs}</CustomFlexCard> */}
+        <CustomFlexCard>{PortfolioTabs}</CustomFlexCard>
         <Switch>
           <Route exact path={`${path}`}>
             <PortfolioSummary />

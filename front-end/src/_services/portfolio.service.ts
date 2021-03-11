@@ -261,7 +261,7 @@ const data: IPortfolioLineChartItem[] = [
 
 async function getPortfolioChartData(
   timeframe: timeframe,
-  exchangeID?: string
+  portfolioFilterId?: string
 ) {
   const Authorization = authHeader().Authorization;
   const requestOptions = {
@@ -270,7 +270,9 @@ async function getPortfolioChartData(
 
   return await axios
     .get(
-      `${API_DOMAIN}/portfolios/${exchangeID ? exchangeID + "/" : ""}chart`,
+      `${API_DOMAIN}/portfolios/${
+        portfolioFilterId != "ALL" ? "/" + portfolioFilterId + "/" : ""
+      }chart`,
       { headers: requestOptions, params: { timeframe: timeframe } }
     )
     .then((response) => {
