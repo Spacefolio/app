@@ -23,12 +23,20 @@ async function getAll() {
       return response.data;
     })
     .catch((err) => {
-      throw err
+      throw err;
     });
 }
 async function getInfo() {
+  const Authorization = authHeader().Authorization;
+  const requestOptions = {
+    Authorization: Authorization,
+    "Content-Type": "application/json",
+  };
+
   return await axios
-    .get(`${API_DOMAIN}/exchanges/available-exchanges`)
+    .get(`${API_DOMAIN}/exchanges/available-exchanges`, {
+      headers: requestOptions,
+    })
     .then((response) => {
       return response.data;
     })
@@ -72,7 +80,7 @@ async function update(id: string, data: IExchangeAccountRequest) {
       return response.data;
     })
     .catch((err) => {
-      throw err
+      throw err;
     });
 }
 
@@ -84,7 +92,7 @@ async function _delete(id: string) {
     Authorization: Authorization,
     "Content-Type": "application/json",
   };
-  
+
   return await axios
     .delete(`${API_DOMAIN}/exchanges/${id}`, {
       headers: requestOptions,
@@ -93,7 +101,7 @@ async function _delete(id: string) {
       return response;
     })
     .catch((err) => {
-      throw err
+      throw err;
     });
 }
 

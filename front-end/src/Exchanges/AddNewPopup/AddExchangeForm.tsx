@@ -29,6 +29,16 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
 
   const [passphrase, setPassphrase] = useState("");
 
+  const [privateKey, setPrivateKey] = useState("");
+
+  const [login, setLogin] = useState("");
+
+  const [token, setToken] = useState("");
+
+  const [uid, setUid] = useState("");
+
+  const [walletAddress, setWalletAddress] = useState("");
+
   const [name, setName] = useState(integrationInfo.name);
 
   const [nickname, setNickname] = useState(integrationInfo.name);
@@ -101,45 +111,118 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
           }
         />
       </ExchangeFormRow>
-      <ExchangeFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="apikey"
-          fullWidth
-          label="API Key"
-          value={apiKey}
-          type="text"
-          onChange={(e) => setApiKey(e.target.value)}
-          helperText={submitted && !apiKey && "First Name is Required."}
-        />
-      </ExchangeFormRow>
-      <ExchangeFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="apisecret"
-          fullWidth
-          label="API Seccret"
-          type="text"
-          onChange={(e) => setApiSecret(e.target.value)}
-          helperText={submitted && !apiSecret && "First Name is Required."}
-          value={apiSecret}
-        />
-      </ExchangeFormRow>
-      <ExchangeFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="passphrase"
-          fullWidth
-          label="Passphrase"
-          value={passphrase}
-          type="text"
-          onChange={(e) => setPassphrase(e.target.value)}
-          helperText={submitted && !passphrase && "First Name is Required."}
-        />
-      </ExchangeFormRow>
+      {integrationInfo.requiredCredentials.apiKey && (
+        <ExchangeFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="apikey"
+            fullWidth
+            label="API Key"
+            value={apiKey}
+            type="text"
+            onChange={(e) => setApiKey(e.target.value)}
+          />
+        </ExchangeFormRow>
+      )}
+      {integrationInfo.requiredCredentials.secret && (
+        <ExchangeFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="apisecret"
+            fullWidth
+            label="API Seccret"
+            type="text"
+            onChange={(e) => setApiSecret(e.target.value)}
+            value={apiSecret}
+          />
+        </ExchangeFormRow>
+      )}
+      {integrationInfo.requiredCredentials.password && (
+        <ExchangeFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="passphrase"
+            fullWidth
+            label="Passphrase"
+            value={passphrase}
+            type="text"
+            onChange={(e) => setPassphrase(e.target.value)}
+          />
+        </ExchangeFormRow>
+      )}
+      {integrationInfo.requiredCredentials.privateKey && (
+        <ExchangeFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="privateKey"
+            fullWidth
+            label="Private Key"
+            value={privateKey}
+            type="text"
+            onChange={(e) => setPrivateKey(e.target.value)}
+          />
+        </ExchangeFormRow>
+      )}
+      {integrationInfo.requiredCredentials.login && (
+        <ExchangeFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="login"
+            fullWidth
+            label="Login"
+            value={login}
+            type="text"
+            onChange={(e) => setLogin(e.target.value)}
+          />
+        </ExchangeFormRow>
+      )}
+      {integrationInfo.requiredCredentials.token && (
+        <ExchangeFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="token"
+            fullWidth
+            label="Token"
+            value={token}
+            type="text"
+            onChange={(e) => setToken(e.target.value)}
+          />
+        </ExchangeFormRow>
+      )}
+      {integrationInfo.requiredCredentials.uid && (
+        <ExchangeFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="uid"
+            fullWidth
+            label="User ID"
+            value={uid}
+            type="text"
+            onChange={(e) => setUid(e.target.value)}
+          />
+        </ExchangeFormRow>
+      )}
+      {integrationInfo.requiredCredentials.walletAddress && (
+        <ExchangeFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="walletAddress"
+            fullWidth
+            label="WalletAddress"
+            value={walletAddress}
+            type="text"
+            onChange={(e) => setWalletAddress(e.target.value)}
+          />
+        </ExchangeFormRow>
+      )}
     </form>
   );
 };
