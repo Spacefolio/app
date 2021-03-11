@@ -30,6 +30,7 @@ import {
 	saveTransactionViewItems,
 } from '../transactions/transactionView';
 import { fiat } from '../coindata/historical.service';
+import { coindataService } from '../coindata/coindata.service';
 
 export const exchangeService = {
 	getAll,
@@ -434,12 +435,14 @@ async function createPortfolioItems(
 			amountBought = last.totalAmountBought;
 		}
 
+		let logoUrl = await getLogo(balances[i].symbol);
+
 		const item: IPortfolioItem = {
 			asset: {
 				assetId: balances[i].symbol,
 				symbol: balances[i].symbol,
 				name: balances[i].symbol,
-				logoUrl: 'https://seeklogo.com/images/B/bitcoin-logo-DDAEEA68FA-seeklogo.com.png',
+				logoUrl,
 			},
 			balance: balances[i].balance,
 			averageBuyPrice: { USD: averageBuyPrice },
@@ -773,7 +776,7 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
   const formattedOpenOrders: IOpenOrderItemView[] = await Promise.all(
     exchangeAccount.openOrders.map(async (item) => {
       const symbols = item.symbol.split('/');
-      const logoUrl = await getLogo(symbols[0]);
+      let logoUrl = await getLogo(symbols[0]);
       return {
         id: item.id,
         exchangeName: exchangeAccount.name,
@@ -806,5 +809,15 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 }
 
 async function getLogo (symbol: string) {
-  return `https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579`;
+	symbol = symbol.toLowerCase();
+	let coin = await coindataService.getCoinMarketData(symbol);
+
+	if (coin) {
+		return coin.image;
+	}
+	else
+	{
+		return `https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579`;
+	}
+  
 }
