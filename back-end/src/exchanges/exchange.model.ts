@@ -111,6 +111,7 @@ const exchangeAccountSchema = new mongoose.Schema({
   transactionViewItems: [transactionItemViewSchema],
   timeslices: { type: Object },
   lastSyncedDate: { type: Date, default: 0 },
+  logoUrl: { type: String, required: false }
 });
 
 export interface IExchangeAccount {

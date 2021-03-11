@@ -32,6 +32,7 @@ export interface IExchangeAccountRequest {
   name: string;
   nickname?: string;
   exchangeType: exchangeType;
+  logoUrl?: string;
 }
 
 export type exchangeType =
