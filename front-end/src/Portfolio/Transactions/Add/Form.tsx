@@ -16,8 +16,7 @@ export const AddTransactionForm: React.FC<IAddTransactionFormProps> = ({}) => {
 
   const [submitted, setSubmitted] = useState(false);
 
-  const [integrationId, setExchangeType] = useState("");
-
+  const [integrationId, setExchangeType] = useState(""); 
   const [apiKey, setApiKey] = useState("");
 
   const [apiSecret, setApiSecret] = useState("");
