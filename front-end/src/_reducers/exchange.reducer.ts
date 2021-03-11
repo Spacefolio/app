@@ -6,7 +6,6 @@ import { IRootState } from ".";
 interface IExchangeAction {
   type: string;
   exchanges?: IExchangeAccountView[];
-
   id?: string;
   error?: string;
   exchangeAccount?: any;
@@ -14,7 +13,7 @@ interface IExchangeAction {
 
 export interface IExchangesState {
   exchanges: IExchangeAccountView[];
-  exchangeRef: IIntegrationInfo[];
+  integrationInfo: IIntegrationInfo[];
   addingExchange: boolean;
   addExchangeSuccess: boolean;
 }
@@ -26,7 +25,7 @@ interface IExchangeAccountState extends IExchangeAccountView {
 export function exchanges(
   state: IExchangesState = {
     exchanges: [],
-    exchangeRef: [],
+    integrationInfo: [],
     addingExchange: false,
     addExchangeSuccess: false,
   },

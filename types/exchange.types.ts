@@ -14,7 +14,7 @@ export interface IExchangeAccountView {
     passphrase: string;
   };
   portfolioItems?: [IPortfolioItem];
-  transactions?: [ITransaction]
+  transactions?: [ITransaction];
 }
 
 export interface IExchangeAccountRequest {
@@ -37,7 +37,7 @@ export type exchangeType =
   | "coinbase";
 
 export interface IIntegrationInfo {
-  id: string;
+  id: exchangeType;
   name: string;
   logoUrl: string;
   requiredCredentials: {

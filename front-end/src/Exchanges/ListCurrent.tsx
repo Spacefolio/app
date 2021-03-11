@@ -28,7 +28,7 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
 }) => {
   useEffect(() => {
     dispatch(exchangeActions.getAll());
-    dispatch(exchangeActions.getRef());
+    dispatch(exchangeActions.getIntegrationInfo());
   }, []);
   const loadingExchanges = useSelector((state: any) => state.exchanges.loading);
 

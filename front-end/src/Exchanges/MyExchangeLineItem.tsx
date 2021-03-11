@@ -40,10 +40,6 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
 
   const [editExchangeVisible, setEditExchangeVisible] = useState(false);
 
-  const exchangeRef = useSelector(
-    (state: IRootState) => state.exchanges.exchangeRef
-  );
-
   const portfolioFilterID = useSelector(
     (state: IRootState) => state.portfolio.filterId
   );
@@ -51,16 +47,6 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
-
-  useEffect(() => {
-    const targetRef: IIntegrationInfo = exchangeRef.filter(
-      (refItem: IIntegrationInfo) => {
-        return refItem.id === data.exchangeType;
-      }
-    )[0];
-
-    targetRef ? setLogoUrl(targetRef.logoUrl) : null;
-  }, []);
 
   function handleClose(shouldDelete: boolean) {
     if (shouldDelete) {
