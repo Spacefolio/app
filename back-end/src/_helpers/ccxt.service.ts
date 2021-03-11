@@ -4,6 +4,7 @@ import {
   exchangeType,
   IExchangeAccountRequest,
   IExchangeAccountView,
+  IIntegrationInfo,
 } from "../../../types";
 import {
   ITransaction,
@@ -19,7 +20,7 @@ export const ccxtService = {
   verifyConnectionToExchange,
   createTransactions,
   createOrders,
-  getRequiredCredentials,
+  getAvailableExchanges,
 };
 
 function loadExchange(
@@ -72,10 +73,107 @@ async function createOrders(
   return orders;
 }
 
-function getRequiredCredentials(exchangeType: exchangeType) {
-  const exchangeClass = ccxt[exchangeType];
-  const Exchange = new exchangeClass();
-  return Exchange.requiredCredentials;
+const supportedExchanges = [
+  {
+      "id": "coinbase",
+      "name": "Coinbase",
+      "requiredCredentials": {
+          "apiKey": true,
+          "secret": true,
+          "uid": false,
+          "login": false,
+          "password": false,
+          "twofa": false,
+          "privateKey": false,
+          "walletAddress": false,
+          "token": false
+      },
+      "logoUrl": "https://s2.coinmarketcap.com/static/img/exchanges/64x64/89.png"
+  },
+  {
+      "id": "coinbasepro",
+      "name": "Coinbase Pro",
+      "requiredCredentials": {
+          "apiKey": true,
+          "secret": true,
+          "uid": false,
+          "login": false,
+          "password": true,
+          "twofa": false,
+          "privateKey": false,
+          "walletAddress": false,
+          "token": false
+      },
+      "logoUrl": "https://s2.coinmarketcap.com/static/img/exchanges/64x64/89.png"
+  },
+  {
+      "id": "kucoin",
+      "name": "KuCoin",
+      "requiredCredentials": {
+          "apiKey": true,
+          "secret": true,
+          "uid": false,
+          "login": false,
+          "password": true,
+          "twofa": false,
+          "privateKey": false,
+          "walletAddress": false,
+          "token": false
+      },
+      "logoUrl": "https://s2.coinmarketcap.com/static/img/exchanges/64x64/311.png"
+  },
+  {
+      "id": "binance",
+      "name": "Binance",
+      "requiredCredentials": {
+          "apiKey": true,
+          "secret": true,
+          "uid": false,
+          "login": false,
+          "password": false,
+          "twofa": false,
+          "privateKey": false,
+          "walletAddress": false,
+          "token": false
+      },
+      "logoUrl": "https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png"
+  },
+  {
+      "id": "binanceus",
+      "name": "Binance US",
+      "requiredCredentials": {
+          "apiKey": true,
+          "secret": true,
+          "uid": false,
+          "login": false,
+          "password": false,
+          "twofa": false,
+          "privateKey": false,
+          "walletAddress": false,
+          "token": false
+      },
+      "logoUrl": "https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png"
+  },
+  {
+      "id": "hitbtc",
+      "name": "HitBTC",
+      "requiredCredentials": {
+          "apiKey": true,
+          "secret": true,
+          "uid": false,
+          "login": false,
+          "password": false,
+          "twofa": false,
+          "privateKey": false,
+          "walletAddress": false,
+          "token": false
+      },
+      "logoUrl": "https://s2.coinmarketcap.com/static/img/exchanges/64x64/42.png"
+  }
+];
+
+function getAvailableExchanges() : IIntegrationInfo[] {
+  return supportedExchanges;
 }
 
 function getExchangeRate(baseCurrency: string, quoteCurrency: string): number {

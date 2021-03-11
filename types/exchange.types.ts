@@ -37,7 +37,18 @@ export type exchangeType =
   | "coinbase";
 
 export interface IIntegrationInfo {
-  id: exchangeType;
+  id: string;
   name: string;
   logoUrl: string;
+  requiredCredentials: {
+    apiKey: boolean;
+    secret: boolean;
+    uid: boolean;
+    login: boolean;
+    password: boolean;
+    twofa: boolean;
+    privateKey: boolean;
+    walletAddress: boolean;
+    token: boolean;
+  };
 }

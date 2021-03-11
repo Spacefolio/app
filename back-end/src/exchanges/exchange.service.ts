@@ -37,7 +37,7 @@ export const exchangeService = {
 	create,
 	update,
 	delete: _delete,
-	getRequiredCredentials,
+	getAvailableExchanges,
 	getExchangesData,
 	getExchangeData,
 	syncAllExchangesData,
@@ -488,8 +488,8 @@ async function _delete(userId: string, exchangeId: string) {
 	await user.save();
 }
 
-async function getRequiredCredentials(exchangeType: exchangeType) {
-	return ccxtService.getRequiredCredentials(exchangeType);
+async function getAvailableExchanges() {
+	return ccxtService.getAvailableExchanges();
 }
 
 async function getExchangesData(userId: string) {
