@@ -12,7 +12,7 @@ export const ModalWrapper = styled.div`
 
 export const ModalHeader = styled.div`
   display: flex;
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0;
   align-items: center;
   padding: 1rem;
   width: 100%;

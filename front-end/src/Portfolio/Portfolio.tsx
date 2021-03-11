@@ -14,7 +14,7 @@ import {
   CustomFlexCard,
   FlexCard,
   GrowFromZero,
-  Scrollbox,
+  ScrollBox,
 } from "../AlgonexStyles";
 import {
   Tabs,
@@ -28,7 +28,7 @@ import {
 import { useState } from "react";
 import { theme } from "../AlgonexStyles/Theme";
 import { ListMyExchanges } from "../Exchanges";
-import { PortfolioSummary } from "./PortfolioSummary";
+import { PortfolioSummary } from "./Summary";
 
 interface IPortfolioProps {}
 
@@ -87,9 +87,9 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
           <Route exact path={`${path}/charts`}>
             <Charts />
           </Route>
-          <Route exact path={`${path}/holdings`}>
-            <Holdings />
-          </Route>
+          {/* <Route exact path={`${path}/holdings`}>
+            <Holdings  />
+          </Route> */}
           <Route exact path={`${path}/transactions`}>
             <Transactions />
           </Route>

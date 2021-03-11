@@ -1,1 +1,1 @@
-export * from './Holdings'
+export * from './View/List'

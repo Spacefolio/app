@@ -40,8 +40,8 @@ export const ClickableSvg = styled(BaseSvg)`
   }
   ${TimingStyle}
 `;
-export const Scrollbox = styled.div`
-  overflow-y: auto;
+export const ScrollBox = styled.div`
+  overflow-y: scroll;
   overflow-x: hidden;
   height: 100%;
   width: 100%;
@@ -65,7 +65,6 @@ export const FlexCard = styled(CustomFlexCard)`
   align-items: center;
   justify-content: center;
   padding: 1rem;
-
 `;
 export const BaseSearchBar = styled.input`
   cursor: pointer
@@ -138,4 +137,11 @@ export const AlgonexLogo = styled(Polymer)`
   height: 100%;
   width: 100%;
   fill: ${COLORS.primaryBase} !important;
+`;
+
+export const StyledFormRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
 `;

@@ -45,6 +45,10 @@ export const DesktopTopNav = () => {
     (state: IRootState) => state.portfolio.filteredPortfolioData
   );
 
+  const portfolioData: IPortfolioDataView[] = useSelector(
+    (state: IRootState) => state.portfolio.PortfolioData
+  );
+
   const isSyncing = useSelector(
     (state: any) => state.portfolio.syncingPortfolio
   );
@@ -56,6 +60,17 @@ export const DesktopTopNav = () => {
   const isSidebarCollapsed = useSelector(
     (state: IRootState) => state.applicationView.isSidebarCollapsed
   );
+
+  const [
+    metaPortfolioData,
+    setMetaPortfolioData,
+  ] = useState<IPortfolioDataView>();
+
+  useEffect(() => {
+    setMetaPortfolioData(
+      portfolioData.filter((item: IPortfolioDataView) => item.id == "ALL")[0]
+    );
+  }, [portfolioData]);
 
   const history = useHistory();
 
@@ -121,6 +136,14 @@ export const DesktopTopNav = () => {
         <ArrowIcon direction={!isSidebarCollapsed ? "left" : "right"} />
       </ToggleSidebar>
       <NavFlexSpacer />
+      <div
+        style={{ border: "1px solid black", width: "100px", height: "100%" }}
+      >
+        {metaPortfolioData
+          ? "Total Value: " + metaPortfolioData.portfolioTotal
+          : "Total Holdings: $15,684"}
+      </div>
+      <NavFlexSpacer />
       <InlineDiv>
         {DEV_SERVER == "DEVELOPMENT" && (
           <div>
@@ -138,6 +161,7 @@ export const DesktopTopNav = () => {
             />
           </div>
         )}
+        <NavFlexSpacer />
       </InlineDiv>
       <NavAccountContainer
         ref={container}

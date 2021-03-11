@@ -239,8 +239,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
         }
       };
 
-      d3.select("#PVID").html(d0.USD.toFixed(2));
-      d3.select("#PDID").html(valueDate);
+      // d3.select("#PVID").html(d0.USD.toFixed(2));
+      // d3.select("#PDID").html(valueDate);
     }
 
     function mousemove(event: MouseEvent) {
@@ -260,8 +260,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 
     function mouseover(event: any) {
       focus.style("display", null);
-      setDate(true);
-      setPV(true);
+      // setDate(true);
+      // setPV(true);
     }
 
     function mouseout(event: any) {
@@ -270,8 +270,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
       }
       event.preventDefault();
       focus.style("display", "none");
-      setDate(false);
-      setPV(false);
+      // setDate(false);
+      // setPV(false);
     }
 
     //creates box to listen for mouse inputs

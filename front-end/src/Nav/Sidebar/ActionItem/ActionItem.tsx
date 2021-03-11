@@ -13,7 +13,7 @@ import { useState } from "react";
 import { link } from "fs/promises";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../_reducers";
-import { SvgWrapperButton, Scrollbox, SPACING } from "../../../AlgonexStyles";
+import { SvgWrapperButton, ScrollBox, SPACING } from "../../../AlgonexStyles";
 import { useCheckCurrentLocation } from "../../../Hooks/useCheckCurrentLocation";
 
 interface ISidebarActionItemProps {

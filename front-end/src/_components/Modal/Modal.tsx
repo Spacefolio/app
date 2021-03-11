@@ -11,7 +11,7 @@ import {
 import {
   GrowFromZero,
   RD,
-  Scrollbox,
+  ScrollBox,
   SvgWrapperButton,
 } from "../../AlgonexStyles";
 import { Close } from "@material-ui/icons";
