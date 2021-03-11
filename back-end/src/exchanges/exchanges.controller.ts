@@ -6,12 +6,11 @@ import { exchangeService } from "./exchange.service";
 // routes
 router.post('/', create);
 router.get('/', getAll);
+router.get("/available-exchanges", getAvailableExchanges);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
 router.post('/sync', sync);
-
-router.get("/required-credentials/:exchangeType", getRequiredCredentials);
 
 export { router as exchangesRouter };
 
@@ -51,9 +50,9 @@ function _delete(req: any, res: Response, next: NextFunction) {
     .catch((err) => next(err));
 }
 
-function getRequiredCredentials(req: any, res: Response, next: NextFunction) {
+function getAvailableExchanges(req: any, res: Response, next: NextFunction) {
   exchangeService
-    .getRequiredCredentials(req.params.exchangeType)
+    .getAvailableExchanges()
     .then((requiredCredentials: object) => res.json(requiredCredentials))
     .catch((err) => next(err));
 }
