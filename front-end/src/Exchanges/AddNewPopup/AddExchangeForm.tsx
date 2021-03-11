@@ -17,7 +17,6 @@ interface ExchangeFormProps {
 export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
   integrationInfo,
 }) => {
-
   const dispatch = useDispatch();
 
   const [submitted, setSubmitted] = useState(false);
@@ -76,7 +75,7 @@ export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} autoComplete="off" id='add-exchange-form'>
+    <form onSubmit={handleSubmit} autoComplete="off" id="add-exchange-form">
       <ExchangeFormRow
         style={{
           display: "flex",

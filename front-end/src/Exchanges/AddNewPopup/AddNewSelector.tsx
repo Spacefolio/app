@@ -25,14 +25,14 @@ export const SelectNewIntegration: React.FC<ISelectIntegrationProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  const exchangeRef = useSelector((state: any) => state.exchanges.exchangeRef);
+  const integrationInfo = useSelector((state: any) => state.exchanges.exchangeRef);
 
   const [searchFilter, setSearchFilter] = useState(filter && filter);
 
   const [selectedIntegration, setSelectedIntegration] = useState(selectedId);
 
   useEffect(() => {
-    dispatch(exchangeActions.getRef());
+    dispatch(exchangeActions.getIntegrationInfo());
   }, []);
 
   const handleClick = (item: IIntegrationInfo) => {
@@ -62,8 +62,8 @@ export const SelectNewIntegration: React.FC<ISelectIntegrationProps> = ({
       )}
       <Scrollbox>
      
-          {exchangeRef &&
-            exchangeRef
+          {integrationInfo &&
+            integrationInfo
               .filter((item: IIntegrationInfo) => {
                 if (searchFilter) {
                   return item.name

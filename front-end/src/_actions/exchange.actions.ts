@@ -11,7 +11,7 @@ import { prototype } from "react-modal";
 export const exchangeActions = {
   addNew,
   getAll,
-  getRef,
+  getIntegrationInfo,
   update,
   delete: _delete,
 };
@@ -91,7 +91,7 @@ function getAll() {
   }
 }
 
-function getRef() {
+function getIntegrationInfo() {
   return (dispatch: any) => {
     dispatch(request());
 

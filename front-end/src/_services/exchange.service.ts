@@ -28,9 +28,9 @@ async function getAll() {
 }
 async function getInfo() {
   return await axios
-    .get("http://s3.amazonaws.com/statics.algonex.us/exchanges.json")
+    .get(`${API_DOMAIN}/exchanges/available-exchanges`)
     .then((response) => {
-      return response.data.exchanges;
+      return response.data;
     })
     .catch((err) => {
       console.log("err", err);
