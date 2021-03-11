@@ -270,8 +270,8 @@ async function getPortfolioChartData(
 
   return await axios
     .get(
-      `${API_DOMAIN}/portfolios/${
-        portfolioFilterId != "ALL" ? "/" + portfolioFilterId + "/" : ""
+      `${API_DOMAIN}/portfolios${
+        portfolioFilterId != "ALL" ? "/" + portfolioFilterId + "/" : "/"
       }chart`,
       { headers: requestOptions, params: { timeframe: timeframe } }
     )
