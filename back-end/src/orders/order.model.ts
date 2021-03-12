@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { feeSchema, IFee } from "./transaction.model";
+import { feeSchema, IFee } from "../transactions/transaction.model";
 
 export interface IOrderDocument extends mongoose.Document {
   timestamp: number;

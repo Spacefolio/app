@@ -1,6 +1,6 @@
 import { Portal } from "@material-ui/core";
 import React, { useRef, useEffect } from "react";
-import Thpace from "Thpace";
+
 import { FullsizeContainer } from "./Styles";
 
 interface DashboardNoExchangesProps {}
@@ -17,8 +17,8 @@ export const DashboardNoExchanges: React.FC<DashboardNoExchangesProps> = ({}) =>
       automaticResize: true,
     };
 
-    Thpace.create(canvas, settings);
+    // Thpace.create(canvas, settings);
   }, []);
-
+  
   return (<div></div>);
 };

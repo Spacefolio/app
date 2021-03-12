@@ -142,7 +142,7 @@ export const EditTransactionForm: React.FC<ExchangeFormProps> = ({
             required
             id="apisecret"
             fullWidth
-            label="API Seccret"
+            label="API Secret"
             type="text"
             onChange={(e) => setApiSecret(e.target.value)}
             value={apiSecret}

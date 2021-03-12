@@ -6,7 +6,7 @@ export const ModalWrapper = styled.div`
   top: 0;
   left: 0;
   bottom: 0;
-  z-index: 4;
+  z-index: 10;
   ${CenteredFlexBox}
 `;
 
@@ -23,6 +23,9 @@ export const ModalHeader = styled.div`
 export const ModalContent = styled.div`
   padding: 1rem;
   padding-top: 0;
+  max-height: 520px;
+  top: 0;
+  bottom: 0;
 `;
 
 export const ModalBoxSetup = styled.div<{ isMobile: boolean }>`
@@ -30,10 +33,10 @@ export const ModalBoxSetup = styled.div<{ isMobile: boolean }>`
   max-height: 600px;
   position: absolute;
   padding: 0;
-  margin: 50px auto;
+  margin: 0px auto;
   box-sizing: border-box;
   border-radius: 10px;
-  z-index: 3;
+  z-index: 6;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
   background: white;
   border: 0.5px solid whitesmoke;
@@ -42,7 +45,7 @@ export const ModalBoxSetup = styled.div<{ isMobile: boolean }>`
 export const ModalBg = styled.div`
   width: 100vw;
   height: 100vh;
-  z-index: 2;
+  z-index: 5;
   background: rgba(0, 0, 0, 0.5);
 `;
 export const CloseButton = styled(SvgWrapperButton)`

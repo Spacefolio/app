@@ -103,7 +103,6 @@ export enum timespan {
   Y1 = "1Y",
   ALL = "ALL",
 }
-
 export interface IPortfolioLineChartItem {
   T: number; //UNIX timestamp of the plot point to be use as the x axis
   USD: number; //value in usd of the plot point on the y axis

@@ -22,6 +22,7 @@ import { applicationViewActions } from "../../_actions/applicationView.actions";
 import useMedia from "use-media";
 import { ThemeProvider, Typography } from "@material-ui/core";
 import { theme } from "../../AlgonexStyles/Theme";
+import { useLockBodyScroll } from "../../Hooks/useBodyScrollLock";
 
 interface ModalProps {}
 
@@ -33,6 +34,8 @@ export const Modal: React.FC<ModalProps> = ({}) => {
   );
 
   const dispatch = useDispatch();
+
+  useLockBodyScroll(isVisible);
 
   return (
     <React.Fragment>

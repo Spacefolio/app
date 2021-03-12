@@ -1,11 +1,15 @@
 import { Avatar, Typography, TextField } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
+import { KeyboardDatePicker, KeyboardTimePicker } from "@material-ui/pickers";
+import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   IIntegrationInfo,
   IExchangeAccountRequest,
+  IAsset,
 } from "../../../../../types";
-import { StyledFormRow } from "../../../AlgonexStyles";
+import { ScrollBox, StyledFormRow } from "../../../AlgonexStyles";
 
 import { exchangeActions } from "../../../_actions";
 
@@ -16,26 +20,23 @@ export const AddTransactionForm: React.FC<IAddTransactionFormProps> = ({}) => {
 
   const [submitted, setSubmitted] = useState(false);
 
-  const [integrationId, setExchangeType] = useState(""); 
-  const [apiKey, setApiKey] = useState("");
+  const [asset, setAsset] = useState<IAsset | null>({
+    assetId: "Bitcoin",
+    symbol: "BTC",
+  });
+  const [assetInput, setAssetInput] = useState("");
 
-  const [apiSecret, setApiSecret] = useState("");
+  const [date, setDate] = useState(moment());
 
-  const [passphrase, setPassphrase] = useState("");
+  const [time, setTime] = useState(moment());
 
-  const [privateKey, setPrivateKey] = useState("");
+  const [amount, setAmount] = useState("");
 
-  const [login, setLogin] = useState("");
+  const [price, setPrice] = useState("");
 
-  const [token, setToken] = useState("");
+  const [fee, setFee] = useState("");
 
-  const [uid, setUid] = useState("");
-
-  const [walletAddress, setWalletAddress] = useState("");
-
-  const [name, setName] = useState("");
-
-  const [nickname, setNickname] = useState("");
+  const [feeSymbol, setFeeSymbol] = useState("");
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -43,129 +44,99 @@ export const AddTransactionForm: React.FC<IAddTransactionFormProps> = ({}) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} autoComplete="off" id="add-exchange-form">
-      <StyledFormRow
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "start",
-        }}
-      ></StyledFormRow>
-      <StyledFormRow>
-        <TextField
-          variant="outlined"
-          id="nickname"
-          fullWidth
-          label="Nickname"
-          value={nickname}
-          type="text"
-          onChange={(e) => setNickname(e.target.value)}
-        />
-      </StyledFormRow>
+    <ScrollBox>
+      <form onSubmit={handleSubmit} autoComplete="off" id="add-exchange-form">
+        <StyledFormRow>
+          <Autocomplete
+            value={asset}
+            onChange={(event: any, newValue: any) => {
+              setAsset(newValue);
+            }}
+            inputValue={assetInput}
+            onInputChange={(event, newInputValue) => {
+              setAssetInput(newInputValue);
+            }}
+            id="asset"
+            options={[{ assetId: "bitcoin", symbol: "BTC" }]}
+            getOptionLabel={(option: any) => option.assetId}
+            style={{ width: 300 }}
+            renderInput={(params: any) => (
+              <TextField {...params} label="Asset" variant="outlined" />
+            )}
+          />
+        </StyledFormRow>
 
-      <StyledFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="apikey"
-          fullWidth
-          label="API Key"
-          value={apiKey}
-          type="text"
-          onChange={(e) => setApiKey(e.target.value)}
-        />
-      </StyledFormRow>
+        <StyledFormRow>
+          <KeyboardDatePicker
+            format="MM/DD/yyyy"
+            margin="normal"
+            id="date"
+            label="Date"
+            value={date}
+            onChange={setDate}
+          />
 
-      <StyledFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="apisecret"
-          fullWidth
-          label="API Seccret"
-          type="text"
-          onChange={(e) => setApiSecret(e.target.value)}
-          value={apiSecret}
-        />
-      </StyledFormRow>
+          <KeyboardTimePicker
+            margin="normal"
+            id="time"
+            label="Time"
+            value={time}
+            onChange={setTime}
+          />
+        </StyledFormRow>
 
-      <StyledFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="passphrase"
-          fullWidth
-          label="Passphrase"
-          value={passphrase}
-          type="text"
-          onChange={(e) => setPassphrase(e.target.value)}
-        />
-      </StyledFormRow>
+        <StyledFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="amount"
+            fullWidth
+            label="Amount"
+            value={amount}
+            type="text"
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        </StyledFormRow>
 
-      <StyledFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="privateKey"
-          fullWidth
-          label="Private Key"
-          value={privateKey}
-          type="text"
-          onChange={(e) => setPrivateKey(e.target.value)}
-        />
-      </StyledFormRow>
+        <StyledFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="price"
+            fullWidth
+            label="Price"
+            value={price}
+            type="text"
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </StyledFormRow>
 
-      <StyledFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="login"
-          fullWidth
-          label="Login"
-          value={login}
-          type="text"
-          onChange={(e) => setLogin(e.target.value)}
-        />
-      </StyledFormRow>
+        <StyledFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="fee"
+            fullWidth
+            label="Fee"
+            value={fee}
+            type="text"
+            onChange={(e) => setFee(e.target.value)}
+          />
+        </StyledFormRow>
 
-      <StyledFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="token"
-          fullWidth
-          label="Token"
-          value={token}
-          type="text"
-          onChange={(e) => setToken(e.target.value)}
-        />
-      </StyledFormRow>
-
-      <StyledFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="uid"
-          fullWidth
-          label="User ID"
-          value={uid}
-          type="text"
-          onChange={(e) => setUid(e.target.value)}
-        />
-      </StyledFormRow>
-
-      <StyledFormRow>
-        <TextField
-          variant="outlined"
-          required
-          id="walletAddress"
-          fullWidth
-          label="WalletAddress"
-          value={walletAddress}
-          type="text"
-          onChange={(e) => setWalletAddress(e.target.value)}
-        />
-      </StyledFormRow>
-    </form>
+        <StyledFormRow>
+          <TextField
+            variant="outlined"
+            required
+            id="feesymbol"
+            fullWidth
+            label="Fee Symbol"
+            value={feeSymbol}
+            type="text"
+            onChange={(e) => setFeeSymbol(e.target.value)}
+          />
+        </StyledFormRow>
+      </form>
+    </ScrollBox>
   );
 };

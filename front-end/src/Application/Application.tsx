@@ -22,6 +22,8 @@ import { Modal } from "../_components";
 import { ThemeProvider } from "styled-components";
 import { BottomNavbar } from "../Nav/BottomNav/Styles";
 import { applicationViewActions } from "../_actions/applicationView.actions";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 
 export const Application = () => {
   const dispatch = useDispatch();
@@ -39,46 +41,48 @@ export const Application = () => {
   }, []);
 
   return (
-    <React.Fragment>
-      <Modal />
-      <BodyWrapper>
-        <SidebarNav />
-        <ApplicationContainer
-          isMobile={isMobile}
-          isSidebarCollapsed={isSidebarCollapsed}
-          onClick={() => {
-            if (isMobile && !isSidebarCollapsed) {
-              dispatch(applicationViewActions.toggleSidebar(true));
-            }
-          }}
-        >
-          {isMobile ? <MobileTopNav /> : <DesktopTopNav />}
-
-          <ApplicationFlexContainer
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <React.Fragment>
+        <Modal />
+        <BodyWrapper>
+          <SidebarNav />
+          <ApplicationContainer
             isMobile={isMobile}
             isSidebarCollapsed={isSidebarCollapsed}
+            onClick={() => {
+              if (isMobile && !isSidebarCollapsed) {
+                dispatch(applicationViewActions.toggleSidebar(true));
+              }
+            }}
           >
-            <Switch>
-              <Route path={`/portfolio`}>
-                <Portfolio />
-              </Route>
-              <Route exact path={`/dashboard`}>
-                <Dashboard />
-              </Route>
-              <Route path={"/settings"}>
-                <Settings />
-              </Route>
-              <Route exact path={"/bots"}>
-                <Bots />
-              </Route>
-              <Route exact path={"/trade"}>
-                <Trade />
-              </Route>
-              <Redirect to="/dashboard" />
-            </Switch>
-          </ApplicationFlexContainer>
-        </ApplicationContainer>
-      </BodyWrapper>
-    </React.Fragment>
+            {isMobile ? <MobileTopNav /> : <DesktopTopNav />}
+
+            <ApplicationFlexContainer
+              isMobile={isMobile}
+              isSidebarCollapsed={isSidebarCollapsed}
+            >
+              <Switch>
+                <Route path={`/portfolio`}>
+                  <Portfolio />
+                </Route>
+                <Route exact path={`/dashboard`}>
+                  <Dashboard />
+                </Route>
+                <Route path={"/settings"}>
+                  <Settings />
+                </Route>
+                <Route exact path={"/bots"}>
+                  <Bots />
+                </Route>
+                <Route exact path={"/trade"}>
+                  <Trade />
+                </Route>
+                <Redirect to="/dashboard" />
+              </Switch>
+            </ApplicationFlexContainer>
+          </ApplicationContainer>
+        </BodyWrapper>
+      </React.Fragment>
+    </MuiPickersUtilsProvider>
   );
 };

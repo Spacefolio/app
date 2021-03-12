@@ -13,9 +13,13 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
+
     "moduleResolution": "node"
   },
   "include": ["./src/**/*"],
-  "exclude": ["node_modules", "webpack.config.js"]
+  "exclude": ["node_modules", "webpack.config.js"],
+  "awesomeTypescriptLoaderOptions": {
+    "reportFiles": ["./src/**/*"],
+    "checkjs": true
+  }
 }

@@ -133,7 +133,7 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
           </div>
         ) : (
           <div>
-            <Typography>{getStepContent(activeStep)}</Typography>
+            <ScrollBox>{getStepContent(activeStep)}</ScrollBox>
 
             <ButtonSection>
               <BaseButton disabled={activeStep === 0} onClick={handleBack}>
@@ -156,11 +156,3 @@ export const AddExchangePopup: React.FC<IAddExchangeProps> = ({}) => {
     </React.Fragment>
   );
 };
-function dispatch(arg0: {
-  type: string;
-  header: string;
-  modalVisible: boolean;
-  modalComponent: any;
-}) {
-  throw new Error("Function not implemented.");
-}

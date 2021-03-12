@@ -1,2 +1,2 @@
 export * from "./View/List";
-export * from "./AddNew/Popup";
+export * from "./Add/Popup";

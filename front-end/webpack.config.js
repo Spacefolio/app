@@ -3,11 +3,15 @@ var HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 require("dotenv").config();
 var webpack = require("webpack");
-var Chart = require("chart.js");
+const { CheckerPlugin } = require("awesome-typescript-loader");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
   mode: "development",
   entry: ["@babel/polyfill", "./src/index.jsx"],
+  optimization: {
+    minimizer: [new UglifyJsPlugin({ parallel: true })],
+  },
   output: {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/",
@@ -16,12 +20,12 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
   },
+
   module: {
     rules: [
       {
-        test: /\.(ts|tsx)$/,
-        use: "ts-loader",
-        exclude: /node_modules/,
+        test: /\.tsx?$/,
+        loader: "awesome-typescript-loader",
       },
 
       {
@@ -51,6 +55,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new CheckerPlugin(),
     new HtmlWebpackPlugin({
       template: "./src/index.html",
     }),

@@ -1,4 +1,6 @@
 {
-    "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
-    "rules": {}
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": ["node_modules", "../back-end"]
+  }
 }

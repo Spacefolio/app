@@ -41,10 +41,9 @@ export const ClickableSvg = styled(BaseSvg)`
   ${TimingStyle}
 `;
 export const ScrollBox = styled.div`
+  max-height: inherit;
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 100%;
-  width: 100%;
 `;
 export const BaseGrid = styled.div`
   display: grid;

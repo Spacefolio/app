@@ -19,7 +19,7 @@ import {
   IOrder,
   IOrderDocument,
   orderSchema,
-} from "../transactions/order.model";
+} from "../orders/order.model";
 
 export interface IExchangeAccountDocument extends mongoose.Document {
   name: string;
