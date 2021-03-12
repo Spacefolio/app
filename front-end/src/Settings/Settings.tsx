@@ -8,9 +8,9 @@ import {
   useLocation,
   useParams,
 } from "react-router";
-import { CustomFlexCard, FlexCard, GrowFromZero } from "../AlgonexStyles";
-import { theme } from "../AlgonexStyles/Theme";
-import { StyledTabs, StyledTab } from "../Portfolio/Styles";
+import { CustomFlexCard, FlexCard, GrowFromZero } from "../_styles";
+import { theme } from "../_styles/Theme";
+import { StyledTabs, StyledTab } from "../portfolio/Styles";
 import { Modal } from "../_components";
 import { SettingsWrapper } from "./Styles";
 

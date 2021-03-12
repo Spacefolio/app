@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { CenteredFlexBox, SvgWrapperButton } from "../../AlgonexStyles";
+import { CenteredFlexBox, SvgWrapperButton } from "../../_styles";
 
 export const ModalWrapper = styled.div`
   position: fixed;

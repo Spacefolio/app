@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { InlineDiv } from "../../AlgonexStyles";
-import { COLORS } from "../../AlgonexStyles/ResponsiveDesign";
+import { InlineDiv } from "../../_styles";
+import { COLORS } from "../../_styles/ResponsiveDesign";
 
 export const AlertWrapper = styled.div`
   display: flex;

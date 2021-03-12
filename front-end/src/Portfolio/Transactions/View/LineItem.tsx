@@ -5,13 +5,13 @@ import {
 } from "../../../_components";
 import { ReformatCurrencyValue } from "../../../_helpers/formatters";
 import { Avatar, TableRow, Typography } from "@material-ui/core";
-import { FlexWrap, InlineDiv } from "../../../AlgonexStyles";
+import { FlexWrap, InlineDiv } from "../../../_styles";
 import {
   TableCellStyled,
   TableRowStyled,
 } from "../../Filter/Styles";
 import useMedia from "use-media";
-import { RD } from "../../../AlgonexStyles/ResponsiveDesign";
+import { RD } from "../../../_styles/ResponsiveDesign";
 
 interface ITransactionItemProps {
   item: ITransactionItemView;

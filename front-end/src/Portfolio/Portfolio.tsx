@@ -15,7 +15,7 @@ import {
   FlexCard,
   GrowFromZero,
   ScrollBox,
-} from "../AlgonexStyles";
+} from "../_styles";
 import {
   Tabs,
   Tab,
@@ -26,8 +26,8 @@ import {
   Divider,
 } from "@material-ui/core";
 import { useState } from "react";
-import { theme } from "../AlgonexStyles/Theme";
-import { ListMyExchanges } from "../Exchanges";
+import { theme } from "../_styles/Theme";
+import { ListMyExchanges } from "../integrations";
 import { PortfolioSummary } from "./Summary";
 
 interface IPortfolioProps {}

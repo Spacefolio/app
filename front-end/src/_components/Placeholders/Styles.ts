@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { CenteredFlexBox } from "../../AlgonexStyles";
+import { CenteredFlexBox } from "../../_styles";
 
 export const FullsizeContainer = styled.div`
   height: 100%;

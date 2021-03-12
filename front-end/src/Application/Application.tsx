@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
-import { Portfolio } from "../Portfolio";
-import { Dashboard } from "../Dashboard";
-import { MobileNav, MobileTopNav, DesktopTopNav, SidebarNav } from "../Nav";
+import { Portfolio } from "../portfolio";
+import { Dashboard } from "../dashboard";
+import { MobileNav, MobileTopNav, DesktopTopNav, SidebarNav } from "../nav";
 import {
   ApplicationContainer,
   ApplicationFlexContainer,
   BodyWrapper,
-} from "./Styles";
-import { RD } from "../AlgonexStyles/ResponsiveDesign";
+} from "./styles";
+import { RD } from "../_styles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
-import { Settings } from "../Settings";
-import { GrowFromZero } from "../AlgonexStyles";
+import { Settings } from "../settings";
+import { GrowFromZero } from "../_styles";
 import { portfolioActions } from "../_actions";
 import useMedia from "use-media";
 import { Container } from "@material-ui/core";
-import { Bots } from "../Bots";
-import { Trade } from "../Trade";
+import { Bots } from "../bots";
+import { Trade } from "../trade";
 import { Modal } from "../_components";
 import { ThemeProvider } from "styled-components";
-import { BottomNavbar } from "../Nav/BottomNav/Styles";
+import { BottomNavbar } from "../nav/bottom/Styles";
 import { applicationViewActions } from "../_actions/applicationView.actions";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";

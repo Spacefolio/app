@@ -1,9 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DashboardWrapper } from "./Styles";
-import { FlexCard } from "../AlgonexStyles";
+import { FlexCard } from "../_styles";
 import { IRootState } from "../_reducers";
-import { MetaPortfolio } from "../Portfolio";
+import { MetaPortfolio } from "../portfolio";
 import { DashboardNoExchanges } from "../_components/Placeholders";
 
 export const Dashboard = () => {

@@ -8,9 +8,9 @@ import { ITransaction, ITransactionDocument } from "./transaction.model";
 import { ccxtService } from "../exchanges/_helpers/ccxt.service";
 import ccxt from "ccxt";
 import { Db } from "mongodb";
-import { fiat, getHistoricalData } from "../coindata/historical.service";
-import { getCurrentPrice } from "../coindata/coindata.service";
-import { getCoinLogo } from "../coindata";
+import { fiat, getHistoricalData } from "../assets/historical.service";
+import { getCurrentPrice } from "../assets/coindata.service";
+import { getCoinLogo } from "../assets";
 
 export async function createTransactionViewItems(
   exchange: IExchangeAccountDocument

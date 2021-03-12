@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {RD, SPACING} from '../AlgonexStyles/ResponsiveDesign' 
+import {RD, SPACING} from '../_styles/ResponsiveDesign' 
 
 export const DashboardWrapper = styled.div`
   width: 100%;

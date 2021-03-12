@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GrowFromZero } from "../../AlgonexStyles";
+import { GrowFromZero } from "../../_styles";
 import { DDList, DDListItem, DDWrapper } from "./DropdownStyles";
 
 export interface IDropdownItem {

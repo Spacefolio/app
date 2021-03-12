@@ -5,7 +5,7 @@ import {
   IIntegrationInfo,
   IExchangeAccountRequest,
 } from "../../../../../types";
-import { StyledFormRow } from "../../../AlgonexStyles";
+import { StyledFormRow } from "../../../_styles";
 import { exchangeActions } from "../../../_actions";
 
 interface ExchangeFormProps {

@@ -7,8 +7,8 @@ import {
   FadeoutAnimation,
   SvgWrapperButton,
   TimingStyle,
-} from "../../AlgonexStyles";
-import { COLORS, RD, SPACING } from "../../AlgonexStyles/ResponsiveDesign";
+} from "../../_styles";
+import { COLORS, RD, SPACING } from "../../_styles/ResponsiveDesign";
 
 export const SidebarSpacer = styled.div`
   height: 100%;

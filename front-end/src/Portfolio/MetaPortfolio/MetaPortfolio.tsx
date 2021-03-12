@@ -18,8 +18,8 @@ import useDimensions from "react-use-dimensions";
 import { timeFrameSelectors } from "../../_helpers/formatters";
 import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
 import { Button, Typography } from "@material-ui/core";
-import { ListMyExchanges } from "../../Exchanges";
-import { InlineDiv } from "../../AlgonexStyles";
+import { ListMyExchanges } from "../../integrations";
+import { InlineDiv } from "../../_styles";
 
 export const MetaPortfolio = () => {
   const dispatch = useDispatch();

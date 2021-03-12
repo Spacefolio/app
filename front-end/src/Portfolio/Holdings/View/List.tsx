@@ -4,7 +4,7 @@ import { IPortfolioDataView, IPortfolioItemView } from "../../../../../types";
 import { useSelector } from "react-redux";
 
 import { IRootState } from "../../../_reducers";
-import { CustomFlexCard, GrowFromZero } from "../../../AlgonexStyles";
+import { CustomFlexCard, GrowFromZero } from "../../../_styles";
 import { ViewLoading } from "../../../_components";
 import {
   Paper,

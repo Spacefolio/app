@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseSvg } from "../../AlgonexStyles";
+import { BaseSvg } from "../../_styles";
 
 export const decideTransactionIcon = (type: string) => {
   switch (type) {

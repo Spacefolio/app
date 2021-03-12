@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { SPACING } from "../../../AlgonexStyles";
+import { SPACING } from "../../../_styles";
 
 export const SummaryWrapper = styled.div`
   padding: ${SPACING.flexCardGap} 0;

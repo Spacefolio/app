@@ -1,14 +1,14 @@
 import { Avatar, TableCell, TableRow, Typography } from "@material-ui/core";
 import React from "react";
 import { IPortfolioDataView, IPortfolioItemView } from "../../../../../types";
-import { InlineDiv } from "../../../AlgonexStyles";
-import { COLORS } from "../../../AlgonexStyles/ResponsiveDesign";
+import { InlineDiv } from "../../../_styles";
+import { COLORS } from "../../../_styles/ResponsiveDesign";
 import {
   DataWrapper,
   DesktopWrapper,
   HoldingDesktopWrapper,
   MobileWrapper,
-} from "../../../AlgonexStyles/TabularStyles";
+} from "../../../_styles/TabularStyles";
 import {
   ReformatAmountValue,
   ReformatCurrencyValue,

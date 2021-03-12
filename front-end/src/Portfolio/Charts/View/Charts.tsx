@@ -6,7 +6,7 @@ import { portfolioService } from "../../../_services";
 import { timeframe } from "../../../../../types";
 import { PortfolioPieChart } from "../../../_components/Charts/Pie/PieChart";
 import { IRootState } from "../../../_reducers";
-import { FlexCard, GrowFromZero } from "../../../AlgonexStyles";
+import { FlexCard, GrowFromZero } from "../../../_styles";
 import { MetaPortfolio } from "../..";
 
 export const Charts = () => {

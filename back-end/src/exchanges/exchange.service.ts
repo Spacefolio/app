@@ -33,8 +33,8 @@ import {
   getConversionRate,
   saveTransactionViewItems,
 } from "../transactions/transactionView";
-import { fiat } from "../coindata/historical.service";
-import { getCoinLogo } from "../coindata";
+import { fiat } from "../assets/historical.service";
+import { getCoinLogo } from "../assets";
 
 export const exchangeService = {
   getAll,

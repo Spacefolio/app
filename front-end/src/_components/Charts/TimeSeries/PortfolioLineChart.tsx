@@ -7,7 +7,7 @@ import { IRootState } from "../../../_reducers";
 import { useSelector } from "react-redux";
 import { NONAME } from "dns";
 import { ViewLoading } from "../..";
-import { COLORS, RD } from "../../../AlgonexStyles/ResponsiveDesign";
+import { COLORS, RD } from "../../../_styles/ResponsiveDesign";
 import useMedia from "use-media";
 
 interface PortfolioLineChartProps {

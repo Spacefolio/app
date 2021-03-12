@@ -1,5 +1,5 @@
 import { timeframe } from "../../../types";
-import { RD, SPACING } from "../AlgonexStyles/ResponsiveDesign";
+import { RD, SPACING } from "../_styles/ResponsiveDesign";
 
 export const ReformatCurrencyValue = (value: number, currencyType: string) => {
   if (value == 0) return 0;

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { COLORS, RD, SPACING } from "../../../AlgonexStyles/ResponsiveDesign";
-import { BaseGrid, CenteredFlexBox, ClickableDiv } from "../../../AlgonexStyles";
+import { COLORS, RD, SPACING } from "../../../_styles/ResponsiveDesign";
+import { BaseGrid, CenteredFlexBox, ClickableDiv } from "../../../_styles";
 import { Paper } from "@material-ui/core";
 
 export const PortfolioCharts = styled(BaseGrid)`

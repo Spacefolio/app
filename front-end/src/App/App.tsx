@@ -4,14 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { history } from "../_helpers";
 import { alertActions } from "../_actions";
 import { PrivateRoute } from "../_components";
-import { Application } from "../Application";
+import { Application } from "../application";
 import { Alert } from "../_components";
 import "typeface-roboto";
 import "./App.scss";
-import { AppContainer } from "./appStyles";
-import "../AlgonexStyles/variables.scss";
+import { AppContainer } from "./styles";
+import "../_styles/variables.scss";
 import { CssBaseline } from "@material-ui/core";
-import { GetStarted } from "../RegisterPage/GetStarted";
+import { GetStarted } from "../login/login";
 
 export const App = () => {
   const dispatch = useDispatch();

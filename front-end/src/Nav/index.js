@@ -1,3 +1,3 @@
-export * from "./TopNav";
-export * from "./Sidebar";
-export * from "./BottomNav";
+export * from "./top";
+export * from "./sidebar";
+export * from "./bottom";

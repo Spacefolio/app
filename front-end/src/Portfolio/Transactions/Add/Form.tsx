@@ -9,7 +9,7 @@ import {
   IExchangeAccountRequest,
   IAsset,
 } from "../../../../../types";
-import { ScrollBox, StyledFormRow } from "../../../AlgonexStyles";
+import { ScrollBox, StyledFormRow } from "../../../_styles";
 
 import { exchangeActions } from "../../../_actions";
 

@@ -6,8 +6,8 @@ import { IExchangeAccountDocument, IHoldingSlice, IHoldingSnapshot, ITimeslice, 
 import ccxt from 'ccxt';
 import { userService } from '../users/user.service';
 import { spawn } from 'child_process';
-import { getHourlyData } from '../coindata/historical.service';
-import { IHourlyPrice } from '../coindata/historical.model';
+import { getHourlyData } from '../assets/historical.service';
+import { IHourlyPrice } from '../assets/historical.model';
 
 export const portfolioService = {
 	getAll,

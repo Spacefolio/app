@@ -1,7 +1,7 @@
 import react, { useEffect, useState } from "react";
 import React from "react";
 import { IPortfolioDataView } from "../../../../../types";
-import { BaseButton, FlexCard, InlineDiv } from "../../../AlgonexStyles";
+import { BaseButton, FlexCard, InlineDiv } from "../../../_styles";
 import { PortfolioLineChart } from "../../../_components";
 import { Container } from "./Styles";
 import useDimensions from "react-use-dimensions";

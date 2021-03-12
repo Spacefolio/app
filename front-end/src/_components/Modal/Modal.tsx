@@ -13,7 +13,7 @@ import {
   RD,
   ScrollBox,
   SvgWrapperButton,
-} from "../../AlgonexStyles";
+} from "../../_styles";
 import { Close } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
@@ -21,8 +21,8 @@ import { dispatch } from "d3-dispatch";
 import { applicationViewActions } from "../../_actions/applicationView.actions";
 import useMedia from "use-media";
 import { ThemeProvider, Typography } from "@material-ui/core";
-import { theme } from "../../AlgonexStyles/Theme";
-import { useLockBodyScroll } from "../../Hooks/useBodyScrollLock";
+import { theme } from "../../_styles/Theme";
+import { useLockBodyScroll } from "../../_hooks/useBodyScrollLock";
 
 interface ModalProps {}
 

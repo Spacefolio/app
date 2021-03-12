@@ -1,4 +1,4 @@
-import { RD } from "../AlgonexStyles/ResponsiveDesign";
+import { RD } from "../_styles/ResponsiveDesign";
 import { applicationViewConstants } from "../_constants/applicationView.constants";
 import { IViewType } from "../../../types";
 
