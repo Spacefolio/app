@@ -1,7 +1,7 @@
 import axios from "axios";
 import moment from "moment";
-import { coindataService } from "./coindata.service";
-import { HistoricalData, HourlyData, IHourlyPrice } from "./historical.model";
+import { coindataService, getCurrentPrice } from "./coindata.service";
+import { HistoricalData, HourlyData, IDailyPrice, IHourlyPrice } from "./historical.model";
 
 interface IHistoricalCandleResponse {
   day: number;
@@ -51,11 +51,33 @@ export async function loadHistoricalDataToDb(symbol: string) {
 
   var historicalDataJson = await axios.get<IHistoricalDataResponse>(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=10000`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
 
-  const historicalData = new HistoricalData( { symbol } );
+  var historicalData = await HistoricalData.findOne({ symbol });
+  if (!historicalData) {
+    historicalData = new HistoricalData( { symbol } );
+  }
+  
+  let length = historicalData.prices.length;
+  var start = 0;
+  if (length > 0)
+  {
+    var lastTimestamp = historicalData.prices[length - 1].timestamp;
+    while (historicalDataJson.prices[start++][0] <= lastTimestamp);
+    start--;
+  }
 
-  for (let i = 0; i < historicalDataJson.prices.length; i++)
+  for (let i = start; i < historicalDataJson.prices.length; i++)
   {
     let timestamp: number = historicalDataJson.prices[i][0];
+    let leftover = timestamp % 86400000;
+    if (leftover >= 43200000) // halfway through the day
+    { // round up to next day
+      timestamp = timestamp + (86400000 - leftover);
+    }
+    else
+    { // round down to start of this day
+      timestamp = timestamp - leftover;
+    }
+    
     historicalData.prices.push({ price: historicalDataJson.prices[i][1], timestamp});
   }
 
@@ -104,14 +126,14 @@ export async function loadHourlyData(symbol: string)
 
 export async function getHourlyData(symbol: string, from: number, to: number) : Promise<IHourlyPrice[]>
 {
-  var hourlyPrices: IHourlyPrice[] = [];
+  const hourlyPrices: IHourlyPrice[] = [];
   
   from = from - (from % 3600000); // round down to nearest hour
   to = to - (to % 3600000);
 
   if (fiat(symbol))
   {
-    for (let i = from; i < to; i += 3600000)
+    for (let i = from; i <= to; i += 3600000)
     {
       hourlyPrices.push({ hour: i, price: 1 });
     }
@@ -141,7 +163,7 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
   var endIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == to);
   if (endIndex == -1) throw `Could not fetch hourly price data for symbol '${symbol}'. [3]`;
 
-  for (let i = startIndex; i < endIndex; i++)
+  for (let i = startIndex; i <= endIndex; i++)
   {
     hourlyPrices.push(hourlyData.prices[i]);
   }
@@ -152,15 +174,45 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
 export async function getHistoricalData(symbol: string, timestamp: number) : Promise<number>
 {
   var symbols = symbol.split('/');
+  let now = Date.now();
+  let today = now - (now % 86400000);
+  if (timestamp == today)
+  {
+    let currentPrice = await getCurrentPrice(symbol);
+    if (!currentPrice) throw "Could not fetch current price.";
+    return currentPrice;
+  }
+
   var historicalData = await HistoricalData.findOne({ symbol: symbols[0] });
   if (!historicalData) {
     historicalData = await loadHistoricalDataToDb(symbols[0]);
     if (!historicalData) {
-      return 1;
+      throw "Could not fetch historical data [1]";
     }
   }
   const date = (timestamp - (timestamp % 86400000));
-  const candle = historicalData.prices.find((candle) => candle.timestamp == date);
-  if (!candle) return 1;
+  var candle = historicalData.prices.find((candle) => candle.timestamp == date);
+  if (!candle)
+  {
+    if (historicalData.prices.length < 1)
+    {
+      throw "Could not fetch historical data [2]";
+    }
+    // if we need to grab the newest prices
+    if (historicalData.prices[historicalData.prices.length - 1].timestamp < date)
+    {
+      historicalData = await loadHistoricalDataToDb(symbols[0]); 
+    }
+    else if (historicalData.prices[0].timestamp > date)
+    {
+      throw "Could not fetch historical data [3]";
+    }
+    else
+    {
+      throw "Could not fetch historical data [4]";
+    }
+
+    candle = historicalData.prices.find((candle) => candle.timestamp == date);
+  }
   return candle.price;
 }

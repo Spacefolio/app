@@ -4,7 +4,7 @@ import { Coin, ICoinMarketData } from "./coindata.model";
 export const coindataService = {
   fetchCoinMarketData,
   getCoinMarketData,
-  getCoinId
+  getCoinId,
 };
 
 async function fetchCoinMarketData()

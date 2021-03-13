@@ -1,37 +1,17 @@
-import { IUserDocument, User } from '../users/user.model';
-import {
-	IExchangeAccountRequest,
-	exchangeType,
-	IExchangeAccountView,
-	IPortfolioDataView,
-	IPortfolioItemView,
-	ITransactionItemView,
-  IOpenOrderItemView,
-} from '../../../types';
-import {
-	ExchangeAccount,
-	IExchangeAccount,
-	IExchangeAccountDocument,
-	IHoldingsHistory,
-	IHoldingSlice,
-	IHoldingSnapshot,
-	ITimeslice,
-} from './exchange.model';
-import ccxt, { Balances, Exchange } from 'ccxt';
+import { User } from '../users/user.model';
+import { IExchangeAccountRequest, IPortfolioDataView, IPortfolioItemView, IOpenOrderItemView } from '../../../types';
+import { ExchangeAccount, IExchangeAccountDocument, IHoldingsHistory, IHoldingSlice, IHoldingSnapshot, ITimeslice } from './exchange.model';
+import ccxt, { Exchange } from 'ccxt';
 import { IPortfolioItem } from '../portfolios/portfolio.model';
-import { ITransaction, ITransactionDocument, Transaction } from '../transactions/transaction.model';
+import { ITransaction } from '../transactions/transaction.model';
 import { randNum } from '../../exchangeDataDetailed';
 import { ccxtService } from '../_helpers/ccxt.service';
-import { IOrder, IOrderDocument, orderSchema } from '../transactions/order.model';
-import {
-	convertTransactionToTransactionView,
-	createTransactionViewItems,
-	getConversionRate,
-	saveTransactionViewItems,
-} from '../transactions/transactionView';
-import { fiat } from '../coindata/historical.service';
+import { IOrder } from '../transactions/order.model';
+import { getConversionRate, saveTransactionViewItems } from '../transactions/transactionView';
+import { fiat, getHistoricalData } from '../coindata/historical.service';
 import { coindataService } from '../coindata/coindata.service';
-
+import { IDailyPrice } from '../coindata/historical.model';
+    
 export const exchangeService = {
 	getAll,
 	getById,
@@ -103,21 +83,18 @@ async function updatePortfolioItems(
 
 	const thingsToRemove = ['info', 'free', 'used', 'total'];
 
-	if (exchange.id == "binance" || exchange.id == "binanceus")
-	{
+	if (exchange.id == 'binance' || exchange.id == 'binanceus') {
 		for (var [key, value] of Object.entries(balances)) {
 			if (thingsToRemove.includes(key)) continue;
 			if (value.total <= 0) continue;
-			let holdingHistory = (holdingsHistory[key]) ? holdingsHistory[key] : [];
+			let holdingHistory = holdingsHistory[key] ? holdingsHistory[key] : [];
 			neededBalances.push({
 				symbol: key,
 				balance: value,
 				holdingHistory,
 			});
 		}
-	}
-	else
-	{
+	} else {
 		for (var [key, value] of Object.entries(balances)) {
 			if (thingsToRemove.includes(key)) continue;
 			if (!holdingsHistory[key]) continue;
@@ -312,37 +289,34 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 async function updateTransactions(exchange: Exchange, exchangeAccountDocument: IExchangeAccountDocument) {
 	//var time = Date.now();
 	var ccxtTransactions: ccxt.Transaction[] = [];
-	if (!exchange.hasFetchTransactions)
-	{
+	if (!exchange.hasFetchTransactions) {
 		if (!exchange.hasFetchDeposits && !exchange.hasFetchWithdrawals) return [];
 
-		if (exchange.hasFetchDeposits)
-		{
-			let deposits = await exchange.fetchDeposits(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {})
-			.catch((err) => {
-				throw err;
-			});
+		if (exchange.hasFetchDeposits) {
+			let deposits = await exchange
+				.fetchDeposits(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {})
+				.catch((err) => {
+					throw err;
+				});
 
 			ccxtTransactions = ccxtTransactions.concat(deposits);
 		}
 
-		if (exchange.hasFetchWithdrawals)
-		{
-			let withdrawals = await exchange.fetchWithdrawals(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {})
+		if (exchange.hasFetchWithdrawals) {
+			let withdrawals = await exchange
+				.fetchWithdrawals(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {})
+				.catch((err) => {
+					throw err;
+				});
+
+			ccxtTransactions = ccxtTransactions.concat(withdrawals);
+		}
+	} else {
+		ccxtTransactions = await exchange
+			.fetchTransactions(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {})
 			.catch((err) => {
 				throw err;
 			});
-
-			ccxtTransactions = ccxtTransactions.concat(withdrawals);			
-		}
-	}
-	else
-	{
-		ccxtTransactions = await exchange
-		.fetchTransactions(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {})
-		.catch((err) => {
-			throw err;
-		});
 	}
 	//console.log("Fetch transactions from exchange: ", Date.now() - time);
 	//time = Date.now();
@@ -371,8 +345,7 @@ async function updateOrders(exchange: Exchange, exchangeAccountDocument: IExchan
 		return [];
 	}
 
-	if (exchangeAccountDocument.exchangeType == 'binance' || exchangeAccountDocument.exchangeType == 'binanceus')
-	{
+	if (exchangeAccountDocument.exchangeType == 'binance' || exchangeAccountDocument.exchangeType == 'binanceus') {
 		/*
 		for (var [key, value] of Object.entries(balances)) {
 			if (thingsToRemove.includes(key)) continue;
@@ -383,9 +356,7 @@ async function updateOrders(exchange: Exchange, exchangeAccountDocument: IExchan
 			ccxtOrders.concat(orders);
 		}
 		*/
-	}
-	else
-	{
+	} else {
 		ccxtOrders = await exchange.fetchOrders(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {}).catch((err) => {
 			throw err;
 		});
@@ -421,13 +392,11 @@ async function createPortfolioItems(
 		var amountSold = 0;
 		var amountBought = 0;
 
-		if (balances[i].holdingHistory)
-		{
+		if (balances[i].holdingHistory) {
 			length = balances[i].holdingHistory.length;
 		}
-		
-		if (length > 0)
-		{
+
+		if (length > 0) {
 			let last = balances[i].holdingHistory[length - 1];
 			averageBuyPrice = last.totalValueInvested / last.totalAmountBought;
 			averageSellPrice = last.totalValueReceived / last.totalAmountSold;
@@ -605,12 +574,10 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 	return portfolioData;
 }
 
-async function fetchBalances(exchange: ccxt.Exchange)
-{
+async function fetchBalances(exchange: ccxt.Exchange) {
 	var balances: ccxt.Balances = { info: { used: 0, free: 0, total: 0 } };
 	balances.info = {};
-	if (!exchange.hasFetchBalance)
-	{
+	if (!exchange.hasFetchBalance) {
 		return balances;
 	}
 
@@ -628,6 +595,7 @@ export interface ITimeslices {
 async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument) {
 	let timeslices: ITimeslices = {};
 	let allTimeHoldingSlices: IHoldingSlice[] = [];
+	let prices: { [key: string]: { [key: number]: number } } = {};
 
 	let now = Date.now();
 	let endDate = now + (86400000 - (now % 86400000)); // start of tomorrow
@@ -678,12 +646,14 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 	}
 
 	for (let day = startDate; day < endDate; day += 86400000) {
+		let nextDay = day + 86400000;
+		
 		let timeslice: ITimeslice = {
-			start: day,
+			start: nextDay,
 			holdings: {},
 			value: 0,
 		};
-
+		
 		for (let holding = 0; holding < allTimeHoldingSlices.length; holding++) {
 			let slice = allTimeHoldingSlices[holding];
 			let snapsInThisSlice: IHoldingSnapshot[] = [];
@@ -701,10 +671,11 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 					lastAmount[holding] = snap.totalAmountBought - snap.totalAmountSold;
 					lastPrice[holding] = snap.price.USD;
 					currentSnapshot[holding]++;
-				} else {
-					break;
-				}
+				} else { break; }
 			}
+
+			let historicalPrice = await getHistoricalData(slice.asset, nextDay).catch((err) => -1);
+			if (historicalPrice != -1) { lastPrice[holding] = historicalPrice; }
 
 			let value = lastAmount[holding] * lastPrice[holding];
 
@@ -720,7 +691,7 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 			timeslice.value += value;
 		}
 
-		timeslices[day] = timeslice;
+		timeslices[nextDay] = timeslice;
 	}
 
 	exchange.timeslices = timeslices;
@@ -745,9 +716,8 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 			var last = item.holdingHistory[length - 1];
 			var profitAllTime = 0;
 			var profitPercentageAllTime = 0;
-			
-			if (length > 0)
-			{
+
+			if (length > 0) {
 				profitAllTime = last.totalValueReceived - last.totalValueInvested + currentValue;
 				profitPercentageAllTime = (profitAllTime / last.totalValueInvested) * 100;
 			}
@@ -756,7 +726,6 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 			totalValue += currentValue;
 			totalInvested += item.amountBought * item.averageBuyPrice.USD;
 
-			
 			//const profit24Hour = (amountSoldInTheLast24Hours * averageSellInTheLast24Hours) - (value24HoursAgo * howMuchIHad24HoursAgo) + currentValue
 			const profit24Hour = randNum();
 			return {
@@ -768,56 +737,52 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 				profitPercentage: {
 					all: profitPercentageAllTime,
 					h24: randNum(),
-				}
+				},
 			};
 		})
 	);
-  
-  const formattedOpenOrders: IOpenOrderItemView[] = await Promise.all(
-    exchangeAccount.openOrders.map(async (item) => {
-      const symbols = item.symbol.split('/');
-      let logoUrl = await getLogo(symbols[0]);
-      return {
-        id: item.id,
-        exchangeName: exchangeAccount.name,
-        symbol: symbols[0],
-        quoteSymbol: symbols[1],
-        logoUrl,
-        type: item.side,
-        date: item.timestamp,
-        amount: item.amount,
-        quoteAmount: item.cost,
-        price: item.price,
-        value: item.cost,
-        fee: item.fee
-      }
-    })
-  );
+
+	const formattedOpenOrders: IOpenOrderItemView[] = await Promise.all(
+		exchangeAccount.openOrders.map(async (item) => {
+			const symbols = item.symbol.split('/');
+			let logoUrl = await getLogo(symbols[0]);
+			return {
+				id: item.id,
+				exchangeName: exchangeAccount.name,
+				symbol: symbols[0],
+				quoteSymbol: symbols[1],
+				logoUrl,
+				type: item.side,
+				date: item.timestamp,
+				amount: item.amount,
+				quoteAmount: item.cost,
+				price: item.price,
+				value: item.cost,
+				fee: item.fee,
+			};
+		})
+	);
 
 	let portfolioData: IPortfolioDataView = {
 		...exchangeAccountJson,
 		portfolioItems: formattedPortfolioItems,
-		profitPercentage:
-			((totalValue + totalProfit - totalInvested) / totalInvested) * 100,
+		profitPercentage: ((totalValue + totalProfit - totalInvested) / totalInvested) * 100,
 		portfolioTotal: { USD: totalValue },
 		profitTotal: { USD: totalProfit },
-    logoUrl: exchangeAccount.logoUrl,
-    openOrders: formattedOpenOrders
+		logoUrl: exchangeAccount.logoUrl,
+		openOrders: formattedOpenOrders,
 	};
 
 	return portfolioData;
 }
 
-async function getLogo (symbol: string) {
+async function getLogo(symbol: string) {
 	symbol = symbol.toLowerCase();
 	let coin = await coindataService.getCoinMarketData(symbol);
 
 	if (coin) {
 		return coin.image;
-	}
-	else
-	{
+	} else {
 		return `https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579`;
 	}
-  
 }
