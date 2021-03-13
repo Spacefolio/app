@@ -1,7 +1,6 @@
 import { Container, Avatar, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Holdings } from '../..';
 import { IPortfolioDataView } from '../../../../../types';
 import { alertActions } from '../../../_actions';
 import { applicationViewActions } from '../../../_actions/applicationView.actions';
@@ -10,6 +9,7 @@ import { portfolioService } from '../../../_services';
 import { FlexCard, BaseButton, InlineDiv } from '../../../_styles';
 import { AddTransactionForm } from '../../Transactions/Add/AddTransactionForm';
 import useDimensions from 'react-use-dimensions';
+import { Assets } from '../..';
 
 interface IPortfolioSummaryItemView {
 	data: IPortfolioDataView;
@@ -84,7 +84,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 						height={200}
 					/>
 				</div>
-				<Holdings portfolioItems={portfolioItems} />
+				<Assets portfolioItems={portfolioItems} />
 			</Container>
 		</FlexCard>
 	);

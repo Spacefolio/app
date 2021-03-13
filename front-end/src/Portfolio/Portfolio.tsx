@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { PortfolioWrapper, StyledTab, StyledTabs } from "./_styles";
-import { MetaPortfolio, Transactions, OpenOrders, Holdings, Charts } from ".";
+import { MetaPortfolio, Transactions, OpenOrders, Charts } from ".";
 import {
   CustomFlexCard,
   FlexCard,

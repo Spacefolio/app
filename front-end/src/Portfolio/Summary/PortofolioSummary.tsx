@@ -8,8 +8,8 @@ import { IPortfolioDataView } from "../../../../types";
 import { BaseButton } from "../../_styles";
 import { theme } from "../../_styles/Theme";
 import { IRootState } from "../../_reducers";
-import { PortfolioSummaryItem } from "./View/PortfolioSummaryItem";
-import { SummaryWrapper } from "./View/_styles";
+import { PortfolioSummaryItem } from "./Line_item/PortfolioSummaryItem";
+import { SummaryWrapper } from "./Line_item/_styles";
 
 export const PortfolioSummary = () => {
   const portfolioData = useSelector(
