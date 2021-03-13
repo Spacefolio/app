@@ -76,7 +76,6 @@ async function update(id: string, data: IExchangeAccountRequest) {
       headers: requestOptions,
     })
     .then((response) => {
-      console.log("\n\nresponse", response.data);
       return response.data;
     })
     .catch((err) => {

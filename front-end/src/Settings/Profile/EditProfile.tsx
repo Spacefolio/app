@@ -1,14 +1,14 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
 import { CustomFlexCard, FlexCard } from '../../_styles';
-import { ProfileGridContainer } from '../_styles';
+import { ProfileContainer } from '../_styles';
 import { UpdateProfileForm } from './UpdateProfileForm';
 
 interface profileProps {}
 
 export const EditProfile: React.FC<profileProps> = ({}) => {
 	return (
-		<ProfileGridContainer>
+		<ProfileContainer>
 			<CustomFlexCard
 				style={{
 					flexDirection: 'column',
@@ -25,6 +25,6 @@ export const EditProfile: React.FC<profileProps> = ({}) => {
 				</div>
 				<UpdateProfileForm />
 			</CustomFlexCard>
-		</ProfileGridContainer>
+		</ProfileContainer>
 	);
 };

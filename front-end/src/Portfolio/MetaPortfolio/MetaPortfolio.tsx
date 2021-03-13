@@ -18,7 +18,7 @@ import useDimensions from "react-use-dimensions";
 import { timeFrameSelectors } from "../../_helpers/formating";
 import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
 import { Button, Typography } from "@material-ui/core";
-import { ListMyExchanges } from "../../integrations";
+import { ListMyExchanges } from "../../Integrations";
 import { InlineDiv } from "../../_styles";
 
 export const MetaPortfolio = () => {

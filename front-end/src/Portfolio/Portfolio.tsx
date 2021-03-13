@@ -27,7 +27,7 @@ import {
 } from "@material-ui/core";
 import { useState } from "react";
 import { theme } from "../_styles/Theme";
-import { ListMyExchanges } from "../integrations";
+import { ListMyExchanges } from "../Integrations";
 import { PortfolioSummary } from "./Summary";
 
 interface IPortfolioProps {}

@@ -7,9 +7,15 @@ export const theme = createMuiTheme({
 	palette: {
 		primary: {
 			main: COLORS.primaryBase,
+      contrastText: "white",
 		},
 		secondary: {
 			main: COLORS.accentBase,
+      contrastText: 'white',
+		},
+		error: {
+			main: COLORS.errorBase,
+      contrastText: "white",
 		},
 	},
 	overrides: {
@@ -32,9 +38,7 @@ export const theme = createMuiTheme({
 		},
 		MuiButton: {
 			root: { color: 'black' },
-		},
-		MuiTextField: {
-			root: { padding: 0},
+			label: { cursor: 'pointer' },
 		},
 	},
 });

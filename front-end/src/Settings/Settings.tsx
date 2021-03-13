@@ -10,10 +10,11 @@ import {
 } from 'react-router';
 import { CustomFlexCard, FlexCard, GrowFromZero } from '../_styles';
 import { theme } from '../_styles/Theme';
-import { StyledTabs, StyledTab } from '../portfolio/Styles';
+import { StyledTabs, StyledTab } from '../Portfolio/Styles';
 import { Modal } from '../_components';
 import { SettingsWrapper } from './_styles';
 import { EditProfile } from './Profile/EditProfile';
+import { ManageIntegrations } from './Integrations/ManageIntegrations';
 
 interface SettingsProps {}
 
@@ -64,12 +65,10 @@ export const Settings: React.FC<SettingsProps> = ({}) => {
 				<CustomFlexCard>{SettingsTabs}</CustomFlexCard>
 				<Switch>
 					<Route exact path={`${path}/profile`}>
-				
-							<EditProfile />
-			
+						<EditProfile />
 					</Route>
 					<Route exact path={`${path}/integrations`}>
-						<div>dfgh;kfja</div>
+						<ManageIntegrations />
 					</Route>
 					<Route exact path={`${path}/holdings`}>
 						<div>saasdfdl;kfja</div>

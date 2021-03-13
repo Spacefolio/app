@@ -35,7 +35,7 @@ import {
 } from "@material-ui/core";
 import { COLORS, RD } from "../../../_styles/ResponsiveDesign";
 import { ArrowDropDown, ExitToApp, Menu } from "@material-ui/icons";
-import { ListMyExchanges } from "../../../integrations";
+import { ListMyExchanges } from "../../../Integrations";
 import { IPortfolioDataView } from "../../../../../types";
 import useMedia from "use-media";
 

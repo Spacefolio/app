@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DashboardWrapper } from "./Styles";
 import { FlexCard } from "../_styles";
 import { IRootState } from "../_reducers";
-import { MetaPortfolio } from "../portfolio";
+import { MetaPortfolio } from "../Portfolio";
 import { DashboardNoExchanges } from "../_components/Placeholders";
 
 export const Dashboard = () => {

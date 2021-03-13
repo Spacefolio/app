@@ -45,8 +45,6 @@ export const MyExchangeEditAreaWrapper = styled.div`
   justify-content: space-evenly;
 `;
 
-export const MyExchangeNameWrapper = styled(ListItemText)``;
-
 export const ExchangeFormContainer = styled.form`
   position: relative;
 `;

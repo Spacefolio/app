@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
-import { Portfolio } from "../portfolio";
-import { Dashboard } from "../dashboard";
-import { MobileNav, MobileTopNav, DesktopTopNav, SidebarNav } from "../nav";
+import { Portfolio } from "../Portfolio";
+import { Dashboard } from "../Dashboard";
+import { MobileNav, MobileTopNav, DesktopTopNav, SidebarNav } from "../Nav";
 import {
   ApplicationContainer,
   ApplicationFlexContainer,
@@ -11,16 +11,16 @@ import {
 } from "./styles";
 import { RD } from "../_styles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
-import { Settings } from "../settings";
+import { Settings } from "../Settings";
 import { GrowFromZero } from "../_styles";
 import { portfolioActions } from "../_actions";
 import useMedia from "use-media";
 import { Container } from "@material-ui/core";
-import { Bots } from "../bots";
-import { Trade } from "../trade";
+import { Bots } from "../Bots";
+import { Trade } from "../Trade";
 import { Modal } from "../_components";
 import { ThemeProvider } from "styled-components";
-import { BottomNavbar } from "../nav/bottom/Styles";
+import { BottomNavbar } from "../Nav/bottom/Styles";
 import { applicationViewActions } from "../_actions/applicationView.actions";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";

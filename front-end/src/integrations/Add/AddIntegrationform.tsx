@@ -13,7 +13,7 @@ interface ExchangeFormProps {
   integrationInfo: IIntegrationInfo;
 }
 
-export const AddExchangeForm: React.FC<ExchangeFormProps> = ({
+export const AddIntegrationForm: React.FC<ExchangeFormProps> = ({
   integrationInfo,
 }) => {
   const dispatch = useDispatch();

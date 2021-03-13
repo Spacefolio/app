@@ -8,10 +8,14 @@ export const SettingsWrapper = styled.div`
 	gap: ${SPACING.flexCardGap};
 `;
 
-export const ProfileGridContainer = styled.div`
+export const ProfileContainer = styled.div`
 	display: grid;
-	grid-template-columns: 1fr ;
-	grid-template-rows: 1fr ;
-  grid-template-areas: 
-  'profileinfo '
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr;
+	grid-template-areas: 'profileinfo ';
+`;
+
+export const IntegrationsContainer = styled.div`
+	display: flex;
+	width: 100%;
 `;
