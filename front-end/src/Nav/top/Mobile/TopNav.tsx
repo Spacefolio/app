@@ -141,8 +141,8 @@ export const MobileTopNav = () => {
             <Avatar
               style={{ color: "white", backgroundColor: COLORS.primaryBase }}
             >
-              {user.firstname
-                ? user.firstname
+              {user.firstName
+                ? user.firstName
                 : user.email[0].toUpperCase() + user.email[1].toUpperCase()}
             </Avatar>
           </InlineDiv>

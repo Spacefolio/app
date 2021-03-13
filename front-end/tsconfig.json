@@ -1,25 +1,25 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist/",
-    "noImplicitAny": true,
-    "resolveJsonModule": true,
-    "module": "es6",
+	"compilerOptions": {
+		"outDir": "./dist/",
+		"noImplicitAny": true,
+		"resolveJsonModule": true,
+		"module": "es6",
 
-    "target": "es5",
+		"target": "es5",
 
-    "jsx": "react",
-    "noFallthroughCasesInSwitch": true,
-    "allowJs": true,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "sourceMap": true,
+		"jsx": "react",
+		"noFallthroughCasesInSwitch": true,
+		"allowJs": true,
+		"forceConsistentCasingInFileNames": true,
+		"esModuleInterop": true,
+		"sourceMap": true,
 
-    "moduleResolution": "node"
-  },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules", "webpack.config.js"],
-  "awesomeTypescriptLoaderOptions": {
-    "reportFiles": ["./src/**/*"],
-    "checkjs": true
-  }
+		"moduleResolution": "node"
+	},
+	"include": ["./src/**/*"],
+	"exclude": ["node_modules", "webpack.config.js", "../back-end"],
+	"awesomeTypescriptLoaderOptions": {
+		"reportFiles": ["./src/**/*"],
+		"checkjs": true
+	}
 }

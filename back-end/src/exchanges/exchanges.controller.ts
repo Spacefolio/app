@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { exchangeService } from ".";
+
 import { IExchangeAccountDocument } from "./exchange.model";
+import { exchangeService } from "./exchange.service";
 
 const router = Router();
 

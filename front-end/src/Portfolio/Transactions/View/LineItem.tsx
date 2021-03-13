@@ -3,7 +3,7 @@ import { ITransactionItemView } from "../../../../../types";
 import {
   decideTransactionIcon,
 } from "../../../_components";
-import { ReformatCurrencyValue } from "../../../_helpers/formatters";
+import { ReformatCurrencyValue } from "../../../_helpers/formating";
 import { Avatar, TableRow, Typography } from "@material-ui/core";
 import { FlexWrap, InlineDiv } from "../../../_styles";
 import {

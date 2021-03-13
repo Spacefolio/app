@@ -1,12 +1,12 @@
-import { coindataService } from "..";
+import { coindataService } from '../coindata.service';
 
 export async function getCoinLogo(symbol: string) {
-  symbol = symbol.toLowerCase();
-  let coin = await coindataService.getCoinMarketData(symbol);
+	symbol = symbol.toLowerCase();
+	let coin = await coindataService.getCoinMarketData(symbol);
 
-  if (coin) {
-    return coin.image;
-  } else {
-    return `https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579`;
-  }
+	if (coin) {
+		return coin.image;
+	} else {
+		return `https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579`;
+	}
 }

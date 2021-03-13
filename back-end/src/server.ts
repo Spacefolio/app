@@ -1,16 +1,16 @@
 ﻿require("rootpath")();
 require("dotenv").config();
-const express = require("express");
+import express from "express";
 const app = express();
-const cors = require("cors");
-const bodyParser = require("body-parser");
+import cors from "cors";
+import bodyParser from "body-parser";
 import jwt from "./_helpers/jwt";
 import { errorHandler } from "./_helpers/error-handler";
 import { usersRouter } from "./users/users.controller";
 import { exchangesRouter } from "./exchanges/exchanges.controller";
 import { portfolioRouter } from "./portfolios/portfolios.controller";
 import { transactionsRouter } from "./transactions/transactions.controller";
-import { coindataRouter } from "./assets/Crypto/coindata.controller";
+import { coindataRouter } from "./assets/coindata.controller";
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

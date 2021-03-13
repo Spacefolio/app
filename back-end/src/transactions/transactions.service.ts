@@ -2,7 +2,7 @@ import { IUserDocument } from "../users/user.model";
 import { userService } from "../users/user.service";
 import { IExchangeAccountDocument } from "../exchanges/exchange.model";
 import { ITransactionItemView, IUser } from "../../../types";
-import { exchangeService } from "../exchanges";
+import { exchangeService } from "../exchanges/exchange.service";
 
 export const transactionService = {
   getTransactions,

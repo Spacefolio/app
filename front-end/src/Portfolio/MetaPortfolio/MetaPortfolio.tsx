@@ -15,7 +15,7 @@ import { IPortfolioDataView, timeframe } from "../../../../types";
 import { portfolioService } from "../../_services";
 import { IRootState } from "../../_reducers";
 import useDimensions from "react-use-dimensions";
-import { timeFrameSelectors } from "../../_helpers/formatters";
+import { timeFrameSelectors } from "../../_helpers/formating";
 import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
 import { Button, Typography } from "@material-ui/core";
 import { ListMyExchanges } from "../../integrations";

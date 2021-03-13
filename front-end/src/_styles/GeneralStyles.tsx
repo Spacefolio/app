@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import React from "react";
-import { COLORS, TIMING } from "./ResponsiveDesign";
+import { COLORS, SPACING, TIMING } from "./ResponsiveDesign";
 import styled from "styled-components";
 import { Polymer } from "@material-ui/icons";
 import { Button } from "@material-ui/core";
@@ -92,7 +92,7 @@ export const BigWideButton = styled.button`
 
 export const BaseButton = styled(Button)`
   box-shadow: 0px 15px 25px -17px ${COLORS.primaryBase};
-  width: 120px;
+  min-width: 120px;
   padding: 10 10px;
   border-radius: 20px;
 `;
@@ -140,6 +140,7 @@ export const AlgonexLogo = styled(Polymer)`
 
 export const StyledFormRow = styled.div`
   display: flex;
+  gap: ${SPACING.flexCardGap};
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem;

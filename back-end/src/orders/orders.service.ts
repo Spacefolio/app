@@ -1,7 +1,8 @@
-import { IExchangeAccountDocument, exchangeService } from "../exchanges";
+import { exchangeService } from "../exchanges/exchange.service";
 import { createTransactionViewItemsForOpenOrders } from "../transactions";
 import { IUserDocument, userService } from "../users";
 import { ITransactionItemView } from "../../../types";
+import { IExchangeAccountDocument } from "../exchanges/exchange.model";
 
 export const orderService = {
   getOpenOrders,

@@ -1,77 +1,111 @@
-import { userConstants } from "../_constants";
-import { userService } from "../_services";
-import { alertActions, portfolioActions } from ".";
-import { history } from "../_helpers";
-import { ILoginRequest, INewUser, IUser } from "../../../types";
-import { Redirect } from "react-router";
+import { userConstants } from '../_constants';
+import { userService } from '../_services';
+import { alertActions, portfolioActions } from '.';
+import { history } from '../_helpers';
+import {
+	ILoginRequest,
+	INewUser,
+	IUser,
+	IUserUpdateRequest,
+	IUserView,
+} from '../../../types';
+import { Redirect } from 'react-router';
 
 export const userActions = {
-  login,
-  logout,
-  register,
-  // getAll,
-  // delete: _delete
+	login,
+	logout,
+	register,
+	update,
+	// getAll,
+	// delete: _delete
 };
 
 function login(user: ILoginRequest) {
-  return (dispatch: any) => {
-    dispatch(request(user.email));
+	return (dispatch: any) => {
+		dispatch(request(user.email));
 
-    userService.login(user).then(
-      (user) => {
-        dispatch(success(user));
-        dispatch(portfolioActions.sync());
-        history.push("/dashboard");
-      },
-      (error) => {
-        dispatch(failure(error.toString()));
-        dispatch(alertActions.error(error.toString()));
-      }
-    );
-  };
+		userService.login(user).then(
+			(user) => {
+				dispatch(success(user));
+				dispatch(portfolioActions.sync());
+				history.push('/dashboard');
+			},
+			(error: Error) => {
+				dispatch(failure(error.toString()));
+				dispatch(alertActions.error(error.message));
+			}
+		);
+	};
 
-  function request(email: string) {
-    return { type: userConstants.LOGIN_REQUEST, email };
-  }
-  function success(user: any) {
-    return { type: userConstants.LOGIN_SUCCESS, user };
-  }
-  function failure(error: any) {
-    return { type: userConstants.LOGIN_FAILURE, error };
-  }
+	function request(email: string) {
+		return { type: userConstants.LOGIN_REQUEST, email };
+	}
+	function success(user: any) {
+		return { type: userConstants.LOGIN_SUCCESS, user };
+	}
+	function failure(error: any) {
+		return { type: userConstants.LOGIN_FAILURE, error };
+	}
 }
 
 function logout() {
-  userService.logout();
-  return { type: userConstants.LOGOUT };
+	userService.logout();
+	return { type: userConstants.LOGOUT };
 }
 
 function register(user: INewUser) {
-  return (dispatch: any) => {
-    dispatch(request(user));
+	return (dispatch: any) => {
+		dispatch(request(user));
 
-    userService
-      .register(user)
-      .then((user) => {
-        dispatch(success(user));
-        dispatch(alertActions.success("Registration successful"));
-        history.push("/");
-      })
-      .catch((error) => {
-        dispatch(failure(error.toString()));
-        dispatch(alertActions.error(error.toString()));
-      });
-  };
+		userService
+			.register(user)
+			.then((user) => {
+				dispatch(success(user));
+				dispatch(alertActions.success('Registration successful'));
+				history.push('/');
+			})
+			.catch((error) => {
+				dispatch(failure(error.toString()));
+				dispatch(alertActions.error(error.toString()));
+			});
+	};
 
-  function request(user: INewUser) {
-    return { type: userConstants.REGISTER_REQUEST, user };
-  }
-  function success(user: IUser) {
-    return { type: userConstants.REGISTER_SUCCESS, user };
-  }
-  function failure(error: string) {
-    return { type: userConstants.REGISTER_FAILURE, error };
-  }
+	function request(user: INewUser) {
+		return { type: userConstants.REGISTER_REQUEST, user };
+	}
+	function success(user: IUserView) {
+		return { type: userConstants.REGISTER_SUCCESS, user };
+	}
+	function failure(error: string) {
+		return { type: userConstants.REGISTER_FAILURE, error };
+	}
+}
+
+function update(user: IUserUpdateRequest) {
+	return (dispatch: any) => {
+		dispatch(request(user));
+
+		userService
+			.update(user)
+			.then((user: IUserUpdateRequest) => {
+				dispatch(success(user));
+				dispatch(alertActions.success('Update successful'));
+			})
+			.catch((error: Error) => {
+				dispatch(failure(error.toString()));
+				dispatch(alertActions.error(error.message));
+			});
+	};
+
+	function request(user: IUserUpdateRequest) {
+		return { type: userConstants.UPDATE_REQUEST, user };
+	}
+	function success(user: IUserUpdateRequest) {
+		return { type: userConstants.UPDATE_SUCCESS, user };
+	}
+	function failure(error: string) {
+		return { type: userConstants.UPDATE_FAILURE, error };
+	}
 }
 
 // function getAll() {

@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core";
 import { BaseButton, ScrollBox } from "../../_styles";
 import { SelectNewIntegration } from "./IntegrationSelector";
-import { ButtonSection } from "./Style";
+import { ButtonSection } from "./_style";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import { applicationViewActions } from "../../_actions/applicationView.actions";

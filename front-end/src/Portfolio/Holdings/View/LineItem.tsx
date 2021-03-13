@@ -12,7 +12,7 @@ import {
 import {
   ReformatAmountValue,
   ReformatCurrencyValue,
-} from "../../../_helpers/formatters";
+} from "../../../_helpers/formating";
 
 interface HoldingItemProps {
   portfolioItem: IPortfolioItemView;

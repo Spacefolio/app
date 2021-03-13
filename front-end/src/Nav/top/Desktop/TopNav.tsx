@@ -171,7 +171,7 @@ export const DesktopTopNav = () => {
       >
         <InlineDiv>
           {/* <Avatar src={filteredPortfolioData.logoUrl} /> */}
-          Hi, {user.firstname}
+          Hi, {user.firstName}
           <ArrowDropDown />
         </InlineDiv>
         {accountDropdown}

@@ -11,7 +11,7 @@ router.post("/register", register);
 router.get("/current", getCurrent);
 router.get("/:id", getById);
 router.post("/registration-check", checkRegistration);
-// router.put('/:id', update);
+router.put('/:id', update);
 //router.delete('/:id', _delete);
 
 export { router as usersRouter };
@@ -64,11 +64,11 @@ function getById(req: any, res: Response, next: NextFunction) {
     .catch((err) => next(err));
 }
 
-// function update(req: any, res: Response, next: NextFunction) {
-//     userService.update(req.params.id, req.body)
-//         .then(() => res.json({}))
-//         .catch(err: any => next(err));
-// }
+function update(req: any, res: Response, next: NextFunction) {
+    userService.update(req.params.id, req.body.user)
+        .then((user) => res.send().status(204))
+        .catch((err: any) => next(err));
+}
 
 /*
 function _delete(req, res, next) {
