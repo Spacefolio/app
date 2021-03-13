@@ -66,17 +66,17 @@ async function getMetaportfolioChart(userId: string, timeframe: timespan) {
 		{
 			if (!timeslices[chartData[i].T])
 			{
-				timeslices[chartData[i].T] = chartData[i].USD;
+				timeslices[chartData[i].T] = { start: chartData[i].T, value: chartData[i].USD, holdings: {} };
 			}
 			else
 			{
-				timeslices[chartData[i].T] += chartData[i].USD;
+				timeslices[chartData[i].T].value += chartData[i].USD;
 			}
 		}
 	}
 
 	return Object.entries(timeslices).map(([timestamp, value]: [string, ITimeslice]) => {
-		return { T: timestamp, USD: value };
+		return { T: value.start, USD: value.value };
 	});
 }
 
@@ -168,7 +168,7 @@ async function getPortfolioChart(userId: string, portfolioId: string, timeframe:
 	timeslicesNew.push(...slices);
 
 	return timeslicesNew.map((timeslice) => {
-		return { T: timeslice.start, USD: timeslice.value };
+		return { T: timeslice.start - 86400000, USD: timeslice.value };
 	});
 }
 
@@ -177,6 +177,8 @@ async function splitSlices(slices: ITimeslice[], pieces: number, previousSlice?:
 	let currentSnapshot: { [key: string]: number } = {};
 	let lastAmount: { [key: string]: number } = {};
 	let lastPrice: { [key: string]: number } = {};
+	let now = Date.now();
+	let lastHour = now - (now % 3600000);
 
 	if (previousSlice) {
 		for (let [key, value] of Object.entries(previousSlice.holdings)) {
@@ -193,21 +195,19 @@ async function splitSlices(slices: ITimeslice[], pieces: number, previousSlice?:
 		}
 	}
 
-	for (let currentSlice = 0; currentSlice < slices.length; currentSlice++) {
-		let slice = slices[currentSlice];
-		let sliceStart = slice.start;
+	for (let currentDaySlice = 0; currentDaySlice < slices.length; currentDaySlice++) {
+		let daySlice = slices[currentDaySlice];
 		let holdingSlices: IHoldingSlice[] = [];
-
-    let startHour = slice.start;
-    let endHour = slice.start + (24 * 3600000);
-    let now = Date.now();
-    now = now - (now % 3600000);
-    if (endHour > now)
+    let endHour = daySlice.start;
+    let startHour = daySlice.start - (24 * 3600000);
+		let sliceStart = startHour;
+		
+		if (endHour > lastHour)
     {
-      endHour = now;
+      endHour = lastHour;
     }
 
-		for (var [key, value] of Object.entries(slice.holdings)) {
+		for (var [key, value] of Object.entries(daySlice.holdings)) {
 			holdingSlices.push(value);
 			currentSnapshot[key] = 0;
 		}
@@ -219,15 +219,15 @@ async function splitSlices(slices: ITimeslice[], pieces: number, previousSlice?:
 				holdings: {},
 			};
 
-      let currentHour = sliceStart + ((86400000 / pieces) * (i - 1));
+      sliceStart = (startHour) + ((86400000 / pieces) * (i - 1));
 
-			let sliceEnd = slice.start + (i * 86400000) / pieces;
+			let sliceEnd = startHour + (i * (86400000 / pieces));
 
 			for (let holding = 0; holding < holdingSlices.length; holding++) {
 				let holdingSlice = holdingSlices[holding];
 				let snapsInThisSlice: IHoldingSnapshot[] = [];
 				const currentAsset = holdingSlice.asset;
-        const hourlyPrices = await getHourlyData(currentAsset, startHour, endHour);
+        const hourlyPrices = await getHourlyData(currentAsset, sliceStart, sliceEnd);
 
 				for (let j = currentSnapshot[currentAsset]; j < holdingSlice.snapshots.length; j++) {
 					let snap = holdingSlice.snapshots[j];
@@ -242,7 +242,7 @@ async function splitSlices(slices: ITimeslice[], pieces: number, previousSlice?:
 					}
 				}
 
-        let currentPrice = hourlyPrices.find((hourlyPrice) => hourlyPrice.hour == currentHour);
+        let currentPrice = hourlyPrices.find((hourlyPrice) => hourlyPrice.hour == sliceStart);
         if (currentPrice != undefined) { lastPrice[currentAsset] = currentPrice.price; }
 				let value = lastAmount[currentAsset] * lastPrice[currentAsset];
 
