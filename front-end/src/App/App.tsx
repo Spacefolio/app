@@ -8,10 +8,10 @@ import { Application } from "../Application";
 import { Alert } from "../_components";
 import "typeface-roboto";
 import "./App.scss";
-import { AppContainer } from "./styles";
+import { AppContainer } from "./_styles";
 import "../_styles/variables.scss";
 import { CssBaseline } from "@material-ui/core";
-import { GetStarted } from "../Login/login";
+import { Login } from "../Login/Login";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ export const App = () => {
         <Alert />
         <Router history={history}>
           <Switch>
-            <Route exact path="/login" component={GetStarted} />
+            <Route exact path="/login" component={Login} />
             <PrivateRoute path="/" component={Application} />
             <Redirect from="*" to="" />
           </Switch>

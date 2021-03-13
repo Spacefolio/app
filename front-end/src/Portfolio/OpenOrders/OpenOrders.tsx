@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Filter, ViewLoading } from "../../_components";
 import { IPortfolioDataView } from "../../../../types";
-import { OpenOrderItem } from "./OpenOrderItem/OpenOrderItem";
+import { OpenOrderItem } from "./Line_item/OpenOrderItem";
 import { IRootState } from "../../_reducers";
 
 export const OpenOrders = () => {

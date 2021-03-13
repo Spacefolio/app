@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { IPortfolioDataView, ITransactionItemView } from "../../../../../types";
-import { TransactionItem } from "./LineItem";
+import { TransactionItem } from "./TransactionItem";
 
 import { useState } from "react";
 

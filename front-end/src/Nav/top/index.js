@@ -1,2 +1,2 @@
-export * from "./Mobile";
-export * from "./Desktop";
+export * from "./DesktopTopNav";
+export * from "./MobileTopNav";

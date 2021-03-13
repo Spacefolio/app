@@ -1,7 +1,7 @@
 import {
 	ModifyContainer,
 	MyExchangesLineItemContainer,
-} from './Styles';
+} from './_styles';
 import {
 	Dialog,
 	DialogTitle,

@@ -2,17 +2,17 @@ import React, { useEffect } from 'react';
 import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useHistory } from 'react-router-dom';
-import { portfolioActions, userActions } from '../../../_actions';
+import { portfolioActions, userActions } from '../../_actions';
 import {
 	ArrowIcon,
 	Dropdown,
 	IDropdownItem,
 	Modal,
-} from '../../../_components';
-import { applicationViewActions } from '../../../_actions/applicationView.actions';
-import { IRootState } from '../../../_reducers';
+} from '../../_components';
+import { applicationViewActions } from '../../_actions/applicationView.actions';
+import { IRootState } from '../../_reducers';
 
-import { InlineDiv } from '../../../_styles';
+import { InlineDiv } from '../../_styles';
 import {
 	Avatar,
 	ListItemAvatar,
@@ -23,12 +23,13 @@ import {
 	Tabs,
 	Typography,
 } from '@material-ui/core';
-import { COLORS, RD } from '../../../_styles/ResponsiveDesign';
+import { COLORS, RD } from '../../_styles/ResponsiveDesign';
 import { Add, ArrowDropDown, ExitToApp } from '@material-ui/icons';
-import { AddIntegrationPopup, ListMyExchanges } from '../../../Integrations';
-import { IPortfolioDataView } from '../../../../../types';
-import { SyncIcon } from '../../../_styles/IconStyles';
-import { NavContainer, ToggleSidebar, NavFlexSpacer, NavAccountContainer } from './Styles';
+import { AddIntegrationPopup, ListMyExchanges } from '../../Integrations';
+import { IPortfolioDataView } from '../../../../types';
+import { SyncIcon } from '../../_styles/IconStyles';
+import { NavAccountContainer, NavContainer, NavFlexSpacer, ToggleSidebar } from './_styles';
+
 
 export const DesktopTopNav = () => {
 	const dispatch = useDispatch();

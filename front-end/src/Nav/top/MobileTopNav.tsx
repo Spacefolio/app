@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useHistory } from "react-router-dom";
-import { userActions } from "../../../_actions";
-import { ArrowIcon, Dropdown, IDropdownItem } from "../../../_components";
-import { applicationViewActions } from "../../../_actions/applicationView.actions";
-import { IRootState } from "../../../_reducers";
+import { userActions } from "../../_actions";
+import { ArrowIcon, Dropdown, IDropdownItem } from "../../_components";
+import { applicationViewActions } from "../../_actions/applicationView.actions";
+import { IRootState } from "../../_reducers";
 import {
   BrandingContainer,
   BrandTextLink,
@@ -15,14 +15,14 @@ import {
   NavFlexSpacer,
   NavLogoArea,
   ToggleSidebar,
-} from "./Styles";
+} from "./_styles";
 import {
   AlgonexLogo,
   BaseLink,
   ClickableDiv,
   InlineDiv,
   SvgWrapperButton,
-} from "../../../_styles";
+} from "../../_styles";
 import {
   Avatar,
   ListItemAvatar,
@@ -33,10 +33,10 @@ import {
   Typography,
   useScrollTrigger,
 } from "@material-ui/core";
-import { COLORS, RD } from "../../../_styles/ResponsiveDesign";
+import { COLORS, RD } from "../../_styles/ResponsiveDesign";
 import { ArrowDropDown, ExitToApp, Menu } from "@material-ui/icons";
-import { ListMyExchanges } from "../../../Integrations";
-import { IPortfolioDataView } from "../../../../../types";
+import { ListMyExchanges } from "../../Integrations";
+import { IPortfolioDataView } from "../../../../types";
 import useMedia from "use-media";
 
 interface Props {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { GrowFromZero } from "../../_styles";
-import { DDList, DDListItem, DDWrapper } from "./DropdownStyles";
+import { DDList, DDListItem, DDWrapper } from "./_styles";
 
 export interface IDropdownItem {
   text: string;

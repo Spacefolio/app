@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { HoldingItem } from "./LineItem";
-import { IPortfolioDataView, IPortfolioItemView } from "../../../../../types";
+import { AssetItem } from "./Line_item/AssetItem";
+import { IPortfolioDataView, IPortfolioItemView } from "../../../../types";
 import { useSelector } from "react-redux";
 
-import { IRootState } from "../../../_reducers";
-import { CustomFlexCard, GrowFromZero } from "../../../_styles";
-import { ViewLoading } from "../../../_components";
+import { IRootState } from "../../_reducers";
+import { CustomFlexCard, GrowFromZero } from "../../_styles";
+import { ViewLoading } from "../../_components";
 import {
   Paper,
   Table,
@@ -15,13 +15,13 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { TableCellStyled } from "../../Filter/Styles";
+import { TableCellStyled } from "../Filter/Styles";
 
 interface IHoldingsProps {
   portfolioItems: IPortfolioItemView[];
 }
 
-export const Holdings: React.FC<IHoldingsProps> = ({ portfolioItems }) => {
+export const Assets: React.FC<IHoldingsProps> = ({ portfolioItems }) => {
   const [filterField, setFilterField] = useState("value");
   const [sortAscending, setSortAscending] = useState(false);
 
@@ -47,7 +47,7 @@ export const Holdings: React.FC<IHoldingsProps> = ({ portfolioItems }) => {
           <TableBody>
             {sortHoldings(filterField, sortAscending).map(
               (pItem: IPortfolioItemView) => {
-                return <HoldingItem portfolioItem={pItem} />;
+                return <AssetItem portfolioItem={pItem} />;
               }
             )}
           </TableBody>

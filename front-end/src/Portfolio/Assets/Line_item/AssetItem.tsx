@@ -18,7 +18,7 @@ interface HoldingItemProps {
   portfolioItem: IPortfolioItemView;
 }
 
-export const HoldingItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
+export const AssetItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
   const {
     asset,
     amount,

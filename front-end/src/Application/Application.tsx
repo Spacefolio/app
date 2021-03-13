@@ -8,7 +8,7 @@ import {
   ApplicationContainer,
   ApplicationFlexContainer,
   BodyWrapper,
-} from "./styles";
+} from "./_styles";
 import { RD } from "../_styles/ResponsiveDesign";
 import { IRootState } from "../_reducers";
 import { Settings } from "../Settings";
@@ -20,7 +20,7 @@ import { Bots } from "../Bots";
 import { Trade } from "../Trade";
 import { Modal } from "../_components";
 import { ThemeProvider } from "styled-components";
-import { BottomNavbar } from "../Nav/bottom/Styles";
+import { BottomNavbar } from "../Nav/Bottom/Styles";
 import { applicationViewActions } from "../_actions/applicationView.actions";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";

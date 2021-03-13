@@ -8,7 +8,7 @@ import {
   PortfolioProfitSection,
   TimeframeItem,
   TimeFrameSelectorContainer,
-} from "./Styles";
+} from "./_styles";
 import { Dropdown, Modal, PortfolioLineChart } from "../../_components";
 import { alertActions, portfolioActions } from "../../_actions";
 import { IPortfolioDataView, timeframe } from "../../../../types";

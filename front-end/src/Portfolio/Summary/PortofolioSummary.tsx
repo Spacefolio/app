@@ -3,13 +3,13 @@ import { Add } from "@material-ui/icons";
 import React from "react";
 import { useSelector } from "react-redux";
 import { ThemeProvider } from "styled-components";
-import { IPortfolioItem } from "../../../../../back-end/src/portfolios/portfolio.model";
-import { IPortfolioDataView } from "../../../../../types";
-import { BaseButton } from "../../../_styles";
-import { theme } from "../../../_styles/Theme";
-import { IRootState } from "../../../_reducers";
-import { PortfolioSummaryItem } from "./portfolio-item";
-import { SummaryWrapper } from "./styles";
+import { IPortfolioItem } from "../../../../back-end/src/portfolios/portfolio.model";
+import { IPortfolioDataView } from "../../../../types";
+import { BaseButton } from "../../_styles";
+import { theme } from "../../_styles/Theme";
+import { IRootState } from "../../_reducers";
+import { PortfolioSummaryItem } from "./View/PortfolioSummaryItem";
+import { SummaryWrapper } from "./View/_styles";
 
 export const PortfolioSummary = () => {
   const portfolioData = useSelector(

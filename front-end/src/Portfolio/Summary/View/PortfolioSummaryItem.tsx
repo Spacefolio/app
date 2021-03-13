@@ -1,23 +1,21 @@
-import react, { useEffect, useState } from 'react';
-import React from 'react';
-import { IPortfolioDataView } from '../../../../../types';
-import { BaseButton, FlexCard, InlineDiv } from '../../../_styles';
-import { PortfolioLineChart } from '../../../_components';
-import { Container } from './styles';
-import useDimensions from 'react-use-dimensions';
-import { alertActions } from '../../../_actions';
-import { portfolioService } from '../../../_services';
+import { Container, Avatar, Typography } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Avatar, Typography } from '@material-ui/core';
 import { Holdings } from '../..';
+import { IPortfolioDataView } from '../../../../../types';
+import { alertActions } from '../../../_actions';
 import { applicationViewActions } from '../../../_actions/applicationView.actions';
-import { AddTransactionForm } from '../../Transactions/Add/Form';
+import { PortfolioLineChart } from '../../../_components';
+import { portfolioService } from '../../../_services';
+import { FlexCard, BaseButton, InlineDiv } from '../../../_styles';
+import { AddTransactionForm } from '../../Transactions/Add/AddTransactionForm';
+import useDimensions from 'react-use-dimensions';
 
 interface IPortfolioSummaryItemView {
 	data: IPortfolioDataView;
 }
 
-export const PortfolioSummaryItem: react.FC<IPortfolioSummaryItemView> = ({
+export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 	data,
 }) => {
 	const {

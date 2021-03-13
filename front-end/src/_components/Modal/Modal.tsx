@@ -6,7 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalWrapper,
-} from "./Styles";
+} from "./_styles";
 
 import {
   GrowFromZero,

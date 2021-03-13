@@ -1,11 +1,11 @@
 import React from "react";
-import { SidebarContainer, SidebarSpacer } from "./styles";
+import { SidebarContainer, SidebarSpacer } from "./_styles";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../../_reducers";
 import {
   SidebarActionItem,
   SidebarSubActionItem,
-} from "./line_item/ActionItem";
+} from "./Line_item/SidebarActionItem";
 import {
   Android,
   Dashboard,
@@ -25,7 +25,7 @@ import { AlgonexLogo } from "../../_styles";
 import { Tabs } from "@material-ui/core";
 import path from "path";
 import { useHistory } from "react-router";
-import { ModalWrapper } from "../../_components/Modal/Styles";
+import { ModalWrapper } from "../../_components/Modal/_styles";
 
 interface SidebarNavProps {}
 

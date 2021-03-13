@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DashboardWrapper } from "./Styles";
+import { DashboardWrapper } from "./_styles";
 import { FlexCard } from "../_styles";
 import { IRootState } from "../_reducers";
 import { MetaPortfolio } from "../Portfolio";

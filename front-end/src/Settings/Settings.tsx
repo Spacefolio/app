@@ -10,7 +10,7 @@ import {
 } from 'react-router';
 import { CustomFlexCard, FlexCard, GrowFromZero } from '../_styles';
 import { theme } from '../_styles/Theme';
-import { StyledTabs, StyledTab } from '../Portfolio/Styles';
+import { StyledTabs, StyledTab } from '../Portfolio/_styles';
 import { Modal } from '../_components';
 import { SettingsWrapper } from './_styles';
 import { EditProfile } from './Profile/EditProfile';

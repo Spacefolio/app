@@ -7,7 +7,7 @@ import {
   SidebarIconContainer,
   TabSubContentContainer,
   SidebarSubTab,
-} from "./Styles";
+} from "./_styles";
 import { Route, useHistory, useLocation, useRouteMatch } from "react-router";
 import { useState } from "react";
 import { link } from "fs/promises";

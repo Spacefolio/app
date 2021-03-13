@@ -6,7 +6,7 @@ import {
   AlertMessage,
   AlertWrapper,
   IconContainer,
-} from "./AlertStyles";
+} from "./_styles";
 import { IRootState } from "../../_reducers";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import { Close } from "@material-ui/icons";

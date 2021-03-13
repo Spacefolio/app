@@ -19,11 +19,11 @@ import {
 	Typography,
 } from '@material-ui/core';
 import { LockOutlined } from '@material-ui/icons';
-import { FormWrapper } from './styles';
+import { FormWrapper } from './_styles';
 import { userService } from '../_services';
 import { emailTester } from '../_helpers';
 
-export const GetStarted = () => {
+export const Login = () => {
 	const [email, setEmail] = useState('');
 
 	const [password, setPassword] = useState('');

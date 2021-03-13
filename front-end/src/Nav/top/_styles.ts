@@ -5,7 +5,7 @@ import {
   SPACING,
   SvgWrapperButton,
   BaseLink,
-} from "../../../_styles";
+} from "../../_styles";
 
 export const NavLogoArea = styled(ClickableDiv)`
   display: flex;
@@ -19,7 +19,7 @@ export const NavContainer = styled.div`
   font-size: 1em;
   ${CenteredFlexBox}
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
-  z-index: 3;
+  z-index: 5;
   position: sticky;
   top: 0;
   background-color: white;

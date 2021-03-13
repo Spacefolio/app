@@ -1,1 +1,2 @@
-export * from './View/summary'
+export * from './View';
+export * from './PortofolioSummary';
