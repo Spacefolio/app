@@ -1,5 +1,5 @@
 import { User } from '../users/user.model';
-import { IExchangeAccountRequest, IPortfolioDataView, IPortfolioItemView, IOpenOrderItemView } from '../../../types';
+import { IExchangeAccountRequest, IPortfolioDataView, IPortfolioItemView, IOpenOrderItemView, ITransactionItemView } from '../../../types';
 import { ExchangeAccount, IExchangeAccountDocument, IHoldingsHistory, IHoldingSlice, IHoldingSnapshot, ITimeslice } from './exchange.model';
 import ccxt, { Exchange } from 'ccxt';
 import { IPortfolioItem } from '../portfolios/portfolio.model';
@@ -11,7 +11,7 @@ import { getConversionRate, saveTransactionViewItems } from '../transactions/tra
 import { fiat, getHistoricalData } from '../coindata/historical.service';
 import { coindataService } from '../coindata/coindata.service';
 import { IDailyPrice } from '../coindata/historical.model';
-    
+
 export const exchangeService = {
 	getAll,
 	getById,
@@ -156,6 +156,10 @@ async function addTransactionSnapshotToHistory(transaction: ITransaction, exchan
 		totalAmountSold: 0,
 		totalValueReceived: 0,
 		totalValueInvested: 0,
+		totalValueDeposited: 0,
+		totalValueWithdrawn: 0,
+		totalAmountDeposited: 0,
+		totalAmountWithdrawn: 0,
 	};
 
 	let lastSnapshot = { ...snapshot };
@@ -177,6 +181,10 @@ async function addTransactionSnapshotToHistory(transaction: ITransaction, exchan
 		snapshot.totalValueInvested = lastSnapshot.totalValueInvested + amount * priceInUsd;
 		snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
 		snapshot.price.USD = priceInUsd;
+		snapshot.totalValueDeposited = lastSnapshot.totalValueDeposited + (amount * priceInUsd);
+		snapshot.totalValueWithdrawn = lastSnapshot.totalValueWithdrawn;
+		snapshot.totalAmountDeposited = lastSnapshot.totalAmountDeposited + amount;
+		snapshot.totalAmountWithdrawn = lastSnapshot.totalAmountWithdrawn;
 	} else {
 		snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
 		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + amount + fee;
@@ -185,6 +193,10 @@ async function addTransactionSnapshotToHistory(transaction: ITransaction, exchan
 		snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
 		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + (amount - fee) * priceInUsd;
 		snapshot.price.USD = priceInUsd;
+		snapshot.totalValueDeposited = lastSnapshot.totalValueDeposited;
+		snapshot.totalValueWithdrawn = lastSnapshot.totalValueWithdrawn + (amount + fee) * priceInUsd;
+		snapshot.totalAmountDeposited = lastSnapshot.totalAmountDeposited;
+		snapshot.totalAmountWithdrawn = lastSnapshot.totalAmountWithdrawn + (amount + fee);
 	}
 
 	holdingsHistory[currency].push(snapshot);
@@ -211,6 +223,10 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 		totalAmountSold: 0,
 		totalValueReceived: 0,
 		totalValueInvested: 0,
+		totalValueDeposited: 0,
+		totalValueWithdrawn: 0,
+		totalAmountDeposited: 0,
+		totalAmountWithdrawn: 0,
 	};
 
 	let lastSnapshot = { ...snapshot };
@@ -232,6 +248,10 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 		snapshot.totalValueInvested = lastSnapshot.totalValueInvested + orderCost * quoteCurrencyInUsd;
 		snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
 		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : (order.cost / order.filled) * quoteCurrencyInUsd;
+		snapshot.totalValueDeposited = lastSnapshot.totalValueDeposited;
+		snapshot.totalValueWithdrawn = lastSnapshot.totalValueWithdrawn;
+		snapshot.totalAmountDeposited = lastSnapshot.totalAmountDeposited;
+		snapshot.totalAmountWithdrawn = lastSnapshot.totalAmountWithdrawn;
 	} else {
 		snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
 		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + order.filled;
@@ -240,6 +260,10 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 		snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
 		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + (order.cost - order.fee.cost) * quoteCurrencyInUsd;
 		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : (order.cost / order.filled) * quoteCurrencyInUsd;
+		snapshot.totalValueDeposited = lastSnapshot.totalValueDeposited;
+		snapshot.totalValueWithdrawn = lastSnapshot.totalValueWithdrawn;
+		snapshot.totalAmountDeposited = lastSnapshot.totalAmountDeposited;
+		snapshot.totalAmountWithdrawn = lastSnapshot.totalAmountWithdrawn;
 	}
 
 	let snapshotQuote = {
@@ -251,6 +275,10 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 		totalAmountSold: 0,
 		totalValueReceived: 0,
 		totalValueInvested: 0,
+		totalValueDeposited: 0,
+		totalValueWithdrawn: 0,
+		totalAmountDeposited: 0,
+		totalAmountWithdrawn: 0,
 	};
 
 	let lastSnapshotQuote = { ...snapshotQuote };
@@ -271,6 +299,10 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 		snapshotQuote.totalValueInvested = lastSnapshotQuote.totalValueInvested;
 		snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived + order.cost * quoteCurrencyInUsd;
 		snapshotQuote.price.USD = quoteCurrencyInUsd;
+		snapshotQuote.totalValueDeposited = lastSnapshotQuote.totalValueDeposited;
+		snapshotQuote.totalValueWithdrawn = lastSnapshotQuote.totalValueWithdrawn;
+		snapshotQuote.totalAmountDeposited = lastSnapshotQuote.totalAmountDeposited;
+		snapshotQuote.totalAmountWithdrawn = lastSnapshotQuote.totalAmountWithdrawn;
 	} else {
 		// count as a buy of the quote currency
 		snapshotQuote.totalAmountBought = lastSnapshotQuote.totalAmountBought + order.cost - order.fee.cost;
@@ -280,6 +312,10 @@ async function addOrderSnapshotToHistory(order: IOrder, exchange: ccxt.Exchange,
 		snapshotQuote.totalValueInvested = lastSnapshotQuote.totalValueInvested + order.cost * quoteCurrencyInUsd;
 		snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived;
 		snapshotQuote.price.USD = quoteCurrencyInUsd;
+		snapshotQuote.totalValueDeposited = lastSnapshotQuote.totalValueDeposited;
+		snapshotQuote.totalValueWithdrawn = lastSnapshotQuote.totalValueWithdrawn;
+		snapshotQuote.totalAmountDeposited = lastSnapshotQuote.totalAmountDeposited;
+		snapshotQuote.totalAmountWithdrawn = lastSnapshotQuote.totalAmountWithdrawn;
 	}
 
 	holdingsHistory[baseCurrency].push(snapshot);
@@ -481,7 +517,9 @@ async function getExchangesData(userId: string) {
 		portfolioData.push(portfolioDataItem);
 	}
 
-	return portfolioData[0];
+	let metaportfolio = await createMetaportfolioData(portfolioData);
+	//portfolioData = [metaportfolio, ...portfolioData];
+	return metaportfolio;
 }
 
 async function getExchangeData(userId: string, exchangeId: string) {
@@ -647,13 +685,13 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 
 	for (let day = startDate; day < endDate; day += 86400000) {
 		let nextDay = day + 86400000;
-		
+
 		let timeslice: ITimeslice = {
 			start: nextDay,
 			holdings: {},
 			value: 0,
 		};
-		
+
 		for (let holding = 0; holding < allTimeHoldingSlices.length; holding++) {
 			let slice = allTimeHoldingSlices[holding];
 			let snapsInThisSlice: IHoldingSnapshot[] = [];
@@ -671,11 +709,15 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 					lastAmount[holding] = snap.totalAmountBought - snap.totalAmountSold;
 					lastPrice[holding] = snap.price.USD;
 					currentSnapshot[holding]++;
-				} else { break; }
+				} else {
+					break;
+				}
 			}
 
 			let historicalPrice = await getHistoricalData(slice.asset, nextDay).catch((err) => -1);
-			if (historicalPrice != -1) { lastPrice[holding] = historicalPrice; }
+			if (historicalPrice != -1) {
+				lastPrice[holding] = historicalPrice;
+			}
 
 			let value = lastAmount[holding] * lastPrice[holding];
 
@@ -704,7 +746,7 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 	var totalValue = 0;
 	var totalProfit = 0;
 	var totalInvested = 0;
-	var totalProfitPercentage = 0;
+	var totalDeposited = 0;
 
 	const formattedPortfolioItems: IPortfolioItemView[] = await Promise.all(
 		exchangeAccount.portfolioItems.map(async (item) => {
@@ -724,7 +766,8 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 
 			totalProfit += profitAllTime;
 			totalValue += currentValue;
-			totalInvested += item.amountBought * item.averageBuyPrice.USD;
+			totalInvested += last.totalValueInvested;
+			totalDeposited += last.totalValueDeposited;
 
 			//const profit24Hour = (amountSoldInTheLast24Hours * averageSellInTheLast24Hours) - (value24HoursAgo * howMuchIHad24HoursAgo) + currentValue
 			const profit24Hour = randNum();
@@ -765,8 +808,9 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 
 	let portfolioData: IPortfolioDataView = {
 		...exchangeAccountJson,
+		transactions: exchangeAccount.transactionViewItems,
 		portfolioItems: formattedPortfolioItems,
-		profitPercentage: ((totalValue + totalProfit - totalInvested) / totalInvested) * 100,
+		profitPercentage: (totalProfit / totalDeposited) * 100,
 		portfolioTotal: { USD: totalValue },
 		profitTotal: { USD: totalProfit },
 		logoUrl: exchangeAccount.logoUrl,
@@ -774,6 +818,95 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 	};
 
 	return portfolioData;
+}
+
+type PortfolioItemsDict = { [key: string]: { item: IPortfolioItemView; totalInvested: { all: number; h24: number } } };
+
+async function createMetaportfolioData(portfolioData: IPortfolioDataView[]) {
+	let portfolioItemsDict: PortfolioItemsDict = {};
+	let transactions: ITransactionItemView[] = [];
+	let openOrders: IOpenOrderItemView[] = [];
+	let portfolioItems: IPortfolioItemView[] = [];
+	let profitTotal = { USD: 0 };
+	let totalInvested = 0;
+	let profitPercentage = 0;
+	let portfolioTotal = { USD: 0 };
+
+	for (let i = 0; i < portfolioData.length; i++) {
+		mergePortfolioItems(portfolioItemsDict, portfolioData[i].portfolioItems);
+		transactions = transactions.concat(portfolioData[i].transactions);
+		openOrders = openOrders.concat(portfolioData[i].openOrders);
+	}
+
+	for (let [assetId, entry] of Object.entries(portfolioItemsDict)) {
+		entry.item.profitPercentage.all = entry.item.profitTotal.all / entry.totalInvested.all;
+		entry.item.profitPercentage.h24 = entry.item.profitTotal.h24 / entry.totalInvested.h24;
+		if (entry.item.amount > 0) {
+			entry.item.currentPrice = entry.item.value.USD / entry.item.amount;
+		}
+		portfolioTotal.USD += entry.item.value.USD;
+		profitTotal.USD += entry.item.profitTotal.all;
+		totalInvested += entry.totalInvested.all;
+
+		portfolioItems.push(entry.item);
+	}
+
+	profitPercentage = (profitTotal.USD / totalInvested) * 100;
+
+	let metaportfolio: IPortfolioDataView = {
+		name: 'All portfolios',
+		id: 'ALL',
+		nickname: 'Metaportfolio',
+		addedDate: new Date(),
+		apiInfo: {
+			apiKey: '',
+			apiSecret: '',
+			passphrase: '',
+		},
+		transactions,
+		portfolioItems,
+		profitPercentage,
+		portfolioTotal,
+		profitTotal,
+		openOrders,
+	};
+
+	return metaportfolio;
+}
+
+async function mergePortfolioItems(portfolioItemsDict: PortfolioItemsDict, portfolioItems: IPortfolioItemView[]) {
+	for (let i = 0; i < portfolioItems.length; i++) {
+		let item = portfolioItems[i];
+		if (portfolioItemsDict[item.asset.assetId]) {
+			let entry = portfolioItemsDict[item.asset.assetId];
+			entry.item.amount += item.amount;
+			entry.item.value.USD += item.value.USD;
+			entry.item.profitTotal.all += item.profitTotal.all;
+			entry.item.profitTotal.h24 += item.profitTotal.h24;
+			entry.totalInvested.all += item.profitTotal.all / item.profitPercentage.all;
+			entry.totalInvested.h24 += item.profitTotal.h24 / item.profitPercentage.h24;
+		} else {
+			let totalInvested = { all: item.profitTotal.all / item.profitPercentage.all, h24: item.profitTotal.h24 / item.profitTotal.h24 };
+
+			portfolioItemsDict[item.asset.assetId] = {
+				item: {
+					asset: item.asset,
+					amount: item.amount,
+					value: item.value,
+					currentPrice: item.currentPrice,
+					profitTotal: {
+						all: item.profitTotal.all,
+						h24: item.profitTotal.h24,
+					},
+					profitPercentage: {
+						all: 0,
+						h24: 0,
+					},
+				},
+				totalInvested,
+			};
+		}
+	}
 }
 
 async function getLogo(symbol: string) {

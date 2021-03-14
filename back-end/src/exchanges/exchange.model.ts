@@ -51,6 +51,10 @@ export interface IHoldingSnapshot {
   totalAmountSold: number;
   totalValueReceived: number;
   totalValueInvested: number;
+  totalValueDeposited: number;
+  totalValueWithdrawn: number;
+  totalAmountDeposited: number;
+  totalAmountWithdrawn: number;
 }
 
 export interface IHoldingsHistory {
@@ -143,6 +147,7 @@ exchangeAccountSchema.set("toJSON", {
     delete ret.hash;
     delete ret.orders;
     delete ret.transactions;
+    delete ret.transactionViewItems;
     delete ret.openOrders;
     delete ret.timeslices;
     delete ret.lastSyncedDate;

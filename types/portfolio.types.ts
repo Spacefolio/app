@@ -7,15 +7,15 @@ export interface IPortfolioDataView {
   id: string;
   nickname: string;
   addedDate: Date | string;
-  exchangeType: exchangeType;
+  exchangeType?: exchangeType;
   apiInfo: {
     apiKey: string;
     apiSecret: string;
     passphrase: string;
   };
   logoUrl?: string;
-  transactionViewItems: ITransactionItemView[];
-  openOrders: IOpenOrderItemView[];
+  transactions?: ITransactionItemView[];
+  openOrders?: IOpenOrderItemView[];
   portfolioItems: IPortfolioItemView[];
   profitPercentage: number;
   portfolioTotal: { USD: number };
@@ -34,15 +34,12 @@ export interface ICachedPortfolioDataView {
     passphrase: string;
   };
   logoUrl?: string;
-  orders: IOpenOrderItemView[];
-  transactionViewItems: ITransactionItemView[];
-  transactions: ITransaction[];
+  transactions: ITransactionItemView[];
   openOrders: IOpenOrderItemView[];
   portfolioItems: IPortfolioItemView[];
   profitPercentage: number;
   portfolioTotal: { USD: number };
   profitTotal: { USD: number };
-  holdingHistory: IHoldingSnapshot[];
   lastRefresh: number;
 }
 

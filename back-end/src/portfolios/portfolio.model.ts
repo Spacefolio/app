@@ -30,6 +30,10 @@ const holdingSnapshotSchema = new mongoose.Schema({
   totalAmountSold: Number,
   totalValueReceived: Number,
   totalValueInvested: Number,
+  totalValueDeposited: Number,
+  totalValueWithdrawn: Number,
+  totalAmountDeposited: Number,
+  totalAmountWithdrawn: Number,
 });
 /* #endregion */
 

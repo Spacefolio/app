@@ -22,7 +22,7 @@ export const Transactions = () => {
     <React.Fragment>
       {filteredPortfolioData != null ? (
         <Filter
-          data={filteredPortfolioData.transactionViewItems}
+          data={filteredPortfolioData.transactions}
           sortAscending={sortAscending}
           LineItemComponent={TransactionItem}
         />

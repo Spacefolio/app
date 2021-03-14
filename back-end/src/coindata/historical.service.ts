@@ -113,8 +113,11 @@ export async function loadHourlyData(symbol: string)
     hourlyData = new HourlyData( { symbol });
   }
 
+  hourlyData.prices = [];
+
   for (let i = 0; i < hourlyDataJson.prices.length; i++)
   {
+    
     let timestamp: number = hourlyDataJson.prices[i][0];
     let hour = timestamp % 3600000 >= 1800000 ? timestamp + (3600000 - (timestamp % 3600000)) : timestamp - (timestamp % 3600000); // round to nearest hour
     hourlyData.prices.push({ hour, price: hourlyDataJson.prices[i][1] });
@@ -150,17 +153,34 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
   }
 
   var startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from);
+  var endIndex = -1;
   var lastHour = hourlyData.prices[hourlyData.prices.length - 1].hour;
 
-  if (startIndex == -1 || lastHour < to)
+  if (startIndex == -1)
   {
     hourlyData = await loadHourlyData(symbol);
     startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from);
     lastHour = hourlyData.prices[hourlyData.prices.length - 1].hour;
-    if (startIndex == -1 || lastHour < to) throw `Could not fetch hourly price data for symbol '${symbol}'. [2]`;
+    if (startIndex == -1)
+    { // attempt to grab last hour's price
+      console.log(`used last hour's price for ${symbol}`);
+      startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from - 3600000);
+      endIndex = startIndex;
+      if (startIndex == -1)
+      { // attempt to grab the latest price we have
+        console.log(`used last retrieved price for ${symbol}`);
+        startIndex = hourlyData.prices.length - 1;
+        endIndex = hourlyData.prices.length - 1;
+      }
+    }
+    if (startIndex == -1) throw `Could not fetch hourly price data for symbol '${symbol}'. [2]`;
   }
 
-  var endIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == to);
+  if (endIndex == -1)
+  {
+    endIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == to);
+  }
+
   if (endIndex == -1) throw `Could not fetch hourly price data for symbol '${symbol}'. [3]`;
 
   for (let i = startIndex; i <= endIndex; i++)

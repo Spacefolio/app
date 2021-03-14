@@ -206,6 +206,10 @@ async function splitSlices(slices: ITimeslice[], pieces: number, previousSlice?:
     {
       endHour = lastHour;
     }
+		if (sliceStart > lastHour)
+		{
+			sliceStart = lastHour;
+		}
 
 		for (var [key, value] of Object.entries(daySlice.holdings)) {
 			holdingSlices.push(value);
@@ -222,6 +226,14 @@ async function splitSlices(slices: ITimeslice[], pieces: number, previousSlice?:
       sliceStart = (startHour) + ((86400000 / pieces) * (i - 1));
 
 			let sliceEnd = startHour + (i * (86400000 / pieces));
+			if (sliceEnd > lastHour)
+    	{
+      	sliceEnd = lastHour;
+    	}
+			if (sliceStart > lastHour)
+			{
+				break;
+			}
 
 			for (let holding = 0; holding < holdingSlices.length; holding++) {
 				let holdingSlice = holdingSlices[holding];
