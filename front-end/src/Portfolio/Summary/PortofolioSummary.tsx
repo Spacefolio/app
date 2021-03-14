@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { ThemeProvider } from "styled-components";
 import { IPortfolioItem } from "../../../../back-end/src/portfolios/portfolio.model";
 import { IPortfolioDataView } from "../../../../types";
-import { BaseButton } from "../../_styles";
+import { ActionButton } from "../../_styles";
 import { theme } from "../../_styles/Theme";
 import { IRootState } from "../../_reducers";
 import { PortfolioSummaryItem } from "./Line_item/PortfolioSummaryItem";

@@ -66,7 +66,7 @@ function register(user: INewUser) {
 			})
 			.catch((error) => {
 				dispatch(failure(error.toString()));
-				dispatch(alertActions.error(error.toString()));
+				dispatch(alertActions.error(error.message));
 			});
 	};
 

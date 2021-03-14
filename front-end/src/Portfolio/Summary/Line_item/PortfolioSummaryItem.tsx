@@ -6,7 +6,7 @@ import { alertActions } from '../../../_actions';
 import { applicationViewActions } from '../../../_actions/applicationView.actions';
 import { PortfolioLineChart } from '../../../_components';
 import { portfolioService } from '../../../_services';
-import { FlexCard, BaseButton, InlineDiv } from '../../../_styles';
+import { FlexCard, ActionButton, InlineDiv } from '../../../_styles';
 import { AddTransactionForm } from '../../Transactions/Add/AddTransactionForm';
 import useDimensions from 'react-use-dimensions';
 import { Assets } from '../..';
@@ -44,15 +44,15 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 			.then((res) => {
 				setChartData(res);
 			})
-			.catch((err) => {
-				dispatch(alertActions.error(err));
+			.catch((error: Error) => {
+				dispatch(alertActions.error(error.message));
 			});
 	}, []);
 
 	return (
 		<FlexCard>
 			<Container>
-				<BaseButton
+				<ActionButton
 					onClick={() =>
 						dispatch(
 							applicationViewActions.setModal(
@@ -64,7 +64,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 					}
 				>
 					Add Transaction
-				</BaseButton>
+				</ActionButton>
 				<InlineDiv style={{ gridArea: 'name' }}>
 					<Avatar src={logoUrl} />
 					<Typography>{nickname}</Typography>

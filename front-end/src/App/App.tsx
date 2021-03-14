@@ -30,7 +30,7 @@ export const App = () => {
         <Router history={history}>
           <Switch>
             <Route exact path="/login" component={Login} />
-            <PrivateRoute path="/" component={Application} />
+            <PrivateRoute path="/" Component={Application} />
             <Redirect from="*" to="" />
           </Switch>
         </Router>

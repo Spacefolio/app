@@ -25,9 +25,8 @@ export const Charts = () => {
       .then((res) => {
         setPortfolioChartData(res);
       })
-      .catch((err) => {
-        console.log(err);
-        dispatch(alertActions.error(err));
+      .catch((error: Error) => {
+        dispatch(alertActions.error(error.message));
       });
   }, [timeframe, filterId]);
 

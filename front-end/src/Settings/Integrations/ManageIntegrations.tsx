@@ -1,10 +1,18 @@
-import { Fab, Menu, MenuList, Typography } from '@material-ui/core';
+import {
+	CardActions,
+	CardContent,
+	CardHeader,
+	Fab,
+	Menu,
+	MenuList,
+	Typography,
+} from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { AddIntegrationPopup, ListMyExchanges } from '../../Integrations';
 import { applicationViewActions } from '../../_actions/applicationView.actions';
-import { BaseButton, CustomFlexCard } from '../../_styles';
+import { ActionButton, FlexCard } from '../../_styles';
 import { IntegrationsContainer } from '../_styles';
 
 interface ManageIntegrationsProps {}
@@ -14,50 +22,40 @@ export const ManageIntegrations: React.FC<ManageIntegrationsProps> = ({}) => {
 
 	return (
 		<IntegrationsContainer>
-			<CustomFlexCard
-				style={{
-					width: '100%',
-					flexDirection: 'column',
-					padding: '20px',
-					gridArea: 'profileinfo',
-					gap: '20px',
-				}}
-			>
-				<div>
+			<FlexCard fullWidth>
+				<CardHeader>
 					<Typography variant="h5">My Integrations</Typography>
 					<Typography variant="caption" color="textSecondary">
 						Add, edit or delete your integrations
 					</Typography>
-				</div>
-				<MenuList>
-					<ListMyExchanges enableEditing={true} />
-				</MenuList>
-				<Fab
-					variant="extended"
-					color="primary"
-					onClick={() =>
-						dispatch(
-							applicationViewActions.setModal(
-								true,
-								<AddIntegrationPopup />,
-								'Add Integration'
+				</CardHeader>
+				<CardContent>
+					<MenuList>
+						<ListMyExchanges enableEditing={true} />
+					</MenuList>
+				</CardContent>
+				<CardActions>
+					<ActionButton
+						variant="contained"
+						color="primary"
+						onClick={() =>
+							dispatch(
+								applicationViewActions.setModal(
+									true,
+									<AddIntegrationPopup />,
+									'Add Integration'
+								)
 							)
-						)
-					}
-				>
-					<Typography variant="button">Add Integration</Typography>
-				</Fab>
+						}
+					>
+						<Typography variant="button">Add Integration</Typography>
+					</ActionButton>
+				</CardActions>
 				{/* <Fab color="primary">
 					<Add />
 				</Fab> */}
-			</CustomFlexCard>
-			<CustomFlexCard
-				style={{
-					width: '100%',
-				}}
-			>
-				sdfghfgd
-			</CustomFlexCard>
+			</FlexCard>
+			<FlexCard>sdfghfgd</FlexCard>
 		</IntegrationsContainer>
 	);
 };

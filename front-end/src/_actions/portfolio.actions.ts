@@ -23,7 +23,7 @@ function sync() {
       })
       .catch((error) => {
         dispatch(failure());
-        dispatch(alertActions.error(error.toString()));
+        dispatch(alertActions.error(error.message));
       });
   };
 
@@ -49,7 +49,7 @@ function refresh(portfolioId: string, manual: boolean = false) {
       })
       .catch((error) => {
         dispatch(failure());
-        dispatch(alertActions.error(error.toString()));
+        dispatch(alertActions.error(error.message));
       });
   };
 
@@ -99,7 +99,7 @@ function getOpenOrders(exchangeID?: string) {
       })
       .catch((error) => {
         dispatch(failure(error.toString()));
-        dispatch(alertActions.error(error.toString()));
+        dispatch(alertActions.error(error.message));
       });
   };
 

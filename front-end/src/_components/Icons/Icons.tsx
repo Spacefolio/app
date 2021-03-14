@@ -1,5 +1,5 @@
 import React from "react";
-import { BigWideButton, ClickableSvg } from "../../_styles";
+import { ClickableSvg } from "../../_styles";
 
 interface ISvgProps {
   style?: object;

@@ -8,7 +8,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
 	mode: 'development',
-	entry: ['@babel/polyfill', './src/index.jsx'],
+	entry: ['./src/index.tsx'],
 	optimization: {
 		minimizer: [new UglifyJsPlugin({ parallel: true })],
 	},
@@ -26,11 +26,6 @@ module.exports = {
 			{
 				test: /\.tsx?$/,
 				loader: 'awesome-typescript-loader',
-			},
-
-			{
-				test: /\.jsx$/,
-				use: 'babel-loader',
 			},
 			{
 				test: /\.(scss|css)$/,

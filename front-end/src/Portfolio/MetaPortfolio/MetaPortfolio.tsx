@@ -43,9 +43,8 @@ export const MetaPortfolio = () => {
       .then((res) => {
         setPortfolioChartData(res);
       })
-      .catch((err) => {
-        console.log(err);
-        dispatch(alertActions.error(err));
+      .catch((error) => {
+        dispatch(alertActions.error(error.message));
       });
   }, [timeframe, filterId]);
 

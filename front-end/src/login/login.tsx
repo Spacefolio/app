@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userActions } from '../_actions';
-import { BaseButton, BigWideButton, FlexCard, StyledFormRow } from '../_styles';
+import { ActionButton, StyledFormRow } from '../_styles';
 import { IRootState } from '../_reducers';
 import {
 	Avatar,
@@ -166,9 +166,9 @@ export const Login = () => {
 						</Grid>
 					) : null}
 					<StyledFormRow style={{ justifyContent: 'center' }}>
-						<BaseButton variant="contained" color="primary" type="submit">
+						<ActionButton variant="contained" color="primary" type="submit">
 							Sign In
-						</BaseButton>
+						</ActionButton>
 					</StyledFormRow>
 				</form>
 			</FormWrapper>

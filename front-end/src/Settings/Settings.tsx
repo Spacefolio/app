@@ -8,7 +8,7 @@ import {
 	useLocation,
 	useParams,
 } from 'react-router';
-import { CustomFlexCard, FlexCard, GrowFromZero } from '../_styles';
+import { FlexCard, GrowFromZero } from '../_styles';
 import { theme } from '../_styles/Theme';
 import { StyledTabs, StyledTab } from '../Portfolio/_styles';
 import { Modal } from '../_components';
@@ -62,7 +62,7 @@ export const Settings: React.FC<SettingsProps> = ({}) => {
 	return (
 		<ThemeProvider theme={theme}>
 			<SettingsWrapper>
-				<CustomFlexCard>{SettingsTabs}</CustomFlexCard>
+				<FlexCard>{SettingsTabs}</FlexCard>
 				<Switch>
 					<Route exact path={`${path}/profile`}>
 						<EditProfile />

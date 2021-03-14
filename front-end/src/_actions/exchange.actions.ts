@@ -27,9 +27,9 @@ function addNew(exchange: IExchangeAccountRequest) {
 				dispatch(portfolioActions.sync());
 				dispatch(alertActions.success('Exchange Added'));
 			})
-			.catch((error) => {
+			.catch((error: Error) => {
 				dispatch(failure(error.toString()));
-				dispatch(alertActions.error(error.toString()));
+				dispatch(alertActions.error(error.message));
 			});
 	};
 

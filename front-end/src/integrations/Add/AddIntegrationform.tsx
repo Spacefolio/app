@@ -6,7 +6,7 @@ import {
   IIntegrationInfo,
 } from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { BigWideButton, StyledFormRow } from "../../_styles";
+import {  StyledFormRow } from "../../_styles";
 import { Avatar, TextField, Typography } from "@material-ui/core";
 
 interface ExchangeFormProps {

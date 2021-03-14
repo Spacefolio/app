@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { AssetItem } from "./Line_item/AssetItem";
-import { IPortfolioDataView, IPortfolioItemView } from "../../../../types";
-import { useSelector } from "react-redux";
-
-import { IRootState } from "../../_reducers";
-import { CustomFlexCard, GrowFromZero } from "../../_styles";
+import { IPortfolioItemView } from "../../../../types";
 import { ViewLoading } from "../../_components";
 import {
   Paper,

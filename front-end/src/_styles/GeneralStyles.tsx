@@ -1,9 +1,9 @@
-import { Link, NavLink } from "react-router-dom";
-import React from "react";
-import { COLORS, SPACING, TIMING } from "./ResponsiveDesign";
-import styled from "styled-components";
-import { Polymer } from "@material-ui/icons";
-import { Button } from "@material-ui/core";
+import { Link, NavLink } from 'react-router-dom';
+import React from 'react';
+import { COLORS, SPACING, TIMING } from './ResponsiveDesign';
+import styled from 'styled-components';
+import { Polymer } from '@material-ui/icons';
+import { Button } from '@material-ui/core';
 export const TimingStyle = `
 transition: ${TIMING.transitionTime};
 `;
@@ -15,56 +15,41 @@ export const CenteredFlexBox = `
 export const BaseSvg = styled.svg``;
 
 export const BaseDiv = styled.div`
-  position: relative;
-  cursor: pointer;
-  * {
-    cursor: pointer;
-  }
+	position: relative;
+	cursor: pointer;
+	* {
+		cursor: pointer;
+	}
 `;
 
 export const ClickableDiv = styled(BaseDiv)`
-  &:hover {
-    color: ${COLORS.accentBase};
-    svg {
-      fill: ${COLORS.accentBase};
-    }
-  }
-  ${TimingStyle}
+	&:hover {
+		color: ${COLORS.accentBase};
+		svg {
+			fill: ${COLORS.accentBase};
+		}
+	}
+	${TimingStyle}
 `;
 export const ClickableSvg = styled(BaseSvg)`
-  width: 1rem;
-  height: 1rem;
-  cursor: pointer;
-  &:hover {
-    fill: ${COLORS.accentBase};
-  }
-  ${TimingStyle}
+	width: 1rem;
+	height: 1rem;
+	cursor: pointer;
+	&:hover {
+		fill: ${COLORS.accentBase};
+	}
+	${TimingStyle}
 `;
 export const ScrollBox = styled.div`
-  max-height: inherit;
-  overflow-y: scroll;
-  overflow-x: hidden;
+	max-height: inherit;
+	overflow-y: scroll;
+	overflow-x: hidden;
 `;
 export const BaseGrid = styled.div`
-  display: grid;
-  ${TimingStyle}
+	display: grid;
+	${TimingStyle}
 `;
 
-export const CustomFlexCard = styled.div`
-  display: flex;
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 6px 6px 14px #e3e3e8;
-  overflow: hidden;
-  ${TimingStyle};
-`;
-
-export const FlexCard = styled(CustomFlexCard)`
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-`;
 export const BaseSearchBar = styled.input`
   cursor: pointer
   border-radius: 3px;
@@ -73,28 +58,6 @@ export const BaseSearchBar = styled.input`
   padding: 1rem;
   &:focus {
   }
-`;
-export const BigWideButton = styled.button`
-  ${CenteredFlexBox}
-  width: 100%;
-  border-radius: 1rem;
-  background-color: ${COLORS.primaryBase};
-  padding: 1rem;
-  color: white;
-  box-shadow: 0px 15px 25px -17px ${COLORS.primaryBase};
-  cursor: pointer;
-  ${TimingStyle}
-  &:hover {
-    background-color: ${COLORS.accentBase};
-    box-shadow: 0px 15px 25px -17px ${COLORS.accentBase};
-  }
-`;
-
-export const BaseButton = styled(Button)`
-  box-shadow: 0px 15px 25px -17px ${COLORS.primaryBase};
-  min-width: 120px;
-  padding: 10 10px;
-  border-radius: 20px;
 `;
 
 export const FullScreenOverlay = styled.div`
@@ -107,41 +70,38 @@ export const FullScreenOverlay = styled.div`
   margin: 50%;
 `;
 export const BaseLink = styled(Link)`
-  color: ${COLORS.primaryBase};
-  ${TimingStyle}
+	color: ${COLORS.primaryBase};
+	${TimingStyle}
 `;
 
 interface InlineDivProps {
-  align?: "start" | "flex-end";
+	align?: 'start' | 'flex-end';
 }
 export const InlineDiv = styled.div<InlineDivProps>`
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: ${(props) => props.align};
+	white-space: nowrap;
+	display: flex;
+	align-items: center;
+	justify-content: ${(props) => props.align};
 `;
 
 export const SvgWrapperButton = styled(ClickableDiv)`
-  height: 2rem;
-  width: 2rem;
-  ${CenteredFlexBox}
+	height: 2rem;
+	width: 2rem;
+	${CenteredFlexBox}
 `;
 export const FlexWrap = styled(InlineDiv)`
-  white-space: none;
-  flex-wrap: wrap;
-  gap: 5px;
+	white-space: none;
+	flex-wrap: wrap;
+	gap: 5px;
 `;
 
 export const AlgonexLogo = styled(Polymer)`
-  height: 100%;
-  width: 100%;
-  fill: ${COLORS.primaryBase} !important;
+	height: 100%;
+	width: 100%;
+	fill: ${COLORS.primaryBase} !important;
 `;
 
-export const StyledFormRow = styled.div`
-  display: flex;
-  gap: ${SPACING.flexCardGap};
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem;
+
+export const FlexSpacer = styled.div`
+	width: 100%;
 `;

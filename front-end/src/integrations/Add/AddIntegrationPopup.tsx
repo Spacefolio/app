@@ -13,7 +13,7 @@ import {
 	Theme,
 	Typography,
 } from '@material-ui/core';
-import { BaseButton, ScrollBox } from '../../_styles';
+import { ActionButton, ScrollBox } from '../../_styles';
 import { SelectNewIntegration } from './IntegrationSelector';
 import { ButtonSection } from './_style';
 import { useDispatch, useSelector } from 'react-redux';
@@ -136,10 +136,10 @@ export const AddIntegrationPopup: React.FC<IAddExchangeProps> = ({}) => {
 					{getStepContent(activeStep)}
 
 					<ButtonSection>
-						<BaseButton disabled={activeStep === 0} onClick={handleBack}>
+						<ActionButton disabled={activeStep === 0} onClick={handleBack}>
 							Back
-						</BaseButton>
-						<BaseButton
+						</ActionButton>
+						<ActionButton
 							type={activeStep === 1 ? 'submit' : 'button'}
 							form={activeStep === 1 ? 'add-exchange-form' : ''}
 							disabled={integrationInfo == null}
@@ -148,7 +148,7 @@ export const AddIntegrationPopup: React.FC<IAddExchangeProps> = ({}) => {
 							onClick={handleClick}
 						>
 							{addingExchange ? 'Submitting' : buttonText}
-						</BaseButton>
+						</ActionButton>
 					</ButtonSection>
 				</React.Fragment>
 			)}

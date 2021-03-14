@@ -7,8 +7,8 @@ import {
 } from '../../../../types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-	BaseButton,
-	BigWideButton,
+	ActionButton,
+	
 	ScrollBox,
 	StyledFormRow,
 } from '../../_styles';
@@ -154,7 +154,7 @@ export const EditIntegrationForm: React.FC<ExchangeFormProps> = ({ data }) => {
 					/>
 				</StyledFormRow>
 
-				<BaseButton
+				<ActionButton
 					disabled={
 						data.nickname == nickname &&
 						data.apiInfo.apiKey == apiKey &&
@@ -171,7 +171,7 @@ export const EditIntegrationForm: React.FC<ExchangeFormProps> = ({ data }) => {
 					<Typography variant="button">
 						{addingExchange ? 'Updating...' : 'Update'}
 					</Typography>
-				</BaseButton>
+				</ActionButton>
 			</form>
 		</ScrollBox>
 	);

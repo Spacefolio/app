@@ -8,7 +8,7 @@ import { IUserUpdateRequest, IUserView } from '../../../../types';
 import { userActions } from '../../_actions';
 import { emailTester } from '../../_helpers';
 import { IRootState } from '../../_reducers';
-import { BaseButton, StyledFormRow } from '../../_styles';
+import { ActionButton, InlineDiv, StyledFormRow } from '../../_styles';
 
 interface UpdateProfileFormProps {}
 
@@ -51,7 +51,7 @@ export const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({}) => {
 	return (
 		<form onSubmit={handleSubmit} autoComplete="off" id="update-profile-form">
 			<StyledFormRow>
-				<Email color={"action"} />
+				<Email color={'action'} />
 				<TextField
 					variant="standard"
 					required
@@ -71,7 +71,7 @@ export const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({}) => {
 			</StyledFormRow>
 
 			<StyledFormRow>
-				<Person color={"action"} />
+				<Person color={'action'} />
 				<TextField
 					variant="standard"
 					required
@@ -96,7 +96,7 @@ export const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({}) => {
 			</StyledFormRow>
 
 			<StyledFormRow>
-				<Face color={"action"} />
+				<Face color={'action'} />
 				<TextField
 					variant="standard"
 					required
@@ -109,7 +109,7 @@ export const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({}) => {
 				/>
 			</StyledFormRow>
 			<StyledFormRow style={{ justifyContent: 'flex-end' }}>
-				<BaseButton
+				<ActionButton
 					variant="contained"
 					color="primary"
 					type="submit"
@@ -124,7 +124,7 @@ export const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({}) => {
 					<Typography variant="button" noWrap>
 						Save Changes
 					</Typography>
-				</BaseButton>
+				</ActionButton>
 			</StyledFormRow>
 		</form>
 	);

@@ -17,7 +17,12 @@
 		"moduleResolution": "node"
 	},
 	"include": ["./src/**/*"],
-	"exclude": ["node_modules", "webpack.config.js", "../back-end"],
+	"exclude": [
+		"node_modules",
+		"webpack.config.js",
+		"../back-end",
+		"./src/stories/*"
+	],
 	"awesomeTypescriptLoaderOptions": {
 		"reportFiles": ["./src/**/*"],
 		"checkjs": true
