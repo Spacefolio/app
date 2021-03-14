@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AssetItem } from "./Line_item/AssetItem";
-import { IPortfolioItemView } from "../../../../types";
+import { IPortfolioDataView, IPortfolioItemView } from "../../../../types";
 import { ViewLoading } from "../../_components";
 import {
   Paper,
@@ -15,6 +15,7 @@ import { TableCellStyled } from "../Filter/Styles";
 
 interface IHoldingsProps {
   portfolioItems: IPortfolioItemView[];
+
 }
 
 export const Assets: React.FC<IHoldingsProps> = ({ portfolioItems }) => {

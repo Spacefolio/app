@@ -1,81 +1,73 @@
-import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
-import * as d3 from "d3";
-import "./PieChart.scss";
-import { useSelector } from "react-redux";
-import { IRootState } from "../../../_reducers";
-import { portfolioActions } from "../../../_actions";
-import { IPortfolioItemView } from "../../../../../types";
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import * as d3 from 'd3';
+import './PieChart.scss';
+import { IPortfolioItemView } from '../../../../../types';
+import { Doughnut } from 'react-chartjs-2';
 
 interface PortfolioLineChartProps {
-  size?: number;
-  id: string;
+	size?: number;
+	data: IPortfolioItemView[];
+	id: string;
 }
 
 export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
-  size,
-  id,
+	size,
+	id,
+	data,
 }) => {
-  const filteredPortfolioData = useSelector(
-    (state: IRootState) => state.portfolio.filteredPortfolioData
-  );
+	const [chartData, setChartData] = useState<any>();
 
-  useEffect(() => {
-    filteredPortfolioData && drawChart();
-  }, [filteredPortfolioData]);
+	useEffect(() => {
+		setChartData({
+			labels: data.map((item) => item.asset.name),
+			datasets: [
+				{
+					backgroundColor: [
+						'#B21F00',
+						'#C9DE00',
+						'#2FDE00',
+						'#00A6B4',
+						'#6800B4',
+					],
+					hoverBackgroundColor: [
+						'#501800',
+						'#4B5000',
+						'#175000',
+						'#003350',
+						'#35014F',
+					],
+					data: data.map((item) => item.value.USD),
+				},
+			],
+		});
+	}, [data, size]);
 
-  function drawChart() {
-    d3.select(`#${id}1`).remove();
-
-    const data = filteredPortfolioData.portfolioItems.map(
-      (item: IPortfolioItemView) => {
-        return item.value.USD;
-      }
-    );
-
-    var group: any = d3
-      .select(`#${id}`)
-      .append("svg")
-      .attr("id", `${id}1`)
-      .attr("width", size)
-      .attr("height", size)
-      .append("g")
-      .attr("transform", `translate(${size / 2}, ${size / 2})`);
-
-    var pieSegments = d3.pie()(data);
-
-    var arcGenerator = d3
-      .arc()
-      .innerRadius(0)
-      .outerRadius(size / 2)
-      .startAngle((d: any) => d.startAngle)
-      .endAngle((d: any) => d.endAngle);
-
-    var colors = d3.scaleOrdinal(d3.schemeCategory10);
-
-    group
-      .selectAll("path")
-      .data(pieSegments)
-      .enter()
-      .append("path")
-      .attr("d", arcGenerator)
-      .attr("fill", (d: any, i: any) => colors(i));
-  }
-
-  return (
-    <div id={`${id}`}>
-      {!filteredPortfolioData && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: `${size}px`,
-            height: `${size}px`,
-          }}
-        >
-          <div>LOADING CHART...</div>
-        </div>
-      )}
-    </div>
-  );
+	return (
+		<div id={`${id}`}>
+			{!data ? (
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						width: `${size}px`,
+						height: `${size}px`,
+					}}
+				>
+					<div>LOADING CHART...</div>
+				</div>
+			) : (
+				<Doughnut
+					data={chartData}
+					width={size}
+					height={size}
+					options={{
+						legend: {
+							display: false,
+						},
+					}}
+				/>
+			)}
+		</div>
+	);
 };

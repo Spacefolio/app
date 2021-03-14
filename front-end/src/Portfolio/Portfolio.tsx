@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PortfolioWrapper, StyledTab, StyledTabs } from './_styles';
-import { MetaPortfolio, Transactions, OpenOrders, Charts } from '.';
+import { MetaPortfolio, Transactions, OpenOrders, Charts, Assets } from '.';
 import { FlexCard } from '../_styles';
 import { ThemeProvider } from '@material-ui/core';
 import { useState } from 'react';
@@ -36,7 +36,7 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 			></StyledTab>
 
 			<StyledTab
-				onClick={() => history.push(`${path}/holdings`)}
+				onClick={() => history.push(`${path}/assets`)}
 				label="Holdings"
 			></StyledTab>
 
@@ -58,7 +58,7 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 				{/* <div>
           <ListMyExchanges enableEditing={false} />
         </div> */}
-				<FlexCard>{PortfolioTabs}</FlexCard>
+				{/* <FlexCard>{PortfolioTabs}</FlexCard> */}
 				<Switch>
 					<Route exact path={`${path}`}>
 						<PortfolioSummary />
@@ -66,9 +66,9 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 					<Route exact path={`${path}/charts`}>
 						<Charts />
 					</Route>
-					{/* <Route exact path={`${path}/holdings`}>
-            <Holdings  />
-          </Route> */}
+					{/* <Route exact path={`${path}/assets`}>
+						<Assets />
+					</Route> */}
 					<Route exact path={`${path}/transactions`}>
 						<Transactions />
 					</Route>

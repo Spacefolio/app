@@ -36,7 +36,6 @@ export const Charts = () => {
         <MetaPortfolio />
       </FlexCard>
       <FlexCard style={{ gridArea: "two" }}>
-        <PortfolioPieChart size={300} id="portfolio-pie-chart" />
       </FlexCard>
 
       <FlexCard style={{ gridArea: "three" }}>

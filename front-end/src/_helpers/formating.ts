@@ -21,6 +21,13 @@ export const ReformatCurrencyValue = (value: number, currencyType: string) => {
 	}
 };
 
+export const ReformatCurrencyValueMini = (value: number) => {
+	return value.toLocaleString(undefined, {
+		maximumFractionDigits: 2,
+		minimumFractionDigits: 2,
+	});
+};
+
 export const ReformatAmountValue = (value: number) => {
 	return value.toLocaleString();
 };

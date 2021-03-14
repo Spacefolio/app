@@ -4,12 +4,20 @@ import { useDispatch } from 'react-redux';
 import { IPortfolioDataView } from '../../../../../types';
 import { alertActions } from '../../../_actions';
 import { applicationViewActions } from '../../../_actions/applicationView.actions';
-import { PortfolioLineChart } from '../../../_components';
+import { PortfolioLineChart, PortfolioPieChart } from '../../../_components';
 import { portfolioService } from '../../../_services';
-import { FlexCard, ActionButton, InlineDiv } from '../../../_styles';
+import {
+	FlexCard,
+	ActionButton,
+	InlineDiv,
+	FlexCardContent,
+	FlexCardHeader,
+	FlexSpacer,
+} from '../../../_styles';
 import { AddTransactionForm } from '../../Transactions/Add/AddTransactionForm';
 import useDimensions from 'react-use-dimensions';
 import { Assets } from '../..';
+import { AssetsMiniList } from '../../Assets/AssetsMiniList';
 
 interface IPortfolioSummaryItemView {
 	data: IPortfolioDataView;
@@ -51,31 +59,26 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 
 	return (
 		<FlexCard>
-			<Container>
-				<ActionButton
-					onClick={() =>
-						dispatch(
-							applicationViewActions.setModal(
-								true,
-								<AddTransactionForm />,
-								'Add Transaction'
-							)
-						)
-					}
-				>
-					Add Transaction
-				</ActionButton>
-				<InlineDiv style={{ gridArea: 'name' }}>
-					<Avatar src={logoUrl} />
-					<Typography>{nickname}</Typography>
+			<FlexCardHeader>
+				<InlineDiv style={{ padding: '12px' }}>
+					<InlineDiv>
+						<Avatar color="black" src={logoUrl} sizes="small" />
+						<Typography variant="h2">{nickname}</Typography>
+					</InlineDiv>
+					<FlexSpacer />
 				</InlineDiv>
-
-				<div
-					style={{ gridArea: 'chart', overflowX: 'hidden' }}
+			</FlexCardHeader>
+			<FlexCardContent justifyContent="space-between" flexDirection="row">
+				<InlineDiv
+					style={{
+						overflow: 'hidden',
+						maxHeight: '200px',
+						minWidth: '500px',
+					}}
 					ref={chartContainerRef}
 				>
 					<PortfolioLineChart
-						id={'test'}
+						id={nickname.replace(/\s/g, '') + 'chart'}
 						timeframe={'ALL'}
 						data={chartData}
 						width={width}
@@ -83,9 +86,22 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 						xAxis={true}
 						height={200}
 					/>
-				</div>
-				<Assets portfolioItems={portfolioItems} />
-			</Container>
+				</InlineDiv>
+				<InlineDiv
+					style={{
+						overflow: 'hidden',
+						minWidth: '200px',
+					}}
+				>
+					<PortfolioPieChart
+						data={portfolioItems}
+						size={180}
+						id={nickname.replace(/\s/g, '') + 'pie'}
+					/>
+				</InlineDiv>
+
+				<AssetsMiniList portfolioItems={portfolioItems} />
+			</FlexCardContent>
 		</FlexCard>
 	);
 };

@@ -14,7 +14,8 @@ export const FlexCard = styled(Card)<FlexCardProps>`
 	display: flex;
 	background: white;
 	border-radius: 10px;
-	box-shadow: 6px 6px 14px #e3e3e8;
+	// box-shadow: 6px 6px 14px #e3e3e8;
+	box-shadow: none;
 	overflow: hidden;
 	${(props) => (props.disableGutters ? 'padding: 0;' : 'padding: 0 12px;')}
 	${TimingStyle};
@@ -25,10 +26,21 @@ export const FlexCard = styled(Card)<FlexCardProps>`
 			: 'flex-direction: column;'};
 `;
 
-export interface FlexCardContentProps {}
+export interface FlexCardContentProps {
+	flexDirection?: 'row' | 'column';
+	justifyContent?: any;
+}
 export const FlexCardContent = styled.div<FlexCardContentProps>`
+	display: flex;
+	${(props) =>
+		props.flexDirection == 'row'
+			? 'flex-direction: row;'
+			: 'flex-direction: column;'};
+	${(props) =>
+		props.justifyContent && `justify-content: ${props.justifyContent};`}
 	padding: 16px;
 	padding-top: 0;
+	flex-wrap: wrap;
 `;
 
 export interface FlexCardHeaderProps {
@@ -45,8 +57,6 @@ export const FlexCardHeader = styled.div<FlexCardHeaderProps>`
 				? props.side * parseInt(SPACING.flexCardGap)
 				: parseInt(SPACING.flexCardGap)}px;
 `;
-
-
 
 export interface FlexCardContainerProps {}
 

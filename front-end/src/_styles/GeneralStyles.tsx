@@ -75,9 +75,13 @@ export const BaseLink = styled(Link)`
 `;
 
 interface InlineDivProps {
-	align?: 'start' | 'flex-end';
+	align?: any;
+	spacing?: number;
 }
 export const InlineDiv = styled.div<InlineDivProps>`
+	gap: calc(
+		${SPACING.flexCardGap} * ${(props) => (props.spacing ? props.spacing : 0)}
+	);
 	white-space: nowrap;
 	display: flex;
 	align-items: center;
@@ -101,7 +105,12 @@ export const AlgonexLogo = styled(Polymer)`
 	fill: ${COLORS.primaryBase} !important;
 `;
 
-
-export const FlexSpacer = styled.div`
+interface FlexSpacerProps {
+	showLine?: boolean;
+}
+export const FlexSpacer = styled.div<FlexSpacerProps>`
+	${(props) =>
+		props.showLine &&
+		`height: 1px; background: rgb(0,0,0,0.6); margin: 0 10px;`}
 	width: 100%;
 `;
