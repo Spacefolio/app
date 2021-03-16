@@ -1,33 +1,34 @@
 import {
-	Container,
 	Avatar,
 	Typography,
 	Grid,
 	Hidden,
-	CircularProgress,
+	Button,
+	MenuItem,
+	ClickAwayListener,
+	Popper,
+	MenuList,
+	Paper,
+	ListItemIcon,
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { IPortfolioDataView } from '../../../../../types';
+import { IPortfolioDataView, timeframe } from '../../../../../types';
 import { alertActions, portfolioActions } from '../../../_actions';
-
 import { SimpleTimeSeries, PortfolioPieChart } from '../../../_components';
 import { portfolioService } from '../../../_services';
 import {
 	FlexCard,
-	ActionButton,
 	InlineDiv,
 	FlexCardContent,
 	FlexCardHeader,
 	FlexSpacer,
 } from '../../../_styles';
-
 import useDimensions from 'react-use-dimensions';
-
 import { AssetsMiniList } from '../../Assets/AssetsMiniList';
-
 import { SyncIcon } from '../../../_styles/IconStyles';
-import { useFilteredPortfolio } from '../../../_hooks/useFilteredPortfolio';
+import { timeFrameSelectors } from '../../../_helpers';
+import { DateRange } from '@material-ui/icons';
 
 export interface IPortfolioSummaryItemView {
 	portfolioItem: IPortfolioDataView;
@@ -43,27 +44,87 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 
 	const [chartContainerRef, { width }] = useDimensions();
 
+	const [Tframe, setTimeframe] = useState<timeframe>('ALL');
+
 	useEffect(() => {
 		setChartData([]);
 		portfolioItem &&
 			portfolioService
-				.getPortfolioChartData('ALL', portfolioItem.id)
+				.getPortfolioChartData(Tframe, portfolioItem.id)
 				.then((res) => {
 					setChartData(res);
 				})
 				.catch((error: Error) => {
 					dispatch(alertActions.error(error.message));
 				});
-	}, [portfolioItem]);
+	}, [portfolioItem, Tframe]);
 
 	const testColors = [
-		'#B21F00',
-		'#6800B4',
-		'#C9DE00',
-		'#2FDE00',
-		'#00A6B4',
-		'pink',
+		'rgb(211, 241, 210)',
+		'rgb(144, 204, 222)',
+		'rgb(160, 155, 204)',
+		'rgb(203, 166, 204)',
+		'rgb(243, 198, 209)',
+		'rgb(253, 218, 223)',
 	];
+
+	const anchorRef = React.useRef<HTMLButtonElement>(null);
+	const [TframeVisible, setTframeVisible] = useState(false);
+
+	const handleClose = (event: React.MouseEvent<EventTarget>) => {
+		if (
+			anchorRef.current &&
+			anchorRef.current.contains(event.target as HTMLElement)
+		) {
+			return;
+		}
+
+		setTframeVisible(false);
+	};
+
+	const TimeframeSelector = () => (
+		<div>
+			<Button
+				ref={anchorRef}
+				aria-controls={open ? 'menu-list-grow' : undefined}
+				aria-haspopup="true"
+				onClick={() => setTframeVisible(!TframeVisible)}
+			>
+				{Tframe}
+				<DateRange />
+			</Button>
+			<Popper
+				open={TframeVisible}
+				anchorEl={anchorRef.current}
+				role={undefined}
+				transition
+			>
+				<Paper>
+					<ClickAwayListener onClickAway={handleClose}>
+						<MenuList
+							autoFocusItem={TframeVisible}
+							id="menu-list-grow"
+							onClick={() => setTframeVisible(false)}
+						>
+							{timeFrameSelectors.map((item: timeframe, index: number) => {
+								return (
+									<MenuItem
+										key={index}
+										onClick={() => {
+											setTimeframe(item);
+										}}
+										selected={item == Tframe}
+									>
+										{item}
+									</MenuItem>
+								);
+							})}
+						</MenuList>
+					</ClickAwayListener>
+				</Paper>
+			</Popper>
+		</div>
+	);
 
 	const Content = () => (
 		<React.Fragment>
@@ -81,6 +142,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 							<Typography variant="caption">{portfolioItem.name}</Typography>
 						</InlineDiv>
 					</div>
+					{TimeframeSelector()}
 					<FlexSpacer />
 				</InlineDiv>
 			</FlexCardHeader>
@@ -116,8 +178,6 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 								showY={false}
 								id={portfolioItem.nickname.replace(/\s/g, '') + 'chart'}
 								data={chartData}
-								width={width}
-								height={150}
 							/>
 						</Grid>
 					</Grid>

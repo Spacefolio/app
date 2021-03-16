@@ -4,8 +4,6 @@ import Chart from 'chart.js';
 import { theme } from '../../../_styles/Theme';
 
 interface PortfolioLineChartProps {
-	width: number;
-	height: number;
 	id: string;
 	data: IPortfolioLineChartItem[];
 	showX?: boolean;
@@ -14,8 +12,6 @@ interface PortfolioLineChartProps {
 }
 
 export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
-	height,
-	width,
 	id,
 	showX = true,
 	showY = true,

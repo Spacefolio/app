@@ -3,6 +3,7 @@ import { SPACING } from '.';
 
 export const StyledFormRow = styled.div`
 	display: flex;
+	width: 100%;
 	gap: ${SPACING.flexCardGap};
 	align-items: flex-end;
 	justify-content: space-between;

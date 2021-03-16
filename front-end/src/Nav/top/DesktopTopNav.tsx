@@ -30,7 +30,7 @@ import {
 	ToggleSidebar,
 } from './_styles';
 
-export const DesktopTopNav = () => {
+export const TopNav = () => {
 	const dispatch = useDispatch();
 
 	const user = useSelector((state: IRootState) => state.authentication.user);
@@ -80,7 +80,6 @@ export const DesktopTopNav = () => {
 			containerRef={container}
 		>
 			<MenuList>
-				<ListMyExchanges enableEditing={false} />
 				<MenuItem
 					button={true}
 					key={'AddExchange'}
@@ -125,30 +124,21 @@ export const DesktopTopNav = () => {
 
 	return (
 		<NavContainer>
-			<ToggleSidebar onClick={() => dispatch(applicationViewActions.toggleSidebar())}>
+			<ToggleSidebar
+				onClick={() => dispatch(applicationViewActions.toggleSidebar())}
+			>
 				<Menu />
 			</ToggleSidebar>
 			<NavFlexSpacer />
-			<div
-				style={{ border: '1px solid black', width: '100px', height: '100%' }}
-			>
-				{metaPortfolioData
-					? 'Total Value: ' + metaPortfolioData.portfolioTotal
-					: 'Total Holdings: $15,684'}
-			</div>
-			<NavFlexSpacer />
 			<InlineDiv>
 				{DEV_SERVER == 'DEVELOPMENT' && (
-					<div>
-						sync
-						<SyncIcon
-							onClick={() => dispatch(portfolioActions.sync())}
-							isSyncing={isSyncing}
-						/>
-					</div>
+					<SyncIcon
+						onClick={() => dispatch(portfolioActions.sync())}
+						isSyncing={isSyncing}
+					/>
 				)}
-				<NavFlexSpacer />
 			</InlineDiv>
+			<NavFlexSpacer />
 			<NavAccountContainer
 				ref={container}
 				onClick={() => {
@@ -156,8 +146,12 @@ export const DesktopTopNav = () => {
 				}}
 			>
 				<InlineDiv>
-					{/* <Avatar src={filteredPortfolioData.logoUrl} /> */}
-					Hi, {user.firstName}
+					<Avatar color="primary">
+						{user.firstName
+							? user.email[0].toUpperCase() + user.email[1].toUpperCase()
+							: user.firstName[0].toUpperCase() +
+							  user.firstName[1].toUpperCase()}
+					</Avatar>
 					<ArrowDropDown />
 				</InlineDiv>
 				{accountDropdown}

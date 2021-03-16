@@ -49,7 +49,12 @@ export const UpdateProfileForm: React.FC<UpdateProfileFormProps> = ({}) => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit} autoComplete="off" id="update-profile-form">
+		<form
+			onSubmit={handleSubmit}
+			autoComplete="off"
+			id="update-profile-form"
+			style={{ width: '100%' }}
+		>
 			<StyledFormRow>
 				<Email color={'action'} />
 				<TextField

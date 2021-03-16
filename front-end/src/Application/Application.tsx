@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Portfolio } from '../Portfolio';
 import { Dashboard } from '../Dashboard';
-import { DesktopTopNav, SidebarNav } from '../Nav';
+import { SidebarNav, TopNav } from '../Nav';
 import { ApplicationContainer, BodyWrapper } from './_styles';
 import { IRootState } from '../_reducers';
 import { Settings } from '../Settings';
@@ -25,7 +25,7 @@ export const Application = () => {
 			<React.Fragment>
 				<Modal />
 				<BodyWrapper>
-					<DesktopTopNav />
+					<TopNav />
 					<ApplicationContainer>
 						<SidebarNav />
 						<Container disableGutters={!mobile} maxWidth={'lg'} fixed>

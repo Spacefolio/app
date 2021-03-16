@@ -3,11 +3,11 @@ import { createMuiTheme } from '@material-ui/core';
 export const theme = createMuiTheme({
 	breakpoints: {
 		values: {
-			xs: 0,
-			sm: 650,
-			md: 945,
-			lg: 1920,
-			xl: 2150,
+			xs: 600,
+			sm: 945,
+			md: 1265,
+			lg: 1600,
+			xl: 1920,
 		},
 	},
 	typography: {
@@ -36,15 +36,15 @@ export const theme = createMuiTheme({
 	},
 	palette: {
 		primary: {
-			main: '#0066ff',
+			main: '#6861ff',
 			contrastText: 'white',
 		},
 		secondary: {
-			main: '#00c850',
+			main: '#61ff69',
 			contrastText: 'white',
 		},
 		error: {
-			main: '#ea0000',
+			main: '#ff6961',
 			contrastText: 'white',
 		},
 	},

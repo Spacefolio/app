@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { IPortfolioItem } from '../../../../back-end/src/portfolios/portfolio.model';
 import { IPortfolioDataView } from '../../../../types';
-import { ActionButton, InlineDiv } from '../../_styles';
+import { ActionButton, FlexSpacer, InlineDiv } from '../../_styles';
 import { theme } from '../../_styles/Theme';
 import { IRootState } from '../../_reducers';
 import { PortfolioSummaryItem } from './Line_item/PortfolioSummaryItem';
@@ -21,6 +21,8 @@ export const PortfolioSummary = () => {
 			<SummaryWrapper>
 				<InlineDiv style={{ padding: '12px' }}>
 					<Typography variant="subtitle2">Your Portolios</Typography>
+          <FlexSpacer/>
+          
 				</InlineDiv>
 				{portfolioData.length > 0 ? (
 					portfolioData.map((portfolio: IPortfolioDataView, index: number) => {
