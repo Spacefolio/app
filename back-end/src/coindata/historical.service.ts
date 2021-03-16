@@ -1,7 +1,13 @@
 import axios from "axios";
-import moment from "moment";
+import { IHoldingSnapshot, ITimeslices } from "../exchanges/exchange.model";
+import { IPortfolioLineChartItem } from "../../../types";
+import { IExchangeAccountDocument, IHoldingSlice, ITimeslice } from "../exchanges/exchange.model";
 import { coindataService, getCurrentPrice } from "./coindata.service";
 import { HistoricalData, HourlyData, IDailyPrice, IHourlyPrice } from "./historical.model";
+
+export const ONE_HOUR = 3600000;
+export const ONE_DAY = 86400000;
+export const ONE_WEEK = 604800000;
 
 interface IHistoricalCandleResponse {
   day: number;
@@ -101,12 +107,11 @@ export async function loadHourlyData(symbol: string)
 {
   const coinId = await coindataService.getCoinId(symbol);
   const now = Date.now() / 1000;
-
-  var toTimestamp = now;
-  let lastHour = now - (now % 3600);
-  var fromTimestamp = lastHour - 691200; // subtract 8 days (in seconds) to get one week ago
-
-  var hourlyDataJson = await axios.get<IHistoricalDataResponse>(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart/range?vs_currency=usd&from=${fromTimestamp}&to=${toTimestamp}`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err; });
+  const toTimestamp = now;
+  const lastHour = now - (now % 3600);
+  const fromTimestamp = lastHour - 691200; // subtract 8 days (in seconds) to get one week ago
+  
+  const hourlyDataJson = await axios.get<IHistoricalDataResponse>(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart/range?vs_currency=usd&from=${fromTimestamp}&to=${toTimestamp}`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err; });
 
   var hourlyData = await HourlyData.findOne({ symbol });
   if (!hourlyData) {
@@ -156,7 +161,7 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
   var endIndex = -1;
   var lastHour = hourlyData.prices[hourlyData.prices.length - 1].hour;
 
-  if (startIndex == -1)
+  if (startIndex == -1 || to > lastHour)
   {
     hourlyData = await loadHourlyData(symbol);
     startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from);
@@ -164,7 +169,7 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
     if (startIndex == -1)
     { // attempt to grab last hour's price
       console.log(`used last hour's price for ${symbol}`);
-      startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from - 3600000);
+      startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from - ONE_HOUR);
       endIndex = startIndex;
       if (startIndex == -1)
       { // attempt to grab the latest price we have
@@ -181,7 +186,18 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
     endIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == to);
   }
 
-  if (endIndex == -1) throw `Could not fetch hourly price data for symbol '${symbol}'. [3]`;
+  if (endIndex == -1)
+  {
+    // attempt to grab last hour's price
+    console.log(`used last hour's price for ${symbol}`);
+    endIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == to - ONE_HOUR);
+    if (endIndex == -1) {
+      // attempt to grab the latest price we have
+      console.log(`used last retrieved price for ${symbol}`);
+      endIndex = hourlyData.prices.length - 1;
+      if (endIndex == -1) { throw `Could not fetch hourly price data for symbol '${symbol}'. [3]`; }
+    }
+  }
 
   for (let i = startIndex; i <= endIndex; i++)
   {
@@ -189,6 +205,156 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
   }
 
   return hourlyPrices;
+}
+
+export function extractHoldingsSymbolsFromTimeslices(timeslices: ITimeslice[]): string[]
+{
+  let symbols = new Set<string>();
+  for (let i = 0; i < timeslices.length; i++)
+  {
+    let holdings = Object.values<IHoldingSlice>(timeslices[i].holdings);
+    for (let j = 0; j < holdings.length; j++)
+    {
+      symbols.add(holdings[j].asset);
+    }
+  }
+  return Array.from(symbols);
+}
+
+export async function getLatestHourlyTimeSeries(exchangeAccount: IExchangeAccountDocument, timeslices: ITimeslice[]): Promise<IPortfolioLineChartItem[]>
+{
+  if (exchangeAccount.hourlyTimeSeries == undefined)
+  {
+    exchangeAccount.hourlyTimeSeries = {};
+  }
+  let timeseries: ITimeslice[] = Object.values(exchangeAccount.hourlyTimeSeries);
+  let latestHour = getLatestHour();
+  // If this is already cached, we can just return it as is.
+  if (timeseries.length > 0 && timeseries[timeseries.length - 1].start >= latestHour)
+  {
+    return timeseries.map((entry) => ({
+      T: entry.start,
+      USD: entry.value
+    }));
+  }
+  // Generate hourly time series for last 7 days (last whole hour and 167 previous hours)
+  // If there is partial data available,
+	// we will append the latest data and return the whole series.
+  let symbols = extractHoldingsSymbolsFromTimeslices(timeslices);
+  return loadLatestHourlyTimeSeries(exchangeAccount, symbols, timeslices);
+}
+
+function getLatestHour() {
+  let now = Date.now();
+  let latestHour = now - (now % 3600000);
+  return latestHour;
+}
+
+export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccountDocument, symbols: string[], timeslices: ITimeslice[]): Promise<IPortfolioLineChartItem[]>
+{
+  let hourlySlices: { [key: number]: ITimeslice } = {};
+  let lastAmount: { [key: string]: number } = {};
+  let lastPrice: { [key: string]: number } = {};
+  let prices: { [key: string]: { [key: number]: IHourlyPrice } } = {};
+  const latestHour = getLatestHour();
+  const startOfToday = latestHour - (latestHour % ONE_DAY)
+  const oneWeekAgo = latestHour - ONE_WEEK; // subtract 7 days (in milliseconds) to get one week ago
+  
+  for (let i = 0; i < symbols.length; i++)
+  { // Grab last week of hourly prices for each symbol in holdings
+    let hourlyPrices = await getHourlyData(symbols[i], oneWeekAgo-ONE_HOUR, latestHour);
+    prices[symbols[i]] = {};
+    for (let j = 0; j < hourlyPrices.length; j++)
+    {
+      prices[symbols[i]][hourlyPrices[j].hour] = hourlyPrices[j];
+    }
+  }
+
+  if (timeslices[timeslices.length - 1].start != startOfToday)
+  {
+    throw "The exchange account has not been synced";
+  }
+  if (timeslices.length < 8) { throw "The exchange account does not have a full week of data."; }
+
+  if (timeslices.length >= 9)
+  { // initialize the holdings amounts and prices from 8 days ago
+    for (let [key, value] of Object.entries(timeslices[timeslices.length - 9].holdings)) {
+			lastAmount[key] = value.amount;
+			lastPrice[key] = value.price;
+		}
+  }
+
+  /// TODO: Check if we already have part of the hourly time series cached and only append new data
+  /*
+  let cachedHourlyTimeSeries: ITimeslice[] = Object.values(exchangeAccount.hourlyTimeSeries);
+  if (cachedHourlyTimeSeries[cachedHourlyTimeSeries.length - 1].start == latestHour)
+  {
+    return cachedHourlyTimeSeries;
+  }
+  */
+
+  for (let i = timeslices.length - 8; i < timeslices.length; i++)
+  {
+    let dailySlice = timeslices[i];
+    let startOfDay = dailySlice.start;
+    let endOfDay = Math.min(startOfDay + ONE_DAY, latestHour);
+    let holdings = Object.values(dailySlice.holdings);
+    let currentSnap: { [key: string]: number } = {};
+
+    if (i == 0) { startOfDay = oneWeekAgo-ONE_HOUR; }
+    
+    // initialize the current snapshots index for each holding to 0 for each daily slice
+    holdings.forEach((holding) => {
+      currentSnap[holding.asset] = 0;
+    });
+    
+    for (let hour = startOfDay; hour < endOfDay; hour+=ONE_HOUR)
+    {
+      let hourlySlice: ITimeslice = {
+				start: hour,
+				value: 0,
+				holdings: {},
+			};
+      let snapsInThisSlice: IHoldingSnapshot[] = [];
+
+      for (let j=0, holding = holdings[j]; j < holdings.length; holding = holdings[++j])
+      {
+        const currentAsset = holding.asset;
+        for (let index = currentSnap[currentAsset]; index < holding.snapshots.length; index++)
+        {
+          let snap = holding.snapshots[index];
+          if (snap.timestamp < hour + ONE_HOUR)
+          {
+            snapsInThisSlice.push(snap);
+            lastAmount[currentAsset] = snap.totalAmountBought - snap.totalAmountSold;
+            lastPrice[currentAsset] = snap.price.USD;
+            currentSnap[currentAsset]++;
+          } else { break; }
+        }
+
+        let hourlyPrice = prices[currentAsset][hour];
+        if (hourlyPrice != undefined) { lastPrice[currentAsset] = hourlyPrice.price; }
+        let value = lastAmount[currentAsset] * lastPrice[currentAsset];
+
+        let hourlyHoldingSlice = {
+          asset: currentAsset,
+          amount: lastAmount[currentAsset],
+          price: lastPrice[currentAsset],
+          value,
+          snapshots: snapsInThisSlice,
+        };
+
+        hourlySlice.holdings[currentAsset] = hourlyHoldingSlice;
+        hourlySlice.value += value;
+      }
+
+      hourlySlices[hour] = hourlySlice;
+    }
+  }
+
+  return Object.entries(hourlySlices).map((value: [string, ITimeslice]) => {
+    return { T: value[1].start, USD: value[1].value };
+  });
 }
 
 export async function getHistoricalData(symbol: string, timestamp: number) : Promise<number>

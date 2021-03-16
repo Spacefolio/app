@@ -1,6 +1,6 @@
 import { User } from '../users/user.model';
 import { IExchangeAccountRequest, IPortfolioDataView, IPortfolioItemView, IOpenOrderItemView, ITransactionItemView } from '../../../types';
-import { ExchangeAccount, IExchangeAccountDocument, IHoldingsHistory, IHoldingSlice, IHoldingSnapshot, ITimeslice } from './exchange.model';
+import { ExchangeAccount, IExchangeAccountDocument, IHoldingsHistory, IHoldingSlice, IHoldingSnapshot, ITimeslice, ITimeslices } from './exchange.model';
 import ccxt, { Exchange } from 'ccxt';
 import { IPortfolioItem } from '../portfolios/portfolio.model';
 import { ITransaction } from '../transactions/transaction.model';
@@ -626,10 +626,6 @@ async function fetchBalances(exchange: ccxt.Exchange) {
 	return balances;
 }
 
-export interface ITimeslices {
-	[key: string]: ITimeslice;
-}
-
 async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument) {
 	let timeslices: ITimeslices = {};
 	let allTimeHoldingSlices: IHoldingSlice[] = [];
@@ -684,10 +680,8 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 	}
 
 	for (let day = startDate; day < endDate; day += 86400000) {
-		let nextDay = day + 86400000;
-
 		let timeslice: ITimeslice = {
-			start: nextDay,
+			start: day,
 			holdings: {},
 			value: 0,
 		};
@@ -714,7 +708,7 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 				}
 			}
 
-			let historicalPrice = await getHistoricalData(slice.asset, nextDay).catch((err) => -1);
+			let historicalPrice = await getHistoricalData(slice.asset, day).catch((err) => -1);
 			if (historicalPrice != -1) {
 				lastPrice[holding] = historicalPrice;
 			}
@@ -733,7 +727,7 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 			timeslice.value += value;
 		}
 
-		timeslices[nextDay] = timeslice;
+		timeslices[day] = timeslice;
 	}
 
 	exchange.timeslices = timeslices;
@@ -839,8 +833,8 @@ async function createMetaportfolioData(portfolioData: IPortfolioDataView[]) {
 	}
 
 	for (let [assetId, entry] of Object.entries(portfolioItemsDict)) {
-		entry.item.profitPercentage.all = entry.item.profitTotal.all / entry.totalInvested.all;
-		entry.item.profitPercentage.h24 = entry.item.profitTotal.h24 / entry.totalInvested.h24;
+		entry.item.profitPercentage.all = (entry.item.profitTotal.all / entry.totalInvested.all) * 100;
+		entry.item.profitPercentage.h24 = (entry.item.profitTotal.h24 / entry.totalInvested.h24) * 100;
 		if (entry.item.amount > 0) {
 			entry.item.currentPrice = entry.item.value.USD / entry.item.amount;
 		}
@@ -883,10 +877,10 @@ async function mergePortfolioItems(portfolioItemsDict: PortfolioItemsDict, portf
 			entry.item.value.USD += item.value.USD;
 			entry.item.profitTotal.all += item.profitTotal.all;
 			entry.item.profitTotal.h24 += item.profitTotal.h24;
-			entry.totalInvested.all += item.profitTotal.all / item.profitPercentage.all;
-			entry.totalInvested.h24 += item.profitTotal.h24 / item.profitPercentage.h24;
+			entry.totalInvested.all += (item.profitTotal.all / item.profitPercentage.all) * 100;
+			entry.totalInvested.h24 += (item.profitTotal.h24 / item.profitPercentage.h24) * 100;
 		} else {
-			let totalInvested = { all: item.profitTotal.all / item.profitPercentage.all, h24: item.profitTotal.h24 / item.profitTotal.h24 };
+			let totalInvested = { all: (item.profitTotal.all / item.profitPercentage.all) * 100, h24: (item.profitTotal.h24 / item.profitPercentage.h24) * 100 };
 
 			portfolioItemsDict[item.asset.assetId] = {
 				item: {
