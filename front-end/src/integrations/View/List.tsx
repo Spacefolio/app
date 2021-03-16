@@ -37,15 +37,7 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
 		(state: IRootState) => state.exchanges.exchanges
 	);
 
-	const portfolioFilterID = useSelector(
-		(state: IRootState) => state.portfolio.filterId
-	);
-
 	const dispatch = useDispatch();
-
-	const [addExchangeVisible, setAddExchangeVisible] = useState(false);
-
-	const history = useHistory();
 
 	const useStyles = makeStyles((theme: Theme) =>
 		createStyles({

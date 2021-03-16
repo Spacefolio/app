@@ -12,24 +12,6 @@ import { MetaPortfolio } from "../..";
 export const Charts = () => {
   const dispatch = useDispatch();
 
-  const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
-
-  const [PortfolioChartData, setPortfolioChartData] = useState([]);
-
-  const [timeframe, setTimeframe] = useState<timeframe>("ALL");
-
-  useEffect(() => {
-    setPortfolioChartData([]);
-    portfolioService
-      .getPortfolioChartData(timeframe, filterId)
-      .then((res) => {
-        setPortfolioChartData(res);
-      })
-      .catch((error: Error) => {
-        dispatch(alertActions.error(error.message));
-      });
-  }, [timeframe, filterId]);
-
   return (
     <PortfolioCharts>
       <FlexCard style={{ gridArea: "one" }}>

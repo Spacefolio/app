@@ -1,4 +1,4 @@
-import { Fab, Typography } from '@material-ui/core';
+import { CircularProgress, Fab, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -13,7 +13,7 @@ import { SummaryWrapper } from './Line_item/_styles';
 
 export const PortfolioSummary = () => {
 	const portfolioData = useSelector(
-		(state: IRootState) => state.portfolio.PortfolioData
+		(state: IRootState) => state.portfolio.portfoliosData
 	);
 
 	return (
@@ -22,9 +22,15 @@ export const PortfolioSummary = () => {
 				<InlineDiv style={{ padding: '12px' }}>
 					<Typography variant="subtitle2">Your Portolios</Typography>
 				</InlineDiv>
-				{portfolioData.map((portfolio: IPortfolioDataView, index: number) => {
-					return <PortfolioSummaryItem key={index} data={portfolio} />;
-				})}
+				{portfolioData.length > 0 ? (
+					portfolioData.map((portfolio: IPortfolioDataView, index: number) => {
+						return (
+							<PortfolioSummaryItem key={index} portfolioItem={portfolio} />
+						);
+					})
+				) : (
+					<CircularProgress />
+				)}
 			</SummaryWrapper>
 		</ThemeProvider>
 	);

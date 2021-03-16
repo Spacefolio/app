@@ -7,8 +7,6 @@ export const portfolioActions = {
   sync,
   refresh,
   getOpenOrders,
-  FilterPortfolio,
-  SetFilteredPortfolioData,
 };
 
 function sync() {
@@ -44,7 +42,7 @@ function refresh(portfolioId: string, manual: boolean = false) {
     portfolioService
       .refreshPortfolio(portfolioId, manual)
       .then((res: any) => {
-        dispatch(SetFilteredPortfolioData(res));
+        // dispatch(SetFilteredPortfolioData(res));
         dispatch(success(res));
       })
       .catch((error) => {
@@ -56,7 +54,7 @@ function refresh(portfolioId: string, manual: boolean = false) {
   function request() {
     return { type: portfolioConstants.REFRESH_REQUEST };
   }
-  function success(portfolioData: IPortfolioDataView[]) {
+  function success(portfolioData: IPortfolioDataView) {
     return { type: portfolioConstants.REFRESH_SUCCESS, portfolioData };
   }
   function failure() {
@@ -114,16 +112,16 @@ function getOpenOrders(exchangeID?: string) {
   }
 }
 
-function FilterPortfolio(portfolioId: string) {
-  return (dispatch: any) => {
-    dispatch(portfolioActions.refresh(portfolioId));
-    dispatch(request(portfolioId));
-  };
-  function request(portfolioId: string) {
-    return { type: portfolioConstants.FILTER_ID, exchangeID: portfolioId };
-  }
-}
+// function FilterPortfolio(portfolioId: string) {
+//   return (dispatch: any) => {
+//     dispatch(portfolioActions.refresh(portfolioId));
+//     dispatch(request(portfolioId));
+//   };
+//   function request(portfolioId: string) {
+//     return { type: portfolioConstants.FILTER_ID, exchangeID: portfolioId };
+//   }
+// }
 
-function SetFilteredPortfolioData(filteredPortfolioData: IPortfolioDataView) {
-  return { type: portfolioConstants.FILTER_DATA, filteredPortfolioData };
-}
+// function SetFilteredPortfolioData(filteredPortfolioData: IPortfolioDataView) {
+//   return { type: portfolioConstants.FILTER_DATA, filteredPortfolioData };
+// }

@@ -14,9 +14,7 @@ export const FlexCard = styled(Card)<FlexCardProps>`
 	display: flex;
 	background: white;
 	border-radius: 10px;
-	// box-shadow: 6px 6px 14px #e3e3e8;
-	box-shadow: none;
-	overflow: hidden;
+	box-shadow: 6px 6px 14px #e3e3e8;
 	${(props) => (props.disableGutters ? 'padding: 0;' : 'padding: 0 12px;')}
 	${TimingStyle};
 	${(props) => (props.fullWidth ? 'width: 100%;' : 'width: auto;')}
@@ -24,6 +22,7 @@ export const FlexCard = styled(Card)<FlexCardProps>`
 		props.flexDirection == 'row'
 			? 'flex-direction: row;'
 			: 'flex-direction: column;'};
+	overflow: visible;
 `;
 
 export interface FlexCardContentProps {
@@ -32,15 +31,9 @@ export interface FlexCardContentProps {
 }
 export const FlexCardContent = styled.div<FlexCardContentProps>`
 	display: flex;
-	${(props) =>
-		props.flexDirection == 'row'
-			? 'flex-direction: row;'
-			: 'flex-direction: column;'};
-	${(props) =>
-		props.justifyContent && `justify-content: ${props.justifyContent};`}
 	padding: 16px;
 	padding-top: 0;
-	flex-wrap: wrap;
+  max-height: inherit;
 `;
 
 export interface FlexCardHeaderProps {

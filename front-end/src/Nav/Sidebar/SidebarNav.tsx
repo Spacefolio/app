@@ -1,94 +1,105 @@
-import React from "react";
-import { SidebarContainer, SidebarSpacer } from "./_styles";
-import { useDispatch, useSelector } from "react-redux";
-import { IRootState } from "../../_reducers";
+import React, { useEffect, useState } from 'react';
 import {
-  SidebarActionItem,
-  SidebarSubActionItem,
-} from "./Line_item/SidebarActionItem";
+	MobileSidebarContainer,
+	SidebarContainer,
+	SidebarSpacer,
+} from './_styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { SidebarActionItem } from './Line_item/SidebarActionItem';
 import {
-  Android,
-  Dashboard,
-  Help,
-  PieChart,
-  PieChartOutlined,
-  Settings,
-  Tab,
-  Timeline,
-  TrendingUp,
-} from "@material-ui/icons";
-
-import { RD } from "../../_styles/ResponsiveDesign";
-
-import { useMedia } from "use-media";
-import { AlgonexLogo } from "../../_styles";
-import { Tabs } from "@material-ui/core";
-import path from "path";
-import { useHistory } from "react-router";
-import { ModalWrapper } from "../../_components/Modal/_styles";
+	Android,
+	Dashboard,
+	Help,
+	PieChart,
+	Settings,
+	TrendingUp,
+} from '@material-ui/icons';
+import {
+	Drawer,
+	Hidden,
+	Modal,
+	Slide,
+	Tabs,
+	useMediaQuery,
+} from '@material-ui/core';
+import { IRootState } from '../../_reducers';
+import { theme } from '../../_styles/Theme';
 
 interface SidebarNavProps {}
 
 export const SidebarNav: React.FC<SidebarNavProps> = () => {
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-  const isSidebarCollapsed = useSelector(
-    (state: IRootState) => state.applicationView.isSidebarCollapsed
-  );
+	const isSidebarCollapsed = useSelector(
+		(state: IRootState) => state.applicationView.isSidebarCollapsed
+	);
 
-  const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
+	const mobile = useMediaQuery(theme.breakpoints.up('md'));
 
-  const history = useHistory();
+	const [mobileSidebar, setMobileSidebar] = useState(false);
 
-  return (
-    <SidebarContainer
-      isSidebarCollapsed={isSidebarCollapsed}
-      isMobile={isMobile}
-      // isFixed={width <= parseInt(RD.breakpointsmartphone) ? true : false}
-    >
-      <SidebarActionItem
-        text="ALGONEX"
-        icon={<AlgonexLogo />}
-        linkUri="/dashboard"
-        Branding={true}
-      ></SidebarActionItem>
+	useEffect(() => {
+		setMobileSidebar(false);
+	}, [mobile]);
 
-      <SidebarActionItem
-        text="Dashboard"
-        icon={<Dashboard />}
-        linkUri="/dashboard"
-      ></SidebarActionItem>
+	useEffect(() => {
+		setMobileSidebar(!mobileSidebar);
+	}, [isSidebarCollapsed]);
 
-      <SidebarActionItem
-        text="Trade"
-        icon={<TrendingUp />}
-        linkUri="/trade"
-      ></SidebarActionItem>
+	const SidebarContent = (
+		<React.Fragment>
+			<SidebarActionItem
+				text="Dashboard"
+				icon={<Dashboard />}
+				linkUri="/dashboard"
+			></SidebarActionItem>
 
-      <SidebarActionItem
-        text="Portfolio"
-        icon={<PieChart />}
-        linkUri="/portfolio"
-      ></SidebarActionItem>
+			<SidebarActionItem
+				text="Trade"
+				icon={<TrendingUp />}
+				linkUri="/trade"
+			></SidebarActionItem>
 
-      <SidebarActionItem
-        text="Bots"
-        icon={<Android />}
-        linkUri="/bots"
-      ></SidebarActionItem>
+			<SidebarActionItem
+				text="Portfolio"
+				icon={<PieChart />}
+				linkUri="/portfolio"
+			></SidebarActionItem>
 
-      <SidebarSpacer />
+			<SidebarActionItem
+				text="Bots"
+				icon={<Android />}
+				linkUri="/bots"
+			></SidebarActionItem>
 
-      <SidebarActionItem
-        text="Help & FAQs"
-        icon={<Help />}
-        linkUri="/settings"
-      ></SidebarActionItem>
-      <SidebarActionItem
-        text="Settings"
-        icon={<Settings />}
-        linkUri="/settings"
-      ></SidebarActionItem>
-    </SidebarContainer>
-  );
+			<SidebarSpacer />
+
+			<SidebarActionItem
+				text="Help & FAQs"
+				icon={<Help />}
+				linkUri="/settings"
+			></SidebarActionItem>
+
+			<SidebarActionItem
+				text="Settings"
+				icon={<Settings />}
+				linkUri="/settings"
+			></SidebarActionItem>
+		</React.Fragment>
+	);
+
+	return (
+		<React.Fragment>
+			<Hidden mdUp>
+				<Modal onClose={() => setMobileSidebar(false)} open={mobileSidebar}>
+					<MobileSidebarContainer>{SidebarContent}</MobileSidebarContainer>
+				</Modal>
+			</Hidden>
+			<Hidden smDown>
+				<SidebarContainer open={isSidebarCollapsed}>
+					{SidebarContent}
+				</SidebarContainer>
+			</Hidden>
+		</React.Fragment>
+	);
 };

@@ -72,7 +72,6 @@ export function exchanges(
 			return {
 				...state,
 				exchanges: state.exchanges.filter((item: IExchangeAccountView) => {
-					console.log(item.id);
 					return item.id !== action.id;
 				}),
 			};

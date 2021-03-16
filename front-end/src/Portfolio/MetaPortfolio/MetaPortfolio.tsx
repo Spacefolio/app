@@ -1,217 +1,214 @@
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  MetaPortfolioWrapper,
-  PortfolioValueWrapper,
-  PortfolioName,
-  PortfolioValueColumn,
-  PortfolioProfitSection,
-  TimeframeItem,
-  TimeFrameSelectorContainer,
-} from "./_styles";
-import { Dropdown, Modal, PortfolioLineChart } from "../../_components";
-import { alertActions, portfolioActions } from "../../_actions";
-import { IPortfolioDataView, timeframe } from "../../../../types";
-import { portfolioService } from "../../_services";
-import { IRootState } from "../../_reducers";
-import useDimensions from "react-use-dimensions";
-import { timeFrameSelectors } from "../../_helpers/formating";
-import { ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
-import { Button, Typography } from "@material-ui/core";
-import { ListMyExchanges } from "../../Integrations";
-import { InlineDiv } from "../../_styles";
+	MetaPortfolioWrapper,
+	PortfolioValueWrapper,
+	PortfolioName,
+	PortfolioValueColumn,
+	PortfolioProfitSection,
+	TimeframeItem,
+	TimeFrameSelectorContainer,
+} from './_styles';
+import { Dropdown, PortfolioLineChart } from '../../_components';
+import { alertActions, portfolioActions } from '../../_actions';
+import { IPortfolioDataView, timeframe } from '../../../../types';
+import { portfolioService } from '../../_services';
+import { IRootState } from '../../_reducers';
+import useDimensions from 'react-use-dimensions';
+import { timeFrameSelectors } from '../../_helpers/formating';
+import { ArrowDropDown, ArrowDropUp } from '@material-ui/icons';
+import { Button, Typography } from '@material-ui/core';
+import { ListMyExchanges } from '../../Integrations';
+import { InlineDiv } from '../../_styles';
+import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
 
 export const MetaPortfolio = () => {
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-  const filteredPortfolioData: IPortfolioDataView = useSelector(
-    (state: IRootState) => state.portfolio.filteredPortfolioData
-  );
+	const filteredPortfolioData: IPortfolioDataView = useFilteredPortfolio('ALL');
 
-  const [chartContainerRef, { width: chartContainerWidth }] = useDimensions();
+	const [chartContainerRef, { width: chartContainerWidth }] = useDimensions();
 
-  const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
+	const [PortfolioChartData, setPortfolioChartData] = useState<[]>([]);
 
-  const [PortfolioChartData, setPortfolioChartData] = useState<[]>([]);
+	const [timeframe, setTimeframe] = useState<timeframe>('ALL');
 
-  const [timeframe, setTimeframe] = useState<timeframe>("ALL");
+	useEffect(() => {
+		setPortfolioChartData([]);
+		portfolioService
+			.getPortfolioChartData(timeframe, 'All')
+			.then((res) => {
+				setPortfolioChartData(res);
+			})
+			.catch((error) => {
+				dispatch(alertActions.error(error.message));
+			});
+	}, [timeframe]);
 
-  useEffect(() => {
-    setPortfolioChartData([]);
-    portfolioService
-      .getPortfolioChartData(timeframe, filterId)
-      .then((res) => {
-        setPortfolioChartData(res);
-      })
-      .catch((error) => {
-        dispatch(alertActions.error(error.message));
-      });
-  }, [timeframe, filterId]);
+	const [chartDate, setChartDate] = useState(false);
 
-  const [chartDate, setChartDate] = useState(false);
+	const [chartValue, setChartValue] = useState(false);
 
-  const [chartValue, setChartValue] = useState(false);
+	const PortfolioValueSection = () => {
+		const [portfolioSelectorVisible, setPortfolioSelectorVisible] = useState(
+			false
+		);
 
-  const PortfolioValueSection = () => {
-    const [portfolioSelectorVisible, setPortfolioSelectorVisible] = useState(
-      false
-    );
+		const ref: MutableRefObject<undefined> = useRef();
 
-    const ref: MutableRefObject<undefined> = useRef();
+		const CurrentPortfolio = () => (
+			<PortfolioName
+				ref={ref}
+				onClick={() => setPortfolioSelectorVisible(!portfolioSelectorVisible)}
+			>
+				<Button size="large" variant="outlined" color="primary">
+					<InlineDiv>
+						All Portfolios
+						<ArrowDropDown />
+					</InlineDiv>
+				</Button>
 
-    const CurrentPortfolio = () => (
-      <PortfolioName
-        ref={ref}
-        onClick={() => setPortfolioSelectorVisible(!portfolioSelectorVisible)}
-      >
-        <Button size="large" variant="outlined" color="primary">
-          <InlineDiv>
-            {filterId != "" ? filteredPortfolioData.nickname : "All Portfolios"}
-            <ArrowDropDown />
-          </InlineDiv>
-        </Button>
+				<Dropdown
+					containerRef={ref}
+					isVisible={portfolioSelectorVisible}
+					setVisiblity={() => setPortfolioSelectorVisible(false)}
+				>
+					<ListMyExchanges enableEditing={false} />
+				</Dropdown>
+			</PortfolioName>
+		);
 
-        <Dropdown
-          containerRef={ref}
-          isVisible={portfolioSelectorVisible}
-          setVisiblity={() => setPortfolioSelectorVisible(false)}
-        >
-          <ListMyExchanges enableEditing={false} />
-        </Dropdown>
-      </PortfolioName>
-    );
+		const PortfolioValue = () => (
+			<React.Fragment>
+				{filteredPortfolioData.portfolioTotal != null ? (
+					<InlineDiv>
+						<Typography variant="h5">$</Typography>
+						<div id={'PVID'}>
+							{chartValue
+								? null
+								: filteredPortfolioData.portfolioTotal.USD.toFixed(2)}
+						</div>
+					</InlineDiv>
+				) : (
+					'loading...'
+				)}
+			</React.Fragment>
+		);
 
-    const PortfolioValue = () => (
-      <React.Fragment>
-        {filteredPortfolioData.portfolioTotal != null ? (
-          <InlineDiv>
-            <Typography variant="h5">$</Typography>
-            <div id={"PVID"}>
-              {chartValue
-                ? null
-                : filteredPortfolioData.portfolioTotal.USD.toFixed(2)}
-            </div>
-          </InlineDiv>
-        ) : (
-          "loading..."
-        )}
-      </React.Fragment>
-    );
+		const PortfolioDate = () => (
+			<React.Fragment>
+				{filteredPortfolioData != null ? (
+					<div id={'PDID'}>{chartDate ? '' : ''}</div>
+				) : (
+					'loading...'
+				)}
+			</React.Fragment>
+		);
 
-    const PortfolioDate = () => (
-      <React.Fragment>
-        {filteredPortfolioData != null ? (
-          <div id={"PDID"}>{chartDate ? "" : ""}</div>
-        ) : (
-          "loading..."
-        )}
-      </React.Fragment>
-    );
+		const ProfitPercentage = () => (
+			<React.Fragment>
+				{filteredPortfolioData.profitPercentage != null
+					? `(${filteredPortfolioData.profitPercentage.toFixed(2)}%)`
+					: 'loading...'}
+			</React.Fragment>
+		);
 
-    const ProfitPercentage = () => (
-      <React.Fragment>
-        {filteredPortfolioData.profitPercentage != null
-          ? `(${filteredPortfolioData.profitPercentage.toFixed(2)}%)`
-          : "loading..."}
-      </React.Fragment>
-    );
+		const ProfitTotal = () => (
+			<React.Fragment>
+				{filteredPortfolioData.profitTotal != null
+					? `$${filteredPortfolioData.profitTotal.USD.toFixed(2)}`
+					: 'loading...'}
+			</React.Fragment>
+		);
 
-    const ProfitTotal = () => (
-      <React.Fragment>
-        {filteredPortfolioData.profitTotal != null
-          ? `$${filteredPortfolioData.profitTotal.USD.toFixed(2)}`
-          : "loading..."}
-      </React.Fragment>
-    );
+		const ProfitDirection = () => (
+			<React.Fragment>
+				{filteredPortfolioData.profitTotal != null ? (
+					filteredPortfolioData.profitTotal.USD > 0 ? (
+						<ArrowDropUp />
+					) : (
+						<ArrowDropDown />
+					)
+				) : (
+					'loading...'
+				)}
+			</React.Fragment>
+		);
 
-    const ProfitDirection = () => (
-      <React.Fragment>
-        {filteredPortfolioData.profitTotal != null ? (
-          filteredPortfolioData.profitTotal.USD > 0 ? (
-            <ArrowDropUp />
-          ) : (
-            <ArrowDropDown />
-          )
-        ) : (
-          "loading..."
-        )}
-      </React.Fragment>
-    );
-
-    return (
-      <React.Fragment>
-        {filteredPortfolioData != null ? (
-          <PortfolioValueWrapper>
-            {/* <PortfolioValueColumn style={{ alignItems: "start" }}>
+		return (
+			<React.Fragment>
+				{filteredPortfolioData != null ? (
+					<PortfolioValueWrapper>
+						{/* <PortfolioValueColumn style={{ alignItems: "start" }}>
           {CurrentPortfolio}
           {SyncButtonSection}
         </PortfolioValueColumn> */}
-            <PortfolioValueColumn>
-              <InlineDiv>
-                <Typography variant={"h4"}>
-                  {PortfolioValue()}
-                  {PortfolioDate()}
-                  {/* {RefreshButton} */}
-                </Typography>
-              </InlineDiv>
-            </PortfolioValueColumn>
-            <PortfolioValueColumn>
-              <PortfolioProfitSection
-                value={
-                  filteredPortfolioData && filteredPortfolioData.profitTotal.USD
-                }
-              >
-                {ProfitDirection()} {ProfitTotal()} {ProfitPercentage()}
-              </PortfolioProfitSection>
-            </PortfolioValueColumn>
-          </PortfolioValueWrapper>
-        ) : (
-          "loading..."
-        )}
-      </React.Fragment>
-    );
-  };
+						<PortfolioValueColumn>
+							<InlineDiv>
+								<Typography variant={'h4'}>
+									{PortfolioValue()}
+									{PortfolioDate()}
+									{/* {RefreshButton} */}
+								</Typography>
+							</InlineDiv>
+						</PortfolioValueColumn>
+						<PortfolioValueColumn>
+							<PortfolioProfitSection
+								value={
+									filteredPortfolioData && filteredPortfolioData.profitTotal.USD
+								}
+							>
+								{ProfitDirection()} {ProfitTotal()} {ProfitPercentage()}
+							</PortfolioProfitSection>
+						</PortfolioValueColumn>
+					</PortfolioValueWrapper>
+				) : (
+					'loading...'
+				)}
+			</React.Fragment>
+		);
+	};
 
-  const TimeframeSelectorBar = (
-    <TimeFrameSelectorContainer>
-      {timeFrameSelectors.map((item: timeframe) => {
-        return (
-          <TimeframeItem
-            onClick={() => {
-              setTimeframe(item);
-            }}
-            selected={item == timeframe}
-          >
-            {item}
-          </TimeframeItem>
-        );
-      })}
-    </TimeFrameSelectorContainer>
-  );
+	const TimeframeSelectorBar = (
+		<TimeFrameSelectorContainer>
+			{timeFrameSelectors.map((item: timeframe) => {
+				return (
+					<TimeframeItem
+						onClick={() => {
+							setTimeframe(item);
+						}}
+						selected={item == timeframe}
+					>
+						{item}
+					</TimeframeItem>
+				);
+			})}
+		</TimeFrameSelectorContainer>
+	);
 
-  return (
-    <MetaPortfolioWrapper>
-      {PortfolioValueSection()}
-      <div
-        ref={chartContainerRef}
-        style={{
-          width: "100%",
-          overflow: "hidden",
-        }}
-      >
-        {TimeframeSelectorBar}
-        <PortfolioLineChart
-          setPV={setChartValue}
-          setDate={setChartDate}
-          data={PortfolioChartData}
-          width={chartContainerWidth}
-          xAxis={true}
-          timeframe={timeframe}
-          yAxis={false}
-          height={400}
-          id={"PCardChart"}
-        />
-      </div>
-    </MetaPortfolioWrapper>
-  );
+	return (
+		<MetaPortfolioWrapper>
+			{PortfolioValueSection()}
+			<div
+				ref={chartContainerRef}
+				style={{
+					width: '100%',
+					overflow: 'hidden',
+				}}
+			>
+				{TimeframeSelectorBar}
+				<PortfolioLineChart
+					setPV={setChartValue}
+					setDate={setChartDate}
+					data={PortfolioChartData}
+					width={chartContainerWidth}
+					xAxis={true}
+					timeframe={timeframe}
+					yAxis={false}
+					height={400}
+					id={'PCardChart'}
+				/>
+			</div>
+		</MetaPortfolioWrapper>
+	);
 };

@@ -14,13 +14,16 @@ import {
 	ReformatCurrencyValue,
 	ReformatCurrencyValueMini,
 } from '../../../_helpers/formating';
+import { theme } from '../../../_styles/Theme';
 
 interface AssetsMiniItemProps {
 	portfolioItem: IPortfolioItemView;
+	color: string;
 }
 
 export const AssetsMiniItem: React.FC<AssetsMiniItemProps> = ({
 	portfolioItem,
+	color,
 }) => {
 	const {
 		asset,
@@ -32,7 +35,7 @@ export const AssetsMiniItem: React.FC<AssetsMiniItemProps> = ({
 	} = portfolioItem;
 
 	const portfolioValueItemStyler = (num: number) => {
-		return num < 0 ? COLORS.errorBase : COLORS.accentBase;
+		return num < 0 ? COLORS.errorBase : theme.palette.secondary.main;
 	};
 
 	const avatarSize = parseInt(SPACING.flexCardGap) * 2.5 + 'px';
@@ -86,9 +89,9 @@ export const AssetsMiniItem: React.FC<AssetsMiniItemProps> = ({
 	};
 
 	return (
-		<InlineDiv style={{padding: "5px 0"}} align="space-between">
+		<InlineDiv style={{ padding: '5px 0' }} align="space-between">
 			{NameSection()}
-			<FlexSpacer showLine />
+			<FlexSpacer color={color} showLine />
 			{/* {AmountSection()} */}
 			{/* {CurrentPriceSection()} */}
 			{ValueSection()}

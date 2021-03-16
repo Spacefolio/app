@@ -4,6 +4,7 @@ import { COLORS, SPACING, TIMING } from './ResponsiveDesign';
 import styled from 'styled-components';
 import { Polymer } from '@material-ui/icons';
 import { Button } from '@material-ui/core';
+import { theme } from './Theme';
 export const TimingStyle = `
 transition: ${TIMING.transitionTime};
 `;
@@ -24,9 +25,9 @@ export const BaseDiv = styled.div`
 
 export const ClickableDiv = styled(BaseDiv)`
 	&:hover {
-		color: ${COLORS.accentBase};
+		color: ${theme.palette.secondary.main};
 		svg {
-			fill: ${COLORS.accentBase};
+			fill: ${theme.palette.secondary.main};
 		}
 	}
 	${TimingStyle}
@@ -36,7 +37,7 @@ export const ClickableSvg = styled(BaseSvg)`
 	height: 1rem;
 	cursor: pointer;
 	&:hover {
-		fill: ${COLORS.accentBase};
+		fill: ${theme.palette.secondary.main};
 	}
 	${TimingStyle}
 `;
@@ -53,7 +54,7 @@ export const BaseGrid = styled.div`
 export const BaseSearchBar = styled.input`
   cursor: pointer
   border-radius: 3px;
-  border: ${COLORS.primaryBase} solid 1px;
+  border: ${theme.palette.primary.main} solid 1px;
   width: 100%;
   padding: 1rem;
   &:focus {
@@ -70,7 +71,7 @@ export const FullScreenOverlay = styled.div`
   margin: 50%;
 `;
 export const BaseLink = styled(Link)`
-	color: ${COLORS.primaryBase};
+	color: ${theme.palette.primary.main};
 	${TimingStyle}
 `;
 
@@ -91,26 +92,24 @@ export const InlineDiv = styled.div<InlineDivProps>`
 export const SvgWrapperButton = styled(ClickableDiv)`
 	height: 2rem;
 	width: 2rem;
-	${CenteredFlexBox}
-`;
-export const FlexWrap = styled(InlineDiv)`
-	white-space: none;
-	flex-wrap: wrap;
-	gap: 5px;
+
 `;
 
 export const AlgonexLogo = styled(Polymer)`
 	height: 100%;
 	width: 100%;
-	fill: ${COLORS.primaryBase} !important;
+	fill: ${theme.palette.primary.main} !important;
 `;
 
 interface FlexSpacerProps {
 	showLine?: boolean;
+	color?: string;
 }
 export const FlexSpacer = styled.div<FlexSpacerProps>`
 	${(props) =>
 		props.showLine &&
-		`height: 1px; background: rgb(0,0,0,0.6); margin: 0 10px;`}
+		`height: 3px; background: ${props.color}; margin: 0 10px;`}
 	width: 100%;
+	border-radius: 3px;
+	opacity: 0.7;
 `;

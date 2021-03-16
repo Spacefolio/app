@@ -1,8 +1,15 @@
 import { createMuiTheme } from '@material-ui/core';
-import { blue } from '@material-ui/core/colors';
-import { COLORS } from '.';
 
 export const theme = createMuiTheme({
+	breakpoints: {
+		values: {
+			xs: 0,
+			sm: 650,
+			md: 945,
+			lg: 1920,
+			xl: 2150,
+		},
+	},
 	typography: {
 		subtitle2: {
 			fontSize: '1rem',
@@ -29,15 +36,15 @@ export const theme = createMuiTheme({
 	},
 	palette: {
 		primary: {
-			main: COLORS.primaryBase,
+			main: '#0066ff',
 			contrastText: 'white',
 		},
 		secondary: {
-			main: COLORS.accentBase,
+			main: '#00c850',
 			contrastText: 'white',
 		},
 		error: {
-			main: COLORS.errorBase,
+			main: '#ea0000',
 			contrastText: 'white',
 		},
 	},
@@ -48,6 +55,8 @@ export const theme = createMuiTheme({
 				transition: 'none',
 			},
 		},
+		MuiContainer: {},
+		MuiDrawer: {},
 		MuiTab: {
 			root: {
 				textTransform: 'none',

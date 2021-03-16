@@ -8,8 +8,6 @@ import {
 } from '../../_styles/FlexCard';
 
 import { Flexcard } from './flex-card.stories';
-import { ThemeProvider } from 'styled-components';
-import { theme } from '../../_styles/Theme';
 
 export default {
 	title: 'Design/Flex Card/Flex Card Container',

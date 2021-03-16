@@ -54,6 +54,7 @@ function update(exchange: IExchangeAccountRequest, id: string) {
 				dispatch(success(res));
 				dispatch(alertActions.success('update successful'));
 				dispatch(applicationViewActions.setModal(false, null, null));
+				dispatch(portfolioActions.sync());
 			})
 			.catch((error: Error) => {
 				dispatch(failure(error.toString()));
@@ -114,17 +115,14 @@ function getIntegrationInfo() {
 	}
 }
 
-function _delete(id: string, filterId: string) {
+function _delete(id: string) {
 	console.log('action', id);
 	return (dispatch: any) => {
 		dispatch(request(id));
 
 		exchangeService.delete(id).then((res) => {
 			dispatch(success(id));
-			if (id == filterId) {
-				dispatch(portfolioActions.FilterPortfolio('ALL'));
-				dispatch(portfolioActions.refresh('ALL'));
-			}
+			dispatch(portfolioActions.sync());
 		});
 		dispatch(alertActions.success('Deleted')).catch((error: any) =>
 			dispatch(failure(id, error.toString()))

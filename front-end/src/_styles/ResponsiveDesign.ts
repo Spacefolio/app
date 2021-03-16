@@ -38,7 +38,7 @@ export const SPACING = {
 	sidebarWidth: '200px',
 	flexCardGap: '8px',
 	NavbarHeight: '60px',
-	sidebarHeight: '40px',
+	sidebarHeight: '60px',
 };
 export const TIMING = {
 	transitionTime: '0.3s',

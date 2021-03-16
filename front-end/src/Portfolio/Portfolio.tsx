@@ -70,10 +70,10 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 						<Assets />
 					</Route> */}
 					<Route exact path={`${path}/transactions`}>
-						<Transactions />
+						{/* <Transactions  /> */}
 					</Route>
 					<Route exact path={`${path}/openorders`}>
-						<OpenOrders />
+						{/* <OpenOrders /> */}
 					</Route>
 				</Switch>
 			</PortfolioWrapper>

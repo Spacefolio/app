@@ -1,7 +1,4 @@
-import {
-	ModifyContainer,
-	MyExchangesLineItemContainer,
-} from './_styles';
+import { ModifyContainer, MyExchangesLineItemContainer } from './_styles';
 import {
 	Dialog,
 	DialogTitle,
@@ -14,7 +11,7 @@ import {
 	MenuItem,
 	Portal,
 	Typography,
-  ListItemText,
+	ListItemText,
 } from '@material-ui/core';
 
 import { Delete, Edit, Work } from '@material-ui/icons';
@@ -40,19 +37,11 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
 }) => {
 	const dispatch = useDispatch();
 
-	const [editExchangeVisible, setEditExchangeVisible] = useState(false);
-
-	const portfolioFilterID = useSelector(
-		(state: IRootState) => state.portfolio.filterId
-	);
-
 	const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
-	const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
 
 	function handleClose(shouldDelete: boolean) {
 		if (shouldDelete) {
-			dispatch(exchangeActions.delete(data.id, filterId));
+			dispatch(exchangeActions.delete(data.id));
 		} else {
 			setIsDeleteOpen(false);
 		}
@@ -121,8 +110,6 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
 			<MenuItem
 				button={true}
 				key={data.id}
-				selected={portfolioFilterID == data.id}
-				onClick={() => dispatch(portfolioActions.FilterPortfolio(data.id))}
 			>
 				<ListItemAvatar>
 					<Avatar src={data.logoUrl} />

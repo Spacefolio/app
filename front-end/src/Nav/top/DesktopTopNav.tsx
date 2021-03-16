@@ -3,12 +3,7 @@ import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useHistory } from 'react-router-dom';
 import { portfolioActions, userActions } from '../../_actions';
-import {
-	ArrowIcon,
-	Dropdown,
-	IDropdownItem,
-	Modal,
-} from '../../_components';
+import { ArrowIcon, Dropdown, IDropdownItem, Modal } from '../../_components';
 import { applicationViewActions } from '../../_actions/applicationView.actions';
 import { IRootState } from '../../_reducers';
 
@@ -24,12 +19,16 @@ import {
 	Typography,
 } from '@material-ui/core';
 import { COLORS, RD } from '../../_styles/ResponsiveDesign';
-import { Add, ArrowDropDown, ExitToApp } from '@material-ui/icons';
+import { Add, ArrowDropDown, ExitToApp, Menu } from '@material-ui/icons';
 import { AddIntegrationPopup, ListMyExchanges } from '../../Integrations';
 import { IPortfolioDataView } from '../../../../types';
 import { SyncIcon } from '../../_styles/IconStyles';
-import { NavAccountContainer, NavContainer, NavFlexSpacer, ToggleSidebar } from './_styles';
-
+import {
+	NavAccountContainer,
+	NavContainer,
+	NavFlexSpacer,
+	ToggleSidebar,
+} from './_styles';
 
 export const DesktopTopNav = () => {
 	const dispatch = useDispatch();
@@ -38,12 +37,12 @@ export const DesktopTopNav = () => {
 
 	const [accountDropdownVisible, setAccountDropdownVisible] = useState(false);
 
-	const filteredPortfolioData: IPortfolioDataView = useSelector(
-		(state: IRootState) => state.portfolio.filteredPortfolioData
-	);
+	// const filteredPortfolioData: IPortfolioDataView = useSelector(
+	// 	(state: IRootState) => state.portfolio.filteredPortfolioData
+	// );
 
 	const portfolioData: IPortfolioDataView[] = useSelector(
-		(state: IRootState) => state.portfolio.PortfolioData
+		(state: IRootState) => state.portfolio.portfoliosData
 	);
 
 	const isSyncing = useSelector(
@@ -58,10 +57,9 @@ export const DesktopTopNav = () => {
 		(state: IRootState) => state.applicationView.isSidebarCollapsed
 	);
 
-	const [
-		metaPortfolioData,
-		setMetaPortfolioData,
-	] = useState<IPortfolioDataView>();
+	const [metaPortfolioData, setMetaPortfolioData] = useState<
+		IPortfolioDataView
+	>();
 
 	useEffect(() => {
 		setMetaPortfolioData(
@@ -127,10 +125,8 @@ export const DesktopTopNav = () => {
 
 	return (
 		<NavContainer>
-			<ToggleSidebar
-				onClick={() => dispatch(applicationViewActions.toggleSidebar())}
-			>
-				<ArrowIcon direction={!isSidebarCollapsed ? 'left' : 'right'} />
+			<ToggleSidebar onClick={() => dispatch(applicationViewActions.toggleSidebar())}>
+				<Menu />
 			</ToggleSidebar>
 			<NavFlexSpacer />
 			<div
@@ -148,13 +144,6 @@ export const DesktopTopNav = () => {
 						<SyncIcon
 							onClick={() => dispatch(portfolioActions.sync())}
 							isSyncing={isSyncing}
-						/>
-						refresh
-						<SyncIcon
-							onClick={() =>
-								dispatch(portfolioActions.refresh(filteredPortfolioData.id))
-							}
-							isSyncing={isRefreshing}
 						/>
 					</div>
 				)}

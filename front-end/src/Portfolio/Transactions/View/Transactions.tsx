@@ -1,34 +1,38 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { IPortfolioDataView, ITransactionItemView } from "../../../../../types";
-import { TransactionItem } from "./TransactionItem";
+import { IPortfolioDataView, ITransactionItemView } from '../../../../../types';
+import { TransactionItem } from './TransactionItem';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { Filter, ViewLoading } from "../../../_components";
+import { Filter, ViewLoading } from '../../../_components';
 
-import { IRootState } from "../../../_reducers";
+import { IRootState } from '../../../_reducers';
+import { useFilteredPortfolio } from '../../../_hooks/useFilteredPortfolio';
 
-export const Transactions = () => {
-  const dispatch = useDispatch();
+interface ITransactionsProps {
+	PortfolioId: string;
+}
 
-  const [sortAscending, setSortAscending] = useState(false);
-  const filteredPortfolioData: IPortfolioDataView = useSelector(
-    (state: IRootState) => state.portfolio.filteredPortfolioData
-  );
+export const Transactions: React.FC<ITransactionsProps> = ({ PortfolioId }) => {
+	const dispatch = useDispatch();
 
-  return (
-    <React.Fragment>
-      {filteredPortfolioData != null ? (
-        <Filter
-          data={filteredPortfolioData.transactionViewItems}
-          sortAscending={sortAscending}
-          LineItemComponent={TransactionItem}
-        />
-      ) : (
-        <ViewLoading />
-      )}
-    </React.Fragment>
-  );
+	const data = useFilteredPortfolio(PortfolioId);
+
+	const [sortAscending, setSortAscending] = useState(false);
+
+	return (
+		<React.Fragment>
+			{data != null ? (
+				<Filter
+					data={data.transactionViewItems}
+					sortAscending={sortAscending}
+					LineItemComponent={TransactionItem}
+				/>
+			) : (
+				<ViewLoading />
+			)}
+		</React.Fragment>
+	);
 };

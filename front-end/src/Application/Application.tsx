@@ -3,64 +3,32 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Portfolio } from '../Portfolio';
 import { Dashboard } from '../Dashboard';
-import { MobileNav, MobileTopNav, DesktopTopNav, SidebarNav } from '../Nav';
-import {
-	ApplicationContainer,
-	ApplicationFlexContainer,
-	BodyWrapper,
-} from './_styles';
-import { RD } from '../_styles/ResponsiveDesign';
+import { DesktopTopNav, SidebarNav } from '../Nav';
+import { ApplicationContainer, BodyWrapper } from './_styles';
 import { IRootState } from '../_reducers';
 import { Settings } from '../Settings';
-import { GrowFromZero } from '../_styles';
-import { portfolioActions } from '../_actions';
-import useMedia from 'use-media';
-import { Container } from '@material-ui/core';
+import { Container, useMediaQuery } from '@material-ui/core';
 import { Bots } from '../Bots';
 import { Trade } from '../Trade';
 import { Modal } from '../_components';
-import { ThemeProvider } from 'styled-components';
-import { BottomNavbar } from '../Nav/Bottom/Styles';
-import { applicationViewActions } from '../_actions/applicationView.actions';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import { theme } from '../_styles/Theme';
 
 export const Application = () => {
 	const dispatch = useDispatch();
 
-	const isSidebarCollapsed = useSelector(
-		(state: IRootState) => state.applicationView.isSidebarCollapsed
-	);
-
-	const filterId = useSelector((state: IRootState) => state.portfolio.filterId);
-
-	const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
-
-	useEffect(() => {
-		dispatch(portfolioActions.refresh(filterId));
-	}, []);
+	const mobile = useMediaQuery(theme.breakpoints.up('sm'));
 
 	return (
 		<MuiPickersUtilsProvider utils={MomentUtils}>
 			<React.Fragment>
 				<Modal />
 				<BodyWrapper>
-					<SidebarNav />
-					<ApplicationContainer
-						isMobile={isMobile}
-						isSidebarCollapsed={isSidebarCollapsed}
-						onClick={() => {
-							if (isMobile && !isSidebarCollapsed) {
-								dispatch(applicationViewActions.toggleSidebar(true));
-							}
-						}}
-					>
-						{isMobile ? <MobileTopNav /> : <DesktopTopNav />}
-
-						<ApplicationFlexContainer
-							isMobile={isMobile}
-							isSidebarCollapsed={isSidebarCollapsed}
-						>
+					<DesktopTopNav />
+					<ApplicationContainer>
+						<SidebarNav />
+						<Container disableGutters={!mobile} maxWidth={'lg'} fixed>
 							<Switch>
 								<Route path={`/portfolio`}>
 									<Portfolio />
@@ -79,7 +47,7 @@ export const Application = () => {
 								</Route>
 								<Redirect to="/dashboard" />
 							</Switch>
-						</ApplicationFlexContainer>
+						</Container>
 					</ApplicationContainer>
 				</BodyWrapper>
 			</React.Fragment>

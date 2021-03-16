@@ -6,20 +6,31 @@ import { AssetsMiniItem } from './Line_item/AssetsMiniItem';
 
 interface AssetsMiniListProps {
 	portfolioItems: IPortfolioItemView[];
+	colors: string[];
 }
 
 export const AssetsMiniList: React.FC<AssetsMiniListProps> = ({
 	portfolioItems,
+	colors,
 }) => {
 	const sortHoldings = portfolioItems.sort(
 		(a: any, b: any) => b['value'].USD - a['value'].USD
 	);
 
 	return (
-		<ScrollBox style={{ padding: '0 8px', minWidth: '400px' }}>
+		<ScrollBox
+			style={{
+				padding: '0 8px',
+				width: '100%',
+			}}
+		>
 			{portfolioItems ? (
-				sortHoldings.map((pItem: IPortfolioItemView) => (
-					<AssetsMiniItem portfolioItem={pItem} />
+				sortHoldings.map((pItem: IPortfolioItemView, index) => (
+					<AssetsMiniItem
+						key={index}
+						color={colors[index]}
+						portfolioItem={pItem}
+					/>
 				))
 			) : (
 				<ViewLoading />
