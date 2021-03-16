@@ -24,9 +24,9 @@ export const Transactions: React.FC<ITransactionsProps> = ({ PortfolioId }) => {
 
 	return (
 		<React.Fragment>
-			{data != null ? (
+			{Transactions != null ? (
 				<Filter
-					data={data.transactionViewItems}
+					data={Transactions}
 					sortAscending={sortAscending}
 					LineItemComponent={TransactionItem}
 				/>
