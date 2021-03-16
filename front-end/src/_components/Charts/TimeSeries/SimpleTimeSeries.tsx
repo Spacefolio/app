@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { IPortfolioLineChartItem, timeframe } from '../../../../../types';
 import Chart from 'chart.js';
 import { theme } from '../../../_styles/Theme';
+import { CircularProgress } from '@material-ui/core';
+import moment from 'moment';
 
 interface PortfolioLineChartProps {
 	id: string;
@@ -36,8 +38,8 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 					},
 				],
 			},
-			options: { 
-				tooltips: { enabled: showTooltip },
+			options: {
+				tooltips: { enabled: showTooltip, intersect: false, mode: 'x' },
 				title: { display: false },
 				legend: { display: false },
 				maintainAspectRatio: false,
@@ -46,27 +48,32 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 					xAxes: [
 						{
 							ticks: {
+								maxRotation: 0,
+								minRotation: 0,
 								fontSize: 12,
-								autoSkipPadding: 50,
+								autoSkipPadding: 90,
+								callback: (value, index, values) => {
+									return moment(value).format('MMM DD');
+								},
 							},
-							gridLines: { display: false, drawBorder: false },
+							gridLines: { display: false, drawBorder: true },
 							type: 'time',
 							display: showX,
 							scaleLabel: {
-								display: false,
+								display: true,
 							},
 						},
 					],
 					yAxes: [
 						{
 							ticks: {
-								autoSkipPadding: 50,
+								autoSkipPadding: 80,
 								display: true,
 								callback: (value, index, values) => {
 									return value;
 								},
 							},
-							gridLines: { drawBorder: false },
+							gridLines: { display: false, drawBorder: false },
 							display: showY,
 							scaleLabel: {
 								display: false,
@@ -76,7 +83,7 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 				},
 			},
 		});
-    return() => chart.destroy();
+		return () => chart.destroy();
 	}, [chartData]);
 
 	interface IChartPoint {
@@ -86,8 +93,8 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 
 	return (
 		<React.Fragment>
-			<div style={{ position: "relative" }}>
-				{chartData && <canvas id={id} ref={chartRef} />}
+			<div style={{ position: 'relative' }}>
+				{chartData ? <canvas id={id} ref={chartRef} /> : <CircularProgress />}
 			</div>
 		</React.Fragment>
 	);

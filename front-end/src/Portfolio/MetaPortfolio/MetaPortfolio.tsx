@@ -6,8 +6,6 @@ import {
 	PortfolioName,
 	PortfolioValueColumn,
 	PortfolioProfitSection,
-	TimeframeItem,
-	TimeFrameSelectorContainer,
 } from './_styles';
 import { Dropdown, PortfolioLineChart } from '../../_components';
 import { alertActions, portfolioActions } from '../../_actions';
@@ -21,6 +19,7 @@ import { Button, Typography } from '@material-ui/core';
 import { ListMyExchanges } from '../../Integrations';
 import { InlineDiv } from '../../_styles';
 import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
+import { TimeframeSelectorBar } from '../../_components/Charts/TimeframeSelector/TimeframeSelector';
 
 export const MetaPortfolio = () => {
 	const dispatch = useDispatch();
@@ -169,23 +168,6 @@ export const MetaPortfolio = () => {
 		);
 	};
 
-	const TimeframeSelectorBar = (
-		<TimeFrameSelectorContainer>
-			{timeFrameSelectors.map((item: timeframe) => {
-				return (
-					<TimeframeItem
-						onClick={() => {
-							setTimeframe(item);
-						}}
-						selected={item == timeframe}
-					>
-						{item}
-					</TimeframeItem>
-				);
-			})}
-		</TimeFrameSelectorContainer>
-	);
-
 	return (
 		<MetaPortfolioWrapper>
 			{PortfolioValueSection()}
@@ -196,7 +178,7 @@ export const MetaPortfolio = () => {
 					overflow: 'hidden',
 				}}
 			>
-				{TimeframeSelectorBar}
+				<TimeframeSelectorBar Tframe={timeframe} setTimeframe={setTimeframe}/>
 				<PortfolioLineChart
 					setPV={setChartValue}
 					setDate={setChartDate}

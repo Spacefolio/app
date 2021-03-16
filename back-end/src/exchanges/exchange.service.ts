@@ -564,7 +564,9 @@ async function syncAllExchangesData(userId: string) {
 		portfolioData.push(portfolioDataItem);
 	}
 
-	return portfolioData;
+  const metabitch = await createMetaportfolioData(portfolioData);
+
+	return [metabitch, ...portfolioData];
 }
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {

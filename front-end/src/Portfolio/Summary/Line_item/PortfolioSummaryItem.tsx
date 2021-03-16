@@ -27,8 +27,10 @@ import {
 import useDimensions from 'react-use-dimensions';
 import { AssetsMiniList } from '../../Assets/AssetsMiniList';
 import { SyncIcon } from '../../../_styles/IconStyles';
-import { timeFrameSelectors } from '../../../_helpers';
-import { DateRange } from '@material-ui/icons';
+import {
+	TimeframeSelectorBar,
+	TimeframeSelectorDropdown,
+} from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
 
 export interface IPortfolioSummaryItemView {
 	portfolioItem: IPortfolioDataView;
@@ -68,63 +70,9 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 		'rgb(253, 218, 223)',
 	];
 
-	const anchorRef = React.useRef<HTMLButtonElement>(null);
 	const [TframeVisible, setTframeVisible] = useState(false);
 
-	const handleClose = (event: React.MouseEvent<EventTarget>) => {
-		if (
-			anchorRef.current &&
-			anchorRef.current.contains(event.target as HTMLElement)
-		) {
-			return;
-		}
-
-		setTframeVisible(false);
-	};
-
-	const TimeframeSelector = () => (
-		<div>
-			<Button
-				ref={anchorRef}
-				aria-controls={open ? 'menu-list-grow' : undefined}
-				aria-haspopup="true"
-				onClick={() => setTframeVisible(!TframeVisible)}
-			>
-				{Tframe}
-				<DateRange />
-			</Button>
-			<Popper
-				open={TframeVisible}
-				anchorEl={anchorRef.current}
-				role={undefined}
-				transition
-			>
-				<Paper>
-					<ClickAwayListener onClickAway={handleClose}>
-						<MenuList
-							autoFocusItem={TframeVisible}
-							id="menu-list-grow"
-							onClick={() => setTframeVisible(false)}
-						>
-							{timeFrameSelectors.map((item: timeframe, index: number) => {
-								return (
-									<MenuItem
-										key={index}
-										onClick={() => {
-											setTimeframe(item);
-										}}
-										selected={item == Tframe}
-									>
-										{item}
-									</MenuItem>
-								);
-							})}
-						</MenuList>
-					</ClickAwayListener>
-				</Paper>
-			</Popper>
-		</div>
-	);
+	const DetailsSection = () => <div>im details</div>;
 
 	const Content = () => (
 		<React.Fragment>
@@ -142,7 +90,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 							<Typography variant="caption">{portfolioItem.name}</Typography>
 						</InlineDiv>
 					</div>
-					{TimeframeSelector()}
+
 					<FlexSpacer />
 				</InlineDiv>
 			</FlexCardHeader>
@@ -173,9 +121,13 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 						container
 					>
 						<Grid ref={chartContainerRef} xs>
+							<TimeframeSelectorBar
+								Tframe={Tframe}
+								setTimeframe={setTimeframe}
+							/>
 							<SimpleTimeSeries
-								showX={false}
-								showY={false}
+								showX={true}
+								showY={true}
 								id={portfolioItem.nickname.replace(/\s/g, '') + 'chart'}
 								data={chartData}
 							/>

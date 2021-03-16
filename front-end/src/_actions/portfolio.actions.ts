@@ -16,7 +16,6 @@ function sync() {
       .syncPortfolio()
       .then((res: any) => {
         dispatch(success(res));
-        dispatch(refresh("ALL"));
         dispatch(alertActions.success("Sync Complete"));
       })
       .catch((error) => {
@@ -28,8 +27,8 @@ function sync() {
   function request() {
     return { type: portfolioConstants.SYNC_REQUEST };
   }
-  function success(portfolioData: IPortfolioDataView[]) {
-    return { type: portfolioConstants.SYNC_SUCCESS, portfolioData };
+  function success(portfoliosData: IPortfolioDataView[]) {
+    return { type: portfolioConstants.SYNC_SUCCESS, portfoliosData };
   }
   function failure() {
     return { type: portfolioConstants.SYNC_FAILURE };
@@ -42,7 +41,6 @@ function refresh(portfolioId: string, manual: boolean = false) {
     portfolioService
       .refreshPortfolio(portfolioId, manual)
       .then((res: any) => {
-        // dispatch(SetFilteredPortfolioData(res));
         dispatch(success(res));
       })
       .catch((error) => {

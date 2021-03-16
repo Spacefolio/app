@@ -2,7 +2,7 @@ import { CombinedState, combineReducers, Reducer } from "redux";
 import { IPortfolioState, portfolio } from "./portfolio.reducer";
 import { authentication, IAuthenticationState } from "./authentication.reducer";
 import { IRegistrationState, registration } from "./registration.reducer";
-import { alert } from "./alert.reducer";
+import { alert, IAlertState } from "./alert.reducer";
 import { exchanges, IExchangesState } from "./exchange.reducer";
 import {
   IApplicationViewState,
@@ -15,7 +15,7 @@ export interface IRootState {
   authentication: IAuthenticationState;
   registration: IRegistrationState;
   applicationView: IApplicationViewState;
-  alert: any;
+  alert: IAlertState;
 }
 
 const rootReducer = combineReducers({

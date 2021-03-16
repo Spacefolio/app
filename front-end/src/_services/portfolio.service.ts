@@ -55,16 +55,18 @@ async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
 		Authorization: Authorization,
 	};
 
-	const CachedPortfolio = await getCachedPortfolio(portfolioFilterId);
+	const CachedPortfolio = getCachedPortfolio(portfolioFilterId);
 
 	if (
 		CachedPortfolio &&
 		Date.now() - CachedPortfolio.lastRefresh < 30000 &&
 		!manual
 	) {
+		console.log('this was cached');
 		//if the specific portfolio was housed in the cache and its been less than 30 seconds since last refresh then serve the cached data
 		return CachedPortfolio;
 	} else {
+		console.log('wasnt cached not adding to the cache');
 		//refresh portfolio from server
 		return await axios
 			.get<IPortfolioDataView>(

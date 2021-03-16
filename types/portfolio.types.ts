@@ -27,7 +27,7 @@ export interface ICachedPortfolioDataView {
   id: string;
   nickname: string;
   addedDate: Date | string;
-  exchangeType: exchangeType;
+  exchangeType?: exchangeType;
   apiInfo: {
     apiKey: string;
     apiSecret: string;

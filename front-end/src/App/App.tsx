@@ -5,7 +5,7 @@ import { history } from '../_helpers';
 import { alertActions } from '../_actions';
 import { PrivateRoute } from '../_components';
 import { Application } from '../Application';
-import { Alert } from '../_components';
+import { AlertContainer } from '../_components';
 import 'typeface-roboto';
 import './App.scss';
 import { AppContainer } from './_styles';
@@ -28,7 +28,7 @@ export const App = () => {
 			<CssBaseline />
 			<ThemeProvider theme={theme}>
 				<AppContainer>
-					<Alert />
+					<AlertContainer />
 					<Router history={history}>
 						<Switch>
 							<Route exact path="/login" component={Login} />

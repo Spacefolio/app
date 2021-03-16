@@ -39,7 +39,7 @@ export function portfolio(
 		case portfolioConstants.SYNC_SUCCESS:
 			return {
 				...state,
-				portfolioData: action.portfolioData,
+				portfoliosData: action.portfoliosData,
 				syncingPortfolio: false,
 			};
 		case portfolioConstants.SYNC_FAILURE:

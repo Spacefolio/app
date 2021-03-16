@@ -4,9 +4,6 @@ import { COLORS } from '../../_styles/ResponsiveDesign';
 import { theme } from '../../_styles/Theme';
 
 export const AlertWrapper = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	width: 100%;
 `;
 

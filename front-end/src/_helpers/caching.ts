@@ -1,14 +1,27 @@
 import { ICachedPortfolioDataView, IPortfolioDataView } from '../../../types';
 
 export const updateCachedPortfolio = (portfolio: IPortfolioDataView) => {
-	let cachedPortfolios = JSON.parse(localStorage.getItem('Portfolio'));
+	let cachedPortfolios: ICachedPortfolioDataView[] = JSON.parse(
+		localStorage.getItem('Portfolio')
+	);
 
 	if (cachedPortfolios) {
-		const updatedList = cachedPortfolios.map((item: IPortfolioDataView) =>
-			item.id === portfolio.id
-				? { ...portfolio, lastRefresh: Date.now() }
-				: item
-		);
+		var updatedList;
+		if (getCachedPortfolio(portfolio.id)) {
+			updatedList = cachedPortfolios.map((item: IPortfolioDataView) =>
+				item.id === portfolio.id
+					? { ...portfolio, lastRefresh: Date.now() }
+					: item
+			);
+		} else {
+			updatedList = [
+				...cachedPortfolios,
+				{
+					...portfolio,
+					lastRefresh: Date.now(),
+				},
+			];
+		}
 		localStorage.setItem('Portfolio', JSON.stringify(updatedList));
 	} else {
 		localStorage.setItem('Portfolio', JSON.stringify([portfolio]));
