@@ -1,92 +1,52 @@
-import {
-	IExchangeAccount,
-	IExchangeAccountDocument,
-} from '../exchanges/exchange.model';
+import { IExchangeAccount, IExchangeAccountDocument } from '../exchanges/exchange.model';
 import { ITransactionItemView } from '../../../types';
-import { IOrder, IOrderDocument } from '../orders/order.model';
+import { IOrder, IOrderDocument } from './order.model';
 import { ITransaction, ITransactionDocument } from './transaction.model';
-import { ccxtService } from '../exchanges/_helpers/ccxt.service';
+import { ccxtService } from '../_helpers/ccxt.service';
 import ccxt from 'ccxt';
 import { Db } from 'mongodb';
-import { fiat, getHistoricalData } from '../assets/historical.service';
-import { getCoinLogo } from '../assets/_helpers/coindata.helpers';
-import { getCurrentPrice } from '../assets/coindata.service';
+import { fiat, getHistoricalData } from '../coindata/historical.service';
+import { getCurrentPrice } from '../coindata/coindata.service';
 
-export async function createTransactionViewItems(
-	exchange: IExchangeAccountDocument
-): Promise<ITransactionItemView[]> {
+export async function createTransactionViewItems(exchange: IExchangeAccountDocument): Promise<ITransactionItemView[]> {
 	const transactionViewItems: ITransactionItemView[] = [];
 	const ccxtExchange = ccxtService.loadExchange(exchange);
 
 	for (var i = 0; i < exchange.transactions.length; i++) {
 		let transaction: ITransactionDocument = exchange.transactions[i];
-		let transactionItem: ITransactionItemView = await convertTransactionToTransactionView(
-			ccxtExchange,
-			exchange,
-			transaction
-		);
+		let transactionItem: ITransactionItemView = await convertTransactionToTransactionView(ccxtExchange, exchange, transaction);
 		transactionViewItems.push(transactionItem);
 	}
 
 	for (var i = 0; i < exchange.orders.length; i++) {
 		let order: IOrderDocument = exchange.orders[i];
-		let transactionItem: ITransactionItemView = await convertOrderToTransactionView(
-			ccxtExchange,
-			exchange,
-			order
-		);
+		let transactionItem: ITransactionItemView = await convertOrderToTransactionView(ccxtExchange, exchange, order);
 		transactionViewItems.push(transactionItem);
 	}
 
 	return transactionViewItems;
 }
 
-export async function saveTransactionViewItems(
-	ccxtExchange: ccxt.Exchange,
-	exchange: IExchangeAccountDocument,
-	newOrdersCount: number,
-	newTransactionsCount: number
-) {
-	for (
-		var i = exchange.transactions.length - newTransactionsCount;
-		i < exchange.transactions.length;
-		i++
-	) {
+export async function saveTransactionViewItems(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument, newOrdersCount: number, newTransactionsCount: number) {
+	for (var i = exchange.transactions.length - newTransactionsCount; i < exchange.transactions.length; i++) {
 		let transaction: ITransactionDocument = exchange.transactions[i];
-		let transactionItem: ITransactionItemView = await convertTransactionToTransactionView(
-			ccxtExchange,
-			exchange,
-			transaction
-		);
+		let transactionItem: ITransactionItemView = await convertTransactionToTransactionView(ccxtExchange, exchange, transaction);
 		exchange.transactionViewItems.push(transactionItem);
 	}
 
-	for (
-		var i = exchange.orders.length - newOrdersCount;
-		i < exchange.orders.length;
-		i++
-	) {
+	for (var i = exchange.orders.length - newOrdersCount; i < exchange.orders.length; i++) {
 		let order: IOrderDocument = exchange.orders[i];
-		let transactionItem: ITransactionItemView = await convertOrderToTransactionView(
-			ccxtExchange,
-			exchange,
-			order
-		);
+		let transactionItem: ITransactionItemView = await convertOrderToTransactionView(ccxtExchange, exchange, order);
 		exchange.transactionViewItems.push(transactionItem);
 	}
 }
 
-export async function createTransactionViewItemsForOpenOrders(
-	exchange: IExchangeAccountDocument
-): Promise<ITransactionItemView[]> {
+export async function createTransactionViewItemsForOpenOrders(exchange: IExchangeAccountDocument): Promise<ITransactionItemView[]> {
 	const transactionViewItems: ITransactionItemView[] = [];
 
 	for (var i = 0; i < exchange.openOrders.length; i++) {
 		let order: IOrderDocument = exchange.openOrders[i];
-		let transactionItem: ITransactionItemView = await convertOpenOrderToTransactionView(
-			exchange,
-			order
-		);
+		let transactionItem: ITransactionItemView = await convertOpenOrderToTransactionView(exchange, order);
 		transactionViewItems.push(transactionItem);
 	}
 
@@ -104,12 +64,7 @@ export async function convertOrderToTransactionView(
 	var valueInUsd = order.cost;
 
 	if (quoteSymbol != 'USD') {
-		const conversionRate = await getConversionRate(
-			ccxtExchange,
-			quoteSymbol,
-			'USD',
-			order.timestamp
-		);
+		const conversionRate = await getConversionRate(ccxtExchange, quoteSymbol, 'USD', order.timestamp);
 		priceInUsd = conversionRate * priceInUsd;
 		valueInUsd = order.amount * priceInUsd;
 	}
@@ -119,7 +74,7 @@ export async function convertOrderToTransactionView(
 		exchangeName: exchange.name,
 		symbol: baseSymbol,
 		quoteSymbol: getQuoteSymbol(order.symbol),
-		logoUrl: await getCoinLogo(baseSymbol),
+		logoUrl: await getLogoUrlForSymbol(baseSymbol),
 		type: order.side,
 		date: order.timestamp,
 		amount: order.filled,
@@ -139,12 +94,7 @@ export async function convertTransactionToTransactionView(
 ): Promise<ITransactionItemView> {
 	var priceInUsd = 1;
 	if (transaction.currency != 'USD') {
-		priceInUsd = await getConversionRate(
-			ccxtExchange,
-			transaction.currency,
-			'USD',
-			transaction.timestamp
-		);
+		priceInUsd = await getConversionRate(ccxtExchange, transaction.currency, 'USD', transaction.timestamp);
 	}
 	//const quoteAmount = getQuoteAmountAtTime(ccxtExchange, transaction.timestamp, transaction.currency, transaction.amount, "USD");
 
@@ -153,7 +103,7 @@ export async function convertTransactionToTransactionView(
 		exchangeName: exchange.name,
 		symbol: transaction.currency,
 		quoteSymbol: transaction.currency,
-		logoUrl: await getCoinLogo(transaction.currency),
+		logoUrl: await getLogoUrlForSymbol(transaction.currency),
 		type: transaction.type,
 		date: transaction.timestamp,
 		amount: transaction.amount,
@@ -179,7 +129,7 @@ export async function convertOpenOrderToTransactionView(
 		exchangeName: exchange.name,
 		symbol: baseSymbol,
 		quoteSymbol: getQuoteSymbol(order.symbol),
-		logoUrl: await getCoinLogo(baseSymbol),
+		logoUrl: await getLogoUrlForSymbol(baseSymbol),
 		type: order.side,
 		date: order.timestamp,
 		amount: order.amount,
@@ -202,6 +152,10 @@ export function getQuoteSymbol(symbol: string): string {
 	return symbols.length > 1 ? symbols[1] : 'ERR';
 }
 
+export async function getLogoUrlForSymbol(symbol: string) {
+	return 'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png';
+}
+
 export async function getConversionRate(
 	exchange: ccxt.Exchange,
 	baseCurrency: string,
@@ -209,37 +163,26 @@ export async function getConversionRate(
 	timestamp?: number
 ): Promise<number> {
 	let symbol = baseCurrency + '/' + quoteCurrency;
-	let fiatValue = fiat(symbol);
-	if (fiatValue != 0) return fiatValue;
+  let fiatValue = fiat(symbol);
+  if (fiatValue != 0) return fiatValue;
+  
+  let sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  
+  if (timestamp == undefined)
+  {
+    return await getCurrentPrice(baseCurrency).catch(async (err: any) => {
+      if (!exchange.has.fetchTicker) throw 'Exchange does not have fetchTicker';
+      return sleep(exchange.rateLimit).then(() => exchange.fetchTicker(symbol))
+      .then((ticker: ccxt.Ticker) => {
+        return (ticker.last ? ticker.last : ((ticker.high + ticker.low) / 2));
+      }).catch((err) => { return 1; })
+    });
+  }
 
-	let sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-	if (timestamp == undefined) {
-		return await getCurrentPrice(baseCurrency).catch(async (err: any) => {
-			if (!exchange.has.fetchTicker) throw 'Exchange does not have fetchTicker';
-			return sleep(exchange.rateLimit)
-				.then(() => exchange.fetchTicker(symbol))
-				.then((ticker: ccxt.Ticker) => {
-					return ticker.last ? ticker.last : (ticker.high + ticker.low) / 2;
-				})
-				.catch((err) => {
-					return 1;
-				});
-		});
-	}
-
-	return await getHistoricalData(symbol, timestamp).catch(async () => {
-		if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
-		return sleep(exchange.rateLimit)
-			.then(() =>
-				exchange
-					.fetchOHLCV(symbol, '1m', timestamp, 1)
-					.then((ohlcv: ccxt.OHLCV[]) => {
-						return (ohlcv[0][1] + ohlcv[0][4]) / 2;
-					})
-			)
-			.catch((err) => {
-				return 1;
-			});
-	});
+  return await getHistoricalData(symbol, timestamp).catch(async () => {
+    if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
+    return sleep(exchange.rateLimit).then(() => exchange.fetchOHLCV(symbol, '1m', timestamp, 1).then((ohlcv: ccxt.OHLCV[]) => {
+      return (ohlcv[0][1] + ohlcv[0][4]) / 2;
+    })).catch((err) => { return 1; })
+  });
 }

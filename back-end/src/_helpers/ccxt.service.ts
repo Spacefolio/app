@@ -1,18 +1,18 @@
 import ccxt, { Balances, Exchange } from "ccxt";
-import { IExchangeAccountDocument } from "../exchange.model";
+import { IExchangeAccountDocument } from "../exchanges/exchange.model";
 import {
   exchangeType,
   IExchangeAccountRequest,
   IExchangeAccountView,
   IIntegrationInfo,
-} from "../../../../types";
+} from "../../../types";
 import {
   ITransaction,
   Transaction,
   ITransactionDocument
-} from "../../transactions/transaction.model";
-import { Order } from "../../orders/order.model";
-import { IOrderDocument } from "../../orders/order.model";
+} from "../transactions/transaction.model";
+import { Order } from "../transactions/order.model";
+import { IOrderDocument } from "../transactions/order.model";
 
 export const ccxtService = {
   loadExchange,

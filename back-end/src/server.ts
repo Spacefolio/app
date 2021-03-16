@@ -1,16 +1,16 @@
 ﻿require("rootpath")();
 require("dotenv").config();
-import express from "express";
+const express = require("express");
 const app = express();
-import cors from "cors";
-import bodyParser from "body-parser";
+const cors = require("cors");
+const bodyParser = require("body-parser");
 import jwt from "./_helpers/jwt";
 import { errorHandler } from "./_helpers/error-handler";
 import { usersRouter } from "./users/users.controller";
 import { exchangesRouter } from "./exchanges/exchanges.controller";
 import { portfolioRouter } from "./portfolios/portfolios.controller";
 import { transactionsRouter } from "./transactions/transactions.controller";
-import { coindataRouter } from "./assets/coindata.controller";
+import { coindataRouter } from "./coindata/coindata.controller";
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -32,5 +32,5 @@ app.use(errorHandler);
 const port =
   process.env.NODE_ENV === "production" ? process.env.PORT || 80 : 4000;
 const server = app.listen(port, function () {
-  console.log("Server listening on port " + port);
+    console.log('Server listening on port ' + port);
 });
