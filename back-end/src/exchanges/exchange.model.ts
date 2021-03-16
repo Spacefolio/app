@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import {
-  holdingSnapshotSchema,
   IPortfolioItem,
   portfolioItemSchema,
 } from "../portfolios/portfolio.model";
@@ -39,6 +38,7 @@ export interface IExchangeAccountDocument extends mongoose.Document {
   openOrders: IOrderDocument[];
   transactionViewItems: ITransactionItemView[];
   timeslices: ITimeslices;
+  hourlyTimeSeries: ITimeslices;
   lastSyncedDate: Date;
 }
 
@@ -51,19 +51,15 @@ export interface IHoldingSnapshot {
   totalAmountSold: number;
   totalValueReceived: number;
   totalValueInvested: number;
+  totalValueDeposited: number;
+  totalValueWithdrawn: number;
+  totalAmountDeposited: number;
+  totalAmountWithdrawn: number;
 }
 
 export interface IHoldingsHistory {
   [key: string]: IHoldingSnapshot[];
 }
-
-const holdingSliceSchema = new mongoose.Schema({
-  asset: String,
-  amount: Number,
-  price: Number,
-  value: Number,
-  snapshots: [holdingSnapshotSchema],
-});
 
 export interface IHoldingSlice {
   asset: string;
@@ -82,12 +78,6 @@ export interface ITimeslice {
   value: number;
   holdings: { [key: string]: IHoldingSlice };
 }
-
-const timesliceSchema = new mongoose.Schema({
-  start: Number,
-  value: Number,
-  holdings: [holdingSliceSchema],
-});
 
 export interface IExchangeAccountModel
   extends mongoose.Model<IExchangeAccountDocument> {
@@ -110,6 +100,7 @@ const exchangeAccountSchema = new mongoose.Schema({
   openOrders: [orderSchema],
   transactionViewItems: [transactionItemViewSchema],
   timeslices: { type: Object },
+  hourlyTimeSeries: { type: Object },
   lastSyncedDate: { type: Date, default: 0 },
   logoUrl: { type: String, required: false }
 });
@@ -132,6 +123,7 @@ export interface IExchangeAccount {
   openOrders: [IOrder];
   transactionViewItems: [ITransactionItemView];
   timeslices: [ITimeslice];
+  hourlyTimeSeries: [ITimeslice];
   lastSyncedDate: Date;
 }
 
@@ -143,8 +135,10 @@ exchangeAccountSchema.set("toJSON", {
     delete ret.hash;
     delete ret.orders;
     delete ret.transactions;
+    delete ret.transactionViewItems;
     delete ret.openOrders;
     delete ret.timeslices;
+    delete ret.hourlyTimeSeries;
     delete ret.lastSyncedDate;
   },
 });

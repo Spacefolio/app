@@ -1,40 +1,16 @@
-import { IUserDocument, User } from '../users/user.model';
-import {
-	IExchangeAccountRequest,
-	exchangeType,
-	IExchangeAccountView,
-	IPortfolioDataView,
-	IPortfolioItemView,
-	ITransactionItemView,
-	IOpenOrderItemView,
-} from '../../../types';
-import {
-	ExchangeAccount,
-	IExchangeAccount,
-	IExchangeAccountDocument,
-	IHoldingsHistory,
-	IHoldingSlice,
-	IHoldingSnapshot,
-	ITimeslice,
-} from './exchange.model';
-import ccxt, { Balances, Exchange } from 'ccxt';
-import { IPortfolioItem } from '../portfolios/portfolio.model';
-import {
-	ITransaction,
-	ITransactionDocument,
-	Transaction,
-} from '../transactions/transaction.model';
-import { randNum } from '../../exchangeDataDetailed';
-import { ccxtService } from './_helpers/ccxt.service';
-import { IOrder, IOrderDocument, orderSchema } from '../orders/order.model';
-import {
-	convertTransactionToTransactionView,
-	createTransactionViewItems,
-	getConversionRate,
-	saveTransactionViewItems,
-} from '../transactions/transactionView';
-import { fiat } from '../assets/historical.service';
-import { getCoinLogo } from '../assets/_helpers/coindata.helpers';
+import { Exchange } from "ccxt";
+import { coindataService } from "../assets/coindata.service";
+import { fiat, getHistoricalData } from "../assets/historical.service";
+import { getCoinLogo } from "../assets/_helpers/coindata.helpers";
+import { IOrder } from "../orders";
+import { IPortfolioItem } from "../portfolios/portfolio.model";
+import { ITransaction, saveTransactionViewItems, getConversionRate } from "../transactions";
+import { User } from "../users";
+import { ExchangeAccount } from "../_helpers/db";
+import { IExchangeAccountRequest, IPortfolioDataView, IPortfolioItemView, IOpenOrderItemView, ITransactionItemView } from "../../../types";
+import { IExchangeAccountDocument, IHoldingSnapshot, IHoldingsHistory, ITimeslices, IHoldingSlice, ITimeslice } from "./exchange.model";
+import { ccxtService } from "./_helpers";
+
 
 export const exchangeService = {
 	getAll,
@@ -387,6 +363,10 @@ async function addTransactionSnapshotToHistory(
 		totalAmountSold: 0,
 		totalValueReceived: 0,
 		totalValueInvested: 0,
+		totalValueDeposited: 0,
+		totalValueWithdrawn: 0,
+		totalAmountDeposited: 0,
+		totalAmountWithdrawn: 0,
 	};
 
 	let lastSnapshot = { ...snapshot };
@@ -409,6 +389,10 @@ async function addTransactionSnapshotToHistory(
 			lastSnapshot.totalValueInvested + amount * priceInUsd;
 		snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
 		snapshot.price.USD = priceInUsd;
+		snapshot.totalValueDeposited = lastSnapshot.totalValueDeposited + (amount * priceInUsd);
+		snapshot.totalValueWithdrawn = lastSnapshot.totalValueWithdrawn;
+		snapshot.totalAmountDeposited = lastSnapshot.totalAmountDeposited + amount;
+		snapshot.totalAmountWithdrawn = lastSnapshot.totalAmountWithdrawn;
 	} else {
 		snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
 		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + amount + fee;
@@ -418,6 +402,10 @@ async function addTransactionSnapshotToHistory(
 		snapshot.totalValueReceived =
 			lastSnapshot.totalValueReceived + (amount - fee) * priceInUsd;
 		snapshot.price.USD = priceInUsd;
+		snapshot.totalValueDeposited = lastSnapshot.totalValueDeposited;
+		snapshot.totalValueWithdrawn = lastSnapshot.totalValueWithdrawn + (amount + fee) * priceInUsd;
+		snapshot.totalAmountDeposited = lastSnapshot.totalAmountDeposited;
+		snapshot.totalAmountWithdrawn = lastSnapshot.totalAmountWithdrawn + (amount + fee);
 	}
 
 	holdingsHistory[currency].push(snapshot);
@@ -453,6 +441,10 @@ async function addOrderSnapshotToHistory(
 		totalAmountSold: 0,
 		totalValueReceived: 0,
 		totalValueInvested: 0,
+		totalValueDeposited: 0,
+		totalValueWithdrawn: 0,
+		totalAmountDeposited: 0,
+		totalAmountWithdrawn: 0,
 	};
 
 	let lastSnapshot = { ...snapshot };
@@ -474,21 +466,23 @@ async function addOrderSnapshotToHistory(
 		snapshot.totalValueInvested =
 			lastSnapshot.totalValueInvested + orderCost * quoteCurrencyInUsd;
 		snapshot.totalValueReceived = lastSnapshot.totalValueReceived;
-		snapshot.price.USD = order.price
-			? order.price * quoteCurrencyInUsd
-			: (order.cost / order.filled) * quoteCurrencyInUsd;
+		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : (order.cost / order.filled) * quoteCurrencyInUsd;
+		snapshot.totalValueDeposited = lastSnapshot.totalValueDeposited;
+		snapshot.totalValueWithdrawn = lastSnapshot.totalValueWithdrawn;
+		snapshot.totalAmountDeposited = lastSnapshot.totalAmountDeposited;
+		snapshot.totalAmountWithdrawn = lastSnapshot.totalAmountWithdrawn;
 	} else {
 		snapshot.totalAmountBought = lastSnapshot.totalAmountBought;
 		snapshot.totalAmountSold = lastSnapshot.totalAmountSold + order.filled;
 		snapshot.amountBought = 0;
 		snapshot.amountSold = order.filled;
 		snapshot.totalValueInvested = lastSnapshot.totalValueInvested;
-		snapshot.totalValueReceived =
-			lastSnapshot.totalValueReceived +
-			(order.cost - order.fee.cost) * quoteCurrencyInUsd;
-		snapshot.price.USD = order.price
-			? order.price * quoteCurrencyInUsd
-			: (order.cost / order.filled) * quoteCurrencyInUsd;
+		snapshot.totalValueReceived = lastSnapshot.totalValueReceived + (order.cost - order.fee.cost) * quoteCurrencyInUsd;
+		snapshot.price.USD = order.price ? order.price * quoteCurrencyInUsd : (order.cost / order.filled) * quoteCurrencyInUsd;
+		snapshot.totalValueDeposited = lastSnapshot.totalValueDeposited;
+		snapshot.totalValueWithdrawn = lastSnapshot.totalValueWithdrawn;
+		snapshot.totalAmountDeposited = lastSnapshot.totalAmountDeposited;
+		snapshot.totalAmountWithdrawn = lastSnapshot.totalAmountWithdrawn;
 	}
 
 	let snapshotQuote = {
@@ -500,6 +494,10 @@ async function addOrderSnapshotToHistory(
 		totalAmountSold: 0,
 		totalValueReceived: 0,
 		totalValueInvested: 0,
+		totalValueDeposited: 0,
+		totalValueWithdrawn: 0,
+		totalAmountDeposited: 0,
+		totalAmountWithdrawn: 0,
 	};
 
 	let lastSnapshotQuote = { ...snapshotQuote };
@@ -523,6 +521,10 @@ async function addOrderSnapshotToHistory(
 		snapshotQuote.totalValueReceived =
 			lastSnapshotQuote.totalValueReceived + order.cost * quoteCurrencyInUsd;
 		snapshotQuote.price.USD = quoteCurrencyInUsd;
+		snapshotQuote.totalValueDeposited = lastSnapshotQuote.totalValueDeposited;
+		snapshotQuote.totalValueWithdrawn = lastSnapshotQuote.totalValueWithdrawn;
+		snapshotQuote.totalAmountDeposited = lastSnapshotQuote.totalAmountDeposited;
+		snapshotQuote.totalAmountWithdrawn = lastSnapshotQuote.totalAmountWithdrawn;
 	} else {
 		// count as a buy of the quote currency
 		snapshotQuote.totalAmountBought =
@@ -534,6 +536,10 @@ async function addOrderSnapshotToHistory(
 			lastSnapshotQuote.totalValueInvested + order.cost * quoteCurrencyInUsd;
 		snapshotQuote.totalValueReceived = lastSnapshotQuote.totalValueReceived;
 		snapshotQuote.price.USD = quoteCurrencyInUsd;
+		snapshotQuote.totalValueDeposited = lastSnapshotQuote.totalValueDeposited;
+		snapshotQuote.totalValueWithdrawn = lastSnapshotQuote.totalValueWithdrawn;
+		snapshotQuote.totalAmountDeposited = lastSnapshotQuote.totalAmountDeposited;
+		snapshotQuote.totalAmountWithdrawn = lastSnapshotQuote.totalAmountWithdrawn;
 	}
 
 	holdingsHistory[baseCurrency].push(snapshot);
@@ -551,12 +557,7 @@ async function updateTransactions(
 
 		if (exchange.hasFetchDeposits) {
 			let deposits = await exchange
-				.fetchDeposits(
-					undefined,
-					exchangeAccountDocument.lastSyncedDate.valueOf(),
-					undefined,
-					{}
-				)
+				.fetchDeposits(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {})
 				.catch((err) => {
 					throw err;
 				});
@@ -566,12 +567,7 @@ async function updateTransactions(
 
 		if (exchange.hasFetchWithdrawals) {
 			let withdrawals = await exchange
-				.fetchWithdrawals(
-					undefined,
-					exchangeAccountDocument.lastSyncedDate.valueOf(),
-					undefined,
-					{}
-				)
+				.fetchWithdrawals(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {})
 				.catch((err) => {
 					throw err;
 				});
@@ -580,12 +576,7 @@ async function updateTransactions(
 		}
 	} else {
 		ccxtTransactions = await exchange
-			.fetchTransactions(
-				undefined,
-				exchangeAccountDocument.lastSyncedDate.valueOf(),
-				undefined,
-				{}
-			)
+			.fetchTransactions(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {})
 			.catch((err) => {
 				throw err;
 			});
@@ -621,10 +612,7 @@ async function updateOrders(
 		return [];
 	}
 
-	if (
-		exchangeAccountDocument.exchangeType == 'binance' ||
-		exchangeAccountDocument.exchangeType == 'binanceus'
-	) {
+	if (exchangeAccountDocument.exchangeType == 'binance' || exchangeAccountDocument.exchangeType == 'binanceus') {
 		/*
 		for (var [key, value] of Object.entries(balances)) {
 			if (thingsToRemove.includes(key)) continue;
@@ -636,16 +624,9 @@ async function updateOrders(
 		}
 		*/
 	} else {
-		ccxtOrders = await exchange
-			.fetchOrders(
-				undefined,
-				exchangeAccountDocument.lastSyncedDate.valueOf(),
-				undefined,
-				{}
-			)
-			.catch((err) => {
-				throw err;
-			});
+		ccxtOrders = await exchange.fetchOrders(undefined, exchangeAccountDocument.lastSyncedDate.valueOf(), undefined, {}).catch((err) => {
+			throw err;
+		});
 	}
 
 	const orders = await ccxtService.createOrders(ccxtOrders);
@@ -713,6 +694,155 @@ async function createPortfolioItems(
 	return portfolioItems;
 }
 
+async function update(userId: string, exchangeId: string, exchangeParam: IExchangeAccountRequest) {
+	const user = await User.findById(userId);
+
+	// validate
+	if (!user) throw 'User not found';
+
+	const exchange = await ExchangeAccount.findById(exchangeId);
+
+	if (!exchange) throw 'Exchange account not found';
+
+	// copy exchangeParam properties to exchange
+	Object.assign(exchange, exchangeParam);
+
+	return await exchange.save();
+}
+
+async function _delete(userId: string, exchangeId: string) {
+	console.log(userId, exchangeId);
+	var user = await User.findById(userId);
+
+	if (!user) throw 'User not found';
+
+	const updatedArray = user.linkedExchanges.filter((item) => {
+		return item != exchangeId;
+	});
+
+	user.linkedExchanges = updatedArray;
+
+	const exchange = await ExchangeAccount.findByIdAndRemove(exchangeId);
+
+	await user.save();
+}
+
+async function getAvailableExchanges() {
+	return ccxtService.getAvailableExchanges();
+}
+
+async function getExchangesData(userId: string) {
+	const user = await User.findById(userId);
+	// validate
+	if (!user) throw 'User not found';
+
+	let portfolioData: IPortfolioDataView[] = [];
+
+	for (var i = 0; i < user.linkedExchanges.length; i++) {
+		const exchangeDocument = await ExchangeAccount.findById(user.linkedExchanges[i]);
+
+		if (!exchangeDocument) throw 'No exchange account was found with the specified id';
+
+		const exchange = ccxtService.loadExchange(exchangeDocument);
+		const portfolioDataItem = await createPortfolioData(exchange, exchangeDocument);
+		portfolioData.push(portfolioDataItem);
+	}
+
+	let metaportfolio = await createMetaportfolioData(portfolioData);
+	//portfolioData = [metaportfolio, ...portfolioData];
+	return metaportfolio;
+}
+
+async function getExchangeData(userId: string, exchangeId: string) {
+	const user = await User.findById(userId);
+	if (!user) throw 'User not found';
+
+	if (!user.linkedExchanges.includes(exchangeId)) {
+		throw 'The specified exchange account was not found for this user';
+	}
+
+	const exchangeDocument = await ExchangeAccount.findById(exchangeId);
+
+	if (!exchangeDocument) throw 'No exchange account was found with the specified id';
+
+	const exchange = ccxtService.loadExchange(exchangeDocument);
+
+	return await createPortfolioData(exchange, exchangeDocument);
+}
+
+async function syncAllExchangesData(userId: string) {
+	// updateOrders
+	// updateTransactions
+	// check all exchanges to see if there is new data for the user's
+	// update the database with new information
+
+	const user = await User.findById(userId);
+	// validate
+	if (!user) throw 'User not found';
+
+	let portfolioData: IPortfolioDataView[] = [];
+
+	for (var i = 0; i < user.linkedExchanges.length; i++) {
+		const exchangeDocument = await ExchangeAccount.findById(user.linkedExchanges[i]);
+
+		if (!exchangeDocument) throw 'No exchange account was found with the specified id';
+
+		const exchange = ccxtService.loadExchange(exchangeDocument);
+		const portfolioDataItem = await syncExchangeData(exchangeDocument.id, exchange).catch((err) => {
+			throw err;
+		});
+
+		portfolioData.push(portfolioDataItem);
+	}
+
+	return portfolioData;
+}
+
+async function syncExchangeData(exchangeId: string, exchange: Exchange) {
+	//console.log(Date.now());
+	const lastSynced = new Date();
+	//var lastItem = lastSynced;
+	const exchangeAccountDocument = await exchangeService.getById(exchangeId);
+	//console.log("Get exchange account document: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
+	if (!exchangeAccountDocument) {
+		throw 'Exchange account not found';
+	}
+
+	const balances: ccxt.Balances = await fetchBalances(exchange);
+
+	const transactions: ITransaction[] = await updateTransactions(exchange, exchangeAccountDocument);
+	//console.log("Update transactions: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
+	const orders: IOrder[] = await updateOrders(exchange, exchangeAccountDocument, balances);
+	//console.log("Update orders: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
+	const portfolioItems: IPortfolioItem[] = await updatePortfolioItems(exchange, exchangeAccountDocument, orders, transactions, balances);
+	//console.log("Update portfolio items ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
+
+	const newOrdersCount = orders.length;
+	const newTransactionsCount = transactions.length;
+	await saveTransactionViewItems(exchange, exchangeAccountDocument, newOrdersCount, newTransactionsCount);
+	//console.log("save transaction view items: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
+	await saveHoldingsTimeslices(exchange, exchangeAccountDocument);
+	//console.log("save holdings timeslices: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
+
+	exchangeAccountDocument.lastSyncedDate = lastSynced;
+
+	const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => {
+		throw err;
+	});
+	//console.log("save exchange account document back to mongodb: ", Date.now() - lastItem.valueOf());
+	//lastItem = new Date();
+
+	const portfolioData = await createPortfolioData(exchange, exchangeAccountDocument);
+	//console.log("Create portfoliodata: ", Date.now() - lastItem.valueOf());
+	return portfolioData;
+}
+
 async function fetchBalances(exchange: ccxt.Exchange) {
 	var balances: ccxt.Balances = { info: { used: 0, free: 0, total: 0 } };
 	balances.info = {};
@@ -726,16 +856,11 @@ async function fetchBalances(exchange: ccxt.Exchange) {
 
 	return balances;
 }
-interface ITimeslices {
-	[key: string]: ITimeslice;
-}
 
-async function saveHoldingsTimeslices(
-	ccxtExchange: ccxt.Exchange,
-	exchange: IExchangeAccountDocument
-) {
+async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IExchangeAccountDocument) {
 	let timeslices: ITimeslices = {};
 	let allTimeHoldingSlices: IHoldingSlice[] = [];
+	let prices: { [key: string]: { [key: number]: number } } = {};
 
 	let now = Date.now();
 	let endDate = now + (86400000 - (now % 86400000)); // start of tomorrow
@@ -816,6 +941,11 @@ async function saveHoldingsTimeslices(
 				}
 			}
 
+			let historicalPrice = await getHistoricalData(slice.asset, day).catch((err) => -1);
+			if (historicalPrice != -1) {
+				lastPrice[holding] = historicalPrice;
+			}
+
 			let value = lastAmount[holding] * lastPrice[holding];
 
 			let holdingSlice: IHoldingSlice = {
@@ -846,7 +976,7 @@ async function createPortfolioData(
 	var totalValue = 0;
 	var totalProfit = 0;
 	var totalInvested = 0;
-	var totalProfitPercentage = 0;
+	var totalDeposited = 0;
 
 	const formattedPortfolioItems: IPortfolioItemView[] = await Promise.all(
 		exchangeAccount.portfolioItems.map(async (item) => {
@@ -864,15 +994,14 @@ async function createPortfolioData(
 			var profitPercentageAllTime = 0;
 
 			if (length > 0) {
-				profitAllTime =
-					last.totalValueReceived - last.totalValueInvested + currentValue;
-				profitPercentageAllTime =
-					(profitAllTime / last.totalValueInvested) * 100;
+				profitAllTime = last.totalValueReceived - last.totalValueInvested + currentValue;
+				profitPercentageAllTime = (profitAllTime / last.totalValueInvested) * 100;
 			}
 
 			totalProfit += profitAllTime;
 			totalValue += currentValue;
-			totalInvested += item.amountBought * item.averageBuyPrice.USD;
+			totalInvested += last.totalValueInvested;
+			totalDeposited += last.totalValueDeposited;
 
 			//const profit24Hour = (amountSoldInTheLast24Hours * averageSellInTheLast24Hours) - (value24HoursAgo * howMuchIHad24HoursAgo) + currentValue
 			const profit24Hour = randNum();
@@ -893,7 +1022,7 @@ async function createPortfolioData(
 	const formattedOpenOrders: IOpenOrderItemView[] = await Promise.all(
 		exchangeAccount.openOrders.map(async (item) => {
 			const symbols = item.symbol.split('/');
-			let logoUrl = await getCoinLogo(symbols[0]);
+			let logoUrl = await getLogo(symbols[0]);
 			return {
 				id: item.id,
 				exchangeName: exchangeAccount.name,
@@ -913,9 +1042,9 @@ async function createPortfolioData(
 
 	let portfolioData: IPortfolioDataView = {
 		...exchangeAccountJson,
+		transactions: exchangeAccount.transactionViewItems,
 		portfolioItems: formattedPortfolioItems,
-		profitPercentage:
-			((totalValue + totalProfit - totalInvested) / totalInvested) * 100,
+		profitPercentage: (totalProfit / totalDeposited) * 100,
 		portfolioTotal: { USD: totalValue },
 		profitTotal: { USD: totalProfit },
 		logoUrl: exchangeAccount.logoUrl,
@@ -923,4 +1052,104 @@ async function createPortfolioData(
 	};
 
 	return portfolioData;
+}
+
+type PortfolioItemsDict = { [key: string]: { item: IPortfolioItemView; totalInvested: { all: number; h24: number } } };
+
+async function createMetaportfolioData(portfolioData: IPortfolioDataView[]) {
+	let portfolioItemsDict: PortfolioItemsDict = {};
+	let transactions: ITransactionItemView[] = [];
+	let openOrders: IOpenOrderItemView[] = [];
+	let portfolioItems: IPortfolioItemView[] = [];
+	let profitTotal = { USD: 0 };
+	let totalInvested = 0;
+	let profitPercentage = 0;
+	let portfolioTotal = { USD: 0 };
+
+	for (let i = 0; i < portfolioData.length; i++) {
+		mergePortfolioItems(portfolioItemsDict, portfolioData[i].portfolioItems);
+		transactions = transactions.concat(portfolioData[i].transactions);
+		openOrders = openOrders.concat(portfolioData[i].openOrders);
+	}
+
+	for (let [assetId, entry] of Object.entries(portfolioItemsDict)) {
+		entry.item.profitPercentage.all = (entry.item.profitTotal.all / entry.totalInvested.all) * 100;
+		entry.item.profitPercentage.h24 = (entry.item.profitTotal.h24 / entry.totalInvested.h24) * 100;
+		if (entry.item.amount > 0) {
+			entry.item.currentPrice = entry.item.value.USD / entry.item.amount;
+		}
+		portfolioTotal.USD += entry.item.value.USD;
+		profitTotal.USD += entry.item.profitTotal.all;
+		totalInvested += entry.totalInvested.all;
+
+		portfolioItems.push(entry.item);
+	}
+
+	profitPercentage = (profitTotal.USD / totalInvested) * 100;
+
+	let metaportfolio: IPortfolioDataView = {
+		name: 'All portfolios',
+		id: 'ALL',
+		nickname: 'Metaportfolio',
+		addedDate: new Date(),
+		apiInfo: {
+			apiKey: '',
+			apiSecret: '',
+			passphrase: '',
+		},
+		transactions,
+		portfolioItems,
+		profitPercentage,
+		portfolioTotal,
+		profitTotal,
+		openOrders,
+	};
+
+	return metaportfolio;
+}
+
+async function mergePortfolioItems(portfolioItemsDict: PortfolioItemsDict, portfolioItems: IPortfolioItemView[]) {
+	for (let i = 0; i < portfolioItems.length; i++) {
+		let item = portfolioItems[i];
+		if (portfolioItemsDict[item.asset.assetId]) {
+			let entry = portfolioItemsDict[item.asset.assetId];
+			entry.item.amount += item.amount;
+			entry.item.value.USD += item.value.USD;
+			entry.item.profitTotal.all += item.profitTotal.all;
+			entry.item.profitTotal.h24 += item.profitTotal.h24;
+			entry.totalInvested.all += (item.profitTotal.all / item.profitPercentage.all) * 100;
+			entry.totalInvested.h24 += (item.profitTotal.h24 / item.profitPercentage.h24) * 100;
+		} else {
+			let totalInvested = { all: (item.profitTotal.all / item.profitPercentage.all) * 100, h24: (item.profitTotal.h24 / item.profitPercentage.h24) * 100 };
+
+			portfolioItemsDict[item.asset.assetId] = {
+				item: {
+					asset: item.asset,
+					amount: item.amount,
+					value: item.value,
+					currentPrice: item.currentPrice,
+					profitTotal: {
+						all: item.profitTotal.all,
+						h24: item.profitTotal.h24,
+					},
+					profitPercentage: {
+						all: 0,
+						h24: 0,
+					},
+				},
+				totalInvested,
+			};
+		}
+	}
+}
+
+async function getLogo(symbol: string) {
+	symbol = symbol.toLowerCase();
+	let coin = await coindataService.getCoinMarketData(symbol);
+
+	if (coin) {
+		return coin.image;
+	} else {
+		return `https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579`;
+	}
 }
