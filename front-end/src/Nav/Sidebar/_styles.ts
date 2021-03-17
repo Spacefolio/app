@@ -2,15 +2,8 @@ import { Drawer, DrawerProps, Modal, ModalProps } from '@material-ui/core';
 import { Polymer } from '@material-ui/icons';
 import styled from 'styled-components';
 
-import {
-	CenteredFlexBox,
-	ClickableDiv,
-	ClickableSvg,
-	FadeoutAnimation,
-	SvgWrapperButton,
-	TimingStyle,
-} from '../../_styles';
-import { COLORS, RD, SPACING } from '../../_styles/ResponsiveDesign';
+import { TimingStyle } from '../../_styles';
+import { SPACING } from '../../_styles/ResponsiveDesign';
 import { theme } from '../../_styles/Theme';
 
 export const SidebarSpacer = styled.div`
