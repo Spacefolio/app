@@ -270,7 +270,7 @@ export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccou
     }
   }
 
-  if (timeslices[timeslices.length - 1].start != startOfToday)
+  if (timeslices[timeslices.length - 1].start < startOfToday)
   {
     throw "The exchange account has not been synced";
   }
