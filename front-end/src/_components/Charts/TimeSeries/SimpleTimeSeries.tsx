@@ -52,9 +52,6 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 								minRotation: 0,
 								fontSize: 12,
 								autoSkipPadding: 90,
-								callback: (value, index, values) => {
-									return moment(value).format('MMM DD');
-								},
 							},
 							gridLines: { display: false, drawBorder: true },
 							type: 'time',
