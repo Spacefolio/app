@@ -59,6 +59,12 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 		return dataArray;
 	};
 
+	const [fakeChartData, setFakeChartData] = useState(fakeChart());
+
+	useEffect(() => {
+		setFakeChartData(fakeChart());
+	}, []);
+
 	const mobile = useMediaQuery(theme.breakpoints.up('sm'));
 
 	return (
@@ -101,7 +107,7 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 							<div style={{ height: '70px' }}>
 								<SimpleTimeSeries
 									id={asset.name + 'chart'}
-									data={fakeChart()}
+									data={fakeChartData}
 									showTooltip={true}
 									showX={false}
 									showY={false}
