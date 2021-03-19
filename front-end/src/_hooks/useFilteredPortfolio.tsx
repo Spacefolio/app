@@ -19,7 +19,7 @@ export const useFilteredPortfolio = (portfolioId: string) => {
 				portfolioData.filter((item) => item.id === portfolioId)[0]
 			);
 		}
-	}, [portfolioData]);
+	}, [portfolioData, portfolioId]);
 
 	return filteredPortfolio;
 };

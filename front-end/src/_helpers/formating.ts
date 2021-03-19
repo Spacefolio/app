@@ -1,4 +1,4 @@
-import { timeframe } from '../../../types';
+import { ITimeframe } from '../../../types';
 import { RD, SPACING } from '../_styles/ResponsiveDesign';
 
 export const ReformatCurrencyValue = (value: number, currencyType: string) => {
@@ -32,7 +32,7 @@ export const ReformatAmountValue = (value: number) => {
 	return value.toLocaleString();
 };
 
-export const timeFrameSelectors: timeframe[] = [
+export const timeFrameSelectors: ITimeframe[] = [
 	'24H',
 	'1W',
 	'1M',

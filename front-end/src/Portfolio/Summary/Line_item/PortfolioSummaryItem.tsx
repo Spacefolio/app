@@ -1,19 +1,7 @@
-import {
-	Avatar,
-	Typography,
-	Grid,
-	Hidden,
-	Button,
-	MenuItem,
-	ClickAwayListener,
-	Popper,
-	MenuList,
-	Paper,
-	ListItemIcon,
-} from '@material-ui/core';
+import { Avatar, Typography, Grid, Hidden } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { IPortfolioDataView, timeframe } from '../../../../../types';
+import { IPortfolioDataView, ITimeframe } from '../../../../../types';
 import { alertActions, portfolioActions } from '../../../_actions';
 import { SimpleTimeSeries, PortfolioPieChart } from '../../../_components';
 import { portfolioService } from '../../../_services';
@@ -31,25 +19,26 @@ import {
 	TimeframeSelectorBar,
 	TimeframeSelectorDropdown,
 } from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
-
 export interface IPortfolioSummaryItemView {
+  timeframe?: ITimeframe;
 	portfolioItem: IPortfolioDataView;
 }
 
 export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
-	portfolioItem,
+	timeframe,
+  portfolioItem,
 	...props
 }) => {
 	const dispatch = useDispatch();
 
-	const [chartData, setChartData] = useState([]);
+	const [chartData, setChartData] = useState(null);
 
 	const [chartContainerRef, { width }] = useDimensions();
 
-	const [Tframe, setTimeframe] = useState<timeframe>('ALL');
+	const [Tframe, setTimeframe] = useState<ITimeframe>(timeframe);
 
 	useEffect(() => {
-		setChartData([]);
+		setChartData(null);
 		portfolioItem &&
 			portfolioService
 				.getPortfolioChartData(Tframe, portfolioItem.id)
@@ -57,6 +46,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 					setChartData(res);
 				})
 				.catch((error: Error) => {
+					setChartData([]);
 					dispatch(alertActions.error(error.message));
 				});
 	}, [portfolioItem, Tframe]);
@@ -70,31 +60,10 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 		'rgb(253, 218, 223)',
 	];
 
-	const [TframeVisible, setTframeVisible] = useState(false);
-
-	const DetailsSection = () => <div>im details</div>;
-
 	const Content = () => (
 		<React.Fragment>
-			<FlexCardHeader>
-				<InlineDiv style={{ padding: '12px' }}>
-					<div>
-						<InlineDiv>
-							<Typography variant="h2">{portfolioItem.nickname}</Typography>
-						</InlineDiv>
-						<InlineDiv spacing={1}>
-							<Avatar
-								style={{ width: '15px', height: '15px' }}
-								src={portfolioItem.logoUrl}
-							/>
-							<Typography variant="caption">{portfolioItem.name}</Typography>
-						</InlineDiv>
-					</div>
 
-					<FlexSpacer />
-				</InlineDiv>
-			</FlexCardHeader>
-			<FlexCardContent>
+			<FlexCardContent style={{ maxHeight: '80%' }}>
 				<Grid xs={12} container>
 					<Grid justify="center" alignItems="center" xs={12} container>
 						<Typography

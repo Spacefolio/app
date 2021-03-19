@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import * as d3 from 'd3';
-import { IPortfolioLineChartItem, timeframe } from '../../../../../types';
+import { IPortfolioLineChartItem, ITimeframe } from '../../../../../types';
 import './PortfolioLineChart.scss';
 import moment from 'moment';
 import { ViewLoading } from '../..';
@@ -16,7 +16,7 @@ interface PortfolioLineChartProps {
 	id: string;
 	yAxis?: boolean;
 	xAxis?: boolean;
-	timeframe?: timeframe;
+	timeframe?: ITimeframe;
 	data: IPortfolioLineChartItem[];
 }
 

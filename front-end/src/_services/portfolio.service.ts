@@ -7,7 +7,7 @@ import {
 	IPortfolioLineChartItem,
 } from '../../../types';
 import axios from 'axios';
-import { timeframe } from '../../../types';
+import { ITimeframe } from '../../../types';
 import { plugins } from '../../webpack.config';
 import { getCachedPortfolio, updateCachedPortfolio } from '../_helpers/caching';
 
@@ -223,7 +223,7 @@ const data: IPortfolioLineChartItem[] = [
 ];
 
 async function getPortfolioChartData(
-	timeframe: timeframe,
+	timeframe: ITimeframe,
 	portfolioFilterId?: string
 ) {
 	const Authorization = authHeader().Authorization;

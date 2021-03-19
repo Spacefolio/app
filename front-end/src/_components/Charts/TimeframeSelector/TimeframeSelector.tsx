@@ -8,26 +8,24 @@ import {
 	Typography,
 } from '@material-ui/core';
 import { DateRange } from '@material-ui/icons';
-import React from 'react';
-import { timeframe } from '../../../../../types';
+import React, { useState } from 'react';
+import { ITimeframe } from '../../../../../types';
 import { timeFrameSelectors } from '../../../_helpers';
 import { theme } from '../../../_styles/Theme';
 import { TimeFrameSelectorContainer, TimeframeItem } from './_styles';
 
 interface TimeframeSelectorDDProps {
-	Tframe: timeframe;
+	Tframe: ITimeframe;
 	setTimeframe: any;
-	open: boolean;
-	setOpen: any;
 }
 
 export const TimeframeSelectorDropdown: React.FC<TimeframeSelectorDDProps> = ({
 	Tframe,
 	setTimeframe,
-	open,
-	setOpen,
 }) => {
 	const anchorRef = React.useRef<HTMLButtonElement>(null);
+
+	const [open, setOpen] = useState(false);
 
 	const handleClose = (event: React.MouseEvent<EventTarget>) => {
 		if (
@@ -64,7 +62,7 @@ export const TimeframeSelectorDropdown: React.FC<TimeframeSelectorDDProps> = ({
 							id="menu-list-grow"
 							onClick={() => setOpen(false)}
 						>
-							{timeFrameSelectors.map((item: timeframe, index: number) => {
+							{timeFrameSelectors.map((item: ITimeframe, index: number) => {
 								return (
 									<MenuItem
 										key={index}
@@ -85,8 +83,22 @@ export const TimeframeSelectorDropdown: React.FC<TimeframeSelectorDDProps> = ({
 	);
 };
 
+export const TimeframeSelectorToggle: React.FC<TimeframeSelectorDDProps> = ({
+	Tframe,
+	setTimeframe,
+}) => {
+	return (
+		<div>
+			<Button onClick={() => setTimeframe(Tframe == '24H' ? 'ALL' : '24H')}>
+				{Tframe}
+				<DateRange />
+			</Button>
+		</div>
+	);
+};
+
 interface TimeframeSelectorBarProps {
-	Tframe: timeframe;
+	Tframe: ITimeframe;
 	setTimeframe: any;
 }
 
@@ -96,15 +108,16 @@ export const TimeframeSelectorBar: React.FC<TimeframeSelectorBarProps> = ({
 }) => {
 	return (
 		<TimeFrameSelectorContainer>
-			{timeFrameSelectors.map((item: timeframe) => {
+			{timeFrameSelectors.map((item: ITimeframe, index) => {
 				return (
 					<TimeframeItem
+						key={index}
 						onClick={() => {
 							setTimeframe(item);
 						}}
 						selected={item == Tframe}
 					>
-					{item}
+						{item}
 					</TimeframeItem>
 				);
 			})}

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PortfolioCharts } from "./Styles";
 import { alertActions } from "../../../_actions";
 import { portfolioService } from "../../../_services";
-import { timeframe } from "../../../../../types";
+import { ITimeframe } from "../../../../../types";
 import { PortfolioPieChart } from "../../../_components/Charts/Pie/PieChart";
 import { IRootState } from "../../../_reducers";
 import { FlexCard, GrowFromZero } from "../../../_styles";

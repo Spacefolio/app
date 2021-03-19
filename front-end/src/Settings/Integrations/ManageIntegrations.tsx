@@ -55,7 +55,6 @@ export const ManageIntegrations: React.FC<ManageIntegrationsProps> = ({}) => {
 					<Add />
 				</Fab> */}
 			</FlexCard>
-			<FlexCard>sdfghfgd</FlexCard>
 		</IntegrationsContainer>
 	);
 };

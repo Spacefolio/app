@@ -9,7 +9,7 @@ import {
 } from './_styles';
 import { Dropdown, PortfolioLineChart } from '../../_components';
 import { alertActions, portfolioActions } from '../../_actions';
-import { IPortfolioDataView, timeframe } from '../../../../types';
+import { IPortfolioDataView, ITimeframe } from '../../../../types';
 import { portfolioService } from '../../_services';
 import { IRootState } from '../../_reducers';
 import useDimensions from 'react-use-dimensions';
@@ -30,7 +30,7 @@ export const MetaPortfolio = () => {
 
 	const [PortfolioChartData, setPortfolioChartData] = useState<[]>([]);
 
-	const [timeframe, setTimeframe] = useState<timeframe>('ALL');
+	const [timeframe, setTimeframe] = useState<ITimeframe>('ALL');
 
 	useEffect(() => {
 		setPortfolioChartData([]);
