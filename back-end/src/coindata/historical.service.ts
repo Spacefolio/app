@@ -334,6 +334,7 @@ export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccou
 
         let hourlyPrice = prices[currentAsset][hour];
         if (hourlyPrice != undefined) { lastPrice[currentAsset] = hourlyPrice.price; }
+        if (!lastAmount[currentAsset]) { lastAmount[currentAsset] = 0; }
         let value = lastAmount[currentAsset] * lastPrice[currentAsset];
 
         let hourlyHoldingSlice = {
