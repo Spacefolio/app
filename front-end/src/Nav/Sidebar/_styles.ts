@@ -14,6 +14,7 @@ export const SidebarContainer = styled.div<DrawerProps>`
 	display: flex;
 	justify-content: start;
 	box-shadow: 5px 10px 25px -24px;
+
 	overflow: hidden;
 	flex-direction: column;
 	position: sticky;
@@ -22,21 +23,22 @@ export const SidebarContainer = styled.div<DrawerProps>`
 	z-index: 4;
 	width: ${(props: any) =>
 		props.open ? SPACING.sidebarWidth : SPACING.NavbarHeight};
-
 	align-items: ${(props: any) => (props.open ? 'center' : 'start')};
 	${TimingStyle}
-  background: ${theme.palette.background.default};
+	background: white;
 `;
 
 export const MobileSidebarContainer = styled.div`
 	display: flex;
 	justify-content: start;
+	outline: 0;
 	overflow: hidden;
+	border: none;
 	flex-direction: column;
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	width: ${SPACING.sidebarWidth};
 	flex-shrink: 0;
-	background: ${theme.palette.background.paper};
+	background: white;
 `;

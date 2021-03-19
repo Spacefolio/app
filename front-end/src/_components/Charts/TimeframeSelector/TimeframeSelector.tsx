@@ -89,9 +89,13 @@ export const TimeframeSelectorToggle: React.FC<TimeframeSelectorDDProps> = ({
 }) => {
 	return (
 		<div>
-			<Button onClick={() => setTimeframe(Tframe == '24H' ? 'ALL' : '24H')}>
-				{Tframe}
-				<DateRange />
+			<Button
+				onClick={() => setTimeframe(Tframe == '24H' ? 'ALL' : '24H')}
+			>
+				<Typography variant="body2" color="textSecondary">
+					{Tframe}
+				</Typography>
+				{/* <DateRange fontSize="small" /> */}
 			</Button>
 		</div>
 	);

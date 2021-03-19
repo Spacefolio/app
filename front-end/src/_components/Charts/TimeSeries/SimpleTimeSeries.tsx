@@ -11,11 +11,15 @@ interface PortfolioLineChartProps {
 	data: IPortfolioLineChartItem[];
 	showX?: boolean;
 	showY?: boolean;
+	height?: number;
+	width?: number;
 	showTooltip?: boolean;
 }
 
 export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 	id,
+	height,
+	width,
 	showX = true,
 	showY = true,
 	showTooltip = true,
@@ -37,8 +41,8 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 							borderWidth: 1,
 							fill: false,
 							pointRadius: 0,
-              pointHitRadius: 5,
-              pointHoverRadius: 3,
+							pointHitRadius: 5,
+							pointHoverRadius: 3,
 							data: chartData.map((item) => item.USD),
 						},
 					],
@@ -101,7 +105,14 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 	return (
 		<React.Fragment>
 			<div
-				style={{ position: 'relative', height: 'inherit', width: 'inherit' }}
+				style={{
+					position: 'relative',
+					height: height ? height + 'px' : 'inherit',
+					width: width ? width + 'px' : 'inherit',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
 			>
 				{chartData != null ? (
 					chartData.length > 0 ? (
@@ -110,9 +121,7 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 						'there was a problem loading chart data'
 					)
 				) : (
-					<InlineDiv align="center">
-						<CircularProgress />
-					</InlineDiv>
+					<CircularProgress />
 				)}
 			</div>
 		</React.Fragment>

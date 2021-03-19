@@ -34,7 +34,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
 		(state: IRootState) => state.applicationView.isSidebarCollapsed
 	);
 
-	const mobile = useMediaQuery(theme.breakpoints.up('md'));
+	const mobile = useMediaQuery(theme.breakpoints.down('sm'));
 
 	const [mobileSidebar, setMobileSidebar] = useState(false);
 
@@ -90,12 +90,15 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
 
 	return (
 		<React.Fragment>
-			<Hidden smUp>
-				<Modal onClose={() => setMobileSidebar(false)} open={mobileSidebar}>
+			<Hidden mdUp>
+				<Modal
+					onClose={() => setMobileSidebar(false)}
+					open={mobileSidebar}
+				>
 					<MobileSidebarContainer>{SidebarContent}</MobileSidebarContainer>
 				</Modal>
 			</Hidden>
-			<Hidden xsDown>
+			<Hidden smDown>
 				<SidebarContainer open={isSidebarCollapsed}>
 					{SidebarContent}
 				</SidebarContainer>

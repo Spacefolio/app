@@ -18,8 +18,6 @@ import {
 	TextField,
 	Typography,
 } from '@material-ui/core';
-import { LockOutlined } from '@material-ui/icons';
-import { FormWrapper } from './_styles';
 import { userService } from '../_services';
 import { emailTester } from '../_helpers';
 
@@ -97,12 +95,14 @@ export const Login = () => {
 	}, [isEmailRegistered]);
 
 	return (
-		<Container component="main">
-			<FormWrapper>
-				<Typography align="justify" component="h1" variant="h5">
-					{headerText}
-				</Typography>
-				<Typography>{headerSubText}</Typography>
+		<Container>
+			<Grid style={{ paddingTop: '30%' }} xs={12} container>
+				<Grid direction="column" justify="center" alignItems="center" container>
+					<Typography align="justify" component="h1" variant="h5">
+						{headerText}
+					</Typography>
+					<Typography>{headerSubText}</Typography>
+				</Grid>
 				<form style={{ width: '400px' }} onSubmit={handleSubmit}>
 					<Grid item xs={12}>
 						<TextField
@@ -171,7 +171,7 @@ export const Login = () => {
 						</ActionButton>
 					</StyledFormRow>
 				</form>
-			</FormWrapper>
+			</Grid>
 		</Container>
 	);
 };
