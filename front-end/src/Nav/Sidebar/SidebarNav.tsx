@@ -91,7 +91,10 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
 	return (
 		<React.Fragment>
 			<Hidden mdUp>
-				<Modal onClose={() => setMobileSidebar(false)} open={mobileSidebar}>
+				<Modal
+					onClose={() => setMobileSidebar(false)}
+					open={mobileSidebar}
+				>
 					<MobileSidebarContainer>{SidebarContent}</MobileSidebarContainer>
 				</Modal>
 			</Hidden>
