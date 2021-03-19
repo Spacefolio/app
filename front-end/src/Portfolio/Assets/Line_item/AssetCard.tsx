@@ -21,7 +21,7 @@ interface HoldingItemProps {
 	portfolioItem: IPortfolioItemView;
 }
 
-export const AssetItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
+export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 	var {
 		asset,
 		amount,
@@ -69,18 +69,6 @@ export const AssetItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 				width: mobile ? '250px' : '150px',
 			}}
 		>
-			<div
-				style={{
-					position: 'absolute',
-					top: 0,
-					right: 0,
-				}}
-			>
-				<TimeframeSelectorToggle
-					Tframe={timeframe}
-					setTimeframe={setTimeframe}
-				/>
-			</div>
 			<Grid item xs={12} justify="center" alignItems="center">
 				<Grid xs={12} container justify="center" alignItems="center">
 					<Grid item>
@@ -103,6 +91,9 @@ export const AssetItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 								${currentPrice.toLocaleString()}
 							</Typography>
 						</Grid>
+						<Grid item>
+							<Typography variant="body2">/unit</Typography>
+						</Grid>
 					</Grid>
 					<Grid item style={{ height: '10px' }} />
 					<Grid xs={12} container>
@@ -117,20 +108,28 @@ export const AssetItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 								/>
 							</div>
 						</Grid>
-					</Grid>{' '}
-					<Grid item style={{ height: '10px' }} />
-					<Grid xs={12} justify="center" container>
-						<Grid item>
-							<Typography
-								style={{ fontSize: 10 }}
-								gutterBottom
-								color="textSecondary"
-							>
-								Profit/Loss
-							</Typography>
-						</Grid>
 					</Grid>
+					<Grid item style={{ height: '10px' }} />
 				</Hidden>
+
+				<Grid xs={12} justify="center" alignItems="center" container>
+					<Grid item>
+						<Typography
+							style={{ fontSize: 10 }}
+							variant="button"
+							gutterBottom
+							color="textSecondary"
+						>
+							Profit/Loss
+						</Typography>
+					</Grid>
+					<Grid item>
+						<TimeframeSelectorToggle
+							Tframe={timeframe}
+							setTimeframe={setTimeframe}
+						/>
+					</Grid>
+				</Grid>
 
 				<Grid item style={{ height: '10px' }} />
 
@@ -154,7 +153,7 @@ export const AssetItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 				<Grid xs={12} justify="center" container>
 					<Grid item>
 						<Typography variant="body2" gutterBottom>
-							(${TframeItem(profitTotal).toFixed(2)})
+							{TframeItem(profitTotal).toFixed(2)} USD
 						</Typography>
 					</Grid>
 				</Grid>

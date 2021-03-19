@@ -26,6 +26,13 @@ export const ActionButton = styled(Button)`
 	border-radius: 20px;
 `;
 
+export const TinyButton = styled(Button)`
+	padding: 0;
+	* {
+		padding: 0;
+	}
+`;
+
 export const NavButton = styled(Button)`
 	box-shadow: 0px 15px 25px -17px ${theme.palette.primary.main};
 	min-width: 120px;

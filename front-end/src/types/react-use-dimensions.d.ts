@@ -7,3 +7,9 @@ declare module "animated-number-react" {
   const formatValue: any;
   export default value;
 }
+
+declare module "react-dragscroll" {
+  const value: any;
+  export default value;
+}
+

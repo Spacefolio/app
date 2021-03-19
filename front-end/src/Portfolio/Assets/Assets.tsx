@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { AssetItem } from './Line_item/AssetItem';
+import { AssetCard } from './Line_item/AssetCard';
 import { IPortfolioDataView, IPortfolioItemView } from '../../../../types';
-import { TableCellStyled } from '../Filter/Styles';
-import { FlexCard, SPACING } from '../../_styles';
 import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../../_styles/Theme';
-import { Grid, GridList, GridListTile } from '@material-ui/core';
+import ScrollContainer from 'react-indiana-drag-scroll';
 
 const AssetContainer = styled.div`
 	display: grid;
@@ -13,11 +11,7 @@ const AssetContainer = styled.div`
 	grid-auto-flow: column;
 	grid-auto-columns: calc(50% - var(--gutter) * 2);
 	padding: 10px;
-	overflow-x: scroll;
-	scrollbar-width: none;
-	::-webkit-scrollbar {
-		display: none;
-	}
+	overflow-x: visible;
 `;
 
 interface IHoldingsProps {
@@ -28,13 +22,15 @@ export const Assets: React.FC<IHoldingsProps> = ({ portfolioItems }) => {
 	return (
 		<ThemeProvider theme={theme}>
 			<div style={{ height: '500px', overflowY: 'visible' }}>
-				<AssetContainer>
-					{portfolioItems
-						.filter((item) => item.value.USD > 0)
-						.map((item, index: number) => (
-							<AssetItem portfolioItem={item} />
-						))}
-				</AssetContainer>
+				<ScrollContainer className="scroll-container">
+					<AssetContainer >
+						{portfolioItems
+							// .filter((item) => item.value.USD > 0)
+							.map((item, index: number) => (
+								<AssetCard portfolioItem={item} />
+							))}
+					</AssetContainer>
+				</ScrollContainer>
 			</div>
 		</ThemeProvider>
 	);

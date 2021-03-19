@@ -49,8 +49,6 @@ export const ListMyExchanges: React.FC<IListMyExchangesProps> = ({
 		})
 	);
 
-	const classes = useStyles();
-
 	return (
 		<React.Fragment>
 			{userLinkedExchanges.length > 0 ? (

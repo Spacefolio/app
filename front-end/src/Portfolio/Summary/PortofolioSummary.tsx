@@ -1,12 +1,20 @@
 import {
+	Avatar,
 	Backdrop,
+	Button,
 	Chip,
 	CircularProgress,
+	ClickAwayListener,
 	Fab,
+	ListItemIcon,
+	Menu,
+	MenuItem,
+	Paper,
+	Popper,
 	Typography,
 } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
-import React, { useState } from 'react';
+import { Add, ArrowDropDown } from '@material-ui/icons';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { IPortfolioItem } from '../../../../back-end/src/portfolios/portfolio.model';
@@ -26,6 +34,8 @@ import { SummaryWrapper } from './Line_item/_styles';
 import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
 import { Assets } from '../Assets/Assets';
 import { Transactions } from '..';
+import { Dropdown } from '../../_components';
+import { ListMyExchanges } from '../../Integrations';
 
 export const PortfolioSummary = () => {
 	const portfolioData = useSelector(
@@ -36,18 +46,45 @@ export const PortfolioSummary = () => {
 
 	const filteredPortfolio = useFilteredPortfolio(filterId);
 
+	const anchorEl = useRef<any>(null);
+
+	const [open, setOpen] = useState(false);
+
 	return (
 		<ThemeProvider theme={theme}>
 			{filteredPortfolio ? (
 				<SummaryWrapper>
-					<InlineDiv style={{ padding: '12px' }}>
-						{portfolioData.map((item, index) => (
-							<div key={index} onClick={() => setFilterId(item.id)}>
-								{item.name}
-							</div>
-						))}
-						<FlexSpacer />
-					</InlineDiv>
+					<div>
+						<Button
+							ref={anchorEl}
+							startIcon={<Avatar src={filteredPortfolio.logoUrl} />}
+							onClick={() => setOpen(!open)}
+						>
+							{filteredPortfolio.nickname}
+							<ArrowDropDown />
+						</Button>
+
+						<Menu
+							onClose={() => setOpen(false)}
+							anchorEl={anchorEl.current}
+							id={'integration-pop'}
+							open={open}
+						>
+							{portfolioData.map((item) => (
+								<MenuItem
+									onClick={() => {
+										setFilterId(item.id), setOpen(false);
+									}}
+								>
+									<ListItemIcon>
+										<Avatar src={item.logoUrl} />
+									</ListItemIcon>
+									<Typography>{item.nickname}</Typography>
+								</MenuItem>
+							))}
+						</Menu>
+					</div>
+
 					{CardHeader('Summary', 'Your portfolio at a glance')}
 					<PortfolioSummaryItem
 						timeframe={'24H'}

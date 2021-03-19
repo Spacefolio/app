@@ -82,7 +82,7 @@ export const theme = createMuiTheme({
 		},
 		MuiButton: {
 			root: { color: 'black' },
-			label: { cursor: 'pointer' },
+			label: { cursor: 'pointer'},
 		},
 	},
 });
