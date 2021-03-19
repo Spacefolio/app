@@ -570,12 +570,12 @@ async function syncAllExchangesData(userId: string) {
 }
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {
-	//console.log(Date.now());
+	console.log(Date.now());
 	const lastSynced = new Date();
-	//var lastItem = lastSynced;
+	var lastItem = lastSynced;
 	const exchangeAccountDocument = await exchangeService.getById(exchangeId);
-	//console.log("Get exchange account document: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+	console.log("Get exchange account document: ", Date.now() - lastItem.valueOf());
+	lastItem = new Date();
 	if (!exchangeAccountDocument) {
 		throw 'Exchange account not found';
 	}
@@ -583,34 +583,34 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 	const balances: ccxt.Balances = await fetchBalances(exchange);
 
 	const transactions: ITransaction[] = await updateTransactions(exchange, exchangeAccountDocument);
-	//console.log("Update transactions: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+	console.log("Update transactions: ", Date.now() - lastItem.valueOf());
+	lastItem = new Date();
 	const orders: IOrder[] = await updateOrders(exchange, exchangeAccountDocument, balances);
-	//console.log("Update orders: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+	console.log("Update orders: ", Date.now() - lastItem.valueOf());
+	lastItem = new Date();
 	const portfolioItems: IPortfolioItem[] = await updatePortfolioItems(exchange, exchangeAccountDocument, orders, transactions, balances);
-	//console.log("Update portfolio items ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+	console.log("Update portfolio items ", Date.now() - lastItem.valueOf());
+	lastItem = new Date();
 
 	const newOrdersCount = orders.length;
 	const newTransactionsCount = transactions.length;
 	await saveTransactionViewItems(exchange, exchangeAccountDocument, newOrdersCount, newTransactionsCount);
-	//console.log("save transaction view items: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+	console.log("save transaction view items: ", Date.now() - lastItem.valueOf());
+	lastItem = new Date();
 	await saveHoldingsTimeslices(exchange, exchangeAccountDocument);
-	//console.log("save holdings timeslices: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+	console.log("save holdings timeslices: ", Date.now() - lastItem.valueOf());
+	lastItem = new Date();
 
 	exchangeAccountDocument.lastSyncedDate = lastSynced;
 
 	const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => {
 		throw err;
 	});
-	//console.log("save exchange account document back to mongodb: ", Date.now() - lastItem.valueOf());
-	//lastItem = new Date();
+	console.log("save exchange account document back to mongodb: ", Date.now() - lastItem.valueOf());
+	lastItem = new Date();
 
 	const portfolioData = await createPortfolioData(exchange, exchangeAccountDocument);
-	//console.log("Create portfoliodata: ", Date.now() - lastItem.valueOf());
+	console.log("Create portfoliodata: ", Date.now() - lastItem.valueOf());
 	return portfolioData;
 }
 
