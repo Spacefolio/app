@@ -7,6 +7,7 @@ import ccxt from 'ccxt';
 import { Db } from 'mongodb';
 import { fiat, getHistoricalData } from '../coindata/historical.service';
 import { getCurrentPrice } from '../coindata/coindata.service';
+import { debug } from '../_helpers/logs';
 
 export async function createTransactionViewItems(exchange: IExchangeAccountDocument): Promise<ITransactionItemView[]> {
 	const transactionViewItems: ITransactionItemView[] = [];
@@ -162,6 +163,7 @@ export async function getConversionRate(
 	quoteCurrency: string,
 	timestamp?: number
 ): Promise<number> {
+	let start = Date.now();
 	let symbol = baseCurrency + '/' + quoteCurrency;
   let fiatValue = fiat(symbol);
   if (fiatValue != 0) return fiatValue;
@@ -174,15 +176,23 @@ export async function getConversionRate(
       if (!exchange.has.fetchTicker) throw 'Exchange does not have fetchTicker';
       return sleep(exchange.rateLimit).then(() => exchange.fetchTicker(symbol))
       .then((ticker: ccxt.Ticker) => {
+				debug(`CCXT fetch ticker took ${Date.now() - start} ms`);
         return (ticker.last ? ticker.last : ((ticker.high + ticker.low) / 2));
-      }).catch((err) => { return 1; })
+      }).catch((err) => { 
+				debug(`CCXT fetch ticker error ${Date.now() - start} ms`);
+				return 1; 
+			})
     });
   }
 
-  return await getHistoricalData(symbol, timestamp).catch(async () => {
+  return await getHistoricalData(baseCurrency, timestamp).catch(async () => {
     if (!exchange.has.fetchOHLCV) throw 'Exchange does not have fetchOHLCV';
     return sleep(exchange.rateLimit).then(() => exchange.fetchOHLCV(symbol, '1m', timestamp, 1).then((ohlcv: ccxt.OHLCV[]) => {
-      return (ohlcv[0][1] + ohlcv[0][4]) / 2;
-    })).catch((err) => { return 1; })
+      debug(`CCXT Historical OHLCV took ${Date.now() - start} ms`);
+			return (ohlcv[0][1] + ohlcv[0][4]) / 2;
+    })).catch((err) => {
+			debug(`CCXT Historical OHLCV error ${Date.now() - start} ms`);
+			return 1;
+		})
   });
 }

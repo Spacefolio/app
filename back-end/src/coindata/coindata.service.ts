@@ -54,7 +54,7 @@ interface ISimplePriceResponse
 
 async function fetchCurrentPrice(coinId: string) : Promise<number>
 {
-  var tickerJson = await axios.get<ISimplePriceResponse>(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`, { timeout: 1000 }).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
+  var tickerJson = await axios.get<ISimplePriceResponse>(`https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`, { timeout: 3000 }).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err });
   if (!tickerJson) { return 1; }
   return tickerJson[coinId] ? tickerJson[coinId].usd : 1;
 }

@@ -6,7 +6,7 @@ import { IExchangeAccountDocument, IHoldingSlice, IHoldingSnapshot, ITimeslice, 
 import ccxt from 'ccxt';
 import { userService } from '../users/user.service';
 import { spawn } from 'child_process';
-import { getHourlyData, getLatestHourlyTimeSeries } from '../coindata/historical.service';
+import { getHourlyDataRange, getLatestHourlyTimeSeries } from '../coindata/historical.service';
 import { IHourlyPrice } from '../coindata/historical.model';
 
 export const portfolioService = {
@@ -21,7 +21,6 @@ async function sync(userId: string) {
 	return await exchangeService
 		.syncAllExchangesData(userId)
 		.then((portfolioData) => {
-			//console.log(res)
 			return portfolioData;
 		})
 		.catch((err) => {
@@ -33,7 +32,6 @@ async function getAll(userId: string) {
 	return await exchangeService
 		.getExchangesData(userId)
 		.then((portfolioData) => {
-			//console.log(res)
 			return portfolioData;
 		})
 		.catch((err) => {
@@ -45,7 +43,6 @@ async function get(userId: string, exchangeId: string) {
 	return await exchangeService
 		.getExchangeData(userId, exchangeId)
 		.then((portfolioData) => {
-			//console.log(res)
 			return portfolioData;
 		})
 		.catch((err) => {
@@ -90,50 +87,6 @@ async function getPortfolioChart(userId: string, portfolioId: string, timeframe:
 	if (timeframe == timespan.W1) { return await getOneWeekChart(exchange, timeslices); }
 	return getDailyChart(timeframe, timeslices);
 }
-	/*
-	if (timeframe == timespan.W1) {
-		span = 7;
-		pieces = 4;
-		if (timeslicesAll.length < 8) { span = timeslicesAll.length }
-    
-	} else if (timeframe == timespan.H24) {
-    if (timeslicesAll.length < 1)
-    {
-      let hourlyData = new Array(24);
-      let now = Date.now();
-      let hour = now - (now % 3600000);
-      for (let i = 0; i < 24; i++)
-      {
-        hour -= 3600000;
-        hourlyData[i] = ({ T: hour, USD: 0 });
-      }
-      return hourlyData;
-    }
-		span = 1;
-		pieces = 24;
-	}
-
-	let slicesToSplit = [];
-
-	let previousSlice = timeslicesAll[timeslicesAll.length - span - 1];
-
-	for (let i = timeslicesAll.length - span; i < timeslicesAll.length; i++) {
-		slicesToSplit.push(timeslicesAll[i]);
-	}
-
-	if (slicesToSplit.length < 1)
-	{
-		return [];
-	}
-
-	let slices = await splitSlices(slicesToSplit, pieces, previousSlice);
-	timeslicesNew.push(...slices);
-
-	return timeslicesNew.map((timeslice) => {
-		return { T: timeslice.start, USD: timeslice.value };
-	});
-
-	*/
 
 async function getTwentyFourHourChart(exchangeAccount: IExchangeAccountDocument, timeslices: ITimeslice[]): Promise<IPortfolioLineChartItem[]>
 {
@@ -181,110 +134,4 @@ function getNumberOfDaysForTimespan(timeframe: timespan) {
 		default:
 			return 0;
 	}
-}
-
-async function splitSlices(slices: ITimeslice[], pieces: number, previousSlice?: ITimeslice) {
-	let newSlices: ITimeslice[] = [];
-	let currentSnapshot: { [key: string]: number } = {};
-	let lastAmount: { [key: string]: number } = {};
-	let lastPrice: { [key: string]: number } = {};
-	let now = Date.now();
-	let lastHour = now - (now % 3600000);
-
-	if (previousSlice) {
-		for (let [key, value] of Object.entries(previousSlice.holdings)) {
-			lastAmount[key] = value.amount;
-			lastPrice[key] = value.price;
-		}
-	}
-
-	for (var [key, value] of Object.entries(slices[0].holdings)) {
-		currentSnapshot[key] = 0;
-		if (!previousSlice) {
-			lastPrice[key] = 0;
-			lastAmount[key] = 0;
-		}
-	}
-
-	for (let currentDaySlice = 0; currentDaySlice < slices.length; currentDaySlice++) {
-		let daySlice = slices[currentDaySlice];
-		let holdingSlices: IHoldingSlice[] = [];
-    let endHour = daySlice.start + (24 * 3600000);;
-    let startHour = daySlice.start;
-		let sliceStart = startHour;
-		
-		if (endHour > lastHour)
-    {
-      endHour = lastHour;
-    }
-		if (sliceStart > lastHour)
-		{
-			sliceStart = lastHour;
-		}
-
-		for (var [key, value] of Object.entries(daySlice.holdings)) {
-			holdingSlices.push(value);
-			currentSnapshot[key] = 0;
-		}
-
-		for (let i = 1; i <= pieces; i++) {
-			let newTimeslice: ITimeslice = {
-				start: sliceStart,
-				value: 0,
-				holdings: {},
-			};
-
-      sliceStart = (startHour) + ((86400000 / pieces) * (i - 1));
-
-			let sliceEnd = startHour + (i * (86400000 / pieces));
-			if (sliceEnd > lastHour)
-    	{
-      	sliceEnd = lastHour;
-    	}
-			if (sliceStart > lastHour)
-			{
-				break;
-			}
-
-			for (let holding = 0; holding < holdingSlices.length; holding++) {
-				let holdingSlice = holdingSlices[holding];
-				let snapsInThisSlice: IHoldingSnapshot[] = [];
-				const currentAsset = holdingSlice.asset;
-        const hourlyPrices = await getHourlyData(currentAsset, sliceStart, sliceEnd);
-
-				for (let j = currentSnapshot[currentAsset]; j < holdingSlice.snapshots.length; j++) {
-					let snap = holdingSlice.snapshots[j];
-
-					if (snap.timestamp < sliceEnd) {
-						snapsInThisSlice.push(snap);
-						lastAmount[currentAsset] = snap.totalAmountBought - snap.totalAmountSold;
-						lastPrice[currentAsset] = snap.price.USD;
-						currentSnapshot[currentAsset]++;
-					} else {
-						break;
-					}
-				}
-
-        let currentPrice = hourlyPrices.find((hourlyPrice) => hourlyPrice.hour == sliceStart);
-        if (currentPrice != undefined) { lastPrice[currentAsset] = currentPrice.price; }
-				let value = lastAmount[currentAsset] * lastPrice[currentAsset];
-
-				let newHoldingSlice = {
-					asset: currentAsset,
-					amount: lastAmount[currentAsset],
-					price: lastPrice[currentAsset],
-					value: value,
-					snapshots: snapsInThisSlice,
-				};
-
-				newTimeslice.holdings[currentAsset] = newHoldingSlice;
-				newTimeslice.value += value;
-			}
-
-			newSlices.push(newTimeslice);
-			sliceStart = sliceEnd;
-		}
-	}
-
-	return newSlices;
 }
