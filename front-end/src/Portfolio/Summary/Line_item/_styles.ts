@@ -6,7 +6,6 @@ export const SummaryWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: ${SPACING.flexCardGap};
 `;
 
 export const Container = styled.div`

@@ -22,7 +22,6 @@ export const SidebarContainer = styled.div<DrawerProps>`
 	z-index: 4;
 	width: ${(props: any) =>
 		props.open ? SPACING.sidebarWidth : SPACING.NavbarHeight};
-
 	align-items: ${(props: any) => (props.open ? 'center' : 'start')};
 	${TimingStyle}
   background: ${theme.palette.background.default};

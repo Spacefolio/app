@@ -25,6 +25,7 @@ import { PortfolioSummaryItem } from './Line_item/PortfolioSummaryItem';
 import { SummaryWrapper } from './Line_item/_styles';
 import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
 import { Assets } from '../Assets/Assets';
+import { Transactions } from '..';
 
 export const PortfolioSummary = () => {
 	const portfolioData = useSelector(
@@ -47,57 +48,20 @@ export const PortfolioSummary = () => {
 						))}
 						<FlexSpacer />
 					</InlineDiv>
-
-					<FlexCardHeader>
-						<InlineDiv style={{ padding: '12px' }}>
-							<div>
-								<InlineDiv>
-									<Typography variant="h2">Summary</Typography>
-								</InlineDiv>
-								<InlineDiv spacing={1}>
-									<Typography variant="caption">
-										Your portfolio at a glance
-									</Typography>
-								</InlineDiv>
-							</div>
-						</InlineDiv>
-					</FlexCardHeader>
+					{CardHeader('Summary', 'Your portfolio at a glance')}
 					<PortfolioSummaryItem
 						timeframe={'24H'}
 						portfolioItem={filteredPortfolio}
 					/>
-					<FlexCardHeader>
-						<InlineDiv style={{ padding: '12px' }}>
-							<div>
-								<InlineDiv>
-									<Typography variant="h2">Holdings</Typography>
-								</InlineDiv>
-								<InlineDiv spacing={1}>
-									<Typography variant="caption">
-										Your assets and their performance
-									</Typography>
-								</InlineDiv>
-							</div>
-						</InlineDiv>
-					</FlexCardHeader>
+
+					{CardHeader('Holdings', 'Your assets and their performance')}
 					<Assets portfolioItems={filteredPortfolio.portfolioItems} />
-					<FlexCardHeader>
-						<InlineDiv style={{ padding: '12px' }}>
-							<div>
-								<InlineDiv>
-									<Typography variant="h2">Strategies</Typography>
-								</InlineDiv>
-								<InlineDiv spacing={1}>
-									<Typography variant="caption">
-										All strategies running on this portfolio
-									</Typography>
-								</InlineDiv>
-							</div>
-						</InlineDiv>
-					</FlexCardHeader>
-					<Assets
-						portfolioItems={filteredPortfolio.portfolioItems}
-					/>
+
+					{CardHeader('Strategies', 'All strategies running on this portfolio')}
+					<Assets portfolioItems={filteredPortfolio.portfolioItems} />
+
+					{/* {CardHeader('Transactions', 'Your completed transactions')}
+					<Transactions transactions={filteredPortfolio.transactions} /> */}
 				</SummaryWrapper>
 			) : (
 				<Backdrop open>
@@ -107,3 +71,20 @@ export const PortfolioSummary = () => {
 		</ThemeProvider>
 	);
 };
+
+function CardHeader(title: string, caption: string) {
+	return (
+		<FlexCardHeader>
+			<InlineDiv style={{ padding: '12px' }}>
+				<div>
+					<InlineDiv>
+						<Typography variant="h2">{title}</Typography>
+					</InlineDiv>
+					<InlineDiv spacing={1}>
+						<Typography variant="caption">{caption}</Typography>
+					</InlineDiv>
+				</div>
+			</InlineDiv>
+		</FlexCardHeader>
+	);
+}

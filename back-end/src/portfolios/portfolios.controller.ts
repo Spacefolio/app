@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction, response } from "express";
 import { transactionService } from "../transactions/transactions.service";
-import { IPortfolioDataView, timeframe, timespan } from "../../../types";
+import { IPortfolioDataView, ITimeframe, timespan } from "../../../types";
 const router = Router();
 import { exchangeService } from "../exchanges/exchange.service";
 import { portfolioItemSchema } from "./portfolio.model";

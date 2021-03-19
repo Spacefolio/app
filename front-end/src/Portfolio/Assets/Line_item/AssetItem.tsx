@@ -1,29 +1,21 @@
 import {
 	Avatar,
 	Grid,
-	TableCell,
-	TableRow,
+	Hidden,
 	Typography,
+	useMediaQuery,
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import {
-	IPortfolioDataView,
 	IPortfolioItemView,
+	IPortfolioLineChartItem,
 	ITimeframe,
 } from '../../../../../types';
 import { FlexCard, FlexSpacer, InlineDiv } from '../../../_styles';
-import { COLORS } from '../../../_styles/ResponsiveDesign';
-
-import {
-	ReformatAmountValue,
-	ReformatCurrencyValue,
-} from '../../../_helpers/formating';
+import { COLORS, SPACING } from '../../../_styles/ResponsiveDesign';
 import { theme } from '../../../_styles/Theme';
 import { SimpleTimeSeries } from '../../../_components';
-import {
-	TimeframeSelectorDropdown,
-	TimeframeSelectorToggle,
-} from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
+import { TimeframeSelectorToggle } from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
 
 interface HoldingItemProps {
 	portfolioItem: IPortfolioItemView;
@@ -53,61 +45,118 @@ export const AssetItem: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 		return num < 0 ? COLORS.errorBase : theme.palette.secondary.main;
 	};
 
-	return (
-		<FlexCard style={{ padding: '10px 5px', width: '250px' }}>
-			<Grid container xs={12}>
-				<Grid wrap="nowrap" container xs={12}>
-					<Grid alignItems="center" container>
-						<Avatar src={asset.logoUrl} />
-						<Typography>{asset.name}</Typography>
-					</Grid>
+	const fakeChart = () => {
+		var dataArray: IPortfolioLineChartItem[] = [];
+		for (let i = 0; i < 50; i++) {
+			var USD: number = 0;
+			if (i > 0) {
+				USD = dataArray[i - 1].USD + Math.random() * 10 - 5;
+			} else {
+				USD = Math.random() * 50;
+			}
+			dataArray.push({ T: i, USD });
+		}
+		return dataArray;
+	};
 
-					<FlexSpacer />
-					<Grid xs item>
-						<TimeframeSelectorToggle
-							Tframe={timeframe}
-							setTimeframe={setTimeframe}
-						/>
+	const mobile = useMediaQuery(theme.breakpoints.up('sm'));
+
+	return (
+		<FlexCard
+			style={{
+				position: 'relative',
+				padding: theme.spacing(2),
+				width: mobile ? '250px' : '150px',
+			}}
+		>
+			<div
+				style={{
+					position: 'absolute',
+					top: 0,
+					right: 0,
+				}}
+			>
+				<TimeframeSelectorToggle
+					Tframe={timeframe}
+					setTimeframe={setTimeframe}
+				/>
+			</div>
+			<Grid item xs={12} justify="center" alignItems="center">
+				<Grid xs={12} container justify="center" alignItems="center">
+					<Grid item>
+						<Avatar src={asset.logoUrl} />
 					</Grid>
 				</Grid>
-				<Grid container xs={12}>
-					<div style={{ width: '100%', height: '70px' }}>
-						<SimpleTimeSeries
-							id={asset.name + 'chart'}
-							data={[
-								{ T: 1, USD: 524 },
-								{ T: 2, USD: 25 },
-								{ T: 3, USD: 127 },
-								{ T: 4, USD: 23 },
-								{ T: 5, USD: 146 },
-								{ T: 6, USD: 894 },
-							]}
-							showTooltip={false}
-							showX={false}
-							showY={false}
-						/>
-					</div>
+
+				<Grid xs={12} container justify="center" alignItems="center">
+					<Grid item>
+						<Typography gutterBottom>
+							{asset.name} ({asset.symbol})
+						</Typography>
+					</Grid>
 				</Grid>
-				<Grid justify="center" container>
-					<Typography>{ReformatCurrencyValue(value.USD, 'USD')}</Typography>
+
+				<Hidden xsDown>
+					<Grid xs={12} container justify="center" alignItems="center">
+						<Grid item>
+							<Typography gutterBottom style={{ fontSize: '1.35rem' }}>
+								${currentPrice.toLocaleString()}
+							</Typography>
+						</Grid>
+					</Grid>
+					<Grid item style={{ height: '10px' }} />
+					<Grid xs={12} container>
+						<Grid xs item>
+							<div style={{ height: '70px' }}>
+								<SimpleTimeSeries
+									id={asset.name + 'chart'}
+									data={fakeChart()}
+									showTooltip={true}
+									showX={false}
+									showY={false}
+								/>
+							</div>
+						</Grid>
+					</Grid>{' '}
+					<Grid item style={{ height: '10px' }} />
+					<Grid xs={12} justify="center" container>
+						<Grid item>
+							<Typography
+								style={{ fontSize: 10 }}
+								gutterBottom
+								color="textSecondary"
+							>
+								Profit/Loss
+							</Typography>
+						</Grid>
+					</Grid>
+				</Hidden>
+
+				<Grid item style={{ height: '10px' }} />
+
+				<Grid xs={12} justify="center" container>
+					<Grid item>
+						<Typography
+							variant="h4"
+							gutterBottom
+							style={{
+								color: portfolioValueItemStyler(TframeItem(profitPercentage)),
+								fontSize: '1.6rem',
+								fontWeight: 500,
+							}}
+						>
+							{TframeItem(profitPercentage) > 0 ? '+' : ''}
+							{TframeItem(profitPercentage).toFixed(2)}%
+						</Typography>
+					</Grid>
 				</Grid>
-				<Grid justify="center" container>
-					<Typography
-						style={{
-							color: portfolioValueItemStyler(TframeItem(profitPercentage)),
-						}}
-					>
-						{profitTotal.h24.toFixed(2)}
-					</Typography>
-				</Grid>
-				<Grid justify="center" container>
-					<Typography
-						style={{
-							color: portfolioValueItemStyler(TframeItem(profitPercentage)),
-						}}
-					>
-						{TframeItem(profitPercentage).toFixed(2)}%
-					</Typography>
+
+				<Grid xs={12} justify="center" container>
+					<Grid item>
+						<Typography variant="body2" gutterBottom>
+							(${TframeItem(profitTotal).toFixed(2)})
+						</Typography>
+					</Grid>
 				</Grid>
 			</Grid>
 		</FlexCard>

@@ -18,7 +18,7 @@ import { theme } from '../_styles/Theme';
 export const Application = () => {
 	const dispatch = useDispatch();
 
-	const mobile = useMediaQuery(theme.breakpoints.up('sm'));
+	const mobile = useMediaQuery(theme.breakpoints.up('md'));
 
 	return (
 		<MuiPickersUtilsProvider utils={MomentUtils}>
@@ -28,7 +28,7 @@ export const Application = () => {
 					<TopNav />
 					<ApplicationContainer>
 						<SidebarNav />
-						<Container disableGutters={!mobile} maxWidth={'lg'} fixed={mobile}>
+						<Container disableGutters={!mobile} maxWidth={'xl'} fixed={mobile}>
 							<Switch>
 								<Route path={`/portfolio`}>
 									<Portfolio />

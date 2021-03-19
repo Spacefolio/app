@@ -35,7 +35,7 @@ export const COLORS = {
 	darkBase: '#2e2e2e',
 };
 export const SPACING = {
-	sidebarWidth: '300px',
+	sidebarWidth: '200px',
 	flexCardGap: '8px',
 	NavbarHeight: '60px',
 	sidebarHeight: '60px',

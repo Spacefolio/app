@@ -3,10 +3,10 @@ import { createMuiTheme } from '@material-ui/core';
 export const theme = createMuiTheme({
 	breakpoints: {
 		values: {
-			xs: 600,
-			sm: 975,
-			md: 1265,
-			lg: 1600,
+			xs: 0,
+			sm: 600,
+			md: 960,
+			lg: 1475,
 			xl: 1920,
 		},
 	},
@@ -16,6 +16,18 @@ export const theme = createMuiTheme({
 			opacity: 0.7,
 		},
 		h2: {
+			fontSize: '1.25rem',
+			letterSpacing: '.02em',
+			lineHeight: '1rem',
+			fontWeight: 500,
+		},
+    h3: {
+			fontSize: '1.25rem',
+			letterSpacing: '.02em',
+			lineHeight: '1rem',
+			fontWeight: 500,
+		},
+    h4: {
 			fontSize: '1.25rem',
 			letterSpacing: '.02em',
 			lineHeight: '1rem',
