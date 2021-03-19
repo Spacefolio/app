@@ -2,9 +2,9 @@
 const config = require('config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-import { ConnectionStates } from 'mongoose';
 import { ILoginRequest, IRegisterRequest, IUserView } from '../../../types';
 import { User } from '../_helpers/db';
+import { debug } from '../_helpers/logs';
 
 export const userService = {
 	authenticate,
@@ -22,7 +22,7 @@ async function authenticate(userRequest: ILoginRequest): Promise<IUserView> {
 		const token = jwt.sign({ sub: user._id }, config.secret, {
 			expiresIn: '7d',
 		});
-		console.log(user);
+		debug(`Authenticated user: ${user}`);
 		return {
 			id: user._id,
 			email: user.email,
@@ -62,7 +62,7 @@ async function create(userParam: IRegisterRequest) {
 	// save user
 	user.save(function (err, user) {
 		if (err) {
-			console.log(err);
+			console.error(err);
 			throw err;
 		}
 	});

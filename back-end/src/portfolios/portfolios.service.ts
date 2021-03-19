@@ -6,7 +6,7 @@ import { IExchangeAccountDocument, IHoldingSlice, IHoldingSnapshot, ITimeslice, 
 import ccxt from 'ccxt';
 import { userService } from '../users/user.service';
 import { spawn } from 'child_process';
-import { getHourlyData, getLatestHourlyTimeSeries } from '../coindata/historical.service';
+import { getHourlyDataRange, getLatestHourlyTimeSeries } from '../coindata/historical.service';
 import { IHourlyPrice } from '../coindata/historical.model';
 
 export const portfolioService = {
@@ -21,7 +21,6 @@ async function sync(userId: string) {
 	return await exchangeService
 		.syncAllExchangesData(userId)
 		.then((portfolioData) => {
-			//console.log(res)
 			return portfolioData;
 		})
 		.catch((err) => {
@@ -33,7 +32,6 @@ async function getAll(userId: string) {
 	return await exchangeService
 		.getExchangesData(userId)
 		.then((portfolioData) => {
-			//console.log(res)
 			return portfolioData;
 		})
 		.catch((err) => {
@@ -45,7 +43,6 @@ async function get(userId: string, exchangeId: string) {
 	return await exchangeService
 		.getExchangeData(userId, exchangeId)
 		.then((portfolioData) => {
-			//console.log(res)
 			return portfolioData;
 		})
 		.catch((err) => {

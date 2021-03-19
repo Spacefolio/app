@@ -4,52 +4,16 @@ import { IPortfolioLineChartItem } from "../../../types";
 import { IExchangeAccountDocument, IHoldingSlice, ITimeslice } from "../exchanges/exchange.model";
 import { coindataService, getCurrentPrice } from "./coindata.service";
 import { HistoricalData, HourlyData, IDailyPrice, IHourlyPrice } from "./historical.model";
+import { debug } from "../_helpers/logs";
 
 export const ONE_HOUR = 3600000;
 export const ONE_DAY = 86400000;
 export const ONE_WEEK = 604800000;
 
-interface IHistoricalCandleResponse {
-  day: number;
-  date: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  adjClose: number;
-  volume: number;
-  unadjustedVolume: number;
-  change: number;
-  changePercent: number;
-  vwap: number;
-  label: string;
-  changeOverTime: number;
-}
+export type IDailyPrices = { [key: number ]: number }; // Look up a price for an asset by the daily timestamp
 
 interface IHistoricalDataResponse {
   prices: [ number, number ][]; // time and price
-}
-
-interface ITickerResponse {
-  symbol: string;
-  name: string;
-  price: number;
-  changesPercentage: number;
-  change: number;
-  dayLow: number;
-  dayHigh: number;
-  yearhHigh: number;
-  yearLow: number;
-  marketCap: number;
-  priceAvg50: number;
-  priceAvg200: number;
-  volume: number;
-  avgVolume: number;
-  exchange: string;
-  open: number;
-  previousClose: number;
-  sharesOutstanding: number;
-  timestamp: number;
 }
 
 export async function loadHistoricalDataToDb(symbol: string) {
@@ -74,10 +38,10 @@ export async function loadHistoricalDataToDb(symbol: string) {
   for (let i = start; i < historicalDataJson.prices.length; i++)
   {
     let timestamp: number = historicalDataJson.prices[i][0];
-    let leftover = timestamp % 86400000;
-    if (leftover >= 43200000) // halfway through the day
+    let leftover = timestamp % ONE_DAY;
+    if (leftover >= (ONE_DAY/2)) // halfway through the day
     { // round up to next day
-      timestamp = timestamp + (86400000 - leftover);
+      timestamp = timestamp + (ONE_DAY - leftover);
     }
     else
     { // round down to start of this day
@@ -108,8 +72,8 @@ export async function loadHourlyData(symbol: string)
   const coinId = await coindataService.getCoinId(symbol);
   const now = Date.now() / 1000;
   const toTimestamp = now;
-  const lastHour = now - (now % 3600);
-  const fromTimestamp = lastHour - 691200; // subtract 8 days (in seconds) to get one week ago
+  const lastHour = now - (now % (ONE_HOUR/1000));
+  const fromTimestamp = lastHour - (8 * (ONE_DAY/1000)); // subtract 8 days (in seconds) to get one week ago
   
   const hourlyDataJson = await axios.get<IHistoricalDataResponse>(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart/range?vs_currency=usd&from=${fromTimestamp}&to=${toTimestamp}`).then((jsonResponse) => jsonResponse.data).catch((err) => { throw err; });
 
@@ -124,7 +88,7 @@ export async function loadHourlyData(symbol: string)
   {
     
     let timestamp: number = hourlyDataJson.prices[i][0];
-    let hour = timestamp % 3600000 >= 1800000 ? timestamp + (3600000 - (timestamp % 3600000)) : timestamp - (timestamp % 3600000); // round to nearest hour
+    let hour = (timestamp % ONE_HOUR) >= (ONE_HOUR/2) ? timestamp + (ONE_HOUR - (timestamp % ONE_HOUR)) : timestamp - (timestamp % ONE_HOUR); // round to nearest hour
     hourlyData.prices.push({ hour, price: hourlyDataJson.prices[i][1] });
   }
 
@@ -132,16 +96,16 @@ export async function loadHourlyData(symbol: string)
   return savedData;
 }
 
-export async function getHourlyData(symbol: string, from: number, to: number) : Promise<IHourlyPrice[]>
+export async function getHourlyDataRange(symbol: string, from: number, to: number) : Promise<IHourlyPrice[]>
 {
   const hourlyPrices: IHourlyPrice[] = [];
   
-  from = from - (from % 3600000); // round down to nearest hour
-  to = to - (to % 3600000);
+  from = from - (from % ONE_HOUR); // round down to nearest hour
+  to = to - (to % ONE_HOUR);
 
   if (fiat(symbol))
   {
-    for (let i = from; i <= to; i += 3600000)
+    for (let i = from; i <= to; i += ONE_HOUR)
     {
       hourlyPrices.push({ hour: i, price: 1 });
     }
@@ -168,12 +132,12 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
     lastHour = hourlyData.prices[hourlyData.prices.length - 1].hour;
     if (startIndex == -1)
     { // attempt to grab last hour's price
-      console.log(`used last hour's price for ${symbol}`);
+      debug(`used last hour's price for ${symbol}`);
       startIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == from - ONE_HOUR);
       endIndex = startIndex;
       if (startIndex == -1)
       { // attempt to grab the latest price we have
-        console.log(`used last retrieved price for ${symbol}`);
+        debug(`used last retrieved price for ${symbol}`);
         startIndex = hourlyData.prices.length - 1;
         endIndex = hourlyData.prices.length - 1;
       }
@@ -189,11 +153,11 @@ export async function getHourlyData(symbol: string, from: number, to: number) : 
   if (endIndex == -1)
   {
     // attempt to grab last hour's price
-    console.log(`used last hour's price for ${symbol}`);
+    debug(`used last hour's price for ${symbol}`);
     endIndex = hourlyData.prices.findIndex((hourData) => hourData.hour == to - ONE_HOUR);
     if (endIndex == -1) {
       // attempt to grab the latest price we have
-      console.log(`used last retrieved price for ${symbol}`);
+      debug(`used last retrieved price for ${symbol}`);
       endIndex = hourlyData.prices.length - 1;
       if (endIndex == -1) { throw `Could not fetch hourly price data for symbol '${symbol}'. [3]`; }
     }
@@ -246,7 +210,7 @@ export async function getLatestHourlyTimeSeries(exchangeAccount: IExchangeAccoun
 
 function getLatestHour() {
   let now = Date.now();
-  let latestHour = now - (now % 3600000);
+  let latestHour = now - (now % ONE_HOUR);
   return latestHour;
 }
 
@@ -262,7 +226,7 @@ export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccou
   
   for (let i = 0; i < symbols.length; i++)
   { // Grab last week of hourly prices for each symbol in holdings
-    let hourlyPrices = await getHourlyData(symbols[i], oneWeekAgo-ONE_HOUR, latestHour);
+    let hourlyPrices = await getHourlyDataRange(symbols[i], oneWeekAgo-ONE_HOUR, latestHour);
     prices[symbols[i]] = {};
     for (let j = 0; j < hourlyPrices.length; j++)
     {
@@ -360,9 +324,8 @@ export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccou
 
 export async function getHistoricalData(symbol: string, timestamp: number) : Promise<number>
 {
-  var symbols = symbol.split('/');
   let now = Date.now();
-  let today = now - (now % 86400000);
+  let today = now - (now % ONE_DAY);
   if (timestamp == today)
   {
     let currentPrice = await getCurrentPrice(symbol);
@@ -370,14 +333,14 @@ export async function getHistoricalData(symbol: string, timestamp: number) : Pro
     return currentPrice;
   }
 
-  var historicalData = await HistoricalData.findOne({ symbol: symbols[0] });
+  var historicalData = await HistoricalData.findOne({ symbol: symbol });
   if (!historicalData) {
-    historicalData = await loadHistoricalDataToDb(symbols[0]);
+    historicalData = await loadHistoricalDataToDb(symbol);
     if (!historicalData) {
       throw "Could not fetch historical data [1]";
     }
   }
-  const date = (timestamp - (timestamp % 86400000));
+  const date = (timestamp - (timestamp % ONE_DAY));
   var candle = historicalData.prices.find((candle) => candle.timestamp == date);
   if (!candle)
   {
@@ -388,7 +351,7 @@ export async function getHistoricalData(symbol: string, timestamp: number) : Pro
     // if we need to grab the newest prices
     if (historicalData.prices[historicalData.prices.length - 1].timestamp < date)
     {
-      historicalData = await loadHistoricalDataToDb(symbols[0]); 
+      historicalData = await loadHistoricalDataToDb(symbol); 
     }
     else if (historicalData.prices[0].timestamp > date)
     {
@@ -402,4 +365,59 @@ export async function getHistoricalData(symbol: string, timestamp: number) : Pro
     candle = historicalData.prices.find((candle) => candle.timestamp == date);
   }
   return candle.price;
+}
+
+export async function getHistoricalDataRange(symbol: string, from: number, to: number) : Promise<IDailyPrices>
+{
+  let dailyPrices: IDailyPrices = {};
+  let now = Date.now();
+  let today = now - (now % ONE_DAY);
+
+  if (to == today) // fetch latest price for today
+  {
+    let currentPrice = await getCurrentPrice(symbol);
+    if (!currentPrice) throw "Could not fetch current price.";
+    dailyPrices[today] = currentPrice;
+    to = today - ONE_DAY;
+    if (from == today) return dailyPrices;
+  }
+
+  var historicalData = await HistoricalData.findOne({ symbol: symbol });
+  if (!historicalData) {
+    historicalData = await loadHistoricalDataToDb(symbol);
+    if (!historicalData) {
+      throw "Could not fetch historical data [1]";
+    }
+  }
+
+  // If the range is larger than the dataset, just return the whole dataset
+  if ((to - from)/ONE_DAY >= historicalData.prices.length)
+  {
+    historicalData.prices.forEach((day) => {
+      dailyPrices[day.timestamp] = day.price;
+    });
+    return dailyPrices;
+  }
+
+  // Get the start index
+  let startIndex = historicalData.prices.findIndex((day) => day.timestamp == from);
+  if (startIndex == -1)
+  {
+    debug(`Could not find daily historical value of ${symbol} at timestamp: ${from}`);
+    startIndex = 0;
+  }
+  // Get the end index
+  let endIndex = historicalData.prices.findIndex((day) => day.timestamp == to);
+  if (endIndex == -1)
+  {
+    debug(`Could not find daily historical value of ${symbol} at timestamp: ${to}`);
+    endIndex = historicalData.prices.length - 1;
+  }
+
+  for (let i = startIndex; i <= endIndex; i++)
+  {
+    dailyPrices[historicalData.prices[i].timestamp] = historicalData.prices[i].price;
+  }
+
+  return dailyPrices;
 }
