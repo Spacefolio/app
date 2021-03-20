@@ -48,7 +48,6 @@ export const TimeframeSelectorDropdown: React.FC<TimeframeSelectorDDProps> = ({
 				onClick={() => setOpen(!open)}
 			>
 				{Tframe}
-				<DateRange />
 			</Button>
 			<Popper
 				open={open}

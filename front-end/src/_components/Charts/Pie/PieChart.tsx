@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { IPortfolioItemView } from '../../../../../types';
 import { Doughnut } from 'react-chartjs-2';
 import { Typography } from '@material-ui/core';
+import { AssetsMiniList } from '../../../Portfolio/Assets/AssetsMiniList';
+import { ChartTooltipModel } from 'chart.js';
+import { ReformatCurrencyValueMini } from '../../../_helpers';
 
 interface PortfolioLineChartProps {
 	size?: number;
@@ -16,21 +19,41 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
 	data,
 	colors,
 }) => {
-	const [chartData, setChartData] = useState<any>();
+	const [chartData, setChartData] = useState<any>({});
 
-	const [pieDisplay, setPieDisplay] = useState('');
+	const [calcTotal, setcalcTotal] = useState<string>('');
+
+	const [pieDisplaySymbol, setPieDisplaySymbol] = useState('Total');
+	const [pieDisplayValue, setPieDisplayValue] = useState('');
 
 	useEffect(() => {
+		var total = 0;
+		data.map((item) => {
+			total += item.value.USD;
+		});
+		setcalcTotal(ReformatCurrencyValueMini(total));
+		setPieDisplayValue(ReformatCurrencyValueMini(total));
 		setChartData({
 			labels: data.map((item) => item.asset.name),
 			datasets: [
 				{
+					hoverBorderWidth: 2,
+					hoverBorderColor: 'black',
 					backgroundColor: colors,
 					data: data.map((item) => item.value.USD),
 				},
 			],
 		});
 	}, [data]);
+
+	const testColors = [
+		'rgb(211, 241, 210)',
+		'rgb(144, 204, 222)',
+		'rgb(160, 155, 204)',
+		'rgb(203, 166, 204)',
+		'rgb(243, 198, 209)',
+		'rgb(253, 218, 223)',
+	];
 
 	return (
 		<React.Fragment>
@@ -42,10 +65,19 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
 					options={{
 						tooltips: {
 							enabled: false,
-							custom: (tooltipModel) => {
-								setPieDisplay(
-									tooltipModel.dataPoints.map((point) => point.label)[0]
-								);
+							custom: (tooltipModel: ChartTooltipModel) => {
+								if (tooltipModel.body) {
+									const splitBody = tooltipModel.body[0].lines[0].split(':');
+									const value = splitBody[1];
+									const symbol = splitBody[0];
+									setPieDisplaySymbol(symbol);
+									setPieDisplayValue(
+										ReformatCurrencyValueMini(parseInt(value))
+									);
+								} else {
+									setPieDisplayValue(calcTotal);
+									setPieDisplaySymbol('Total');
+								}
 							},
 						},
 						cutoutPercentage: 70,
@@ -62,13 +94,17 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
 						top: 0,
 						right: 0,
 						left: 0,
-						margin: '20%',
+						margin: '25%',
 						display: 'flex',
 						alignItems: 'center',
+						flexDirection: 'column',
 						justifyContent: 'center',
 					}}
 				>
-					<Typography align="center">{pieDisplay}</Typography>
+					<Typography gutterBottom variant="h2" align="center">
+						{pieDisplaySymbol}
+					</Typography>
+					<Typography align="center">{pieDisplayValue}</Typography>
 				</div>
 			</div>
 		</React.Fragment>

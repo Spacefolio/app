@@ -25,6 +25,8 @@ export const ReformatCurrencyValueMini = (value: number) => {
 	return value.toLocaleString(undefined, {
 		maximumFractionDigits: 2,
 		minimumFractionDigits: 2,
+		style: 'currency',
+		currency: 'USD',
 	});
 };
 

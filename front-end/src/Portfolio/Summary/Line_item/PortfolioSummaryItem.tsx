@@ -20,13 +20,13 @@ import {
 	TimeframeSelectorDropdown,
 } from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
 export interface IPortfolioSummaryItemView {
-  timeframe?: ITimeframe;
+	timeframe?: ITimeframe;
 	portfolioItem: IPortfolioDataView;
 }
 
 export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 	timeframe,
-  portfolioItem,
+	portfolioItem,
 	...props
 }) => {
 	const dispatch = useDispatch();
@@ -62,25 +62,16 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 
 	const Content = () => (
 		<React.Fragment>
-
 			<FlexCardContent style={{ maxHeight: '80%' }}>
 				<Grid xs={12} container>
-					<Grid justify="center" alignItems="center" xs={12} container>
-						<Typography
-							style={{
-								fontWeight: 700,
-								fontSize: '2.125rem',
-								lineHeight: '2.5rem',
-							}}
-						>
-							{portfolioItem.portfolioTotal.USD.toFixed(2)} USD
-						</Typography>
+					{/* <Grid justify="center" alignItems="center" xs={12} container>
+						
 						<SyncIcon
 							onClick={() =>
 								dispatch(portfolioActions.refresh(portfolioItem.id, true))
 							}
 						/>
-					</Grid>
+					</Grid> */}
 					<Grid
 						ref={chartContainerRef}
 						alignItems="center"
@@ -89,17 +80,31 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 						sm={4}
 						container
 					>
-						<Grid ref={chartContainerRef} xs>
-							<TimeframeSelectorBar
+						<Grid
+							ref={chartContainerRef}
+						>
+							<Typography
+								style={{
+									fontWeight: 700,
+									fontSize: '2.125rem',
+									lineHeight: '2.5rem',
+								}}
+							>
+								{portfolioItem.portfolioTotal.USD.toFixed(2)} USD
+							</Typography>
+							{/* {portfolioItem.profitTotal.USD} {portfolioItem.profitPercentage} */}
+							{/* <TimeframeSelectorDropdown
 								Tframe={Tframe}
 								setTimeframe={setTimeframe}
 							/>
-							<SimpleTimeSeries
-								showX={true}
-								showY={true}
-								id={portfolioItem.nickname.replace(/\s/g, '') + 'chart'}
-								data={chartData}
-							/>
+							<div>
+								<SimpleTimeSeries
+									showX={true}
+									showY={true}
+									id={portfolioItem.nickname.replace(/\s/g, '') + 'chart'}
+									data={chartData}
+								/>
+							</div> */}
 						</Grid>
 					</Grid>
 					<Hidden xsDown>
