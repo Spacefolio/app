@@ -8,7 +8,7 @@ import { randNum } from '../../exchangeDataDetailed';
 import { ccxtService } from '../_helpers/ccxt.service';
 import { IOrder } from '../transactions/order.model';
 import { getConversionRate, saveTransactionViewItems } from '../transactions/transactionView';
-import { fiat, getHistoricalDataRange, IDailyPrices, ONE_DAY } from '../coindata/historical.service';
+import { extractHoldingsSymbolsFromTimeslices, fiat, getHistoricalDataRange, getLatestHour, getLatestHourlyTimeSeries, IDailyPrices, loadLatestHourlyTimeSeries, ONE_DAY } from '../coindata/historical.service';
 import { coindataService } from '../coindata/coindata.service';
 import { debug } from '../_helpers/logs';
 
@@ -601,6 +601,12 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 	debug(`Save holdings timeslices: ${Date.now() - lastItem.valueOf()}`);
 	lastItem = new Date();
 
+	const timeslices: ITimeslice[] = Object.values(exchangeAccountDocument.timeslices);
+	const symbols = extractHoldingsSymbolsFromTimeslices(timeslices);
+	await loadLatestHourlyTimeSeries(exchangeAccountDocument, symbols, timeslices, false);
+	debug(`Create hourly timeseries data: ${Date.now() - lastItem.valueOf()}`);
+	lastItem = new Date();
+
 	exchangeAccountDocument.lastSyncedDate = lastSynced;
 
 	const savedExchangeAccount = await exchangeAccountDocument.save().catch((err) => {
@@ -744,6 +750,7 @@ async function saveHoldingsTimeslices(ccxtExchange: ccxt.Exchange, exchange: IEx
 async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IExchangeAccountDocument) {
 	var exchangeAccountJson = exchangeAccount.toJSON();
 	delete exchangeAccountJson.portfolioItems;
+	let hourlySeries: ITimeslices = exchangeAccount.hourlyTimeSeries;
 
 	var totalValue = 0;
 	var totalProfit = 0;
@@ -771,8 +778,8 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 			totalInvested += last.totalValueInvested;
 			totalDeposited += last.totalValueDeposited;
 
-			//const profit24Hour = (amountSoldInTheLast24Hours * averageSellInTheLast24Hours) - (value24HoursAgo * howMuchIHad24HoursAgo) + currentValue
-			const profit24Hour = randNum();
+			const [profit24Hour, profitPercentage24Hour] = getTwentyFourHourProfit(item, currentValue, hourlySeries);
+
 			return {
 				asset: item.asset,
 				amount: item.balance.total,
@@ -781,7 +788,7 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 				currentPrice: currentPrice,
 				profitPercentage: {
 					all: profitPercentageAllTime,
-					h24: randNum(),
+					h24: profitPercentage24Hour,
 				},
 			};
 		})
@@ -920,4 +927,49 @@ async function getLogo(symbol: string) {
 	} else {
 		return `https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579`;
 	}
+}
+
+function getTwentyFourHourProfit(portfolioItem: IPortfolioItem, currentValue: number, hourlySeries: ITimeslices): [number, number]
+{
+	let profit = 0;
+	let twentyFourHoursAgo = getLatestHour() - ONE_DAY;
+	let value24HoursAgo = 0;
+
+	let hourSlice = hourlySeries[twentyFourHoursAgo];
+	if (hourSlice)
+	{
+		let holdingSlice = hourSlice.holdings[portfolioItem.asset.symbol];
+		if (holdingSlice)
+		{
+			value24HoursAgo = holdingSlice.value;
+		}
+	}
+
+	let holdingHistory = portfolioItem.holdingHistory;
+	let length = portfolioItem.holdingHistory.length;
+	
+	if (length > 0)
+	{
+		var endingValueReceived = holdingHistory[length - 1].totalValueReceived;
+		var endingValueInvested = holdingHistory[length - 1].totalValueInvested;
+		var startingValueReceived = endingValueReceived;
+		var startingValueInvested = endingValueInvested;
+		for (let i = length - 1; i >= 0; i--)
+		{
+			if (holdingHistory[i].timestamp < twentyFourHoursAgo)
+			{
+				startingValueReceived = holdingHistory[i].totalValueReceived;
+				startingValueInvested = holdingHistory[i].totalValueInvested;
+				holdingHistory[i].totalValueInvested;
+				break;			
+			}
+		}
+	}
+
+	let newValueReceived = endingValueReceived - startingValueReceived;
+	let newValueInvested = endingValueInvested - startingValueInvested;
+
+	profit = currentValue - value24HoursAgo + newValueReceived - newValueInvested;
+	let profitPercentage = (profit / (value24HoursAgo + newValueInvested)) * 100;
+	return [profit, profitPercentage];
 }
