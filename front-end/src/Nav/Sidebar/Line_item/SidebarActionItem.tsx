@@ -25,7 +25,7 @@ interface ISidebarActionItemProps {
 	linkUri: string;
 }
 
-const SidebarText = styled(Typography)`
+const SidebarText = styled.div`
 	font-size: 0.875rem;
 	font-weight: 600;
 `;
