@@ -24,6 +24,7 @@ import {
 } from '@material-ui/core';
 import { IRootState } from '../../_reducers';
 import { theme } from '../../_styles/Theme';
+import StickyBox from 'react-sticky-box/dist/esnext';
 
 interface SidebarNavProps {}
 
@@ -91,10 +92,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
 	return (
 		<React.Fragment>
 			<Hidden mdUp>
-				<Modal
-					onClose={() => setMobileSidebar(false)}
-					open={mobileSidebar}
-				>
+				<Modal onClose={() => setMobileSidebar(false)} open={mobileSidebar}>
 					<MobileSidebarContainer>{SidebarContent}</MobileSidebarContainer>
 				</Modal>
 			</Hidden>

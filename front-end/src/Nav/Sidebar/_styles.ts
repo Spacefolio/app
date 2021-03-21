@@ -14,11 +14,11 @@ export const SidebarContainer = styled.div<DrawerProps>`
 	display: flex;
 	justify-content: start;
 	box-shadow: 5px 10px 25px -24px;
-
 	overflow: hidden;
-	flex-direction: column;
 	position: sticky;
-	top: 0;
+	top: 60px;
+	flex-direction: column;
+	height: calc(100vh - 60px);
 	flex-shrink: 0;
 	z-index: 4;
 	width: ${(props: any) =>

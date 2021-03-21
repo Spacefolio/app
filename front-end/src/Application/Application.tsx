@@ -25,10 +25,11 @@ export const Application = () => {
 			<React.Fragment>
 				<Modal />
 				<BodyWrapper>
-					<TopNav />
+					<TopNav  />
 					<ApplicationContainer>
 						<SidebarNav />
 						<Container
+            id="content-container"
 							disableGutters={!mobile}
 							maxWidth={'xl'}
 							style={{ overflow: 'hidden' }}
