@@ -24,6 +24,7 @@ import {
 } from '@material-ui/core';
 import { IRootState } from '../../_reducers';
 import { theme } from '../../_styles/Theme';
+import { applicationViewActions } from '../../_actions/applicationView.actions';
 
 interface SidebarNavProps {}
 
@@ -36,15 +37,11 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
 
 	const mobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-	const [mobileSidebar, setMobileSidebar] = useState(false);
+	const medium = useMediaQuery(theme.breakpoints.down('md'));
 
 	useEffect(() => {
-		setMobileSidebar(false);
+		dispatch(applicationViewActions.toggleSidebar(false));
 	}, [mobile]);
-
-	useEffect(() => {
-		setMobileSidebar(!mobileSidebar);
-	}, [isSidebarCollapsed]);
 
 	const SidebarContent = (
 		<React.Fragment>
@@ -91,14 +88,15 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
 	return (
 		<React.Fragment>
 			<Hidden mdUp>
-				<Modal onClose={() => setMobileSidebar(false)} open={mobileSidebar}>
+				<Modal
+					open={isSidebarCollapsed}
+					onClose={() => dispatch(applicationViewActions.toggleSidebar())}
+				>
 					<MobileSidebarContainer>{SidebarContent}</MobileSidebarContainer>
 				</Modal>
 			</Hidden>
 			<Hidden smDown>
-				<SidebarContainer open={isSidebarCollapsed}>
-					{SidebarContent}
-				</SidebarContainer>
+				<SidebarContainer open={!medium}>{SidebarContent}</SidebarContainer>
 			</Hidden>
 		</React.Fragment>
 	);

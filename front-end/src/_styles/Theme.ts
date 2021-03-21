@@ -6,8 +6,8 @@ export const theme = createMuiTheme({
 			xs: 0,
 			sm: 600,
 			md: 960,
-			lg: 1475,
-			xl: 1920,
+			lg: 1250,
+			xl: 1440,
 		},
 	},
 	typography: {
@@ -19,7 +19,7 @@ export const theme = createMuiTheme({
 		},
 		h1: {
 			fontSize: '2rem',
-      lineHeight: 1.3;
+      lineHeight: 1.3,
 			fontWeight: 500,
 		},
 		h2: {

@@ -8,6 +8,7 @@ import { COLORS, RD } from '../../../_styles/ResponsiveDesign';
 import useMedia from 'use-media';
 import { theme } from '../../../_styles/Theme';
 import { ReformatCurrencyValueMini } from '../../../_helpers';
+import { useMediaQuery } from '@material-ui/core';
 
 interface PortfolioLineChartProps {
 	setPV?: React.Dispatch<any>;
@@ -32,7 +33,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 	yAxis = false,
 	data,
 }) => {
-	const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
+	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
 	useEffect(() => {
 		data && drawChart();

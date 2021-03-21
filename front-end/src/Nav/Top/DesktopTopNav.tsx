@@ -10,6 +10,7 @@ import { IRootState } from '../../_reducers';
 import { InlineDiv } from '../../_styles';
 import {
 	Avatar,
+	Hidden,
 	ListItemAvatar,
 	MenuItem,
 	MenuList,
@@ -123,12 +124,14 @@ export const TopNav = () => {
 	);
 
 	return (
-		<NavContainer id='main-nav'>
-			<ToggleSidebar
-				onClick={() => dispatch(applicationViewActions.toggleSidebar())}
-			>
-				<Menu />
-			</ToggleSidebar>
+		<NavContainer id="main-nav">
+			<Hidden mdUp>
+				<ToggleSidebar
+					onClick={() => dispatch(applicationViewActions.toggleSidebar())}
+				>
+					<Menu />
+				</ToggleSidebar>
+			</Hidden>
 			<NavFlexSpacer />
 			<InlineDiv>
 				{DEV_SERVER == 'DEVELOPMENT' && (
