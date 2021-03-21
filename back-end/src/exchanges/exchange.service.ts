@@ -848,8 +848,8 @@ async function createMetaportfolioData(portfolioData: IPortfolioDataView[]) {
 	}
 
 	for (let [assetId, entry] of Object.entries(portfolioItemsDict)) {
-		entry.item.profitPercentage.all = (entry.item.profitTotal.all / entry.totalInvested.all) * 100;
-		entry.item.profitPercentage.h24 = (entry.item.profitTotal.h24 / entry.totalInvested.h24) * 100;
+		entry.item.profitPercentage.all = ((entry.item.profitTotal.all / entry.totalInvested.all) * 100) || 0;
+		entry.item.profitPercentage.h24 = ((entry.item.profitTotal.h24 / entry.totalInvested.h24) * 100) || 0;
 		if (entry.item.amount > 0) {
 			entry.item.currentPrice = entry.item.value.USD / entry.item.amount;
 		}
@@ -970,6 +970,10 @@ function getTwentyFourHourProfit(portfolioItem: IPortfolioItem, currentValue: nu
 	let newValueInvested = endingValueInvested - startingValueInvested;
 
 	profit = currentValue - value24HoursAgo + newValueReceived - newValueInvested;
-	let profitPercentage = (profit / (value24HoursAgo + newValueInvested)) * 100;
+	let profitPercentage = 0;
+	if (value24HoursAgo + newValueInvested != 0)
+	{
+		profitPercentage = (profit / (value24HoursAgo + newValueInvested)) * 100;
+	}
 	return [profit, profitPercentage];
 }

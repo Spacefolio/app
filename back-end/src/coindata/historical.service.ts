@@ -243,7 +243,11 @@ export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccou
   if (timeslices.length < 8) { throw "The exchange account does not have a full week of data."; }
 
   /// TODO: Check if we already have part of the hourly time series cached and only append new data
-  let cachedHourlyTimeSeries: ITimeslice[] = Object.values(exchangeAccount.hourlyTimeSeries);
+  let cachedHourlyTimeSeries: ITimeslice[] = [];
+  if (exchangeAccount.hourlyTimeSeries)
+  {
+    cachedHourlyTimeSeries = Object.values(exchangeAccount.hourlyTimeSeries);
+  }
   if (cachedHourlyTimeSeries && cachedHourlyTimeSeries.length > 0)
   {
     if (cachedHourlyTimeSeries[cachedHourlyTimeSeries.length - 1].start >= latestHour - ONE_HOUR)
