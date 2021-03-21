@@ -28,7 +28,11 @@ export const Application = () => {
 					<TopNav />
 					<ApplicationContainer>
 						<SidebarNav />
-						<Container disableGutters={!mobile} maxWidth={'xl'}>
+						<Container
+							disableGutters={!mobile}
+							maxWidth={'xl'}
+							style={{ overflow: 'hidden' }}
+						>
 							<Switch>
 								<Route path={`/portfolio`}>
 									<Portfolio />

@@ -5,7 +5,6 @@ import { FlexCard, SPACING } from '../../../_styles';
 
 export const SummaryWrapper = styled.div`
 	width: 100%;
-	height: 100%;
 	display: flex;
 	flex-direction: column;
 `;

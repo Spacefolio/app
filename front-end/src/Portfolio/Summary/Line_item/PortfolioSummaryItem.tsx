@@ -36,6 +36,7 @@ import {
 	OverviewPercent,
 	OverviewContainer,
 } from './_styles';
+import styled from 'styled-components';
 export interface IPortfolioSummaryItemView {
 	timeframe?: ITimeframe;
 	portfolioItem: IPortfolioDataView;
@@ -101,7 +102,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 			xs={12}
 			container
 		>
-			<Grid alignItems="center" justify="center" container xs={12} sm={2}>
+			<Grid alignItems="center" justify="center" container xs={12} sm>
 				<OverviewContainer fullWidth>
 					<Grid xs={12} item>
 						<OverviewValue align="center">
@@ -114,7 +115,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 				</OverviewContainer>
 			</Grid>
 
-			<Grid alignItems="center" justify="center" container xs={12} sm={2}>
+			<Grid alignItems="center" justify="center" container xs={12} sm>
 				<OverviewContainer fullWidth>
 					<Grid>
 						<OverviewValue align="center">
@@ -133,7 +134,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 				</OverviewContainer>
 			</Grid>
 
-			<Grid alignItems="center" justify="center" container xs={12} sm={2}>
+			<Grid alignItems="center" justify="center" container xs={12} sm>
 				<OverviewContainer fullWidth>
 					<Grid>
 						<OverviewValue align="center">
@@ -158,7 +159,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 
 	const Content = () => (
 		<React.Fragment>
-			<FlexCardContent>
+			<div style={{ padding: `${theme.spacing(1)} 0` }}>
 				<Grid xs={12} container>
 					<Grid
 						alignItems="center"
@@ -202,7 +203,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 						</Grid>
 					</Grid>
 				</Grid>
-			</FlexCardContent>
+			</div>
 		</React.Fragment>
 	);
 
