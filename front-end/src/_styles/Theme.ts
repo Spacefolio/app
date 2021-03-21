@@ -19,7 +19,7 @@ export const theme = createMuiTheme({
 		},
 		h1: {
 			fontSize: '2rem',
-      lineHeight: 1.3,
+			lineHeight: 1.3,
 			fontWeight: 500,
 		},
 		h2: {
@@ -62,15 +62,16 @@ export const theme = createMuiTheme({
 		},
 	},
 	overrides: {
+		MuiAvatar: {
+			colorDefault: { color: 'black', backgroundColor: 'transparent' },
+		},
 		MuiTabs: {
 			indicator: {
 				left: 0,
 				transition: 'none',
 			},
 		},
-		MuiContainer: {
-
-    },
+		MuiContainer: {},
 		MuiDrawer: {},
 		MuiTab: {
 			root: {

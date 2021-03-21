@@ -2,48 +2,28 @@ import {
 	Avatar,
 	Backdrop,
 	Button,
-	Chip,
 	CircularProgress,
 	ClickAwayListener,
-	Fab,
 	ListItemIcon,
-	Menu,
 	MenuItem,
 	MenuList,
 	Paper,
 	Popper,
 	Typography,
 } from '@material-ui/core';
-import {
-	AccountBalance,
-	AccountBalanceWallet,
-	Add,
-	ArrowDropDown,
-} from '@material-ui/icons';
+import { AccountBalanceWallet, Add, ArrowDropDown } from '@material-ui/icons';
 import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { IPortfolioItem } from '../../../../back-end/src/portfolios/portfolio.model';
-import { IPortfolioDataView, ITimeframe } from '../../../../types';
-import {
-	ActionButton,
-	FlexCard,
-	FlexCardContent,
-	FlexCardHeader,
-	FlexSpacer,
-	InlineDiv,
-} from '../../_styles';
-import { theme } from '../../_styles/Theme';
+import { AddIntegrationPopup } from '../../Integrations';
+import { applicationViewActions } from '../../_actions/applicationView.actions';
+import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
 import { IRootState } from '../../_reducers';
+import { FlexCardHeader, InlineDiv } from '../../_styles';
+import { theme } from '../../_styles/Theme';
+import { Assets } from '../Assets/Assets';
 import { PortfolioSummaryItem } from './Line_item/PortfolioSummaryItem';
 import { SummaryWrapper } from './Line_item/_styles';
-import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
-import { Assets } from '../Assets/Assets';
-import { Transactions } from '..';
-import { Dropdown } from '../../_components';
-import { AddIntegrationPopup, ListMyExchanges } from '../../Integrations';
-import { applicationViewActions } from '../../_actions/applicationView.actions';
-import { dispatch } from 'd3-dispatch';
 
 export const PortfolioSummary = () => {
 	const portfolioData = useSelector(

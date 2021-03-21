@@ -70,9 +70,9 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 
 	const [periodPercentChange, setPeriodPercentChange] = useState(0);
 
-	const [chartBalance, setChartBalance] = useState();
+	const [chartBalance, setChartBalance] = useState(false);
 
-	const [chartDate, setChartDate] = useState();
+	const [chartDate, setChartDate] = useState(false);
 
 	const calculateChartChange = (data: any) => {
 		const first = data[0].USD;
@@ -117,13 +117,13 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 		>
 			<Grid alignItems="center" justify="center" container xs={12} sm>
 				<OverviewContainer fullWidth>
-					<Grid xs={12} item>
-						<OverviewValue id="PVID" align="center">
+					<Grid xs={12} justify='center' alignItems='center' item container>
+						<OverviewValue id="PVID">
 							{chartBalance
 								? ''
 								: ReformatCurrencyValueMini(portfolioItem.portfolioTotal.USD)}
 						</OverviewValue>
-						<div id="PDID"> {chartDate ? '' : 'Now'}</div>
+						<div id="PDID"> {chartDate ? '' : ''}</div>
 					</Grid>
 					<Grid xs={12} item>
 						<OverviewLabel align="center">Total Balance</OverviewLabel>
@@ -197,6 +197,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 						<Grid item xs={12} ref={chartContainerRef}>
 							<PortfolioLineChart
 								xAxis={true}
+                timeframe={Tframe}
 								yAxis={false}
 								setPV={setChartBalance}
 								setDate={setChartDate}
