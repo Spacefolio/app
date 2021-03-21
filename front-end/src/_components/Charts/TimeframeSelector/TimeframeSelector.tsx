@@ -24,7 +24,7 @@ export const TimeframeSelectorDropdown: React.FC<TimeframeSelectorDDProps> = ({
 	Tframe,
 	setTimeframe,
 }) => {
-	const anchorRef = React.useRef<HTMLButtonElement>(null);
+	const anchorRef = React.useRef<any>(null);
 
 	const [open, setOpen] = useState(false);
 

@@ -24,7 +24,6 @@ import {
 } from '@material-ui/core';
 import { IRootState } from '../../_reducers';
 import { theme } from '../../_styles/Theme';
-import StickyBox from 'react-sticky-box/dist/esnext';
 
 interface SidebarNavProps {}
 
