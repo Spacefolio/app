@@ -1,51 +1,23 @@
-import {
-	Avatar,
-	Typography,
-	Grid,
-	Hidden,
-	useMediaQuery,
-	Card,
-	CircularProgress,
-} from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import { CircularProgress, Grid, useMediaQuery } from '@material-ui/core';
+import { ArrowDownward, ArrowUpward } from '@material-ui/icons';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { IPortfolioDataView, ITimeframe } from '../../../../../types';
-import { alertActions, portfolioActions } from '../../../_actions';
-import {
-	SimpleTimeSeries,
-	PortfolioPieChart,
-	PortfolioLineChart,
-} from '../../../_components';
-import { portfolioService } from '../../../_services';
-import {
-	FlexCard,
-	InlineDiv,
-	FlexCardContent,
-	FlexCardHeader,
-	FlexSpacer,
-} from '../../../_styles';
 import useDimensions from 'react-use-dimensions';
-import { AssetsMiniList } from '../../Assets/AssetsMiniList';
-import { SyncIcon } from '../../../_styles/IconStyles';
-import {
-	TimeframeSelectorBar,
-	TimeframeSelectorDropdown,
-} from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
-import { ProfitColorizer, ReformatCurrencyValueMini } from '../../../_helpers';
+import { IPortfolioDataView, ITimeframe } from '../../../../../types';
+import { alertActions } from '../../../_actions';
+import { PortfolioLineChart, PortfolioPieChart } from '../../../_components';
+import { TimeframeSelectorBar } from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
+import { ReformatCurrencyValueMini } from '../../../_helpers';
+import { portfolioService } from '../../../_services';
+import { FlexCard } from '../../../_styles';
 import { theme } from '../../../_styles/Theme';
+import { AssetsMiniList } from '../../Assets/AssetsMiniList';
 import {
-	ArrowDownward,
-	ArrowDropDown,
-	ArrowDropUp,
-	ArrowUpward,
-} from '@material-ui/icons';
-import {
-	OverviewValue,
+	OverviewContainer,
 	OverviewLabel,
 	OverviewPercent,
-	OverviewContainer,
+	OverviewValue,
 } from './_styles';
-import styled from 'styled-components';
 export interface IPortfolioSummaryItemView {
 	timeframe?: ITimeframe;
 	portfolioItem: IPortfolioDataView;
@@ -73,6 +45,10 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 	const [chartBalance, setChartBalance] = useState(false);
 
 	const [chartDate, setChartDate] = useState(false);
+
+	useEffect(() => {
+		console.log(chartDate);
+	}, [chartDate]);
 
 	const calculateChartChange = (data: any) => {
 		const first = data[0].USD;
@@ -117,13 +93,13 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 		>
 			<Grid alignItems="center" justify="center" container xs={12} sm>
 				<OverviewContainer fullWidth>
-					<Grid xs={12} justify='center' alignItems='center' item container>
+					<Grid xs={12} justify="center" alignItems="center" item container>
 						<OverviewValue id="PVID">
 							{chartBalance
 								? ''
 								: ReformatCurrencyValueMini(portfolioItem.portfolioTotal.USD)}
 						</OverviewValue>
-						<div id="PDID"> {chartDate ? '' : ''}</div>
+						<div id="PDID">{chartDate ? '' : chartDate}</div>
 					</Grid>
 					<Grid xs={12} item>
 						<OverviewLabel align="center">Total Balance</OverviewLabel>
@@ -197,7 +173,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 						<Grid item xs={12} ref={chartContainerRef}>
 							<PortfolioLineChart
 								xAxis={true}
-                timeframe={Tframe}
+								timeframe={Tframe}
 								yAxis={false}
 								setPV={setChartBalance}
 								setDate={setChartDate}

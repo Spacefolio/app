@@ -235,7 +235,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 					case '1W':
 						return moment(dateString).format('ddd h:mm');
 					case '24H':
-						return moment(dateString).format('h:mm');
+						return moment(dateString).format('h:mm A');
 				}
 			};
 
