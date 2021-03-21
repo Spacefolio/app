@@ -1,5 +1,6 @@
 import { ITimeframe } from '../../../types';
-import { RD, SPACING } from '../_styles/ResponsiveDesign';
+import { COLORS, RD, SPACING } from '../_styles/ResponsiveDesign';
+import { theme } from '../_styles/Theme';
 
 export const ReformatCurrencyValue = (value: number, currencyType: string) => {
 	if (value == 0) return 0;
@@ -25,7 +26,13 @@ export const ReformatCurrencyValueMini = (value: number) => {
 	return value.toLocaleString(undefined, {
 		maximumFractionDigits: 2,
 		minimumFractionDigits: 2,
+		style: 'currency',
+		currency: 'USD',
 	});
+};
+
+export const ProfitColorizer = (num: number) => {
+	return num < 0 ? theme.palette.error.main : theme.palette.secondary.main;
 };
 
 export const ReformatAmountValue = (value: number) => {

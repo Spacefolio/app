@@ -9,13 +9,19 @@ import {
 	ListItemIcon,
 	Menu,
 	MenuItem,
+	MenuList,
 	Paper,
 	Popper,
 	Typography,
 } from '@material-ui/core';
-import { Add, ArrowDropDown } from '@material-ui/icons';
+import {
+	AccountBalance,
+	AccountBalanceWallet,
+	Add,
+	ArrowDropDown,
+} from '@material-ui/icons';
 import React, { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { IPortfolioItem } from '../../../../back-end/src/portfolios/portfolio.model';
 import { IPortfolioDataView, ITimeframe } from '../../../../types';
@@ -35,7 +41,9 @@ import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
 import { Assets } from '../Assets/Assets';
 import { Transactions } from '..';
 import { Dropdown } from '../../_components';
-import { ListMyExchanges } from '../../Integrations';
+import { AddIntegrationPopup, ListMyExchanges } from '../../Integrations';
+import { applicationViewActions } from '../../_actions/applicationView.actions';
+import { dispatch } from 'd3-dispatch';
 
 export const PortfolioSummary = () => {
 	const portfolioData = useSelector(
@@ -48,7 +56,20 @@ export const PortfolioSummary = () => {
 
 	const anchorEl = useRef<any>(null);
 
+	const dispatch = useDispatch();
+
 	const [open, setOpen] = useState(false);
+
+	const handleClose = (event: React.MouseEvent<EventTarget>) => {
+		if (
+			anchorEl.current &&
+			anchorEl.current.contains(event.target as HTMLElement)
+		) {
+			return;
+		}
+
+		setOpen(false);
+	};
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -57,35 +78,77 @@ export const PortfolioSummary = () => {
 					<div>
 						<Button
 							ref={anchorEl}
-							startIcon={<Avatar src={filteredPortfolio.logoUrl} />}
+							startIcon={
+								filteredPortfolio.logoUrl ? (
+									<Avatar src={filteredPortfolio.logoUrl} />
+								) : (
+									<Avatar>
+										<AccountBalanceWallet />
+									</Avatar>
+								)
+							}
 							onClick={() => setOpen(!open)}
 						>
 							{filteredPortfolio.nickname}
 							<ArrowDropDown />
 						</Button>
 
-						<Menu
-							onClose={() => setOpen(false)}
-							anchorEl={anchorEl.current}
-							id={'integration-pop'}
+						<Popper
 							open={open}
+							anchorEl={anchorEl.current}
+							role={undefined}
+							transition
 						>
-							{portfolioData.map((item) => (
-								<MenuItem
-									onClick={() => {
-										setFilterId(item.id), setOpen(false);
-									}}
-								>
-									<ListItemIcon>
-										<Avatar src={item.logoUrl} />
-									</ListItemIcon>
-									<Typography>{item.nickname}</Typography>
-								</MenuItem>
-							))}
-						</Menu>
+							<Paper>
+								<ClickAwayListener onClickAway={handleClose}>
+									<MenuList
+										autoFocusItem={open}
+										id="menu-list-grow"
+										onClick={() => setOpen(false)}
+									>
+										{portfolioData.map((item) => (
+											<MenuItem
+												onClick={() => {
+													setFilterId(item.id), setOpen(false);
+												}}
+											>
+												<ListItemIcon>
+													{item.logoUrl ? (
+														<Avatar src={item.logoUrl} />
+													) : (
+														<Avatar>
+															<AccountBalanceWallet />
+														</Avatar>
+													)}
+												</ListItemIcon>
+												<Typography>{item.nickname}</Typography>
+											</MenuItem>
+										))}
+										<MenuItem
+											onClick={() =>
+												dispatch(
+													applicationViewActions.setModal(
+														true,
+														<AddIntegrationPopup />,
+														'Add Integration'
+													)
+												)
+											}
+										>
+											<ListItemIcon>
+												<Avatar>
+													<Add />
+												</Avatar>
+											</ListItemIcon>
+											<Typography>Add Portfolio</Typography>
+										</MenuItem>
+									</MenuList>
+								</ClickAwayListener>
+							</Paper>
+						</Popper>
 					</div>
 
-					{CardHeader('Summary', 'Your portfolio at a glance')}
+					{CardHeader('Overview', 'Your portfolio at a glance')}
 					<PortfolioSummaryItem
 						timeframe={'24H'}
 						portfolioItem={filteredPortfolio}

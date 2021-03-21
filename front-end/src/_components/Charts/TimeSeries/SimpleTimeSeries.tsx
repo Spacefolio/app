@@ -58,7 +58,6 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 							{
 								offset: true,
 								ticks: {
-									padding: -20,
 									maxRotation: 0,
 									minRotation: 0,
 									fontSize: 10,
@@ -76,7 +75,7 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 							{
 								ticks: {
 									fontSize: 10,
-
+									mirror: true,
 									autoSkipPadding: 80,
 									display: true,
 									callback: (value, index, values) => {
@@ -121,7 +120,9 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 						'there was a problem loading chart data'
 					)
 				) : (
-					<CircularProgress />
+					<div style={{ height: '100%', width: '100%' }}>
+						<CircularProgress />
+					</div>
 				)}
 			</div>
 		</React.Fragment>

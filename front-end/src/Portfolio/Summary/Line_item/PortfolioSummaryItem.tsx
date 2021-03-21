@@ -1,4 +1,12 @@
-import { Avatar, Typography, Grid, Hidden } from '@material-ui/core';
+import {
+	Avatar,
+	Typography,
+	Grid,
+	Hidden,
+	useMediaQuery,
+	Card,
+	CircularProgress,
+} from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { IPortfolioDataView, ITimeframe } from '../../../../../types';
@@ -19,23 +27,50 @@ import {
 	TimeframeSelectorBar,
 	TimeframeSelectorDropdown,
 } from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
+import { ProfitColorizer, ReformatCurrencyValueMini } from '../../../_helpers';
+import { theme } from '../../../_styles/Theme';
+import { ArrowDropDown, ArrowDropUp, ArrowUpward } from '@material-ui/icons';
+import {
+	OverviewValue,
+	OverviewLabel,
+	OverviewPercent,
+	OverviewContainer,
+} from './_styles';
+import styled from 'styled-components';
 export interface IPortfolioSummaryItemView {
-  timeframe?: ITimeframe;
+	timeframe?: ITimeframe;
 	portfolioItem: IPortfolioDataView;
 }
 
 export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 	timeframe,
-  portfolioItem,
+	portfolioItem,
 	...props
 }) => {
+	const mobile = useMediaQuery(theme.breakpoints.up('md'));
+
 	const dispatch = useDispatch();
 
 	const [chartData, setChartData] = useState(null);
 
 	const [chartContainerRef, { width }] = useDimensions();
 
-	const [Tframe, setTimeframe] = useState<ITimeframe>(timeframe);
+	const [Tframe, setTimeframe] = useState<ITimeframe>(timeframe || 'ALL');
+
+	const [periodValueChange, setPeriodValueChange] = useState(0);
+
+	const [periodPercentChange, setPeriodPercentChange] = useState(0);
+
+	const calculateChartChange = (data: any) => {
+		const first = data[0].USD;
+		const last = data[data.length - 1].USD;
+
+		const diff = last - first;
+
+		setPeriodValueChange(diff);
+
+		setPeriodPercentChange((diff / first) * 100);
+	};
 
 	useEffect(() => {
 		setChartData(null);
@@ -43,6 +78,7 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 			portfolioService
 				.getPortfolioChartData(Tframe, portfolioItem.id)
 				.then((res) => {
+					calculateChartChange(res);
 					setChartData(res);
 				})
 				.catch((error: Error) => {
@@ -60,50 +96,98 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 		'rgb(253, 218, 223)',
 	];
 
+	const Balance = () => (
+		<Grid
+			style={{ gap: theme.spacing(2), marginBottom: theme.spacing(2) }}
+			xs={12}
+			container
+		>
+			<Grid alignItems="center" justify="center" container xs={12} sm>
+				<OverviewContainer fullWidth>
+					<Grid xs={12} item>
+						<OverviewValue align="center">
+							{ReformatCurrencyValueMini(portfolioItem.portfolioTotal.USD)}
+						</OverviewValue>
+					</Grid>
+					<Grid xs={12} item>
+						<OverviewLabel align="center">Total Balance</OverviewLabel>
+					</Grid>
+				</OverviewContainer>
+			</Grid>
+
+			<Grid alignItems="center" justify="center" container xs={12} sm>
+				<OverviewContainer fullWidth>
+					<Grid>
+						<OverviewValue align="center">
+							{ReformatCurrencyValueMini(portfolioItem.profitTotal.USD)}
+						</OverviewValue>
+					</Grid>
+					<Grid alignItems="center" justify="center" xs={12} container item>
+						<OverviewLabel align="center">Total Profit / Loss </OverviewLabel>
+						<OverviewPercent
+							align="center"
+							value={portfolioItem.profitPercentage}
+						>
+							({portfolioItem.profitPercentage.toFixed(2)})%
+						</OverviewPercent>
+					</Grid>
+				</OverviewContainer>
+			</Grid>
+
+			<Grid alignItems="center" justify="center" container xs={12} sm>
+				<OverviewContainer fullWidth>
+					<Grid>
+						<OverviewValue align="center">
+							{ReformatCurrencyValueMini(periodValueChange)}
+						</OverviewValue>
+					</Grid>
+					<Grid alignItems="center" justify="center" xs={12} container item>
+						<OverviewLabel align="center">{Tframe + ' Change'}</OverviewLabel>
+						<OverviewPercent align="center" value={periodPercentChange}>
+							(
+							{periodPercentChange.toLocaleString(undefined, {
+								minimumFractionDigits: 0,
+								maximumFractionDigits: 2,
+							})}
+							)%
+						</OverviewPercent>
+					</Grid>
+				</OverviewContainer>
+			</Grid>
+		</Grid>
+	);
+
 	const Content = () => (
 		<React.Fragment>
-
-			<FlexCardContent style={{ maxHeight: '80%' }}>
+			<div style={{ padding: `${theme.spacing(1)} 0` }}>
 				<Grid xs={12} container>
-					<Grid justify="center" alignItems="center" xs={12} container>
-						<Typography
-							style={{
-								fontWeight: 700,
-								fontSize: '2.125rem',
-								lineHeight: '2.5rem',
-							}}
-						>
-							{portfolioItem.portfolioTotal.USD.toFixed(2)} USD
-						</Typography>
-						<SyncIcon
-							onClick={() =>
-								dispatch(portfolioActions.refresh(portfolioItem.id, true))
-							}
-						/>
-					</Grid>
 					<Grid
-						ref={chartContainerRef}
 						alignItems="center"
-						justify="center"
+						justify="space-evenly"
 						xs={12}
-						sm={4}
+						sm={8}
 						container
 					>
-						<Grid ref={chartContainerRef} xs>
-							<TimeframeSelectorBar
-								Tframe={Tframe}
-								setTimeframe={setTimeframe}
-							/>
+						<Grid item xs={12} ref={chartContainerRef}>
 							<SimpleTimeSeries
-								showX={true}
+								showX={false}
 								showY={true}
 								id={portfolioItem.nickname.replace(/\s/g, '') + 'chart'}
 								data={chartData}
 							/>
 						</Grid>
+						<TimeframeSelectorBar Tframe={Tframe} setTimeframe={setTimeframe} />
 					</Grid>
-					<Hidden xsDown>
-						<Grid container alignItems="center" justify="center" sm={4}>
+
+					<Grid
+						container
+						wrap="nowrap"
+						alignItems="center"
+						justify="space-evenly"
+						xs={12}
+						sm={4}
+					>
+						<Grid>
 							<PortfolioPieChart
 								colors={testColors}
 								data={portfolioItem.portfolioItems}
@@ -111,21 +195,75 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 								id={portfolioItem.nickname.replace(/\s/g, '') + 'pie'}
 							/>
 						</Grid>
-					</Hidden>
-					<Grid alignItems="center" justify="center" xs={12} sm={4} container>
-						<AssetsMiniList
-							colors={testColors}
-							portfolioItems={portfolioItem.portfolioItems}
-						/>
+						<Grid>
+							<AssetsMiniList
+								colors={testColors}
+								portfolioItems={portfolioItem.portfolioItems}
+							/>
+						</Grid>
 					</Grid>
 				</Grid>
-			</FlexCardContent>
+			</div>
 		</React.Fragment>
 	);
 
 	return (
-		<FlexCard {...props} fullWidth>
-			{portfolioItem && Content()}
-		</FlexCard>
+		<React.Fragment>
+			{portfolioItem ? (
+				<React.Fragment>
+					{Balance()}
+					<FlexCard {...props} fullWidth disableGutters={!mobile}>
+						{Content()}
+					</FlexCard>
+				</React.Fragment>
+			) : (
+				<CircularProgress />
+			)}
+		</React.Fragment>
 	);
 };
+
+{
+	/* <Grid container alignItems="center" justify="center" xs={12}>
+								<Typography
+									align="center"
+									style={{ fontSize: 10 }}
+									variant="button"
+									gutterBottom
+									color="textSecondary"
+								>
+									Profit/Loss
+								</Typography>
+							</Grid>
+
+							<Typography
+								align="center"
+								variant="h4"
+								gutterBottom
+								style={{
+									color: ProfitColorizer(portfolioItem.profitPercentage),
+									fontSize: '1.6rem',
+									fontWeight: 500,
+								}}
+							>
+								{portfolioItem.profitPercentage > 0 ? '+' : ''}
+								{portfolioItem.profitPercentage.toFixed(2)}%
+							</Typography>
+
+							<Typography align="center" variant="body2" gutterBottom>
+								({ReformatCurrencyValueMini(portfolioItem.profitTotal.USD)})
+							</Typography>
+
+
+
+							{/* <Typography
+								align="center"
+								style={{
+									fontWeight: 700,
+									fontSize: '2.125rem',
+									lineHeight: '2.5rem',
+								}}
+							>
+								{portfolioItem.portfolioTotal.USD.toFixed(2)} USD
+							</Typography> */
+}

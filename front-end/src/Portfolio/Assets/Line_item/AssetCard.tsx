@@ -16,6 +16,7 @@ import { COLORS, SPACING } from '../../../_styles/ResponsiveDesign';
 import { theme } from '../../../_styles/Theme';
 import { SimpleTimeSeries } from '../../../_components';
 import { TimeframeSelectorToggle } from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
+import { ReformatCurrencyValueMini } from '../../../_helpers';
 
 interface HoldingItemProps {
 	portfolioItem: IPortfolioItemView;
@@ -159,7 +160,7 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 				<Grid xs={12} justify="center" container>
 					<Grid item>
 						<Typography variant="body2" gutterBottom>
-							{TframeItem(profitTotal).toFixed(2)} USD
+							{ReformatCurrencyValueMini(TframeItem(profitTotal))} USD
 						</Typography>
 					</Grid>
 				</Grid>

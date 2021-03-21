@@ -123,7 +123,7 @@ export const TopNav = () => {
 	);
 
 	return (
-		<NavContainer>
+		<NavContainer id='main-nav'>
 			<ToggleSidebar
 				onClick={() => dispatch(applicationViewActions.toggleSidebar())}
 			>

@@ -12,9 +12,9 @@ export const TimeFrameSelectorContainer = styled.div`
 interface ITimeFrameItemProps {
 	selected: boolean;
 }
-export const TimeframeItem = styled(ClickableDiv)<ITimeFrameItemProps>`
+export const TimeframeItem = styled.div<ITimeFrameItemProps>`
 	width: 100%;
-	padding: 0 0 20px 0;
+	padding: 8px;
 	text-align: center;
 	color: ${theme.palette.text.secondary};
 	${(props) =>

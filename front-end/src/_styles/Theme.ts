@@ -11,6 +11,8 @@ export const theme = createMuiTheme({
 		},
 	},
 	typography: {
+		fontFamily:
+			'-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
 		subtitle2: {
 			fontSize: '1rem',
 			opacity: 0.7,
@@ -21,13 +23,13 @@ export const theme = createMuiTheme({
 			lineHeight: '1rem',
 			fontWeight: 500,
 		},
-    h3: {
+		h3: {
 			fontSize: '1.25rem',
 			letterSpacing: '.02em',
 			lineHeight: '1rem',
 			fontWeight: 500,
 		},
-    h4: {
+		h4: {
 			fontSize: '1.25rem',
 			letterSpacing: '.02em',
 			lineHeight: '1rem',
@@ -82,7 +84,7 @@ export const theme = createMuiTheme({
 		},
 		MuiButton: {
 			root: { color: 'black' },
-			label: { cursor: 'pointer'},
+			label: { cursor: 'pointer' },
 		},
 	},
 });

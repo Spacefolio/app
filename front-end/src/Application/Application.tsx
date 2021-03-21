@@ -25,10 +25,15 @@ export const Application = () => {
 			<React.Fragment>
 				<Modal />
 				<BodyWrapper>
-					<TopNav />
+					<TopNav  />
 					<ApplicationContainer>
 						<SidebarNav />
-						<Container disableGutters={!mobile} maxWidth={'xl'} fixed={mobile}>
+						<Container
+            id="content-container"
+							disableGutters={!mobile}
+							maxWidth={'xl'}
+							style={{ overflow: 'hidden' }}
+						>
 							<Switch>
 								<Route path={`/portfolio`}>
 									<Portfolio />
