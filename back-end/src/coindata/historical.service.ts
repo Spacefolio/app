@@ -194,7 +194,7 @@ export async function getLatestHourlyTimeSeries(exchangeAccount: IExchangeAccoun
   let timeseries: ITimeslice[] = Object.values(exchangeAccount.hourlyTimeSeries);
   let latestHour = getLatestHour();
   // If this is already cached, we can just return it as is.
-  if (timeseries.length > 0 && timeseries[timeseries.length - 1].start >= latestHour)
+  if (timeseries.length > 0 && timeseries[timeseries.length - 1].start >= latestHour - ONE_HOUR)
   {
     return timeseries.map((entry) => ({
       T: entry.start,
@@ -208,18 +208,20 @@ export async function getLatestHourlyTimeSeries(exchangeAccount: IExchangeAccoun
   return loadLatestHourlyTimeSeries(exchangeAccount, symbols, timeslices);
 }
 
-function getLatestHour() {
+export function getLatestHour() {
   let now = Date.now();
   let latestHour = now - (now % ONE_HOUR);
   return latestHour;
 }
 
-export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccountDocument, symbols: string[], timeslices: ITimeslice[]): Promise<IPortfolioLineChartItem[]>
+export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccountDocument, symbols: string[], timeslices: ITimeslice[], saveDocument: boolean = true): Promise<IPortfolioLineChartItem[]>
 {
   let hourlySlices: { [key: number]: ITimeslice } = {};
   let lastAmount: { [key: string]: number } = {};
   let lastPrice: { [key: string]: number } = {};
   let prices: { [key: string]: { [key: number]: IHourlyPrice } } = {};
+  let cachedHours = 0;
+  let daysCached = 0;
   const latestHour = getLatestHour();
   const startOfToday = latestHour - (latestHour % ONE_DAY)
   const oneWeekAgo = latestHour - ONE_WEEK; // subtract 7 days (in milliseconds) to get one week ago
@@ -240,32 +242,65 @@ export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccou
   }
   if (timeslices.length < 8) { throw "The exchange account does not have a full week of data."; }
 
-  if (timeslices.length >= 9)
-  { // initialize the holdings amounts and prices from 8 days ago
-    for (let [key, value] of Object.entries(timeslices[timeslices.length - 9].holdings)) {
-			lastAmount[key] = value.amount;
-			lastPrice[key] = value.price;
-		}
-  }
-
   /// TODO: Check if we already have part of the hourly time series cached and only append new data
-  /*
   let cachedHourlyTimeSeries: ITimeslice[] = Object.values(exchangeAccount.hourlyTimeSeries);
-  if (cachedHourlyTimeSeries[cachedHourlyTimeSeries.length - 1].start == latestHour)
+  if (cachedHourlyTimeSeries && cachedHourlyTimeSeries.length > 0)
   {
-    return cachedHourlyTimeSeries;
-  }
-  */
+    if (cachedHourlyTimeSeries[cachedHourlyTimeSeries.length - 1].start >= latestHour - ONE_HOUR)
+    {
+      return cachedHourlyTimeSeries.map((timeslice) => {
+        return { T: timeslice.start, USD: timeslice.value };
+      });
+    }
 
-  for (let i = timeslices.length - 8; i < timeslices.length; i++)
+    let lastHourCached = cachedHourlyTimeSeries[cachedHourlyTimeSeries.length - 1].start;
+    let firstHourNeeded = oneWeekAgo - ONE_HOUR
+    if (lastHourCached >= firstHourNeeded) // is the cached data within our range of required data?
+    {
+      // start from the last index and go back however many hours are cached that we require
+      let startIndex = (cachedHourlyTimeSeries.length) - ((lastHourCached - firstHourNeeded) / ONE_HOUR);
+      
+      for (let i = startIndex; i < cachedHourlyTimeSeries.length; i++) // save the relevant cached hourly slices
+      {
+        hourlySlices[cachedHourlyTimeSeries[i].start] = cachedHourlyTimeSeries[i];
+        cachedHours++;
+      }
+
+      daysCached = ~~(((lastHourCached + ONE_HOUR) - (timeslices[timeslices.length - 8].start)) / ONE_DAY); // integer division to get days cached
+      
+      // initialize the holdings amounts and prices from the last hour cached
+      for (let [key, value] of Object.entries(hourlySlices[lastHourCached].holdings))
+      {
+        lastAmount[key] = value.amount;
+        lastPrice[key] = value.price;
+      }
+    }
+  }
+  else if (timeslices.length >= 9)
+  {
+    // initialize the holdings amounts and prices from 8 days ago
+    for (let [key, value] of Object.entries(timeslices[timeslices.length - 9].holdings))
+    {
+        lastAmount[key] = value.amount;
+        lastPrice[key] = value.price;
+    }
+  }
+
+  for (let i = timeslices.length - 8 + daysCached; i < timeslices.length; i++)
   {
     let dailySlice = timeslices[i];
     let startOfDay = dailySlice.start;
     let endOfDay = Math.min(startOfDay + ONE_DAY, latestHour);
     let holdings = Object.values(dailySlice.holdings);
     let currentSnap: { [key: string]: number } = {};
+    let firstPass = false;
 
-    if (i == 0) { startOfDay = oneWeekAgo-ONE_HOUR; }
+    // set first day's start to the last cached hour
+    if (i == timeslices.length - 8 + daysCached)
+    {
+      startOfDay = oneWeekAgo-ONE_HOUR + (cachedHours * ONE_HOUR);
+      if (cachedHours > 0) { firstPass = true; }
+    }
     
     // initialize the current snapshots index for each holding to 0 for each daily slice
     holdings.forEach((holding) => {
@@ -313,9 +348,13 @@ export async function loadLatestHourlyTimeSeries(exchangeAccount: IExchangeAccou
         hourlySlice.value += value;
       }
 
-      hourlySlices[hour] = hourlySlice;
+      if (firstPass){ firstPass = false; }
+      else { hourlySlices[hour] = hourlySlice; }
     }
   }
+
+  exchangeAccount.hourlyTimeSeries = hourlySlices;
+  if (saveDocument) { const savedExchangeAccount = await exchangeAccount.save(); }
 
   return Object.entries(hourlySlices).map((value: [string, ITimeslice]) => {
     return { T: value[1].start, USD: value[1].value };
