@@ -8,9 +8,11 @@ import { randNum } from '../../exchangeDataDetailed';
 import { ccxtService } from '../_helpers/ccxt.service';
 import { IOrder } from '../transactions/order.model';
 import { getConversionRate, saveTransactionViewItems } from '../transactions/transactionView';
-import { extractHoldingsSymbolsFromTimeslices, fiat, getHistoricalDataRange, getLatestHour, getLatestHourlyTimeSeries, IDailyPrices, loadLatestHourlyTimeSeries, ONE_DAY } from '../coindata/historical.service';
+import { extractHoldingsIdsFromTimeslices, fiat, getHistoricalDataRange, getLatestHour, getLatestHourlyTimeSeries, IDailyPrices, loadLatestHourlyTimeSeries, ONE_DAY } from '../coindata/historical.service';
 import { coindataService } from '../coindata/coindata.service';
 import { debug } from '../_helpers/logs';
+import { isIfStatement } from 'typescript';
+import { ICoinMarketData } from '../coindata/coindata.model';
 
 export const exchangeService = {
 	getAll,
@@ -437,14 +439,33 @@ async function createPortfolioItems(
 			amountSold = last.totalAmountSold;
 			amountBought = last.totalAmountBought;
 		}
-
+		
 		let logoUrl = await getLogo(balances[i].symbol);
+		let assetId, symbol, name = balances[i].symbol;
+		let coinData: ICoinMarketData;
+		
+		if (fiat(balances[i].symbol))
+		{
+			assetId = 'USD';
+			symbol = 'USD';
+			name = 'US Dollar';
+		}
+		else
+		{
+			coinData = await coindataService.getCoinMarketData(balances[i].symbol);
+			if (coinData)
+			{
+				assetId = coinData.id;
+				symbol = coinData.symbol.toUpperCase();
+				name = coinData.name;
+			}
+		}
 
 		const item: IPortfolioItem = {
 			asset: {
-				assetId: balances[i].symbol,
-				symbol: balances[i].symbol,
-				name: balances[i].symbol,
+				assetId,
+				symbol,
+				name,
 				logoUrl,
 			},
 			balance: balances[i].balance,
@@ -547,7 +568,7 @@ async function syncAllExchangesData(userId: string) {
 	// validate
 	if (!user) throw 'User not found';
 
-	let portfolioData: IPortfolioDataView[] = [];
+	let portfoliosData: IPortfolioDataView[] = [];
 
 	for (var i = 0; i < user.linkedExchanges.length; i++) {
 		const exchangeDocument = await ExchangeAccount.findById(user.linkedExchanges[i]);
@@ -559,12 +580,12 @@ async function syncAllExchangesData(userId: string) {
 			throw err;
 		});
 
-		portfolioData.push(portfolioDataItem);
+		portfoliosData.push(portfolioDataItem);
 	}
 
-  const metabitch = await createMetaportfolioData(portfolioData);
+  const metaportfolioData = await createMetaportfolioData(portfoliosData);
 
-	return [metabitch, ...portfolioData];
+	return [metaportfolioData, ...portfoliosData];
 }
 
 async function syncExchangeData(exchangeId: string, exchange: Exchange) {
@@ -602,7 +623,7 @@ async function syncExchangeData(exchangeId: string, exchange: Exchange) {
 	lastItem = new Date();
 
 	const timeslices: ITimeslice[] = Object.values(exchangeAccountDocument.timeslices);
-	const symbols = extractHoldingsSymbolsFromTimeslices(timeslices);
+	const symbols = extractHoldingsIdsFromTimeslices(timeslices);
 	await loadLatestHourlyTimeSeries(exchangeAccountDocument, symbols, timeslices, false);
 	debug(`Create hourly timeseries data: ${Date.now() - lastItem.valueOf()}`);
 	lastItem = new Date();

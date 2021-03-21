@@ -1,12 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 
 export interface IHistoricalDataDocument extends mongoose.Document {
-  symbol: string;
+  assetId: string;
   prices: Array<IDailyPrice>;
 }
 
 export interface IHourlyDataDocument extends mongoose.Document {
-  symbol: string;
+  assetId: string;
   prices: Array<IHourlyPrice>;
 }
 
@@ -59,12 +59,12 @@ export interface IHourlyPrice
 }
 
 export interface IHistoricalData {
-  symbol: string;
+  assetId: string;
   prices: Array<IDailyPrice>;
 }
 
 export interface IHourlyData {
-  symbol: string;
+  assetId: string;
   prices: Array<IHourlyPrice>;
 }
 
@@ -109,7 +109,7 @@ export const dailyPriceSchema = new mongoose.Schema({
 });
 
 const historicalDataSchema = new mongoose.Schema({
-  symbol: String,
+  assetId: String,
   prices: [dailyPriceSchema]
 });
 
@@ -123,7 +123,7 @@ historicalDataSchema.set("toJSON", {
 });
 
 const hourlyDataSchema = new mongoose.Schema({
-  symbol: String,
+  assetId: String,
   prices: [hourlyPriceSchema]
 });
 
