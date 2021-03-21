@@ -25,13 +25,15 @@ export const AssetsMiniList: React.FC<AssetsMiniListProps> = ({
 			}}
 		>
 			{portfolioItems ? (
-				sortHoldings.map((pItem: IPortfolioItemView, index) => (
-					<AssetsMiniItem
-						key={index}
-						color={colors[index]}
-						portfolioItem={pItem}
-					/>
-				))
+				sortHoldings
+					.filter((item) => item.value.USD > 0)
+					.map((pItem: IPortfolioItemView, index) => (
+						<AssetsMiniItem
+							key={index}
+							color={colors[index]}
+							portfolioItem={pItem}
+						/>
+					))
 			) : (
 				<ViewLoading />
 			)}

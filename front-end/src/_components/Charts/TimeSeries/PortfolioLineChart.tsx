@@ -7,6 +7,7 @@ import { ViewLoading } from '../..';
 import { COLORS, RD } from '../../../_styles/ResponsiveDesign';
 import useMedia from 'use-media';
 import { theme } from '../../../_styles/Theme';
+import { ReformatCurrencyValueMini } from '../../../_helpers';
 
 interface PortfolioLineChartProps {
 	setPV?: React.Dispatch<any>;
@@ -34,7 +35,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 	const isMobile = useMedia({ maxWidth: RD.breakpointsmartphone });
 
 	useEffect(() => {
-		data && drawBasicChart();
+		data && drawChart();
 	}, [data, width, height]);
 
 	const margin = {
@@ -52,7 +53,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 		USD: number;
 	}
 
-	const drawBasicChart = () => {
+	const drawChart = () => {
 		const yMinValue: number = d3.min(data, (d: IChartPoint) => d.USD);
 		const yMaxValue: number = d3.max(data, (d: any) => d.USD);
 		const xMinValue: number = d3.min(data, (d: any) => d.T);
@@ -71,18 +72,18 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 			.append('g')
 			.attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-		//Append the gradient container
-		var defs = svg.append('defs');
+		// //Append the gradient container
+		// var defs = svg.append('defs');
 
-		//append the glow filter
-		var filter = defs.append('filter').attr('id', 'glow');
-		filter
-			.append('feGaussianBlur')
-			.attr('stdDeviation', '1.5')
-			.attr('result', 'coloredBlur');
-		var feMerge = filter.append('feMerge');
-		feMerge.append('feMergeNode').attr('in', 'coloredBlur');
-		feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+		// //append the glow filter
+		// var filter = defs.append('filter').attr('id', 'glow');
+		// filter
+		// 	.append('feGaussianBlur')
+		// 	.attr('stdDeviation', '1.5')
+		// 	.attr('result', 'coloredBlur');
+		// var feMerge = filter.append('feMerge');
+		// feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+		// feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
 		//scale x axis time values according to width provided
 		const xScale = d3
@@ -96,26 +97,26 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 			.range([chartHeight, 0])
 			.domain([yMinValue, yMaxValue]);
 
-		var areaGradient = svg
-			.append('defs')
-			.append('linearGradient')
-			.attr('id', 'areaGradient')
-			.attr('x1', '0%')
-			.attr('y1', '0%')
-			.attr('x2', '0%')
-			.attr('y2', '100%');
+		// var areaGradient = svg
+		// 	.append('defs')
+		// 	.append('linearGradient')
+		// 	.attr('id', 'areaGradient')
+		// 	.attr('x1', '0%')
+		// 	.attr('y1', '0%')
+		// 	.attr('x2', '0%')
+		// 	.attr('y2', '100%');
 
-		areaGradient
-			.append('stop')
-			.attr('offset', '0%')
-			.attr('stop-color', theme.palette.secondary.main)
-			.attr('stop-opacity', 0.6);
+		// areaGradient
+		// 	.append('stop')
+		// 	.attr('offset', '0%')
+		// 	.attr('stop-color', theme.palette.secondary.main)
+		// 	.attr('stop-opacity', 0.6);
 
-		areaGradient
-			.append('stop')
-			.attr('offset', '80%')
-			.attr('stop-color', 'white')
-			.attr('stop-opacity', 0);
+		// areaGradient
+		// 	.append('stop')
+		// 	.attr('offset', '80%')
+		// 	.attr('stop-color', 'white')
+		// 	.attr('stop-opacity', 0);
 
 		//create xAxis component
 		const styledXAxis = d3
@@ -202,15 +203,15 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 		focus
 			.append('line')
 			.attr('class', 'x')
-			.style('opacity', 1)
+			.style('opacity', 0.5)
 			.attr('y1', -height * 2)
 			.attr('y2', height * 2);
 
 		const focusCircle = focus
 			.append('circle')
-			.attr('r', 5)
+			.attr('r', 3)
 			.attr('class', 'focus-circle')
-			.style('opacity', 1);
+			.style('opacity', 0.8);
 
 		function handleMove(xPos: number) {
 			const bisect = d3.bisector((d: any) => d.T).center;
@@ -237,8 +238,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 				}
 			};
 
-			// d3.select("#PVID").html(d0.USD.toFixed(2));
-			// d3.select("#PDID").html(valueDate);
+			d3.select('#PVID').html(ReformatCurrencyValueMini(d0.USD));
+			d3.select('#PDID').html(valueDate());
 		}
 
 		function mousemove(event: MouseEvent) {
@@ -258,8 +259,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 
 		function mouseover(event: any) {
 			focus.style('display', null);
-			// setDate(true);
-			// setPV(true);
+			setDate(true);
+			setPV(true);
 		}
 
 		function mouseout(event: any) {
@@ -268,8 +269,8 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 			}
 			event.preventDefault();
 			focus.style('display', 'none');
-			// setDate(false);
-			// setPV(false);
+			setDate(false);
+			setPV(false);
 		}
 
 		//creates box to listen for mouse inputs
@@ -302,9 +303,10 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 				margin: 0,
 				width: `${width}px`,
 				height: `${height}px`,
+				touchAction: 'none',
 			}}
 		>
-			{!(data.length > 0) ? <ViewLoading /> : <div id={`${id}`}></div>}
+			{!data ? <ViewLoading /> : <div id={`${id}`}></div>}
 		</div>
 	);
 };

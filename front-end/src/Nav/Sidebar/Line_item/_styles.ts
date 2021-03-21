@@ -38,7 +38,7 @@ export const SidebarTab = styled(BaseDiv)<ITabContentContainerProps>`
 		!props.Branding &&
 		`box-shadow: inset 3px 0 0 0 ${theme.palette.primary.main};`}
 	* {
-		fill: ${theme.palette.text.disabled};
+		fill: ${theme.palette.text.primary};
 		${(props) =>
 			props.isActiveTab &&
 			`fill: ${theme.palette.primary.main}; color: ${theme.palette.primary.main};`}
@@ -46,10 +46,6 @@ export const SidebarTab = styled(BaseDiv)<ITabContentContainerProps>`
 	${(props) =>
 		props.Branding && `height: ${parseInt(SPACING.sidebarHeight) * 2}px;`}
 	&:hover {
-		* {
-			fill: ${theme.palette.primary.main};
-			color: ${theme.palette.primary.main};
-		}
 		background: ${theme.palette.grey[100]};
 	}
 `;

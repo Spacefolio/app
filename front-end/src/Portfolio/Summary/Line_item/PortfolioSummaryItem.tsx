@@ -11,7 +11,11 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { IPortfolioDataView, ITimeframe } from '../../../../../types';
 import { alertActions, portfolioActions } from '../../../_actions';
-import { SimpleTimeSeries, PortfolioPieChart } from '../../../_components';
+import {
+	SimpleTimeSeries,
+	PortfolioPieChart,
+	PortfolioLineChart,
+} from '../../../_components';
 import { portfolioService } from '../../../_services';
 import {
 	FlexCard,
@@ -29,7 +33,12 @@ import {
 } from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
 import { ProfitColorizer, ReformatCurrencyValueMini } from '../../../_helpers';
 import { theme } from '../../../_styles/Theme';
-import { ArrowDropDown, ArrowDropUp, ArrowUpward } from '@material-ui/icons';
+import {
+	ArrowDownward,
+	ArrowDropDown,
+	ArrowDropUp,
+	ArrowUpward,
+} from '@material-ui/icons';
 import {
 	OverviewValue,
 	OverviewLabel,
@@ -60,6 +69,10 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 	const [periodValueChange, setPeriodValueChange] = useState(0);
 
 	const [periodPercentChange, setPeriodPercentChange] = useState(0);
+
+	const [chartBalance, setChartBalance] = useState();
+
+	const [chartDate, setChartDate] = useState();
 
 	const calculateChartChange = (data: any) => {
 		const first = data[0].USD;
@@ -105,9 +118,12 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 			<Grid alignItems="center" justify="center" container xs={12} sm>
 				<OverviewContainer fullWidth>
 					<Grid xs={12} item>
-						<OverviewValue align="center">
-							{ReformatCurrencyValueMini(portfolioItem.portfolioTotal.USD)}
+						<OverviewValue id="PVID" align="center">
+							{chartBalance
+								? ''
+								: ReformatCurrencyValueMini(portfolioItem.portfolioTotal.USD)}
 						</OverviewValue>
+						<div id="PDID"> {chartDate ? '' : 'Now'}</div>
 					</Grid>
 					<Grid xs={12} item>
 						<OverviewLabel align="center">Total Balance</OverviewLabel>
@@ -116,41 +132,51 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 			</Grid>
 
 			<Grid alignItems="center" justify="center" container xs={12} sm>
-				<OverviewContainer fullWidth>
-					<Grid>
-						<OverviewValue align="center">
-							{ReformatCurrencyValueMini(portfolioItem.profitTotal.USD)}
-						</OverviewValue>
+				<OverviewContainer flexDirection="row" fullWidth>
+					<Grid xs={1} container justify="center" alignItems="center">
+						{ProfitArrow(portfolioItem.portfolioTotal.USD)}
 					</Grid>
-					<Grid alignItems="center" justify="center" xs={12} container item>
-						<OverviewLabel align="center">Total Profit / Loss </OverviewLabel>
-						<OverviewPercent
-							align="center"
-							value={portfolioItem.profitPercentage}
-						>
-							({portfolioItem.profitPercentage.toFixed(2)})%
-						</OverviewPercent>
+					<Grid xs={11}>
+						<Grid>
+							<OverviewValue align="center">
+								{ReformatCurrencyValueMini(portfolioItem.profitTotal.USD)}
+							</OverviewValue>
+						</Grid>
+						<Grid alignItems="center" justify="center" xs={12} container item>
+							<OverviewLabel align="center">Total Profit/Loss </OverviewLabel>
+							<OverviewPercent
+								align="center"
+								value={portfolioItem.profitPercentage}
+							>
+								({portfolioItem.profitPercentage.toFixed(2)})%
+							</OverviewPercent>
+						</Grid>
 					</Grid>
 				</OverviewContainer>
 			</Grid>
 
 			<Grid alignItems="center" justify="center" container xs={12} sm>
-				<OverviewContainer fullWidth>
-					<Grid>
-						<OverviewValue align="center">
-							{ReformatCurrencyValueMini(periodValueChange)}
-						</OverviewValue>
+				<OverviewContainer flexDirection="row" fullWidth>
+					<Grid xs={1} container justify="center" alignItems="center">
+						{ProfitArrow(periodValueChange)}
 					</Grid>
-					<Grid alignItems="center" justify="center" xs={12} container item>
-						<OverviewLabel align="center">{Tframe + ' Change'}</OverviewLabel>
-						<OverviewPercent align="center" value={periodPercentChange}>
-							(
-							{periodPercentChange.toLocaleString(undefined, {
-								minimumFractionDigits: 0,
-								maximumFractionDigits: 2,
-							})}
-							)%
-						</OverviewPercent>
+					<Grid xs={11}>
+						<Grid>
+							<OverviewValue align="center">
+								{ReformatCurrencyValueMini(periodValueChange)}
+							</OverviewValue>
+						</Grid>
+						<Grid alignItems="center" justify="center" xs={12} container item>
+							<OverviewLabel align="center">{Tframe + ' Change'}</OverviewLabel>
+							<OverviewPercent align="center" value={periodPercentChange}>
+								(
+								{periodPercentChange.toLocaleString(undefined, {
+									minimumFractionDigits: 0,
+									maximumFractionDigits: 2,
+								})}
+								)%
+							</OverviewPercent>
+						</Grid>
 					</Grid>
 				</OverviewContainer>
 			</Grid>
@@ -169,9 +195,13 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 						container
 					>
 						<Grid item xs={12} ref={chartContainerRef}>
-							<SimpleTimeSeries
-								showX={false}
-								showY={true}
+							<PortfolioLineChart
+								xAxis={true}
+								yAxis={false}
+								setPV={setChartBalance}
+								setDate={setChartDate}
+								height={200}
+								width={width}
 								id={portfolioItem.nickname.replace(/\s/g, '') + 'chart'}
 								data={chartData}
 							/>
@@ -223,47 +253,8 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 	);
 };
 
-{
-	/* <Grid container alignItems="center" justify="center" xs={12}>
-								<Typography
-									align="center"
-									style={{ fontSize: 10 }}
-									variant="button"
-									gutterBottom
-									color="textSecondary"
-								>
-									Profit/Loss
-								</Typography>
-							</Grid>
-
-							<Typography
-								align="center"
-								variant="h4"
-								gutterBottom
-								style={{
-									color: ProfitColorizer(portfolioItem.profitPercentage),
-									fontSize: '1.6rem',
-									fontWeight: 500,
-								}}
-							>
-								{portfolioItem.profitPercentage > 0 ? '+' : ''}
-								{portfolioItem.profitPercentage.toFixed(2)}%
-							</Typography>
-
-							<Typography align="center" variant="body2" gutterBottom>
-								({ReformatCurrencyValueMini(portfolioItem.profitTotal.USD)})
-							</Typography>
-
-
-
-							{/* <Typography
-								align="center"
-								style={{
-									fontWeight: 700,
-									fontSize: '2.125rem',
-									lineHeight: '2.5rem',
-								}}
-							>
-								{portfolioItem.portfolioTotal.USD.toFixed(2)} USD
-							</Typography> */
-}
+const ProfitArrow = (profit: number) => (
+	<React.Fragment>
+		{profit > 0 ? <ArrowUpward /> : <ArrowDownward />}
+	</React.Fragment>
+);

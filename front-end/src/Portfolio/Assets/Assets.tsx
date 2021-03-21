@@ -24,7 +24,7 @@ export const Assets: React.FC<IHoldingsProps> = ({ portfolioItems }) => {
 				<ScrollContainer className="scroll-container">
 					<AssetContainer>
 						{portfolioItems
-							// .filter((item) => item.value.USD > 0)
+							.filter((item) => item.value.USD > 0)
 							.map((item, index: number) => (
 								<AssetCard portfolioItem={item} />
 							))}

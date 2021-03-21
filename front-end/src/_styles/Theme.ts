@@ -12,28 +12,27 @@ export const theme = createMuiTheme({
 	},
 	typography: {
 		fontFamily:
-			'-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
+			'Graphik, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
 		subtitle2: {
 			fontSize: '1rem',
 			opacity: 0.7,
 		},
+		h1: {
+			fontSize: '2rem',
+      lineHeight: 1.3;
+			fontWeight: 500,
+		},
 		h2: {
-			fontSize: '1.25rem',
-			letterSpacing: '.02em',
-			lineHeight: '1rem',
+			fontSize: '1.375rem',
 			fontWeight: 500,
 		},
 		h3: {
-			fontSize: '1.25rem',
-			letterSpacing: '.02em',
-			lineHeight: '1rem',
+			fontSize: '1.125rem',
 			fontWeight: 500,
 		},
 		h4: {
-			fontSize: '1.25rem',
-			letterSpacing: '.02em',
-			lineHeight: '1rem',
-			fontWeight: 500,
+			fontSize: '1.125rem',
+			fontWeight: 400,
 		},
 		caption: { opacity: 0.6 },
 		button: {
@@ -69,7 +68,9 @@ export const theme = createMuiTheme({
 				transition: 'none',
 			},
 		},
-		MuiContainer: {},
+		MuiContainer: {
+
+    },
 		MuiDrawer: {},
 		MuiTab: {
 			root: {

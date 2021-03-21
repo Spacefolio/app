@@ -13,7 +13,8 @@ export interface FlexCardProps extends CardProps {
 export const FlexCard = styled(Card)<FlexCardProps>`
 	display: flex;
 	background: white;
-	border-radius: 10px;
+	border-radius: 4px;
+	border: 1px solid rgb(236, 239, 241);
 	box-shadow: none;
 	${(props) => (props.disableGutters ? 'padding: 0;' : 'padding: 0 12px;')}
 	${TimingStyle};
@@ -33,7 +34,7 @@ export const FlexCardContent = styled.div<FlexCardContentProps>`
 	display: flex;
 	padding: 16px;
 	padding-top: 0;
-  max-height: inherit;
+	max-height: inherit;
 `;
 
 export interface FlexCardHeaderProps {

@@ -19,7 +19,7 @@ export const NavContainer = styled.div`
 	font-weight: 500;
 	font-size: 1em;
 	${CenteredFlexBox}
-	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
+	border-bottom: 1px solid rgb(236, 239, 241);
 	z-index: 5;
 	position: sticky;
 	top: 0;
@@ -45,9 +45,9 @@ export const ToggleSidebar = styled.div`
 	left: 0;
 	height: ${SPACING.NavbarHeight};
 	width: ${SPACING.NavbarHeight};
-  &:hover {
-    background: ${theme.palette.grey[100]};
-  }
+	&:hover {
+		background: ${theme.palette.grey[100]};
+	}
 `;
 
 export const BrandingContainer = styled.div``;

@@ -13,12 +13,12 @@ export const SidebarSpacer = styled.div`
 export const SidebarContainer = styled.div<DrawerProps>`
 	display: flex;
 	justify-content: start;
-	box-shadow: 5px 10px 25px -24px;
+	border-right: 1px solid rgb(236, 239, 241);
 	overflow: hidden;
 	position: sticky;
-	top: 60px;
+	top: 0;
 	flex-direction: column;
-	height: calc(100vh - 60px);
+	height: 100vh;
 	flex-shrink: 0;
 	z-index: 4;
 	width: ${(props: any) =>

@@ -26,8 +26,8 @@ export const OverviewLabel = styled(Typography)`
 `;
 
 export const OverviewValue = styled(Typography)`
-	font-size: 1.25rem;
-	font-weight: 400;
+	font-size: 1.65rem;
+	font-weight: 600;
 `;
 
 interface PercentProps {
@@ -41,4 +41,5 @@ export const OverviewPercent = styled(Typography)<PercentProps>`
 
 export const OverviewContainer = styled(FlexCard)`
 	padding: 12px;
+	position: relative;
 `;

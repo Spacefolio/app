@@ -7,11 +7,12 @@ interface ApplicationProps {}
 
 export const ApplicationContainer = styled.div<ApplicationProps>`
 	display: flex;
+	flex-direction: column;
+	width: 100%;
 	${TimingStyle}
 `;
 
 export const BodyWrapper = styled.div`
 	display: flex;
-	flex-direction: column;
 	position: relative;
 `;

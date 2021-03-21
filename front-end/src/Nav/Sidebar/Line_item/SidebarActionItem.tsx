@@ -15,19 +15,25 @@ import { useSelector } from 'react-redux';
 import { IRootState } from '../../../_reducers';
 import { SvgWrapperButton, ScrollBox, SPACING } from '../../../_styles';
 import { useCheckCurrentLocation } from '../../../_hooks/useCheckCurrentLocation';
-import { Typography } from '@material-ui/core';
+import { Avatar, Typography } from '@material-ui/core';
+import styled from 'styled-components';
 
 interface ISidebarActionItemProps {
 	text: string;
 	children?: React.ReactNode;
-	icon?: React.ReactNode;
+	Icon?: any;
 	linkUri: string;
 }
+
+const SidebarText = styled(Typography)`
+	font-size: 0.875rem;
+	font-weight: 600;
+`;
 
 export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
 	text,
 	children,
-	icon,
+	Icon,
 	linkUri,
 }) => {
 	const history = useHistory();
@@ -46,9 +52,13 @@ export const SidebarActionItem: React.FC<ISidebarActionItemProps> = ({
 		<React.Fragment>
 			<LinkWrapper>
 				<SidebarTab isActiveTab={isCurrentPage} onClick={() => handleClick()}>
-					<SidebarIconContainer>{icon}</SidebarIconContainer>
+					<SidebarIconContainer>
+						<Avatar style={{ background: 'whitesmoke' }}>
+							<Icon fontSize="inherit" />
+						</Avatar>
+					</SidebarIconContainer>
 					<LinkText>
-						<Typography>{text}</Typography>
+						<SidebarText>{text}</SidebarText>
 					</LinkText>
 					{children && (
 						<SvgWrapperButton

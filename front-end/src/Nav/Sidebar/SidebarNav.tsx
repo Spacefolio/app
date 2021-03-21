@@ -50,25 +50,25 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
 		<React.Fragment>
 			<SidebarActionItem
 				text="Dashboard"
-				icon={<Dashboard />}
+				Icon={Dashboard}
 				linkUri="/dashboard"
 			></SidebarActionItem>
 
 			<SidebarActionItem
 				text="Trade"
-				icon={<TrendingUp />}
+				Icon={TrendingUp}
 				linkUri="/trade"
 			></SidebarActionItem>
 
 			<SidebarActionItem
 				text="Portfolio"
-				icon={<PieChart />}
+				Icon={PieChart}
 				linkUri="/portfolio"
 			></SidebarActionItem>
 
 			<SidebarActionItem
 				text="Bots"
-				icon={<Android />}
+				Icon={Android}
 				linkUri="/bots"
 			></SidebarActionItem>
 
@@ -76,13 +76,13 @@ export const SidebarNav: React.FC<SidebarNavProps> = () => {
 
 			<SidebarActionItem
 				text="Help & FAQs"
-				icon={<Help />}
+				Icon={Help}
 				linkUri="/settings"
 			></SidebarActionItem>
 
 			<SidebarActionItem
 				text="Settings"
-				icon={<Settings />}
+				Icon={Settings}
 				linkUri="/settings"
 			></SidebarActionItem>
 		</React.Fragment>
