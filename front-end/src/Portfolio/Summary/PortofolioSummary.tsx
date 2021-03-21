@@ -85,7 +85,7 @@ export const PortfolioSummary = () => {
 						</Menu>
 					</div>
 
-					{CardHeader('Summary', 'Your portfolio at a glance')}
+					{CardHeader('Overview', 'Your portfolio at a glance')}
 					<PortfolioSummaryItem
 						timeframe={'24H'}
 						portfolioItem={filteredPortfolio}

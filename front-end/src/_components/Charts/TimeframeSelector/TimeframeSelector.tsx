@@ -41,14 +41,15 @@ export const TimeframeSelectorDropdown: React.FC<TimeframeSelectorDDProps> = ({
 
 	return (
 		<div>
-			<Button
+			<div
 				ref={anchorRef}
 				aria-controls={open ? 'menu-list-grow' : undefined}
 				aria-haspopup="true"
 				onClick={() => setOpen(!open)}
+				style={{ fontWeight: 500 }}
 			>
 				{Tframe}
-			</Button>
+			</div>
 			<Popper
 				open={open}
 				anchorEl={anchorRef.current}
@@ -89,9 +90,7 @@ export const TimeframeSelectorToggle: React.FC<TimeframeSelectorDDProps> = ({
 }) => {
 	return (
 		<div>
-			<Button
-				onClick={() => setTimeframe(Tframe == '24H' ? 'ALL' : '24H')}
-			>
+			<Button onClick={() => setTimeframe(Tframe == '24H' ? 'ALL' : '24H')}>
 				<Typography variant="body2" color="textSecondary">
 					{Tframe}
 				</Typography>

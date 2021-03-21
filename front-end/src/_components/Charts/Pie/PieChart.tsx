@@ -23,7 +23,7 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
 
 	const [calcTotal, setcalcTotal] = useState<string>('');
 
-	const [pieDisplaySymbol, setPieDisplaySymbol] = useState('Total');
+	const [pieDisplaySymbol, setPieDisplaySymbol] = useState('');
 	const [pieDisplayValue, setPieDisplayValue] = useState('');
 
 	useEffect(() => {
@@ -31,8 +31,6 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
 		data.map((item) => {
 			total += item.value.USD;
 		});
-		setcalcTotal(ReformatCurrencyValueMini(total));
-		setPieDisplayValue(ReformatCurrencyValueMini(total));
 		setChartData({
 			labels: data.map((item) => item.asset.name),
 			datasets: [
@@ -72,11 +70,11 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
 									const symbol = splitBody[0];
 									setPieDisplaySymbol(symbol);
 									setPieDisplayValue(
-										ReformatCurrencyValueMini(parseInt(value))
+										ReformatCurrencyValueMini(parseFloat(value))
 									);
 								} else {
-									setPieDisplayValue(calcTotal);
-									setPieDisplaySymbol('Total');
+									setPieDisplayValue('');
+									setPieDisplaySymbol('');
 								}
 							},
 						},

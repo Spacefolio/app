@@ -14,7 +14,7 @@ export const FlexCard = styled(Card)<FlexCardProps>`
 	display: flex;
 	background: white;
 	border-radius: 10px;
-	box-shadow: 6px 6px 14px #e3e3e8;
+	box-shadow: none;
 	${(props) => (props.disableGutters ? 'padding: 0;' : 'padding: 0 12px;')}
 	${TimingStyle};
 	${(props) => (props.fullWidth ? 'width: 100%;' : 'width: auto;')}

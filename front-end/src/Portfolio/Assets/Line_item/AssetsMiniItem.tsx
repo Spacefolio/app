@@ -10,6 +10,7 @@ import {
 	MobileWrapper,
 } from '../../../_styles/TabularStyles';
 import {
+	ProfitColorizer,
 	ReformatAmountValue,
 	ReformatCurrencyValue,
 	ReformatCurrencyValueMini,
@@ -34,10 +35,6 @@ export const AssetsMiniItem: React.FC<AssetsMiniItemProps> = ({
 		profitPercentage,
 	} = portfolioItem;
 
-	const portfolioValueItemStyler = (num: number) => {
-		return num < 0 ? COLORS.errorBase : theme.palette.secondary.main;
-	};
-
 	const avatarSize = parseInt(SPACING.flexCardGap) * 2.5 + 'px';
 
 	const NameSection = () => {
@@ -47,8 +44,6 @@ export const AssetsMiniItem: React.FC<AssetsMiniItemProps> = ({
 					style={{ width: avatarSize, height: avatarSize }}
 					src={asset.logoUrl}
 				/>
-
-				<Typography variant="body2">{asset.name}</Typography>
 			</InlineDiv>
 		);
 	};
@@ -61,27 +56,23 @@ export const AssetsMiniItem: React.FC<AssetsMiniItemProps> = ({
 
 	const CurrentPriceSection = () => {
 		return (
-			<Typography>${ReformatCurrencyValue(currentPrice, 'USD')}</Typography>
+			<Typography>{ReformatCurrencyValue(currentPrice, 'USD')}</Typography>
 		);
 	};
 	const ValueSection = () => {
 		return (
 			<Typography variant="body2">
-				${ReformatCurrencyValueMini(value.USD)}
+				{ReformatCurrencyValueMini(value.USD)}
 			</Typography>
 		);
 	};
 	const ProfitSection = () => {
 		return (
 			<React.Fragment>
-				<Typography
-					style={{ color: portfolioValueItemStyler(profitTotal.all) }}
-				>
+				<Typography style={{ color: ProfitColorizer(profitTotal.all) }}>
 					${profitTotal.all.toFixed(2)}
 				</Typography>
-				<Typography
-					style={{ color: portfolioValueItemStyler(profitPercentage.all) }}
-				>
+				<Typography style={{ color: ProfitColorizer(profitPercentage.all) }}>
 					{profitPercentage.all.toFixed(2)}%
 				</Typography>
 			</React.Fragment>
@@ -89,13 +80,17 @@ export const AssetsMiniItem: React.FC<AssetsMiniItemProps> = ({
 	};
 
 	return (
-		<InlineDiv style={{ padding: '5px 0' }} align="space-between">
-			{NameSection()}
-			<FlexSpacer color={color} showLine />
-			{/* {AmountSection()} */}
-			{/* {CurrentPriceSection()} */}
+		<InlineDiv style={{ padding: '5px 0', gap: '5px' }}>
+			{NameSection()}{' '}
+			<div
+				style={{
+					height: '10px',
+					width: '10px',
+					borderRadius: '50%',
+					background: color,
+				}}
+			></div>
 			{ValueSection()}
-			{/* {ProfitSection()} */}
 		</InlineDiv>
 	);
 };

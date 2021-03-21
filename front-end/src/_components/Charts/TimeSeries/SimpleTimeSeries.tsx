@@ -120,7 +120,9 @@ export const SimpleTimeSeries: React.FC<PortfolioLineChartProps> = ({
 						'there was a problem loading chart data'
 					)
 				) : (
-					<CircularProgress />
+					<div style={{ height: '100%', width: '100%' }}>
+						<CircularProgress />
+					</div>
 				)}
 			</div>
 		</React.Fragment>
