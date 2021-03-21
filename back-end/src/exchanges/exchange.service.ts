@@ -770,7 +770,7 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 
 			if (length > 0) {
 				profitAllTime = last.totalValueReceived - last.totalValueInvested + currentValue;
-				profitPercentageAllTime = (profitAllTime / last.totalValueInvested) * 100;
+				profitPercentageAllTime = ((profitAllTime / last.totalValueInvested) * 100) || 0;
 			}
 
 			totalProfit += profitAllTime;
@@ -840,11 +840,18 @@ async function createMetaportfolioData(portfolioData: IPortfolioDataView[]) {
 	let totalInvested = 0;
 	let profitPercentage = 0;
 	let portfolioTotal = { USD: 0 };
+	let newProfitTotal = { USD: 0 };
+	let newTotalInvested = 0;
 
 	for (let i = 0; i < portfolioData.length; i++) {
 		mergePortfolioItems(portfolioItemsDict, portfolioData[i].portfolioItems);
 		transactions = transactions.concat(portfolioData[i].transactions);
 		openOrders = openOrders.concat(portfolioData[i].openOrders);
+		newProfitTotal.USD += portfolioData[i].profitTotal.USD;
+		if (portfolioData[i].profitPercentage != 0)
+		{
+			newTotalInvested += (portfolioData[i].profitTotal.USD / (portfolioData[i].profitPercentage/100));
+		}
 	}
 
 	for (let [assetId, entry] of Object.entries(portfolioItemsDict)) {
@@ -860,7 +867,7 @@ async function createMetaportfolioData(portfolioData: IPortfolioDataView[]) {
 		portfolioItems.push(entry.item);
 	}
 
-	profitPercentage = (profitTotal.USD / totalInvested) * 100;
+	profitPercentage = ((newProfitTotal.USD / newTotalInvested) * 100) || 0;
 
 	let metaportfolio: IPortfolioDataView = {
 		name: 'All portfolios',
