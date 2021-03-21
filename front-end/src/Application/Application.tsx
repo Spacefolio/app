@@ -32,7 +32,7 @@ export const Application = () => {
 							id="content-container"
 							disableGutters={!mobile}
 							maxWidth={'xl'}
-							style={{ overflow: 'hidden', background: '#f7f9fc' }}
+							style={{ overflowX: 'hidden', background: '#f7f9fc' }}
 						>
 							<Switch>
 								<Route path={`/portfolio`}>
