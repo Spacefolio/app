@@ -28,6 +28,7 @@ async function authenticate(userRequest: ILoginRequest): Promise<IUserView> {
 			email: user.email,
 			firstName: user.firstName,
 			lastName: user.lastName,
+			username: user.username,
 			token,
 		};
 	}
@@ -89,7 +90,7 @@ async function update(userId: string, userParam: IUserUpdateRequest) {
 
 	const { id, username, email, firstName, lastName } = await user.save();
 
-	return({ id, username, email, firstName, lastName });
+	return { id, username, email, firstName, lastName };
 }
 
 async function _delete(id: string) {
