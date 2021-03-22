@@ -1,7 +1,10 @@
+import { dispatch } from 'd3-dispatch';
 import { useRef, useEffect, RefObject, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { IPortfolioDataView } from '../../../types/portfolio.types';
+import { portfolioActions } from '../_actions';
+import { applicationViewActions } from '../_actions/applicationView.actions';
 import { IRootState } from '../_reducers';
 
 export const useFilteredPortfolio = (portfolioId: string) => {
@@ -12,6 +15,12 @@ export const useFilteredPortfolio = (portfolioId: string) => {
 	const [filteredPortfolio, setFilteredPortfolio] = useState<
 		IPortfolioDataView
 	>(null);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(portfolioActions.refresh(portfolioId));
+	}, [portfolioId]);
 
 	useEffect(() => {
 		if (portfolioData) {
