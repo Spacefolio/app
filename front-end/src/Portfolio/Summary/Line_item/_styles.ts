@@ -2,11 +2,21 @@ import { ProfitColorizer } from './../../../_helpers/formating';
 import { Typography } from '@material-ui/core';
 import styled from 'styled-components';
 import { FlexCard, SPACING } from '../../../_styles';
+import { theme } from '../../../_styles/Theme';
 
 export const SummaryWrapper = styled.div`
 	width: 100%;
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	gap: ${theme.spacing(2)}px;
+	grid-template-columns: 2fr 1fr 1fr;
+	grid-template-rows: auto auto auto;
+	grid-template-areas: 'selector selector selector' 'summary summary summary' 'holdings holdings allocations';
+
+	@media (max-width: ${theme.breakpoints.values.md}px) {
+		grid-template-columns: 100%;
+		grid-template-rows: auto auto auto auto;
+		grid-template-areas: 'selector' 'summary' 'allocations' 'holdings';
+	}
 `;
 
 export const Container = styled.div`
@@ -18,16 +28,6 @@ export const Container = styled.div`
 	grid-template-areas:
 		'name chart'
 		'holdings holdings';
-`;
-
-export const OverviewLabel = styled(Typography)`
-	font-size: 1rem;
-	font-weight: 400;
-`;
-
-export const OverviewValue = styled(Typography)`
-	font-size: 1.65rem;
-	font-weight: 600;
 `;
 
 interface PercentProps {

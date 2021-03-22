@@ -61,6 +61,7 @@ export const PortfolioPieChart: React.FC<PortfolioLineChartProps> = ({
 					width={size}
 					data={chartData}
 					options={{
+						responsive: true,
 						tooltips: {
 							enabled: false,
 							custom: (tooltipModel: ChartTooltipModel) => {

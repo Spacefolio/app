@@ -1,23 +1,22 @@
-import { CircularProgress, Grid, useMediaQuery } from '@material-ui/core';
+import {
+	CircularProgress,
+	Grid,
+	Typography,
+	useMediaQuery,
+} from '@material-ui/core';
 import { ArrowDownward, ArrowUpward } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useDimensions from 'react-use-dimensions';
 import { IPortfolioDataView, ITimeframe } from '../../../../../types';
 import { alertActions } from '../../../_actions';
-import { PortfolioLineChart, PortfolioPieChart } from '../../../_components';
+import { PortfolioLineChart } from '../../../_components';
 import { TimeframeSelectorBar } from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
 import { ReformatCurrencyValueMini } from '../../../_helpers';
 import { portfolioService } from '../../../_services';
-import { FlexCard } from '../../../_styles';
+import { FlexCard, FlexCardHeader } from '../../../_styles';
 import { theme } from '../../../_styles/Theme';
-import { AssetsMiniList } from '../../Assets/AssetsMiniList';
-import {
-	OverviewContainer,
-	OverviewLabel,
-	OverviewPercent,
-	OverviewValue,
-} from './_styles';
+import { OverviewContainer, OverviewPercent } from './_styles';
 export interface IPortfolioSummaryItemView {
 	timeframe?: ITimeframe;
 	portfolioItem: IPortfolioDataView;
@@ -76,37 +75,12 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 				});
 	}, [portfolioItem, Tframe]);
 
-	const testColors = [
-		'rgb(211, 241, 210)',
-		'rgb(144, 204, 222)',
-		'rgb(160, 155, 204)',
-		'rgb(203, 166, 204)',
-		'rgb(243, 198, 209)',
-		'rgb(253, 218, 223)',
-	];
-
 	const Balance = () => (
 		<Grid
-			style={{ gap: theme.spacing(2), marginBottom: theme.spacing(2) }}
+			style={{ gap: theme.spacing(2), marginTop: theme.spacing(2) }}
 			xs={12}
 			container
 		>
-			<Grid alignItems="center" justify="center" container xs={12} sm>
-				<OverviewContainer fullWidth>
-					<Grid xs={12} justify="center" alignItems="center" item container>
-						<OverviewValue id="PVID">
-							{chartBalance
-								? ''
-								: ReformatCurrencyValueMini(portfolioItem.portfolioTotal.USD)}
-						</OverviewValue>
-						<div id="PDID">{chartDate ? '' : chartDate}</div>
-					</Grid>
-					<Grid xs={12} item>
-						<OverviewLabel align="center">Total Balance</OverviewLabel>
-					</Grid>
-				</OverviewContainer>
-			</Grid>
-
 			<Grid alignItems="center" justify="center" container xs={12} sm>
 				<OverviewContainer flexDirection="row" fullWidth>
 					<Grid xs={1} container justify="center" alignItems="center">
@@ -114,12 +88,14 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 					</Grid>
 					<Grid xs={11}>
 						<Grid>
-							<OverviewValue align="center">
+							<Typography variant="h2" align="center">
 								{ReformatCurrencyValueMini(portfolioItem.profitTotal.USD)}
-							</OverviewValue>
+							</Typography>
 						</Grid>
 						<Grid alignItems="center" justify="center" xs={12} container item>
-							<OverviewLabel align="center">Total Profit/Loss </OverviewLabel>
+							<Typography variant="subtitle2" align="center">
+								Total Profit/Loss{' '}
+							</Typography>
 							<OverviewPercent
 								align="center"
 								value={portfolioItem.profitPercentage}
@@ -138,12 +114,14 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 					</Grid>
 					<Grid xs={11}>
 						<Grid>
-							<OverviewValue align="center">
+							<Typography variant="h2" align="center">
 								{ReformatCurrencyValueMini(periodValueChange)}
-							</OverviewValue>
+							</Typography>
 						</Grid>
 						<Grid alignItems="center" justify="center" xs={12} container item>
-							<OverviewLabel align="center">{Tframe + ' Change'}</OverviewLabel>
+							<Typography variant="subtitle2" align="center">
+								{Tframe + ' Change'}
+							</Typography>
 							<OverviewPercent align="center" value={periodPercentChange}>
 								(
 								{periodPercentChange.toLocaleString(undefined, {
@@ -161,72 +139,57 @@ export const PortfolioSummaryItem: React.FC<IPortfolioSummaryItemView> = ({
 
 	const Content = () => (
 		<React.Fragment>
-			<div style={{ padding: `${theme.spacing(1)} 0` }}>
-				<Grid xs={12} container>
-					<Grid
-						alignItems="center"
-						justify="space-evenly"
-						xs={12}
-						sm={8}
-						container
-					>
-						<Grid item xs={12} ref={chartContainerRef}>
-							<PortfolioLineChart
-								xAxis={true}
-								timeframe={Tframe}
-								yAxis={false}
-								setPV={setChartBalance}
-								setDate={setChartDate}
-								height={200}
-								width={width}
-								id={portfolioItem.nickname.replace(/\s/g, '') + 'chart'}
-								data={chartData}
-							/>
+			<Grid alignItems="center" justify="space-evenly" xs={12} container>
+				<Grid
+					item
+					xs={12}
+					style={{ overflowX: 'hidden' }}
+					ref={chartContainerRef}
+				>
+					<FlexCardHeader>
+						<Grid xs={12} alignItems="center" item container>
+							<Typography variant="h1" id="PVID">
+								{chartBalance
+									? ''
+									: ReformatCurrencyValueMini(portfolioItem.portfolioTotal.USD)}
+							</Typography>
+							<div id="PDID">{chartDate ? '' : chartDate}</div>
 						</Grid>
-						<TimeframeSelectorBar Tframe={Tframe} setTimeframe={setTimeframe} />
-					</Grid>
+						<Grid xs={12} item>
+							<Typography variant="subtitle2">Total Balance</Typography>
+						</Grid>
+					</FlexCardHeader>
 
-					<Grid
-						container
-						wrap="nowrap"
-						alignItems="center"
-						justify="space-evenly"
-						xs={12}
-						sm={4}
-					>
-						<Grid>
-							<PortfolioPieChart
-								colors={testColors}
-								data={portfolioItem.portfolioItems}
-								size={150}
-								id={portfolioItem.nickname.replace(/\s/g, '') + 'pie'}
-							/>
-						</Grid>
-						<Grid>
-							<AssetsMiniList
-								colors={testColors}
-								portfolioItems={portfolioItem.portfolioItems}
-							/>
-						</Grid>
-					</Grid>
+					<PortfolioLineChart
+						xAxis={true}
+						timeframe={Tframe}
+						yAxis={false}
+						setPV={setChartBalance}
+						setDate={setChartDate}
+						height={200}
+						width={width}
+						id={portfolioItem.nickname.replace(/\s/g, '') + 'chart'}
+						data={chartData}
+					/>
 				</Grid>
-			</div>
+				<TimeframeSelectorBar Tframe={Tframe} setTimeframe={setTimeframe} />
+			</Grid>
 		</React.Fragment>
 	);
 
 	return (
-		<React.Fragment>
+		<div style={{ gridArea: 'summary' }}>
 			{portfolioItem ? (
 				<React.Fragment>
-					{Balance()}
 					<FlexCard {...props} fullWidth disableGutters={!mobile}>
 						{Content()}
-					</FlexCard>
+					</FlexCard>{' '}
+					{Balance()}
 				</React.Fragment>
 			) : (
 				<CircularProgress />
 			)}
-		</React.Fragment>
+		</div>
 	);
 };
 
@@ -235,3 +198,29 @@ const ProfitArrow = (profit: number) => (
 		{profit > 0 ? <ArrowUpward /> : <ArrowDownward />}
 	</React.Fragment>
 );
+
+{
+	/* <Grid
+container
+wrap="nowrap"
+alignItems="center"
+justify="space-evenly"
+xs={12}
+sm={4}
+>
+<Grid>
+  <PortfolioPieChart
+    colors={testColors}
+    data={portfolioItem.portfolioItems}
+    size={150}
+    id={portfolioItem.nickname.replace(/\s/g, '') + 'pie'}
+  />
+</Grid>
+<Grid>
+  <AssetsMiniList
+    colors={testColors}
+    portfolioItems={portfolioItem.portfolioItems}
+  />
+</Grid>
+</Grid> */
+}

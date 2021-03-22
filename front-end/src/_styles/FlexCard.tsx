@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { SPACING } from '.';
 import { InlineDiv, TimingStyle } from './GeneralStyles';
+import { theme } from './Theme';
 
 export interface FlexCardProps extends CardProps {
 	fullWidth?: boolean;
@@ -43,13 +44,8 @@ export interface FlexCardHeaderProps {
 }
 export const FlexCardHeader = styled.div<FlexCardHeaderProps>`
 	padding: ${(props) =>
-			props.top
-				? props.top * parseInt(SPACING.flexCardGap)
-				: parseInt(SPACING.flexCardGap)}px
-		${(props) =>
-			props.side
-				? props.side * parseInt(SPACING.flexCardGap)
-				: parseInt(SPACING.flexCardGap)}px;
+			props.top ? theme.spacing(props.top) : theme.spacing(2)}px
+		${(props) => (props.side ? theme.spacing(props.side) : theme.spacing(4))}px;
 `;
 
 export interface FlexCardContainerProps {}
@@ -68,3 +64,16 @@ const FlexCardContainerStyle = styled.div`
 	flex-direction: column;
 	gap: ${SPACING.flexCardGap};
 `;
+
+export function CardHeader(title: string, caption: string) {
+	return (
+		<FlexCardHeader>
+			<InlineDiv>
+				<Typography variant="h2">{title}</Typography>
+			</InlineDiv>
+			<InlineDiv spacing={1}>
+				<Typography variant="caption">{caption}</Typography>
+			</InlineDiv>
+		</FlexCardHeader>
+	);
+}

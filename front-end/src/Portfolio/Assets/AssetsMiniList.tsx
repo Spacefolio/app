@@ -22,11 +22,12 @@ export const AssetsMiniList: React.FC<AssetsMiniListProps> = ({
 			style={{
 				padding: '0 8px',
 				width: '100%',
+				maxHeight: '150px',
 			}}
 		>
 			{portfolioItems ? (
 				sortHoldings
-					.filter((item) => item.value.USD > 0)
+					// .filter((item) => item.value.USD > 0)
 					.map((pItem: IPortfolioItemView, index) => (
 						<AssetsMiniItem
 							key={index}

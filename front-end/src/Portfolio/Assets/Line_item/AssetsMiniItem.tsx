@@ -85,8 +85,8 @@ export const AssetsMiniItem: React.FC<AssetsMiniItemProps> = ({
 			<div
 				style={{
 					height: '10px',
-					width: '10px',
-					borderRadius: '50%',
+					width: '100%',
+					borderRadius: '50px',
 					background: color,
 				}}
 			></div>

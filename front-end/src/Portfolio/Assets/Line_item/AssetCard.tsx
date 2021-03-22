@@ -71,6 +71,7 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 	return (
 		<FlexCard
 			style={{
+        borderRadius: "10px",
 				position: 'relative',
 				padding: theme.spacing(2),
 				width: mobile ? '250px' : '150px',

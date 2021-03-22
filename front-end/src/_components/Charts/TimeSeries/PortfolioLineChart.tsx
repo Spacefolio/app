@@ -175,7 +175,7 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 			.line()
 			.x((d: any) => xScale(d.T))
 			.y((d: any) => yScale(d.USD))
-			.curve(d3.curveMonotoneX);
+			.curve(d3.curveStep);
 
 		//append line inside the svg component
 		var path = svg
@@ -268,7 +268,6 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 			if (event.originalEvent !== undefined && event.cancelable) {
 				event.preventDefault();
 			}
-			event.preventDefault();
 			focus.style('display', 'none');
 			setDate(false);
 			setPV(false);
@@ -304,7 +303,6 @@ export const PortfolioLineChart: React.FC<PortfolioLineChartProps> = ({
 				margin: 0,
 				width: `${width}px`,
 				height: `${height}px`,
-				touchAction: 'none',
 			}}
 		>
 			{!data ? <ViewLoading /> : <div id={`${id}`}></div>}
