@@ -77,7 +77,7 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 				width: mobile ? '250px' : '150px',
 			}}
 		>
-			<Grid item xs={12} justify="center" alignItems="center">
+			<Grid container item xs={12} alignItems="center">
 				<Grid xs={12} container justify="center" alignItems="center">
 					<Grid item>
 						<Avatar src={asset.logoUrl} />
@@ -86,7 +86,7 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 
 				<Grid xs={12} container justify="center" alignItems="center">
 					<Grid item>
-						<Typography gutterBottom>
+						<Typography noWrap gutterBottom>
 							{asset.name} ({asset.symbol})
 						</Typography>
 					</Grid>
@@ -160,7 +160,7 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 
 				<Grid xs={12} justify="center" container>
 					<Grid item>
-						<Typography variant="body2" gutterBottom>
+						<Typography variant="body2">
 							{ReformatCurrencyValueMini(TframeItem(profitTotal))} USD
 						</Typography>
 					</Grid>
