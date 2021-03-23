@@ -1,25 +1,23 @@
-import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-	MetaPortfolioWrapper,
-	PortfolioValueWrapper,
-	PortfolioName,
-	PortfolioValueColumn,
-	PortfolioProfitSection,
-} from './_styles';
-import { Dropdown, PortfolioLineChart } from '../../_components';
-import { alertActions, portfolioActions } from '../../_actions';
-import { IPortfolioDataView, ITimeframe } from '../../../../types';
-import { portfolioService } from '../../_services';
-import { IRootState } from '../../_reducers';
-import useDimensions from 'react-use-dimensions';
-import { timeFrameSelectors } from '../../_helpers/formating';
-import { ArrowDropDown, ArrowDropUp } from '@material-ui/icons';
 import { Button, Typography } from '@material-ui/core';
+import { ArrowDropDown, ArrowDropUp } from '@material-ui/icons';
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import useDimensions from 'react-use-dimensions';
+import { IPortfolioDataView, ITimeframe } from '../../../../types';
 import { ListMyExchanges } from '../../Integrations';
-import { InlineDiv } from '../../_styles';
-import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
+import { alertActions } from '../../_actions';
+import { Dropdown, PortfolioLineChart } from '../../_components';
 import { TimeframeSelectorBar } from '../../_components/Charts/TimeframeSelector/TimeframeSelector';
+import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
+import { portfolioService } from '../../_services';
+import { InlineDiv } from '../../_styles';
+import {
+  MetaPortfolioWrapper,
+
+  PortfolioName,
+
+  PortfolioProfitSection, PortfolioValueColumn, PortfolioValueWrapper
+} from './_styles';
 
 export const MetaPortfolio = () => {
 	const dispatch = useDispatch();

@@ -1,13 +1,10 @@
-import React, { useEffect } from 'react';
-import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { PortfolioWrapper, StyledTab, StyledTabs } from './_styles';
-import { MetaPortfolio, Transactions, OpenOrders, Charts, Assets } from '.';
-import { FlexCard } from '../_styles';
 import { ThemeProvider } from '@material-ui/core';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { theme } from '../_styles/Theme';
 import { PortfolioSummary } from './Summary';
+import { PortfolioWrapper, StyledTab, StyledTabs } from './_styles';
 
 interface IPortfolioProps {}
 
@@ -63,12 +60,6 @@ export const Portfolio: React.FC<IPortfolioProps> = () => {
 					<Route exact path={`${path}`}>
 						<PortfolioSummary />
 					</Route>
-					<Route exact path={`${path}/charts`}>
-						<Charts />
-					</Route>
-					{/* <Route exact path={`${path}/assets`}>
-						<Assets />
-					</Route> */}
 					<Route exact path={`${path}/transactions`}>
 						{/* <Transactions  /> */}
 					</Route>

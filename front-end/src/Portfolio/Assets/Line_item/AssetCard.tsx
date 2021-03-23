@@ -24,6 +24,7 @@ interface HoldingItemProps {
 
 export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 	var {
+		sparkline,
 		asset,
 		amount,
 		value,
@@ -48,15 +49,23 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 
 	const fakeChart = () => {
 		var dataArray: IPortfolioLineChartItem[] = [];
-		for (let i = 0; i < 50; i++) {
-			var USD: number = 0;
-			if (i > 0) {
-				USD = dataArray[i - 1].USD + Math.random() * 10 - 5;
-			} else {
-				USD = Math.random() * 50;
+
+		if (sparkline.length > 0) {
+			for (let i = 0; i < 50; i++) {
+				dataArray.push({ T: i, USD: sparkline[i] });
 			}
-			dataArray.push({ T: i, USD });
+		} else {
+			for (let i = 0; i < 50; i++) {
+				var USD: number = 0;
+				if (i > 0) {
+					USD = dataArray[i - 1].USD + Math.random() * 10 - 5;
+				} else {
+					USD = Math.random() * 50;
+				}
+				dataArray.push({ T: i, USD });
+			}
 		}
+
 		return dataArray;
 	};
 
@@ -71,7 +80,7 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 	return (
 		<FlexCard
 			style={{
-        borderRadius: "10px",
+				borderRadius: '10px',
 				position: 'relative',
 				padding: theme.spacing(2),
 				width: mobile ? '250px' : '150px',
