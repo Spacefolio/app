@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Coin, ICoinMarketData } from "./coindata.model";
-import { getLatestHour } from "./historical.service";
+import { getLatestHour, ONE_HOUR } from "./historical.service";
 
 export const coindataService = {
   fetchCoinMarketData: fetchAllCoinsMarketData,
@@ -59,7 +59,7 @@ async function getCoinMarketData(symbol: string)
 
   let lastUpdated = Date.parse(coinData.currentMarketData.last_updated);
   
-  if (lastUpdated < getLatestHour())
+  if (lastUpdated < getLatestHour() - ONE_HOUR)
   {
     await fetchCoinMarketData(coinData.id);
     coinData = await Coin.findOne({ symbol: symbolLower });
@@ -110,7 +110,7 @@ async function getCoinDataDocument(symbol: string) {
 
   let lastUpdated = Date.parse(coinData.currentMarketData.last_updated);
   
-  if (lastUpdated < getLatestHour())
+  if (lastUpdated < getLatestHour() - ONE_HOUR)
   {
     await fetchCoinMarketData(coinData.id);
     coinData = await Coin.findOne({ symbol: symbolLower });
