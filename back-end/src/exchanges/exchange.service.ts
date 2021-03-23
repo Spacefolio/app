@@ -13,6 +13,7 @@ import { coindataService } from '../coindata/coindata.service';
 import { debug } from '../_helpers/logs';
 import { isIfStatement } from 'typescript';
 import { ICoinMarketData } from '../coindata/coindata.model';
+import { ok } from 'assert';
 
 export const exchangeService = {
 	getAll,
@@ -364,8 +365,11 @@ async function updateTransactions(exchange: Exchange, exchangeAccountDocument: I
 	debug(`Create transactions: ${Date.now() - time}`);
 	time = Date.now();
 	for (let i = 0; i < transactions.length; i++) {
-		exchangeAccountDocument.transactions.push(transactions[i]);
-		transactionsPojo.push(transactions[i].toObject());
+		if (transactions[i].status == 'ok')
+		{
+			exchangeAccountDocument.transactions.push(transactions[i]);
+			transactionsPojo.push(transactions[i].toObject());
+		}
 	}
 
 	debug(`Push new transactions: ${Date.now() - time}`);
@@ -442,6 +446,7 @@ async function createPortfolioItems(
 		
 		let logoUrl = await getLogo(balances[i].symbol);
 		let assetId, symbol, name = balances[i].symbol;
+		let sparkline: number[] = [];
 		let coinData: ICoinMarketData;
 		
 		if (fiat(balances[i].symbol))
@@ -458,6 +463,7 @@ async function createPortfolioItems(
 				assetId = coinData.id;
 				symbol = coinData.symbol.toUpperCase();
 				name = coinData.name;
+				sparkline = coinData.sparkline_in_7d.price;
 			}
 		}
 
@@ -473,7 +479,7 @@ async function createPortfolioItems(
 			averageSellPrice: { USD: averageSellPrice },
 			amountSold,
 			amountBought,
-			holdingHistory: balances[i].holdingHistory,
+			holdingHistory: balances[i].holdingHistory,			
 		};
 
 		portfolioItems.push(item);
@@ -783,6 +789,8 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 			let length = item.holdingHistory.length;
 
 			const currentPrice = await getConversionRate(exchange, item.asset.symbol, 'USD');
+			const coinData = await coindataService.getCoinMarketData(item.asset.symbol);
+			let sparkline: number[] = coinData.sparkline_in_7d.price ? coinData.sparkline_in_7d.price : [];
 			var currentValue = item.balance.total * currentPrice;
 
 			var last = item.holdingHistory[length - 1];
@@ -811,6 +819,7 @@ async function createPortfolioData(exchange: ccxt.Exchange, exchangeAccount: IEx
 					all: profitPercentageAllTime,
 					h24: profitPercentage24Hour,
 				},
+				sparkline
 			};
 		})
 	);
@@ -922,8 +931,16 @@ async function mergePortfolioItems(portfolioItemsDict: PortfolioItemsDict, portf
 			entry.item.profitTotal.h24 += item.profitTotal.h24;
 			entry.totalInvested.all += (item.profitTotal.all / item.profitPercentage.all) * 100;
 			entry.totalInvested.h24 += (item.profitTotal.h24 / item.profitPercentage.h24) * 100;
+			if (entry.item.sparkline! || entry.item.sparkline.length < 1)
+			{
+				if (item.sparkline && item.sparkline.length > 0)
+				{
+					entry.item.sparkline = item.sparkline;
+				}
+			}
 		} else {
 			let totalInvested = { all: (item.profitTotal.all / item.profitPercentage.all) * 100, h24: (item.profitTotal.h24 / item.profitPercentage.h24) * 100 };
+			let sparkline = item.sparkline? item.sparkline : [];
 
 			portfolioItemsDict[item.asset.assetId] = {
 				item: {
@@ -939,6 +956,7 @@ async function mergePortfolioItems(portfolioItemsDict: PortfolioItemsDict, portf
 						all: 0,
 						h24: 0,
 					},
+					sparkline,
 				},
 				totalInvested,
 			};

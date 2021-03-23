@@ -51,6 +51,7 @@ export interface IPortfolioItemView {
 	profitTotal: { all: number; h24: number };
 	currentPrice: number;
 	profitPercentage: { all: number; h24: number };
+	sparkline: number[];
 }
 
 export interface IAsset {

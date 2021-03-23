@@ -26,6 +26,9 @@ export interface ICoinMarketData {
   atl_change_percentage: number;
   atl_date: string;
   last_updated: string;
+  sparkline_in_7d?: {
+    price: number[]
+  };
 }
 
 export const coinMarketDataSchema = new mongoose.Schema(
@@ -55,6 +58,7 @@ export const coinMarketDataSchema = new mongoose.Schema(
     atl_change_percentage: Number,
     atl_date: String,
     last_updated: String,
+    sparkline_in_7d: { type: Object, required: false }
   },
   { id: false }
 );
@@ -69,11 +73,6 @@ export interface ICoinListItemDocument extends mongoose.Document {
   id: String;
   symbol: String;
   name: String;
-}
-
-export interface ICoinDocument extends mongoose.Document {
-  currentMarketData: ICoinMarketData;
-  dailyPrices: string;
 }
 
 export const coinListItemSchema = new mongoose.Schema({
