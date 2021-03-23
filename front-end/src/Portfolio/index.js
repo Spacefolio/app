@@ -5,4 +5,3 @@ export * from './OpenOrders';
 export * from './Assets';
 export * from './MetaPortfolio';
 export * from './Filter';
-export * from './Charts';
