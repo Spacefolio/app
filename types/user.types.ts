@@ -15,7 +15,7 @@ export interface IUserView {
 	email: string;
 	firstName?: string;
 	lastName?: string;
-	token: string;
+	token?: string;
 }
 
 export interface IUserUpdateRequest {

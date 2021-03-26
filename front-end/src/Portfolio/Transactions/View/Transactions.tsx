@@ -1,9 +1,9 @@
-import React from 'react';
-import { IPortfolioDataView, ITransactionItemView } from '../../../../../types';
-import { TransactionItem } from './TransactionItem';
-import { DataGrid, GridCellParams } from '@material-ui/data-grid';
-import { Avatar, Typography } from '@material-ui/core';
-import { InlineDiv } from '../../../_styles';
+import { Avatar, Typography } from "@material-ui/core";
+import { DataGrid } from "@material-ui/data-grid";
+import React from "react";
+import { ITransactionItemView } from "../../../../../types";
+import { InlineDiv } from "../../../_styles";
+
 
 interface ITransactionsProps {
 	transactions: ITransactionItemView[];

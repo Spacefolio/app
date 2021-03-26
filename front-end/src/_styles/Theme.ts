@@ -8,7 +8,7 @@ export const theme = responsiveFontSizes(
 				sm: 600,
 				md: 960,
 				lg: 1250,
-				xl: 1440,
+				xl: 1525,
 			},
 		},
 		typography: {

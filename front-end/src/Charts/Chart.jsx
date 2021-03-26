@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useDimensions from 'react-use-dimensions';
+
 import "./Chart.scss";
 import CandleStickChart from "./Test";
 import CandleStickChartWithDarkTheme from "./test2";

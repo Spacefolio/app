@@ -1,13 +1,12 @@
-import { User } from '../users/user.model';
+import { IPortfolioLineChartItem, timespan } from '../../../types';
+import { getLatestHourlyTimeSeries } from '../coindata/historical.service';
+import {
+	IExchangeAccountDocument,
+	ITimeslice,
+	ITimeslices,
+} from '../exchanges/exchange.model';
 import { exchangeService } from '../exchanges/exchange.service';
-import { mockPortfolioCalculationsFake } from '../../exchangeDataDetailed';
-import { IPortfolioLineChartItem, ITransactionItemView, timespan } from '../../../types';
-import { IExchangeAccountDocument, IHoldingSlice, IHoldingSnapshot, ITimeslice, ITimeslices } from '../exchanges/exchange.model';
-import ccxt from 'ccxt';
-import { userService } from '../users/user.service';
-import { spawn } from 'child_process';
-import { getHourlyDataRange, getLatestHourlyTimeSeries } from '../coindata/historical.service';
-import { IHourlyPrice } from '../coindata/historical.model';
+import { User } from '../users/user.service';
 
 export const portfolioService = {
 	getAll,
@@ -50,8 +49,11 @@ async function get(userId: string, exchangeId: string) {
 		});
 }
 
-async function getMetaportfolioChart(userId: string, timeframe: timespan) : Promise<IPortfolioLineChartItem[]> {
-	var user = await userService.getById(userId);
+async function getMetaportfolioChart(
+	userId: string,
+	timeframe: timespan
+): Promise<IPortfolioLineChartItem[]> {
+	var user = await User.getById(userId);
 	if (!user) throw 'user not found';
 
 	let timeslices: ITimeslices = {};
@@ -59,58 +61,86 @@ async function getMetaportfolioChart(userId: string, timeframe: timespan) : Prom
 	for (let exchangeId of user.linkedExchanges) {
 		const chartData = await getPortfolioChart(userId, exchangeId, timeframe);
 
-		for (let i = 0; i < chartData.length; i++)
-		{
-			if (!timeslices[chartData[i].T])
-			{
-				timeslices[chartData[i].T] = { start: chartData[i].T, value: chartData[i].USD, holdings: {} };
-			}
-			else
-			{
+		for (let i = 0; i < chartData.length; i++) {
+			if (!timeslices[chartData[i].T]) {
+				timeslices[chartData[i].T] = {
+					start: chartData[i].T,
+					value: chartData[i].USD,
+					holdings: {},
+				};
+			} else {
 				timeslices[chartData[i].T].value += chartData[i].USD;
 			}
 		}
 	}
 
-	return Object.entries(timeslices).map(([timestamp, value]: [string, ITimeslice]) => {
-		return { T: value.start, USD: value.value };
-	});
+	return Object.entries(timeslices).map(
+		([timestamp, value]: [string, ITimeslice]) => {
+			return { T: value.start, USD: value.value };
+		}
+	);
 }
 
-async function getPortfolioChart(userId: string, portfolioId: string, timeframe: timespan): Promise<IPortfolioLineChartItem[]> {
+async function getPortfolioChart(
+	userId: string,
+	portfolioId: string,
+	timeframe: timespan
+): Promise<IPortfolioLineChartItem[]> {
 	var exchange = await exchangeService.getById(portfolioId);
-	if (!exchange) { throw "Unable to retrieve exchange account"; }
+	if (!exchange) {
+		throw 'Unable to retrieve exchange account';
+	}
 	const timeslices: ITimeslice[] = Object.values(exchange.timeslices);
-	
-	if (!timeslices || timeslices.length < 1) { return []; }
-	if (timeframe == timespan.H24) { return await getTwentyFourHourChart(exchange, timeslices); }
-	if (timeframe == timespan.W1) { return await getOneWeekChart(exchange, timeslices); }
+
+	if (!timeslices || timeslices.length < 1) {
+		return [];
+	}
+	if (timeframe == timespan.H24) {
+		return await getTwentyFourHourChart(exchange, timeslices);
+	}
+	if (timeframe == timespan.W1) {
+		return await getOneWeekChart(exchange, timeslices);
+	}
 	return getDailyChart(timeframe, timeslices);
 }
 
-async function getTwentyFourHourChart(exchangeAccount: IExchangeAccountDocument, timeslices: ITimeslice[]): Promise<IPortfolioLineChartItem[]>
-{
+async function getTwentyFourHourChart(
+	exchangeAccount: IExchangeAccountDocument,
+	timeslices: ITimeslice[]
+): Promise<IPortfolioLineChartItem[]> {
 	// Generate hourly time series for last 7 days (last whole hour and 167 previous hours)
 	// if this is already cached, we can just return it as is. If there is partial data available,
 	// we will append the latest data and return the whole series.
-	let hourlyTimeSeries = await getLatestHourlyTimeSeries(exchangeAccount, timeslices);
+	let hourlyTimeSeries = await getLatestHourlyTimeSeries(
+		exchangeAccount,
+		timeslices
+	);
 	return hourlyTimeSeries.slice(hourlyTimeSeries.length - 24);
 }
 
-async function getOneWeekChart(exchangeAccount: IExchangeAccountDocument, timeslices: ITimeslice[]): Promise<IPortfolioLineChartItem[]>
-{
+async function getOneWeekChart(
+	exchangeAccount: IExchangeAccountDocument,
+	timeslices: ITimeslice[]
+): Promise<IPortfolioLineChartItem[]> {
 	// Generate hourly time series for last 7 days (last whole hour and 167 previous hours)
 	// if this is already cached, we can just return it as is. If there is partial data available,
 	// we will append the latest data and return the whole series.
-	let hourlyTimeSeries = await getLatestHourlyTimeSeries(exchangeAccount, timeslices);
+	let hourlyTimeSeries = await getLatestHourlyTimeSeries(
+		exchangeAccount,
+		timeslices
+	);
 	return hourlyTimeSeries.slice(hourlyTimeSeries.length - 168);
 }
 
-function getDailyChart(timeframe: timespan, timeslicesAll: ITimeslice[]): IPortfolioLineChartItem[] {
+function getDailyChart(
+	timeframe: timespan,
+	timeslicesAll: ITimeslice[]
+): IPortfolioLineChartItem[] {
 	// Return the last span of n days based on the timespan provided
 	let timeseries = [];
 	let spanOfDays = getNumberOfDaysForTimespan(timeframe);
-	let start = timeslicesAll.length < spanOfDays ? 0 : timeslicesAll.length - spanOfDays;
+	let start =
+		timeslicesAll.length < spanOfDays ? 0 : timeslicesAll.length - spanOfDays;
 
 	for (let i = start; i < timeslicesAll.length; i++) {
 		timeseries.push({ T: timeslicesAll[i].start, USD: timeslicesAll[i].value });

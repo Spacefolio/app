@@ -7,12 +7,12 @@ import {
 import { ArrowDownward, ArrowUpward } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import useDimensions from 'react-use-dimensions';
 import { IPortfolioDataView, ITimeframe } from '../../../../../types';
 import { alertActions } from '../../../_actions';
 import { PortfolioLineChart } from '../../../_components';
 import { TimeframeSelectorBar } from '../../../_components/Charts/TimeframeSelector/TimeframeSelector';
 import { ReformatCurrencyValueMini } from '../../../_helpers';
+import useDimensions from '../../../_hooks/useDimensions';
 import { portfolioService } from '../../../_services';
 import { FlexCard, FlexCardHeader } from '../../../_styles';
 import { theme } from '../../../_styles/Theme';

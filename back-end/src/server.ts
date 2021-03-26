@@ -1,16 +1,16 @@
-﻿require("rootpath")();
-require("dotenv").config();
-const express = require("express");
+﻿require('rootpath')();
+require('dotenv').config();
+const express = require('express');
 const app = express();
-const cors = require("cors");
-const bodyParser = require("body-parser");
-import jwt from "./_helpers/jwt";
-import { errorHandler } from "./_helpers/error-handler";
-import { usersRouter } from "./users/users.controller";
-import { exchangesRouter } from "./exchanges/exchanges.controller";
-import { portfolioRouter } from "./portfolios/portfolios.controller";
-import { transactionsRouter } from "./transactions/transactions.controller";
-import { coindataRouter } from "./coindata/coindata.controller";
+const cors = require('cors');
+const bodyParser = require('body-parser');
+import jwt from './_helpers/jwt';
+import { errorHandler } from './_helpers/error-handler';
+import { usersRouter } from './users/users.controller';
+import { exchangesRouter } from './exchanges/exchanges.controller';
+import { portfolioRouter } from './portfolios/portfolios.controller';
+import { transactionsRouter } from './transactions/transactions.controller';
+import { coindataRouter } from './coindata/coindata.controller';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -20,17 +20,17 @@ app.use(cors());
 app.use(jwt());
 
 // api routes
-app.use("/users", usersRouter);
-app.use("/exchanges", exchangesRouter);
-app.use("/portfolios", portfolioRouter);
-app.use("/coins", coindataRouter);
+app.use('/users', usersRouter);
+app.use('/exchanges', exchangesRouter);
+app.use('/portfolios', portfolioRouter);
+app.use('/coins', coindataRouter);
 
 // global error handler
 app.use(errorHandler);
 
 // start server
 const port =
-  process.env.NODE_ENV === "production" ? process.env.PORT || 80 : 4000;
+	process.env.NODE_ENV === 'production' ? process.env.PORT || 80 : 4000;
 const server = app.listen(port, function () {
-    console.log('Server listening on port ' + port);
+	console.log('Server listening on port ' + port);
 });

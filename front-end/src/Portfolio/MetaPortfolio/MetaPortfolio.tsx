@@ -2,12 +2,13 @@ import { Button, Typography } from '@material-ui/core';
 import { ArrowDropDown, ArrowDropUp } from '@material-ui/icons';
 import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import useDimensions from 'react-use-dimensions';
+
 import { IPortfolioDataView, ITimeframe } from '../../../../types';
 import { ListMyExchanges } from '../../Integrations';
 import { alertActions } from '../../_actions';
 import { Dropdown, PortfolioLineChart } from '../../_components';
 import { TimeframeSelectorBar } from '../../_components/Charts/TimeframeSelector/TimeframeSelector';
+import useDimensions from '../../_hooks/useDimensions';
 import { useFilteredPortfolio } from '../../_hooks/useFilteredPortfolio';
 import { portfolioService } from '../../_services';
 import { InlineDiv } from '../../_styles';

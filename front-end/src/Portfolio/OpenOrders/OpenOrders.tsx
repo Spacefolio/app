@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Filter, ViewLoading } from '../../_components';
+import {  ViewLoading } from '../../_components';
 import { IOpenOrderItemView, IPortfolioDataView } from '../../../../types';
 import { OpenOrderItem } from './Line_item/OpenOrderItem';
 import { IRootState } from '../../_reducers';
@@ -17,15 +17,15 @@ export const OpenOrders: React.FC<IOpenOrdersProps> = ({ openOrders }) => {
 
 	return (
 		<React.Fragment>
-			{openOrders ? (
-				<Filter
-					data={openOrders}
-					sortAscending={sortAscending}
-					LineItemComponent={OpenOrderItem}
-				/>
+			{/* {openOrders ? (
+				// <Filter
+				// 	data={openOrders}
+				// 	sortAscending={sortAscending}
+				// 	LineItemComponent={OpenOrderItem}
+				// />
 			) : (
 				<ViewLoading />
-			)}
+			)} */}
 		</React.Fragment>
 	);
 };

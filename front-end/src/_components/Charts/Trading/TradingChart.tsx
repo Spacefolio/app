@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-interface TradingChartProps {
-
-}
+interface TradingChartProps {}
 
 export const TradingChart: React.FC<TradingChartProps> = ({}) => {
-    return ();
-}
+	return <div></div>;
+};

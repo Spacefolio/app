@@ -16,7 +16,7 @@ export interface IUserDocument extends mongoose.Document {
 
 const userSchema = new mongoose.Schema({
 	email: { type: String, unique: true, required: true },
-  username: { type: String, unique: true, required: false },
+	username: { type: String, unique: true, required: false },
 	hash: { type: String, required: true },
 	firstName: { type: String, required: false },
 	lastName: { type: String, required: false },
@@ -33,5 +33,5 @@ userSchema.set('toJSON', {
 	},
 });
 
-const User = mongoose.model<IUserDocument, IUserModel>('User', userSchema);
-export { User };
+const UserModel = mongoose.model<IUserDocument, IUserModel>('User', userSchema);
+export { UserModel };
