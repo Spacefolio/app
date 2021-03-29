@@ -1,2 +1,2 @@
-# Algonex
-The front-end and back-end for the Algonex web application
+# BotSea
+The front-end and back-end for the BotSea web application
