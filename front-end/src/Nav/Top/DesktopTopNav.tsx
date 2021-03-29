@@ -58,9 +58,10 @@ export const TopNav = () => {
 		(state: IRootState) => state.applicationView.isSidebarCollapsed
 	);
 
-	const [metaPortfolioData, setMetaPortfolioData] = useState<
-		IPortfolioDataView
-	>();
+	const [
+		metaPortfolioData,
+		setMetaPortfolioData,
+	] = useState<IPortfolioDataView>();
 
 	useEffect(() => {
 		setMetaPortfolioData(
@@ -134,7 +135,7 @@ export const TopNav = () => {
 			</Hidden>
 			<NavFlexSpacer />
 			<InlineDiv>
-				{DEV_SERVER == 'DEVELOPMENT' && (
+				{DEV_SERVER == 'development' && (
 					<SyncIcon
 						onClick={() => dispatch(portfolioActions.sync())}
 						isSyncing={isSyncing}

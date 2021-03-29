@@ -11,6 +11,7 @@ import { exchangesRouter } from './exchanges/exchanges.controller';
 import { portfolioRouter } from './portfolios/portfolios.controller';
 import { transactionsRouter } from './transactions/transactions.controller';
 import { coindataRouter } from './coindata/coindata.controller';
+require('./_helpers/db.ts');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

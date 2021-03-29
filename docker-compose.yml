@@ -1,24 +1,59 @@
-version '3'
+version: '3.7'
 
-services: 
-  backend
-    env_file: 
-      './back-end/.env'
-    
-    build: 
+services:
+  back-end:
+    build:
       context: ./back-end
-      dockerfile: ./dockerfile
-    image: ''
-    ports: 
-      - "4000:4000"
-  
-
-  frontend: 
-    build: 
+      dockerfile: Dockerfile
+    image: myapp-server
+    container_name: myapp-node-server
+    command: /usr/src/app/node_modules/.bin/nodemon server.js
+    volumes:
+      - ./back-end/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '4000:4000'
+    depends_on:
+      - mongo
+    env_file: ./back-end/.env
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+  mongo:
+    image: mongo
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - '27017:27017'
+    networks:
+      - app-network
+  front-end:
+    build:
       context: ./front-end
-      dockerfile: ./Dockerfile
-    image: ''
-    ports: 
-      - "8080:8080"
-    links: 
-     - "backend"
+      dockerfile: Dockerfile
+    image: myapp-client
+    container_name: myapp-react-client
+    volumes:
+      - ./client/:/usr/app
+      - /usr/app/node_modules
+    command: npm startn
+      - ./front-end/:/usr/app
+      - /usr/app/node_modules
+    env_file: ./front-end/.env
+    depends_on:
+      - back-end
+    ports:
+      - '8080:8080'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  data-volume:
+  node_modules:
+  web-root:
+    driver: local

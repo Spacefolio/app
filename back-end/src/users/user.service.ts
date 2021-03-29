@@ -1,4 +1,4 @@
-﻿import { IUserUpdateRequest } from './../../../types/user.types';
+﻿ import { IUserUpdateRequest } from './../../../types/user.types';
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 import { ILoginRequest, IRegisterRequest, IUserView } from '../../../types';

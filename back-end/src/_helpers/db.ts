@@ -14,10 +14,11 @@ const dbConnectionURL = {
 	LOCALURL: `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`,
 };
 
+console.log(dbConnectionURL.LOCALURL);
+
 mongoose.connect(dbConnectionURL.LOCALURL, connectionOptions);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
 	console.log('DB Connected');
 });
-

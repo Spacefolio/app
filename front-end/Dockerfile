@@ -1,12 +1,20 @@
-FROM node:15.10.0 AS ui-build
-WORKDIR /app
-COPY . .
-RUN npm install && npm run build
+# Dockerfile for React client
 
-FROM node:15.10.0
-WORKDIR /app
-COPY --from=ui-build / ./build
+# Build react client
+FROM node:10.16-alpine
+
+# Working directory be app
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+###  Installing dependencies
+
+RUN npm install --silent
+
+# copy local files to app folder
+COPY . .
 
 EXPOSE 8080
 
-CMD ["node", "./bundle.js"]
+CMD ["npm","start"]
