@@ -17,4 +17,4 @@ COPY . .
 # Exports
 EXPOSE 4000
 
-CMD ["npm","start"]
+CMD ["node","./dist/app.js"]
