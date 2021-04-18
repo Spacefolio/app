@@ -50,6 +50,10 @@ class UserMongooseEntityGateway implements UserEntityGateway {
     const users = await Users.find().lean();
     return users.map((user) => UserMapper.toDomain(user));
   }
+
+  async clearUsers() : Promise<void> {
+    await Users.remove({});
+  }
 }
 
 export default UserMongooseEntityGateway;

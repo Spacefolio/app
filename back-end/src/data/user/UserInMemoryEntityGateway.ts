@@ -16,6 +16,7 @@ class UserInMemoryEntityGateway implements UserEntityGateway {
   }
 
   async getUser(email: string): Promise<Readonly<User> | undefined> {
+    console.log(`getUser: ${email}`);
     const result = this.users.find(user => user.getEmail() === email);
     return result;
   }
@@ -27,6 +28,7 @@ class UserInMemoryEntityGateway implements UserEntityGateway {
   }
 
   async createUser(payload: CreateUserPayload): Promise<Readonly<User>> {
+    console.log(`createUser: ${JSON.stringify(payload)}`);
     const user: Readonly<User> = makeUser(payload);
     this.users.push(user);
 
@@ -35,6 +37,10 @@ class UserInMemoryEntityGateway implements UserEntityGateway {
 
   async getUsers(): Promise<Readonly<User>[]> {
     return this.users;
+  }
+
+  async clearUsers(): Promise<void> {
+    this.users = [];
   }
 }
 

@@ -14,8 +14,13 @@
 		"build-client": "cd ../front-end/ && npm run build && cp -r build ../back-end/client",
 		"buildall": "npm run build && npm run build-client",
 		"test": "jest --rootDir=./src --watch",
-		"test:e2e": "jest --rootDir=./__tests__ --runInBand",
+		"test:e2e": "jest --rootDir=./__tests__/src/e2e --runInBand --detectOpenHandles --forceExit",
 		"lint": "eslint \"src/**\""
+	},
+	"jest": {
+		"preset": "ts-jest",
+		"testEnvironment": "node",
+		"verbose": true
 	},
 	"dependencies": {
 		"argon2": "^0.27.2",
@@ -58,6 +63,7 @@
 		"faker": "^5.5.3",
 		"husky": "^6.0.0",
 		"jest": "^26.6.3",
+		"mongodb-memory-server": "^6.9.6",
 		"nodemon": "^2.0.7",
 		"source-map-support": "^0.5.19",
 		"ts-jest": "^26.5.4",

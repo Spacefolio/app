@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { UseCaseError } from '../../../../core/definitions';
-import { User } from '../../../../core/entities';
 import { RegisterUserInvalidRequest, RegisterUserResponseDto, RegisterUserUseCase, UserAlreadyExists } from '../../../../core/use-cases/user';
 import BaseController from '../../common/definitions/Controller';
 
@@ -23,7 +22,7 @@ class RegisterUserController extends BaseController<RegisterUserUseCase> {
 			return;
 		}
 
-		this.ok<Readonly<User>>(res, result.getValue());
+		this.created(res, result.getValue());
 		return;
 	}
 }

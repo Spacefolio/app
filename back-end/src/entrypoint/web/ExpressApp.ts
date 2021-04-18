@@ -45,7 +45,7 @@ class ExpressApp {
         this.logger.info(`[p ${process.pid}] Listening at port ${this.config.port}`);
         console.debug(`Listening at port ${this.config.port}`);
       });
-    
+
     return this.app;
   }
 }

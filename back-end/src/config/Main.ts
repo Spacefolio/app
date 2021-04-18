@@ -1,4 +1,5 @@
 import config from '.';
+import IUserEntityGateway from '../core/use-cases/user/UserEntityGateway';
 import { connectMongoose } from '../data';
 import { UserUseCasesConfiguration } from './core';
 import { DatabaseConfiguration } from './data';
@@ -7,10 +8,12 @@ import { LoggerConfiguration, ControllersConfiguration, RouterConfiguration, Web
 export async function main(): Promise<void> {
 	const logger = LoggerConfiguration.getLogger(config);
 
-	//const db = DatabaseConfiguration.getUserInMemoryDatabase();
+	let userDatabase: IUserEntityGateway = DatabaseConfiguration.getUserInMemoryDatabase();
+	
 	await connectMongoose(config, logger);
-	const userDatabase = DatabaseConfiguration.getUserMongoDatabase();
 
+	userDatabase = DatabaseConfiguration.getUserMongoDatabase();
+	
 	const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
 	const registerUserUseCase = UserUseCasesConfiguration.getRegisterUserUseCase(userDatabase);
 
