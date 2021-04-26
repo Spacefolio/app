@@ -1,5 +1,6 @@
 import { Schema } from "mongoose";
 import mongoose from 'mongoose';
+import { IExchangeAccountDao } from "../integration/exchangeAccount/ExchangeAccountModel";
 
 export interface IUserDao
 {
@@ -8,7 +9,7 @@ export interface IUserDao
 	password: string;
 	firstName?: string;
 	lastName?: string;
-	linkedExchanges?: string[];
+	exchangeAccounts?: string[] | IExchangeAccountDao[];
 }
 
 export interface IUserDocument extends IUserDao, mongoose.Document {}
@@ -19,7 +20,7 @@ const UserSchema = new mongoose.Schema({
 	password: { type: String, required: true },
 	firstName: { type: String, required: false },
 	lastName: { type: String, required: false },
-	linkedExchanges: [{ type: Schema.Types.ObjectId, ref: 'ExchangeAccount' }],
+	exchangeAccounts: [{ type: Schema.Types.ObjectId, ref: 'ExchangeAccount' }],
 }, {
 	timestamps: true
 });

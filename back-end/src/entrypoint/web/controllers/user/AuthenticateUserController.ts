@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { UseCaseError } from '../../../../core/definitions';
 import {
 	AuthenticateUserInvalidRequest,
-	AuthenticateUserResponseDto,
+	AuthenticateUserResponse,
 	AuthenticateUserUseCase,
 	InvalidCredentials,
 	UserNotFound,
@@ -11,7 +11,7 @@ import BaseController from '../../common/definitions/Controller';
 
 class AuthenticateUserController extends BaseController<AuthenticateUserUseCase> {
 	protected async processRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const result: AuthenticateUserResponseDto = await this.usecase.execute(req.body);
+		const result: AuthenticateUserResponse = await this.usecase.execute(req.body);
 
 		if (result.isError) {
 			const error: UseCaseError = result.getError() as UseCaseError;

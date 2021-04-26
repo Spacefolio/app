@@ -1,4 +1,4 @@
-export { default as AuthenticateUserResponseDto } from './AuthenticateUserResponseDto';
-export { default as AuthenticateUserRequestDto } from './AuthenticateUserRequestDto';
+export { default as AuthenticateUserResponse } from './AuthenticateUserResponse';
+export { default as AuthenticateUserRequest } from './AuthenticateUserRequest';
 export { UserNotFound, AuthenticateUserInvalidRequest, InvalidCredentials } from './errors';
-export { default as AuthenticateUserUseCase, VerifyHash } from './AuthenticateUserUseCase';
+export { default as AuthenticateUserUseCase, VerifyHash } from './AuthenticateUser';

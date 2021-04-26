@@ -3,17 +3,15 @@ import { UserUseCasesConfiguration } from "../../../src/config/core";
 import { DatabaseConfiguration } from "../../../src/config/data";
 import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from "../../../src/config/entrypoint";
 import IUserEntityGateway from "../../../src/core/use-cases/user/UserEntityGateway";
-import * as db from './DatabaseFixture';
 
 export class TestServer {
   public constructor(public userDatabase: IUserEntityGateway) {}
 
   public static async createTestServer(): Promise<TestServer> {
-    await db.connect();
 
     const logger = LoggerConfiguration.getLogger(config);
 
-	  const userDatabase = DatabaseConfiguration.getUserMongoDatabase();
+	  const userDatabase = DatabaseConfiguration.getUserInMemoryDatabase();
 	
     const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
     const registerUserUseCase = UserUseCasesConfiguration.getRegisterUserUseCase(userDatabase);
@@ -31,10 +29,8 @@ export class TestServer {
   }
 
   public async clearDb(): Promise<void> {
-    await db.clear();
+    await this.userDatabase.clearUsers();
   }
 
-  public async closeDb(): Promise<void> {
-    await db.close();
-  }
+  public async closeDb(): Promise<void> { await this.clearDb(); }
 }

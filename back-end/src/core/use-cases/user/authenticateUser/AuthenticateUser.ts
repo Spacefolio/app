@@ -1,12 +1,12 @@
 import { IUseCase, Result } from "../../../definitions";
 import { User } from "../../../entities";
 import IUserEntityGateway from "../UserEntityGateway";
-import { AuthenticateUserRequestDto, AuthenticateUserResponseDto } from ".";
+import { AuthenticateUserRequest, AuthenticateUserResponse } from ".";
 import { AuthenticateUserInvalidRequest, InvalidCredentials, UserNotFound } from "./errors";
 
 export type VerifyHash = (hash: string, pass: string) => Promise<boolean>
 
-class AuthenticateUserUseCase implements IUseCase<AuthenticateUserRequestDto, AuthenticateUserResponseDto> {
+class AuthenticateUserUseCase implements IUseCase<AuthenticateUserRequest, AuthenticateUserResponse> {
   
   private userEntityGateway: IUserEntityGateway;
   private verifyHash;
@@ -16,20 +16,20 @@ class AuthenticateUserUseCase implements IUseCase<AuthenticateUserRequestDto, Au
     this.verifyHash = verifyHash;
   }
   
-  async execute(request: AuthenticateUserRequestDto): Promise<AuthenticateUserResponseDto> {
+  async execute(request: AuthenticateUserRequest): Promise<AuthenticateUserResponse> {
     if (!request || !request.email || !request.password) {
       return Result.fail(new AuthenticateUserInvalidRequest(request));
     }
 
-    const user: Readonly<User> | undefined = await this.userEntityGateway.getUser(request.email);
+    const user: User | undefined = await this.userEntityGateway.getUser(request.email);
 
     if (!user) {
       return Result.fail(new UserNotFound(request.email));
     }
 
-    const passwordHash = user.getPassword();
+    const passwordHash = user.password;
     if (await this.verifyHash(passwordHash, request.password)) {
-      return Result.ok<Readonly<User>>(user);
+      return Result.ok<User>(user);
     } else {
       return Result.fail(new InvalidCredentials());
     }

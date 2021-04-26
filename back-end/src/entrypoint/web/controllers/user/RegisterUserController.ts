@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { UseCaseError } from '../../../../core/definitions';
-import { RegisterUserInvalidRequest, RegisterUserResponseDto, RegisterUserUseCase, UserAlreadyExists } from '../../../../core/use-cases/user';
+import { User } from '../../../../core/entities';
+import { RegisterUserInvalidRequest, RegisterUserResponse, RegisterUserUseCase, UserAlreadyExists } from '../../../../core/use-cases/user';
 import BaseController from '../../common/definitions/Controller';
 
 class RegisterUserController extends BaseController<RegisterUserUseCase> {
 	protected async processRequest(req: Request, res: Response): Promise<void> {
-		const result: RegisterUserResponseDto = await this.usecase.execute(req.body);
+		const result: RegisterUserResponse = await this.usecase.execute(req.body);
 
 		if (result.isError) {
 			const error: UseCaseError = result.getError() as UseCaseError;
@@ -22,7 +23,8 @@ class RegisterUserController extends BaseController<RegisterUserUseCase> {
 			return;
 		}
 
-		this.created(res, result.getValue());
+		const createdUser: Readonly<User> = result.getValue();
+		this.created(res, createdUser);
 		return;
 	}
 }

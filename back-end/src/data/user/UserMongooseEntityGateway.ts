@@ -12,15 +12,15 @@ class UserMongooseEntityGateway implements UserEntityGateway {
     return exists;
   }
 
-  async getUser(email: string): Promise<Readonly<User> | undefined> {
-    const user = await Users.findOne({ email }).lean();
+  async getUser(email: string): Promise<User | undefined> {
+    const user = await Users.findOne({ email }).populate('exchangeAccounts');
     if (user) {
       return UserMapper.toDomain(user);
     }
     return undefined;
   }
 
-  async updateUser(user: IUser): Promise<Readonly<User> | undefined> {
+  async updateUser(user: IUser): Promise<User | undefined> {
     const userToUpdate = await Users.findOne({ email: user.email });
 
     if (!userToUpdate) {
@@ -40,13 +40,13 @@ class UserMongooseEntityGateway implements UserEntityGateway {
     return userEntity;
   }
 
-  async createUser(payload: CreateUserPayload): Promise<Readonly<User>> {
+  async createUser(payload: CreateUserPayload): Promise<User> {
     const newUser = await Users.create(payload);
     const userEntity = UserMapper.toDomain(newUser);
     return userEntity;
   }
 
-  async getUsers(): Promise<Readonly<User>[]> {
+  async getUsers(): Promise<User[]> {
     const users = await Users.find().lean();
     return users.map((user) => UserMapper.toDomain(user));
   }

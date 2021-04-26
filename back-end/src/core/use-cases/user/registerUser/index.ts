@@ -1,4 +1,4 @@
 export { RegisterUserInvalidRequest, UserAlreadyExists } from './errors';
-export { default as RegisterUserRequestDto } from './RegisterUserRequestDto';
-export { default as RegisterUserResponseDto } from './RegisterUserResponseDto';
-export { default as RegisterUserUseCase } from './RegisterUserUseCase';
+export { default as RegisterUserRequest } from './RegisterUserRequest';
+export { default as RegisterUserResponse } from './RegisterUserResponse';
+export { default as RegisterUserUseCase } from './RegisterUser';

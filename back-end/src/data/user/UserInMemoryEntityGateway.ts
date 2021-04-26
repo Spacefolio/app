@@ -2,7 +2,7 @@ import { UserEntityGateway, CreateUserPayload } from '../../core/use-cases/user'
 import { User, IUser, makeUser } from '../../core/entities';
 
 class UserInMemoryEntityGateway implements UserEntityGateway {
-  users: Readonly<User>[];
+  users: User[];
   count: number;
 
   constructor() {
@@ -11,31 +11,29 @@ class UserInMemoryEntityGateway implements UserEntityGateway {
   }
 
   async exists (email: string): Promise<boolean> {
-    const index = this.users.findIndex(user => user.getEmail() === email);
+    const index = this.users.findIndex(user => user.email === email);
     return index != -1;
   }
 
-  async getUser(email: string): Promise<Readonly<User> | undefined> {
-    console.log(`getUser: ${email}`);
-    const result = this.users.find(user => user.getEmail() === email);
+  async getUser(email: string): Promise<User | undefined> {
+    const result = this.users.find(user => user.email === email);
     return result;
   }
 
-  async updateUser(user: IUser): Promise<Readonly<User> | undefined> {
-    const index = this.users.findIndex((u: Readonly<User>) => u.getEmail() === user.email);
+  async updateUser(user: IUser): Promise<User | undefined> {
+    const index = this.users.findIndex((u: User) => u.email === user.email);
     this.users[index] = makeUser(user);
     return this.users[index];
   }
 
-  async createUser(payload: CreateUserPayload): Promise<Readonly<User>> {
-    console.log(`createUser: ${JSON.stringify(payload)}`);
-    const user: Readonly<User> = makeUser(payload);
+  async createUser(payload: CreateUserPayload): Promise<User> {
+    const user: User = makeUser(payload);
     this.users.push(user);
 
     return user;
   }
 
-  async getUsers(): Promise<Readonly<User>[]> {
+  async getUsers(): Promise<User[]> {
     return this.users;
   }
 

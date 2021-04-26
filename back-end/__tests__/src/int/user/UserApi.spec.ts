@@ -4,10 +4,9 @@ import makeFakeUser from '../../fixtures/UserFixture';
 import { TestServer } from '../../fixtures/TestServer';
 import { UserEntityGateway } from '../../../../src/core/use-cases/user';
 
-
 describe('User API', () => {
-  let userDatabase: UserEntityGateway;
   let testServer: TestServer;
+  let userDatabase: UserEntityGateway;
  
   beforeAll(async () => {
     axios.defaults.baseURL = `http://localhost:4000`;
@@ -22,6 +21,7 @@ describe('User API', () => {
   beforeEach(async () => {
     await testServer.clearDb();
   });
+
   afterAll(async (done) => {
     await testServer.closeDb();
     done();
@@ -70,6 +70,7 @@ describe('User API', () => {
       expect(response.data.errors).toBeDefined();
     });
   
+    /*
     it('Registration requires username', async () => {
       const fakeUser = makeFakeUser({});
       const requestBody: Partial<IUser> = { ...fakeUser };
@@ -80,7 +81,9 @@ describe('User API', () => {
       expect(response.status).toBe(400);
       expect(response.data.errors).toBeDefined();
     });
+    */
   
+    /*
     it('Registration requires firstName', async () => {
       const fakeUser = makeFakeUser({});
       const requestBody: Partial<IUser> = { ...fakeUser };
@@ -102,6 +105,7 @@ describe('User API', () => {
       expect(response.status).toBe(400);
       expect(response.data.errors).toBeDefined();
     });
+    */
 
     it('Registration requires valid email (e.g. [*]@[*].[*]', async () => {
       const fakeUser = makeFakeUser({});

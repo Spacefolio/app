@@ -2,9 +2,9 @@ import { IUseCase, Result } from "../../../definitions";
 import { User } from "../../../entities";
 import IUserEntityGateway from "../UserEntityGateway";
 import { RegisterUserInvalidRequest, UserAlreadyExists } from "./errors";
-import { RegisterUserRequestDto, RegisterUserResponseDto } from ".";
+import { RegisterUserRequest, RegisterUserResponse } from ".";
 
-class RegisterUserUseCase implements IUseCase<RegisterUserRequestDto, RegisterUserResponseDto> {
+class RegisterUserUseCase implements IUseCase<RegisterUserRequest, RegisterUserResponse> {
   
   private userEntityGateway: IUserEntityGateway;
 
@@ -12,8 +12,8 @@ class RegisterUserUseCase implements IUseCase<RegisterUserRequestDto, RegisterUs
     this.userEntityGateway = userEntityGateway;
   }
   
-  async execute(request: RegisterUserRequestDto): Promise<RegisterUserResponseDto> {
-    if (!request || !request.email || !request.username || !request.password) {
+  async execute(request: RegisterUserRequest): Promise<RegisterUserResponse> {
+    if (!request || !request.email || !request.password) {
       return Result.fail(new RegisterUserInvalidRequest(request));
     }
     
@@ -23,7 +23,7 @@ class RegisterUserUseCase implements IUseCase<RegisterUserRequestDto, RegisterUs
 
     const user = await this.userEntityGateway.createUser(request);
 
-    return Result.ok<Readonly<User>>(user);
+    return Result.ok<User>(user);
   }
 }
 

@@ -2,19 +2,20 @@ import { User, IUser } from '../../../core/entities';
 
 export interface ICreateUserPayload {
   email: string;
-  username: string;
+  username?: string;
   password: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   permissionLevel?: number;
 }
 
 interface IUserEntityGateway {
   exists(email: string): Promise<boolean>;
-  getUser(email: string): Promise<Readonly<User> | undefined>;
-  updateUser(user: IUser): Promise<Readonly<User> | undefined>;
-  createUser(payload: ICreateUserPayload): Promise<Readonly<User>>;
-  getUsers(): Promise<Readonly<User>[] | undefined>;
+  getUser(email: string): Promise<User | undefined>;
+  updateUser(user: IUser): Promise<User | undefined>;
+  createUser(payload: ICreateUserPayload): Promise<User>;
+  getUsers(): Promise<User[] | undefined>;
+  clearUsers(): Promise<void>;
 }
 
 export default IUserEntityGateway;
