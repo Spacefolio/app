@@ -2,11 +2,11 @@ import axios from "axios";
 import { IUser } from '../../../../src/core/entities';
 import makeFakeUser from '../../fixtures/UserFixture';
 import { TestServer } from '../../fixtures/TestServer';
-import { UserEntityGateway } from '../../../../src/core/use-cases/user';
+import { IUserEntityGateway } from '../../../../src/core/use-cases/user';
 
 describe('User API', () => {
   let testServer: TestServer;
-  let userDatabase: UserEntityGateway;
+  let userDatabase: IUserEntityGateway;
  
   beforeAll(async () => {
     axios.defaults.baseURL = `http://localhost:4000`;

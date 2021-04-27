@@ -4,4 +4,4 @@ export * from './authenticateUser';
 // export * from './changeName';
 // export * from './changePassword';
 // export * from './changeUsername';
-export { default as UserEntityGateway , ICreateUserPayload as CreateUserPayload } from "./UserEntityGateway";
+export { default as IUserEntityGateway , ICreateUserPayload as CreateUserPayload } from "./UserEntityGateway";

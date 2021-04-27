@@ -1,11 +1,11 @@
-import { UserEntityGateway, CreateUserPayload } from '../../core/use-cases/user';
+import { IUserEntityGateway, CreateUserPayload } from '../../core/use-cases/user';
 import { User, IUser, makeUser } from '../../core/entities';
 import UserModel from './UserModel';
 import UserMapper from './UserMapper';
 
 const Users = UserModel;
 
-class UserMongooseEntityGateway implements UserEntityGateway {
+class UserMongooseEntityGateway implements IUserEntityGateway {
   
   async exists (email: string): Promise<boolean> {
     const exists = await Users.exists({ email });

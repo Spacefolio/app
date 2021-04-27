@@ -1,4 +1,4 @@
-import { ExchangeAccount } from "./Integration";
+import { ExchangeAccount } from "./Integrations";
 
 export interface IUser {
   email: string;

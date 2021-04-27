@@ -1,12 +1,13 @@
 import { LeanDocument } from "mongoose";
-import {  Exchange, ExchangesConfiguration } from "../../../config/core/Exchanges";
-import { ExchangeAccount, makeExchangeAccount } from "../../../core/entities/Integration/Exchange";
+import { ExchangesConfiguration } from "../../../config/core/Exchanges";
+import { ExchangeAccount, makeExchangeAccount, Exchange } from "../../../core/entities/Integrations/Exchanges";
 import { IExchangeAccountDao, IExchangeAccountDocument } from "./ExchangeAccountModel";
 
 class ExchangeAccountMapper {
   public static toDomain(raw: LeanDocument<IExchangeAccountDocument>): ExchangeAccount {
 
     const exchangeAccount = makeExchangeAccount({
+      accountId: raw.accountId,
       exchange: ExchangesConfiguration.get(raw.exchange),
       credentials: raw.credentials,
       nickname: raw.nickname
@@ -15,10 +16,10 @@ class ExchangeAccountMapper {
     return exchangeAccount;
   }
 
-  public static fromDomain(exchangeAccount: ExchangeAccount, userId: string): IExchangeAccountDao {
+  public static fromDomain(exchangeAccount: ExchangeAccount): IExchangeAccountDao {
     const exchangeAccountDao: IExchangeAccountDao = {
-      owner: userId,
-      exchange: Exchange[exchangeAccount.exchange.id as keyof typeof Exchange],
+      accountId: exchangeAccount.accountId,
+      exchange: <Exchange>(exchangeAccount.exchange.id),
       nickname: exchangeAccount.nickname,
       credentials: exchangeAccount.credentials
     }

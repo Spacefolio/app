@@ -1,10 +1,9 @@
-import { Schema } from "mongoose";
 import mongoose from 'mongoose';
-import { Exchange } from "../../../config/core/Exchanges";
+import { Exchange } from '../../../core/entities/Integrations';
 
 export interface IExchangeAccountDao
 {
-  owner: string;
+  accountId: string,
 	exchange: Exchange,
   nickname: string,
   credentials: 
@@ -24,7 +23,7 @@ export interface IExchangeAccountDao
 export interface IExchangeAccountDocument extends IExchangeAccountDao, mongoose.Document {}
 
 const ExchangeAccountSchema = new mongoose.Schema({
-	owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  accountId: { type: String, unique: true, required: true },
 	exchange: { type: String, enum: Exchange, required: true },
   nickname: { type: String, required: true },
   credentials: {

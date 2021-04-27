@@ -1,5 +1,6 @@
-export { default as UserInMemoryEntityGateway } from './user/UserInMemoryEntityGateway';
-export { default as UserMongooseEntityGateway } from './user/UserMongooseEntityGateway';
-export { default as UserModel } from './user/UserModel';
-export { default as UserMapper } from './user/UserMapper';
+export { default as UserInMemoryEntityGateway } from './User/UserInMemoryEntityGateway';
+export { default as UserMongooseEntityGateway } from './User/UserMongooseEntityGateway';
+export { default as UserModel } from './User/UserModel';
+export { default as UserMapper } from './User/UserMapper';
 export { default as connectMongoose } from './mongoose';
+export { default as makeId } from './Uuid';

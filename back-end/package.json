@@ -24,7 +24,9 @@
 		"preset": "ts-jest",
 		"testEnvironment": "node",
 		"verbose": false,
-		"testMatch": [ "**/?(*.)+(spec|test).[jt]s?(x)" ]
+		"testMatch": [
+			"**/?(*.)+(spec|test).[jt]s?(x)"
+		]
 	},
 	"dependencies": {
 		"argon2": "^0.27.2",
@@ -46,6 +48,7 @@
 		"moment": "^2.29.1",
 		"mongodb": "^3.6.5",
 		"mongoose": "^5.12.2",
+		"nanoid": "^3.1.22",
 		"node": "^15.10.0",
 		"rootpath": "^0.1.2",
 		"winston": "^3.3.3"

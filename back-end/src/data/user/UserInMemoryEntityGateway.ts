@@ -1,13 +1,11 @@
-import { UserEntityGateway, CreateUserPayload } from '../../core/use-cases/user';
+import { IUserEntityGateway, CreateUserPayload } from '../../core/use-cases/user';
 import { User, IUser, makeUser } from '../../core/entities';
 
-class UserInMemoryEntityGateway implements UserEntityGateway {
+class UserInMemoryEntityGateway implements IUserEntityGateway {
   users: User[];
-  count: number;
 
   constructor() {
     this.users = [];
-    this.count = 0;
   }
 
   async exists (email: string): Promise<boolean> {

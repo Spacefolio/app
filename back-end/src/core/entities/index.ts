@@ -11,5 +11,7 @@ export {
 	ExchangeAccount,
 	IExchangeCredentials,
 	IExchange,
+	Exchange,
+	ExchangeNames,
 	makeExchangeAccount,
-} from './Integration';
+} from './Integrations';

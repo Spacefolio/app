@@ -14,17 +14,20 @@ export interface IExchangeCredentials {
 }
 
 export interface IExchangeAccount extends IIntegration {
+  accountId: string;
   exchange: IExchange;
   credentials: IExchangeCredentials;
 }
 
 export class ExchangeAccount extends BaseIntegration implements IExchangeAccount {
   
+  public readonly accountId: string;
   public readonly exchange: IExchange;
   public readonly credentials: IExchangeCredentials;
 
   protected constructor(exchangeAccount: IExchangeAccount) {
     super(exchangeAccount);
+    this.accountId = exchangeAccount.accountId;
     this.exchange = exchangeAccount.exchange;
     this.credentials = exchangeAccount.credentials;
   }

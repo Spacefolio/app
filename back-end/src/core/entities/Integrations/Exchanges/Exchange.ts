@@ -1,3 +1,21 @@
+export enum Exchange {
+  BINANCE = "binance",
+  BINANCEUS = "binanceus",
+  COINBASE = "coinbase",
+  COINBASEPRO = "coinbasepro",
+  HITBTC = "hitbtc",
+  KUCOIN = "kucoin"
+}
+
+export const ExchangeNames = new Map<Exchange, string>([
+  [Exchange.BINANCE, "Binance"],
+  [Exchange.BINANCEUS, "BinanceUS"],
+  [Exchange.COINBASE, "Coinbase"],
+  [Exchange.COINBASEPRO, "CoinbasePro"],
+  [Exchange.HITBTC, "HitBTC"],
+  [Exchange.KUCOIN, "KuCoin"]
+]);
+
 export interface IRequiredExchangeCredentials {
   apiKey: boolean;
   secret: boolean;

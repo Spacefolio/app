@@ -1,4 +1,4 @@
-import { RegisterUserResponse, UserEntityGateway } from "..";
+import { RegisterUserResponse, IUserEntityGateway } from "..";
 import makeFakeUser from "../../../../../__tests__/src/fixtures/UserFixture";
 import { UserInMemoryEntityGateway } from "../../../../data";
 import { UseCaseError } from "../../../definitions";
@@ -7,7 +7,7 @@ import AuthenticateUserUseCase from "./AuthenticateUser";
 import { InvalidCredentials, UserNotFound } from "./errors";
 
 describe('Authenticate User Use Case', () => {
-  const userDatabase: UserEntityGateway = new UserInMemoryEntityGateway();
+  const userDatabase: IUserEntityGateway = new UserInMemoryEntityGateway();
   const authenticateUserUseCase: AuthenticateUserUseCase = new AuthenticateUserUseCase(userDatabase, async (hash, pass) => hash===pass);
   const fakeUser = makeFakeUser({});
 

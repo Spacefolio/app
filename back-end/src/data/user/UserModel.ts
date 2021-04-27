@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 import mongoose from 'mongoose';
-import { IExchangeAccountDao } from "../integration/exchangeAccount/ExchangeAccountModel";
+import { IExchangeAccountDao } from "../Integrations/exchangeAccount/ExchangeAccountModel";
 
 export interface IUserDao
 {

@@ -1,4 +1,4 @@
-import { UseCaseError } from "../../../../definitions";
+import { UseCaseError } from "../../../definitions";
 
 export class UserNotFound extends UseCaseError {
 

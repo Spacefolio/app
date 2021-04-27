@@ -1,4 +1,4 @@
-import { RegisterUserResponse, UserAlreadyExists, UserEntityGateway } from "..";
+import { RegisterUserResponse, UserAlreadyExists, IUserEntityGateway } from "..";
 import makeFakeUser from "../../../../../__tests__/src/fixtures/UserFixture";
 import { UserInMemoryEntityGateway } from "../../../../data";
 import RegisterUserUseCase from "./RegisterUser";
@@ -6,7 +6,7 @@ import { IUser, User } from "../../../entities";
 import { UseCaseError } from "../../../definitions";
 
 describe('Register User Use Case', () => {
-  const userDatabase: UserEntityGateway = new UserInMemoryEntityGateway();
+  const userDatabase: IUserEntityGateway = new UserInMemoryEntityGateway();
   const registerUserUseCase: RegisterUserUseCase = new RegisterUserUseCase(userDatabase);
 
   it('Registers a valid user', async () => {
