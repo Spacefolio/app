@@ -1,5 +1,4 @@
-import { Exchange } from "../../../../config/core/Exchanges";
-import { ExchangeAccount, IExchangeCredentials } from "../../../entities";
+import { Exchange, ExchangeAccount, IExchangeCredentials } from "../../../entities";
 
 export interface ICreateExchangeAccountPayload {
   accountId: string;
@@ -19,7 +18,7 @@ interface IExchangeAccountEntityGateway {
   getExchangeAccount(accountId: string): Promise<ExchangeAccount | undefined>;
   updateExchangeAccount(payload: IUpdateExchangeAccountPayload): Promise<ExchangeAccount | undefined>;
   createExchangeAccount(payload: ICreateExchangeAccountPayload): Promise<ExchangeAccount>;
-  getExchangeAccounts(): Promise<ExchangeAccount[] | undefined>;
+  getExchangeAccounts(): Promise<ExchangeAccount[]>;
   clearExchangeAccounts(): Promise<void>;
 }
 

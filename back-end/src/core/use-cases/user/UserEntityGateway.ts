@@ -14,7 +14,7 @@ interface IUserEntityGateway {
   getUser(email: string): Promise<User | undefined>;
   updateUser(user: IUser): Promise<User | undefined>;
   createUser(payload: ICreateUserPayload): Promise<User>;
-  getUsers(): Promise<User[] | undefined>;
+  getUsers(): Promise<User[]>;
   clearUsers(): Promise<void>;
 }
 

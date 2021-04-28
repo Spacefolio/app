@@ -36,6 +36,7 @@ class AddExchangeAccountUseCase implements IUseCase<AddExchangeAccountRequest, A
     }
 
     const savedAccount = await this.exchangeAccountEntityGateway.createExchangeAccount({ ...request, accountId });
+    user.exchangeAccounts.push(savedAccount);
 
     return Result.ok<ExchangeAccount>(savedAccount);
   }
