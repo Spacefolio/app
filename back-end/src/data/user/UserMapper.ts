@@ -1,8 +1,8 @@
 import { LeanDocument } from "mongoose";
 import { makeUser, User } from "../../core/entities";
 import { ExchangeAccount } from "../../core/entities/Integrations";
-import ExchangeAccountMapper from "../Integrations/exchangeAccount/ExchangeAccountMapper";
-import { IExchangeAccountDao } from "../Integrations/exchangeAccount/ExchangeAccountModel";
+import ExchangeAccountMapper from "../Integrations/ExchangeAccount/ExchangeAccountMapper";
+import { IExchangeAccountDao } from "../Integrations/ExchangeAccount/ExchangeAccountModel";
 import { IUserDocument, IUserDao } from "./UserModel";
 
 class UserMapper {
@@ -36,6 +36,7 @@ class UserMapper {
       password: user.password,
       firstName: user.firstName,
       lastName: user.lastName,
+      exchangeAccounts: []
     }
 
     return userDao;

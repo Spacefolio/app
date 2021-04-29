@@ -15,9 +15,10 @@ export interface IUpdateExchangeAccountPayload {
 
 interface IExchangeAccountEntityGateway {
   exists(accountId: string): Promise<boolean>;
+  createExchangeAccount(payload: ICreateExchangeAccountPayload): Promise<ExchangeAccount>;
   getExchangeAccount(accountId: string): Promise<ExchangeAccount | undefined>;
   updateExchangeAccount(payload: IUpdateExchangeAccountPayload): Promise<ExchangeAccount | undefined>;
-  createExchangeAccount(payload: ICreateExchangeAccountPayload): Promise<ExchangeAccount>;
+  deleteExchangeAccount(accountId: string): Promise<ExchangeAccount | undefined>;
   getExchangeAccounts(): Promise<ExchangeAccount[]>;
   clearExchangeAccounts(): Promise<void>;
 }

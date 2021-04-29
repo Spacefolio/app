@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 import mongoose from 'mongoose';
-import { IExchangeAccountDao } from "../Integrations/exchangeAccount/ExchangeAccountModel";
+import { IExchangeAccountDao } from "..";
 
 export interface IUserDao
 {
@@ -9,7 +9,7 @@ export interface IUserDao
 	password: string;
 	firstName?: string;
 	lastName?: string;
-	exchangeAccounts?: string[] | IExchangeAccountDao[];
+	exchangeAccounts: string[] | IExchangeAccountDao[];
 }
 
 export interface IUserDocument extends IUserDao, mongoose.Document {}

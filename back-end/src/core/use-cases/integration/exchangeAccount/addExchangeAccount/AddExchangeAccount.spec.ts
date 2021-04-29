@@ -1,8 +1,7 @@
 import makeFakeExchangeAccount from "../../../../../../__tests__/src/fixtures/ExchangeAccountFixture";
-import ExchangeAccountInMemoryEntityGateway from "../../../../../data/Integrations/exchangeAccount/ExchangeAccountInMemoryEntityGateway";
-import { Exchange, ExchangeAccount, IExchangeAccount, User } from "../../../../entities";
+import { Exchange, ExchangeAccount, IExchangeAccount } from "../../../../entities";
 import { AddExchangeAccountRequest, AddExchangeAccountUseCase, IExchangeAccountEntityGateway } from "..";
-import { makeId, UserInMemoryEntityGateway } from "../../../../../data";
+import { ExchangeAccountInMemoryEntityGateway, makeId, UserInMemoryEntityGateway } from "../../../../../data";
 import { IUserEntityGateway, UserNotFound } from "../../../user";
 import makeFakeUser from "../../../../../../__tests__/src/fixtures/UserFixture";
 import { UseCaseError } from "../../../../definitions";

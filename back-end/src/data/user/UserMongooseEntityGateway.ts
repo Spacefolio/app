@@ -1,9 +1,11 @@
 import { IUserEntityGateway, CreateUserPayload } from '../../core/use-cases/user';
-import { User, IUser, makeUser } from '../../core/entities';
-import UserModel from './UserModel';
+import { User, IUser, makeUser, ExchangeAccount } from '../../core/entities';
+import UserModel, { IUserDocument } from './UserModel';
 import UserMapper from './UserMapper';
+import { ExchangeAccountModel } from '..';
 
 const Users = UserModel;
+const ExchangeAccounts = ExchangeAccountModel;
 
 class UserMongooseEntityGateway implements IUserEntityGateway {
   
@@ -53,6 +55,29 @@ class UserMongooseEntityGateway implements IUserEntityGateway {
 
   async clearUsers() : Promise<void> {
     await Users.remove({});
+  }
+
+  async addExchangeAccountForUser(email: string, exchangeAccount: ExchangeAccount): Promise<void> {
+    const user = await Users.findOne({ email });
+    if (!user) return;
+
+    const account = await ExchangeAccounts.findOne({ accountId: exchangeAccount.accountId }).lean();
+    if (!account) return;
+    const accounts = user.exchangeAccounts as string[];
+    user.exchangeAccounts = [...accounts, account.id];
+    await user.save();
+  }
+
+  async removeExchangeAccountForUser(email: string, accountId: string): Promise<void> {
+    const user: IUserDocument | null = await Users.findOne({ email });
+    if (!user) return;
+
+    const exchangeAccount = await ExchangeAccounts.findOne({ accountId }).lean();
+    if (!exchangeAccount) return;
+
+    const updatedAccounts = user.exchangeAccounts as string[];
+    user.exchangeAccounts = updatedAccounts.filter((id: string) => id != exchangeAccount.id);
+    await user.save();
   }
 }
 

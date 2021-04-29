@@ -1,5 +1,4 @@
-import { Exchange } from "../../../../../config/core/Exchanges";
-import { IExchangeCredentials } from "../../../../entities";
+import { Exchange, IExchangeCredentials } from "../../../../entities";
 
 interface AddExchangeAccountRequest {
   email: string,

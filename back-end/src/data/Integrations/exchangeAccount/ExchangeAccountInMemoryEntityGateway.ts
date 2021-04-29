@@ -21,6 +21,8 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
 
   async updateExchangeAccount(account: IUpdateExchangeAccountPayload): Promise<ExchangeAccount | undefined> {
     const index = this.exchangeAccounts.findIndex((a: ExchangeAccount) => a.accountId === account.accountId);
+    if (index === -1) { return; }
+
     const old = this.exchangeAccounts[index];
     const accountParams: IExchangeAccount = {
       accountId: old.accountId,
@@ -45,6 +47,15 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
     this.exchangeAccounts.push(exchangeAccount);
 
     return exchangeAccount;
+  }
+
+  async deleteExchangeAccount(accountId: string): Promise<ExchangeAccount | undefined> {
+    const index = this.exchangeAccounts.findIndex((a: ExchangeAccount) => a.accountId === accountId);
+    if (index === -1) return;
+    
+    const deletedExchange: ExchangeAccount = this.exchangeAccounts[index];
+    this.exchangeAccounts.splice(index, 1);
+    return deletedExchange;
   }
 
   async getExchangeAccounts(): Promise<ExchangeAccount[]> {

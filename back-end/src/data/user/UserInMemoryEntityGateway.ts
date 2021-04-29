@@ -1,5 +1,5 @@
 import { IUserEntityGateway, CreateUserPayload } from '../../core/use-cases/user';
-import { User, IUser, makeUser } from '../../core/entities';
+import { User, IUser, makeUser, ExchangeAccount } from '../../core/entities';
 
 class UserInMemoryEntityGateway implements IUserEntityGateway {
   users: User[];
@@ -37,6 +37,19 @@ class UserInMemoryEntityGateway implements IUserEntityGateway {
 
   async clearUsers(): Promise<void> {
     this.users = [];
+  }
+
+  async addExchangeAccountForUser(email: string, exchangeAccount: ExchangeAccount): Promise<void> {
+    const user = await this.getUser(email);
+    if (!user) return;
+    user.exchangeAccounts.push(exchangeAccount);
+  }
+
+  async removeExchangeAccountForUser(email: string, accountId: string): Promise<void> {
+    const user = await this.getUser(email);
+    if (!user) return;
+    const indexToRemove = user.exchangeAccounts.findIndex((account) => account.accountId == accountId);
+    user.exchangeAccounts.splice(indexToRemove, 1);
   }
 }
 

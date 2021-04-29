@@ -26,7 +26,7 @@ const ExchangeAccountSchema = new mongoose.Schema({
   accountId: { type: String, unique: true, required: true },
 	exchange: { type: String, enum: Exchange, required: true },
   nickname: { type: String, required: true },
-  credentials: {
+  credentials: { type: {
     apiKey: String,
     apiSecret: String,
     passphrase: String,
@@ -36,8 +36,7 @@ const ExchangeAccountSchema = new mongoose.Schema({
     privateKey: String,
     walletAddress: String,
     token: String,
-    required: true
-  }
+  }, required: true }
 }, {
 	timestamps: true
 });

@@ -1,4 +1,4 @@
-import { User, IUser } from '../../../core/entities';
+import { User, IUser, ExchangeAccount } from '../../../core/entities';
 
 export interface ICreateUserPayload {
   email: string;
@@ -16,6 +16,8 @@ interface IUserEntityGateway {
   createUser(payload: ICreateUserPayload): Promise<User>;
   getUsers(): Promise<User[]>;
   clearUsers(): Promise<void>;
+  addExchangeAccountForUser(email: string, exchangeAccount: ExchangeAccount): Promise<void>;
+  removeExchangeAccountForUser(email: string, accountId: string): Promise<void>;
 }
 
 export default IUserEntityGateway;
