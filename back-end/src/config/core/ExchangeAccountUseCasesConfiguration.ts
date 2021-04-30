@@ -1,5 +1,7 @@
 import {
 	AddExchangeAccountUseCase,
+	GetAllExchangeAccountsUseCase,
+	GetExchangeAccountUseCase,
 	IExchangeAccountEntityGateway,
 	RemoveExchangeAccountUseCase,
 } from '../../core/use-cases/integration/exchangeAccount';
@@ -19,6 +21,20 @@ class ExchangeAccountUseCasesConfiguration {
 		exchangeAccountEntityGateway: IExchangeAccountEntityGateway
 	): RemoveExchangeAccountUseCase {
 		return new RemoveExchangeAccountUseCase(userEntityGateway, exchangeAccountEntityGateway);
+	}
+
+	static getGetExchangeAccountUseCase(
+		userEntityGateway: IUserEntityGateway,
+		exchangeAccountEntityGateway: IExchangeAccountEntityGateway
+	): GetExchangeAccountUseCase {
+		return new GetExchangeAccountUseCase(userEntityGateway, exchangeAccountEntityGateway);
+	}
+
+	static getGetAllExchangeAccountsUseCase(
+		userEntityGateway: IUserEntityGateway,
+		exchangeAccountEntityGateway: IExchangeAccountEntityGateway
+	): GetAllExchangeAccountsUseCase {
+		return new GetAllExchangeAccountsUseCase(userEntityGateway, exchangeAccountEntityGateway);
 	}
 }
 

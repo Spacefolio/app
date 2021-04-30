@@ -6,12 +6,12 @@ import { LoggerConfiguration, ControllersConfiguration, RouterConfiguration, Web
 
 export async function main(): Promise<void> {
 	const logger = LoggerConfiguration.getLogger(config);
-	
+
 	await connectMongoose(config, logger);
 
 	const userDatabase = DatabaseConfiguration.getUserMongoDatabase();
 	const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountMongoDatabase();
-	
+
 	const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
 	const registerUserUseCase = UserUseCasesConfiguration.getRegisterUserUseCase(userDatabase);
 	const authenticateUserController = ControllersConfiguration.getAuthenticateUserController(authenticateUserUseCase);
@@ -19,14 +19,35 @@ export async function main(): Promise<void> {
 
 	const userRouter = RouterConfiguration.getUserRouter(authenticateUserController, registerUserController);
 
-	const addExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getAddExchangeAccountUseCase(userDatabase, exchangeAccountDatabase);
+	const addExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getAddExchangeAccountUseCase(
+		userDatabase,
+		exchangeAccountDatabase
+	);
 	const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(addExchangeAccountUseCase);
-	const removeExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getRemoveExchangeAccountUseCase(userDatabase, exchangeAccountDatabase);
+	const removeExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getRemoveExchangeAccountUseCase(
+		userDatabase,
+		exchangeAccountDatabase
+	);
 	const removeExchangeAccountController = ControllersConfiguration.getRemoveExchangeAccountController(removeExchangeAccountUseCase);
-	
-	const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(addExchangeAccountController, removeExchangeAccountController);
+	const getExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getGetExchangeAccountUseCase(
+		userDatabase,
+		exchangeAccountDatabase
+	);
+	const getExchangeAccountController = ControllersConfiguration.getGetExchangeAccountController(getExchangeAccountUseCase);
+	const getAllExchangeAccountsUseCase = ExchangeAccountUseCasesConfiguration.getGetAllExchangeAccountsUseCase(
+		userDatabase,
+		exchangeAccountDatabase
+	);
+	const getAllExchangeAccountsController = ControllersConfiguration.getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase);
+
+	const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
+		addExchangeAccountController,
+		removeExchangeAccountController,
+		getExchangeAccountController,
+		getAllExchangeAccountsController
+	);
 	const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
-	
+
 	const expressApp = WebAppConfiguration.getExpressApp(config, userRouter, integrationRouter, logger);
 
 	expressApp.boot();

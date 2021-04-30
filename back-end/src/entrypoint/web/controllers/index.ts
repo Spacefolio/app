@@ -3,3 +3,5 @@ export { default as AuthenticateUserController } from './user/AuthenticateUserCo
 
 export { default as AddExchangeAccountController } from './integrations/exchanges/AddExchangeAccountController';
 export { default as RemoveExchangeAccountController } from './integrations/exchanges/RemoveExchangeAccountController';
+export { default as GetAllExchangeAccountsController } from './integrations/exchanges/GetAllExchangeAccountsController';
+export { default as GetExchangeAccountController } from './integrations/exchanges/GetExchangeAccountController';

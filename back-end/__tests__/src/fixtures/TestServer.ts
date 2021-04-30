@@ -1,45 +1,67 @@
-import config from "../../../src/config";
-import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from "../../../src/config/core";
-import { DatabaseConfiguration } from "../../../src/config/data";
-import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from "../../../src/config/entrypoint";
-import IUserEntityGateway from "../../../src/core/use-cases/user/UserEntityGateway";
+import config from '../../../src/config';
+import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from '../../../src/config/core';
+import { DatabaseConfiguration } from '../../../src/config/data';
+import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from '../../../src/config/entrypoint';
+import IUserEntityGateway from '../../../src/core/use-cases/user/UserEntityGateway';
 
 export class TestServer {
-  public constructor(public userDatabase: IUserEntityGateway) {}
+	public constructor(public userDatabase: IUserEntityGateway) {}
 
-  public static async createTestServer(): Promise<TestServer> {
+	public static async createTestServer(): Promise<TestServer> {
+		const logger = LoggerConfiguration.getLogger(config);
 
-    const logger = LoggerConfiguration.getLogger(config);
+		const userDatabase = DatabaseConfiguration.getUserInMemoryDatabase();
+		const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountInMemoryDatabase();
 
-	  const userDatabase = DatabaseConfiguration.getUserInMemoryDatabase();
-    const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountInMemoryDatabase();
-	
-    const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
-    const authenticateUserController = ControllersConfiguration.getAuthenticateUserController(authenticateUserUseCase);
-    const registerUserUseCase = UserUseCasesConfiguration.getRegisterUserUseCase(userDatabase);    
-    const registerUserController = ControllersConfiguration.getRegisterUserController(registerUserUseCase);
+		const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
+		const authenticateUserController = ControllersConfiguration.getAuthenticateUserController(authenticateUserUseCase);
+		const registerUserUseCase = UserUseCasesConfiguration.getRegisterUserUseCase(userDatabase);
+		const registerUserController = ControllersConfiguration.getRegisterUserController(registerUserUseCase);
 
-    const userRouter = RouterConfiguration.getUserRouter(authenticateUserController, registerUserController);
-    
-    const addExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getAddExchangeAccountUseCase(userDatabase, exchangeAccountDatabase);
-    const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(addExchangeAccountUseCase);
-    const removeExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getRemoveExchangeAccountUseCase(userDatabase, exchangeAccountDatabase);
-    const removeExchangeAccountController = ControllersConfiguration.getRemoveExchangeAccountController(removeExchangeAccountUseCase);
-    
-    const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(addExchangeAccountController, removeExchangeAccountController);
-    const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
+		const userRouter = RouterConfiguration.getUserRouter(authenticateUserController, registerUserController);
 
-    const expressApp = WebAppConfiguration.getExpressApp(config, userRouter, integrationRouter, logger);
+		const addExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getAddExchangeAccountUseCase(
+			userDatabase,
+			exchangeAccountDatabase
+		);
+		const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(addExchangeAccountUseCase);
+		const removeExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getRemoveExchangeAccountUseCase(
+			userDatabase,
+			exchangeAccountDatabase
+		);
+		const removeExchangeAccountController = ControllersConfiguration.getRemoveExchangeAccountController(removeExchangeAccountUseCase);
+		const getExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getGetExchangeAccountUseCase(
+			userDatabase,
+			exchangeAccountDatabase
+		);
+		const getExchangeAccountController = ControllersConfiguration.getGetExchangeAccountController(getExchangeAccountUseCase);
+		const getAllExchangeAccountsUseCase = ExchangeAccountUseCasesConfiguration.getGetAllExchangeAccountsUseCase(
+			userDatabase,
+			exchangeAccountDatabase
+		);
+		const getAllExchangeAccountsController = ControllersConfiguration.getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase);
 
-    expressApp.boot();
+		const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
+			addExchangeAccountController,
+			removeExchangeAccountController,
+			getExchangeAccountController,
+			getAllExchangeAccountsController
+		);
+		const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
 
-    const testServer = new TestServer(userDatabase);
-    return testServer;
-  }
+		const expressApp = WebAppConfiguration.getExpressApp(config, userRouter, integrationRouter, logger);
 
-  public async clearDb(): Promise<void> {
-    await this.userDatabase.clearUsers();
-  }
+		expressApp.boot();
 
-  public async closeDb(): Promise<void> { await this.clearDb(); }
+		const testServer = new TestServer(userDatabase);
+		return testServer;
+	}
+
+	public async clearDb(): Promise<void> {
+		await this.userDatabase.clearUsers();
+	}
+
+	public async closeDb(): Promise<void> {
+		await this.clearDb();
+	}
 }
