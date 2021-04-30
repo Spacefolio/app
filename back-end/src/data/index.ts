@@ -3,6 +3,7 @@ export { default as UserMongooseEntityGateway } from './User/UserMongooseEntityG
 export { default as UserModel } from './User/UserModel';
 export { default as UserMapper } from './User/UserMapper';
 export { default as ExchangeAccountInMemoryEntityGateway } from './Integrations/ExchangeAccount/ExchangeAccountInMemoryEntityGateway';
+export { default as ExchangeAccountMongooseEntityGateway } from './Integrations/ExchangeAccount/ExchangeAccountMongooseEntityGateway';
 export { default as ExchangeAccountMapper } from './Integrations/ExchangeAccount/ExchangeAccountMapper';
 export { IExchangeAccountDao, default as ExchangeAccountModel } from './Integrations/ExchangeAccount/ExchangeAccountModel';
 

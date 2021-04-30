@@ -22,7 +22,7 @@ class AuthenticateUserController extends BaseController<AuthenticateUserUseCase>
 			} else if (error instanceof InvalidCredentials) {
 				this.unauthorized(res, error);
 				return;
-			} else if (error instanceof UserNotFound ) {
+			} else if (error instanceof UserNotFound) {
 				this.unauthorized(res, error);
 				return;
 			}

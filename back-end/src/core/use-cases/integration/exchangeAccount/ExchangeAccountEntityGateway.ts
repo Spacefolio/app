@@ -20,7 +20,7 @@ interface IExchangeAccountEntityGateway {
   updateExchangeAccount(payload: IUpdateExchangeAccountPayload): Promise<ExchangeAccount | undefined>;
   deleteExchangeAccount(accountId: string): Promise<ExchangeAccount | undefined>;
   getExchangeAccounts(): Promise<ExchangeAccount[]>;
-  clearExchangeAccounts(): Promise<void>;
+  clearExchangeAccounts(): Promise<void>
 }
 
 export default IExchangeAccountEntityGateway;
