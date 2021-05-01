@@ -16,7 +16,7 @@
 		"buildall": "npm run build && npm run build-client",
 		"test": "jest --rootDir=./src/core --watch --maxWorkers=25% --detectOpenHandles",
 		"test:unit": "jest --rootDir=./src/core --maxWorkers=25% --detectOpenHandles --forceExit",
-		"test:int": "jest --rootDir=./__tests__/src/int --maxWorkers=50% --detectOpenHandles --forceExit",
+		"test:int": "jest --rootDir=./__tests__/src/int --runInBand --detectOpenHandles --forceExit",
 		"test:all": "npm run test:unit && npm run test:int",
 		"lint": "eslint \"src/**\""
 	},

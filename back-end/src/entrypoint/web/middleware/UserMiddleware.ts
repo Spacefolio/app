@@ -34,11 +34,6 @@ class UserMiddleware {
   }
   */
 
-	async extractUserId(req: Request, res: Response, next: NextFunction) {
-		req.body.id = req.params.userId;
-		next();
-	}
-
 	async hashPassword(req: Request, res: Response, next: NextFunction) {
     if (req.body?.password) {
       req.body.password = await argon2.hash(req.body.password);

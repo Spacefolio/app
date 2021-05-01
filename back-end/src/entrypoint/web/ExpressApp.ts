@@ -6,6 +6,7 @@ import jwt from 'express-jwt';
 import { Logger } from "log4js";
 import UserRouter from "./routers/UserRouter";
 import IntegrationRouter from './routers/IntegrationRouter';
+import { Server } from "node:http";
 
 class ExpressApp {
   app: Application;
@@ -36,7 +37,7 @@ class ExpressApp {
     app.use('/integrations', this.integrationRouter.getRouter());
   }
 
-  boot(): Application {
+  boot(): Server {
     if (!this.app) {
       this.app = express();
     }
@@ -50,7 +51,7 @@ class ExpressApp {
         console.debug(`Listening at port ${this.config.port}`);
       });
 
-    return this.app;
+    return http;
   }
 }
 

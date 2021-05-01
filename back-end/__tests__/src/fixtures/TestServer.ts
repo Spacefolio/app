@@ -1,13 +1,16 @@
+import { Server } from 'node:http';
 import config from '../../../src/config';
 import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from '../../../src/config/core';
 import { DatabaseConfiguration } from '../../../src/config/data';
 import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from '../../../src/config/entrypoint';
+import { IExchangeAccountEntityGateway } from '../../../src/core/use-cases/integration/exchangeAccount';
 import IUserEntityGateway from '../../../src/core/use-cases/user/UserEntityGateway';
 
 export class TestServer {
-	public constructor(public userDatabase: IUserEntityGateway) {}
 
-	public static async createTestServer(): Promise<TestServer> {
+	private constructor(public userDatabase: IUserEntityGateway, public exchangeAccountDatabase: IExchangeAccountEntityGateway, public server: Server) {}
+
+	public static createTestServer(): TestServer {
 		const logger = LoggerConfiguration.getLogger(config);
 
 		const userDatabase = DatabaseConfiguration.getUserInMemoryDatabase();
@@ -51,17 +54,22 @@ export class TestServer {
 
 		const expressApp = WebAppConfiguration.getExpressApp(config, userRouter, integrationRouter, logger);
 
-		expressApp.boot();
+		const server = expressApp.boot();
 
-		const testServer = new TestServer(userDatabase);
+		const testServer = new TestServer(userDatabase, exchangeAccountDatabase, server);
 		return testServer;
 	}
 
 	public async clearDb(): Promise<void> {
 		await this.userDatabase.clearUsers();
+		await this.exchangeAccountDatabase.clearExchangeAccounts();
 	}
 
-	public async closeDb(): Promise<void> {
+	public async close(): Promise<void> {
 		await this.clearDb();
+		this.server.close(() => { return; });
 	}
 }
+
+const testServer = TestServer.createTestServer();
+export { testServer }
