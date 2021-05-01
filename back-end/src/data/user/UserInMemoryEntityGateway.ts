@@ -8,8 +8,13 @@ class UserInMemoryEntityGateway implements IUserEntityGateway {
     this.users = [];
   }
 
-  async exists (email: string): Promise<boolean> {
+  async exists(email: string): Promise<boolean> {
     const index = this.users.findIndex(user => user.email === email);
+    return index != -1;
+  }
+
+  async usernameIsTaken(username: string): Promise<boolean> {
+    const index = this.users.findIndex(user => user.username === username);
     return index != -1;
   }
 

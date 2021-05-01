@@ -11,6 +11,7 @@ export interface ICreateUserPayload {
 
 interface IUserEntityGateway {
   exists(email: string): Promise<boolean>;
+  usernameIsTaken(username: string): Promise<boolean>;
   getUser(email: string): Promise<User | undefined>;
   updateUser(user: IUser): Promise<User | undefined>;
   createUser(payload: ICreateUserPayload): Promise<User>;

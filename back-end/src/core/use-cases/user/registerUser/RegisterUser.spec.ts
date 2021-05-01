@@ -21,13 +21,29 @@ describe('Register User Use Case', () => {
 
   it('Requires unique email', async () => {
     const fakeUser = makeFakeUser({});
+    const fakeUser2 = makeFakeUser({});
+    fakeUser2.email = fakeUser.email;
     userDatabase.createUser(fakeUser);
 
-    const response = await registerUserUseCase.execute(fakeUser);
+    const response = await registerUserUseCase.execute(fakeUser2);
 
-    expect(response.isError).toBeTruthy();
+    expect(response.isError).toBe(true);
     
     const error = response.getError() as UseCaseError;
     expect(error).toBeInstanceOf(UserAlreadyExists);
   });
+
+  it('Requires unique username', async() => {
+    const fakeUser = makeFakeUser({});
+    const fakeUser2 = makeFakeUser({});
+    fakeUser2.username = fakeUser.username;
+    userDatabase.createUser(fakeUser);
+
+    const response = await registerUserUseCase.execute(fakeUser2);
+
+    expect(response.isError).toBe(true);
+
+    const error = response.getError() as UseCaseError;
+    expect(error).toBeInstanceOf(UserAlreadyExists);
+  })
 });

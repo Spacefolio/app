@@ -6,80 +6,82 @@ import { IExchangeAccountDocument } from '..';
 import { Model } from 'mongoose';
 
 class UserMongooseEntityGateway implements IUserEntityGateway {
+	constructor(public Users: Model<IUserDocument>, public ExchangeAccounts: Model<IExchangeAccountDocument>) {}
 
-  constructor(public Users: Model<IUserDocument>, public ExchangeAccounts: Model<IExchangeAccountDocument>) {}
-  
-  async exists (email: string): Promise<boolean> {
-    const exists = await this.Users.exists({ email });
-    return exists;
-  }
+	async exists(email: string): Promise<boolean> {
+		return await this.Users.exists({ email });
+	}
 
-  async getUser(email: string): Promise<User | undefined> {
-    const user = await this.Users.findOne({ email }).populate('exchangeAccounts');
-    if (user) {
-      return UserMapper.toDomain(user);
-    }
-    return undefined;
-  }
+	async usernameIsTaken(username: string): Promise<boolean> {
+		return await this.Users.exists({ username });
+	}
 
-  async updateUser(user: IUser): Promise<User | undefined> {
-    const userToUpdate = await this.Users.findOne({ email: user.email });
+	async getUser(email: string): Promise<User | undefined> {
+		const user = await this.Users.findOne({ email }).populate('exchangeAccounts');
+		if (user) {
+			return UserMapper.toDomain(user);
+		}
+		return undefined;
+	}
 
-    if (!userToUpdate) {
-      return undefined;
-    }
+	async updateUser(user: IUser): Promise<User | undefined> {
+		const userToUpdate = await this.Users.findOne({ email: user.email });
 
-    const userEntity = makeUser(user);
-    const userDao = UserMapper.fromDomain(userEntity);
-    Object.assign(userToUpdate, userDao);
+		if (!userToUpdate) {
+			return undefined;
+		}
 
-    userToUpdate.save((err) => {
-      if (err) {
-        return undefined;
-      }
-    });
+		const userEntity = makeUser(user);
+		const userDao = UserMapper.fromDomain(userEntity);
+		Object.assign(userToUpdate, userDao);
 
-    return userEntity;
-  }
+		userToUpdate.save((err) => {
+			if (err) {
+				return undefined;
+			}
+		});
 
-  async createUser(payload: CreateUserPayload): Promise<User> {
-    const newUser = await this.Users.create(payload);
-    const userEntity = UserMapper.toDomain(newUser);
-    return userEntity;
-  }
+		return userEntity;
+	}
 
-  async getUsers(): Promise<User[]> {
-    const users = await this.Users.find().lean();
-    return users.map((user) => UserMapper.toDomain(user));
-  }
+	async createUser(payload: CreateUserPayload): Promise<User> {
+		const newUser = await this.Users.create(payload);
+		const userEntity = UserMapper.toDomain(newUser);
+		return userEntity;
+	}
 
-  async clearUsers() : Promise<void> {
-    await this.Users.remove({});
-  }
+	async getUsers(): Promise<User[]> {
+		const users = await this.Users.find().lean();
+		return users.map((user) => UserMapper.toDomain(user));
+	}
 
-  async addExchangeAccountForUser(email: string, exchangeAccount: ExchangeAccount): Promise<void> {
-    const user = await this.Users.findOne({ email });
-    if (!user) return;
+	async clearUsers(): Promise<void> {
+		await this.Users.remove({});
+	}
 
-    const account = await this.ExchangeAccounts.findOne({ accountId: exchangeAccount.accountId }).lean();
-    if (!account) return;
-    
-    const accounts = user.exchangeAccounts as string[];
-    user.exchangeAccounts = [...accounts, account._id];
-    await user.save();
-  }
+	async addExchangeAccountForUser(email: string, exchangeAccount: ExchangeAccount): Promise<void> {
+		const user = await this.Users.findOne({ email });
+		if (!user) return;
 
-  async removeExchangeAccountForUser(email: string, accountId: string): Promise<void> {
-    const user: IUserDocument | null = await this.Users.findOne({ email });
-    if (!user) return;
+		const account = await this.ExchangeAccounts.findOne({ accountId: exchangeAccount.accountId }).lean();
+		if (!account) return;
 
-    const exchangeAccount = await this.ExchangeAccounts.findOne({ accountId }).lean();
-    if (!exchangeAccount) return;
+		const accounts = user.exchangeAccounts as string[];
+		user.exchangeAccounts = [...accounts, account._id];
+		await user.save();
+	}
 
-    const updatedAccounts = user.exchangeAccounts as string[];
-    user.exchangeAccounts = updatedAccounts.filter((id: string) => id != exchangeAccount.id);
-    await user.save();
-  }
+	async removeExchangeAccountForUser(email: string, accountId: string): Promise<void> {
+		const user: IUserDocument | null = await this.Users.findOne({ email });
+		if (!user) return;
+
+		const exchangeAccount = await this.ExchangeAccounts.findOne({ accountId }).lean();
+		if (!exchangeAccount) return;
+
+		const updatedAccounts = user.exchangeAccounts as string[];
+		user.exchangeAccounts = updatedAccounts.filter((id: string) => id != exchangeAccount.id);
+		await user.save();
+	}
 }
 
 export default UserMongooseEntityGateway;

@@ -18,7 +18,11 @@ class RegisterUserUseCase implements IUseCase<RegisterUserRequest, RegisterUserR
     }
     
     if (await this.userEntityGateway.exists(request.email)) {
-      return Result.fail(new UserAlreadyExists(request.email));
+      return Result.fail(new UserAlreadyExists('email', request.email));
+    }
+
+    if (request.username && await this.userEntityGateway.usernameIsTaken(request.username)) {
+      return Result.fail(new UserAlreadyExists('username', request.username));
     }
 
     const user = await this.userEntityGateway.createUser(request);

@@ -2,8 +2,8 @@ import { UseCaseError } from "../../../../definitions";
 
 export class UserAlreadyExists extends UseCaseError {
 
-  constructor(email: string) {
-    super(`A user with the email '${email}' already exists`);
+  constructor(field: string, value: string) {
+    super(`A user with the ${field} '${value}' already exists`);
   }
 }
 
