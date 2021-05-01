@@ -28,6 +28,7 @@ class ExchangeAccountMapper {
   }
 
   public static isExchangeAccountDao(toBeDetermined: string | IExchangeAccountDao): toBeDetermined is IExchangeAccountDao {
+    if (!toBeDetermined) return false;
     if ((toBeDetermined as IExchangeAccountDao).credentials) {
       return true;
     }

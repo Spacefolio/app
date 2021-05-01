@@ -1,13 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
 import { Exchange, ExchangeAccount, IUser } from '../../../../src/core/entities';
 import makeFakeUser from '../../fixtures/UserFixture';
-import { testServer } from '../../fixtures/TestServer';
+import { TestServer } from '../../fixtures/TestServer';
 import { AuthenticateUserRequest, IUserEntityGateway } from '../../../../src/core/use-cases/user';
 import { IExchangeAccountEntityGateway } from '../../../../src/core/use-cases/integration/exchangeAccount';
 import makeFakeExchangeAccount from '../../fixtures/ExchangeAccountFixture';
 import { AddExchangeAccountRequestBody } from '../../../../src/entrypoint/web/controllers';
+import { connectMongo, clearMongo, closeMongo } from '../../fixtures/DatabaseFixture';
 
 describe('Exchange Account API', () => {
+	let testServer: TestServer;
 	let userDatabase: IUserEntityGateway;
 	let exchangeAccountDatabase: IExchangeAccountEntityGateway;
 	const fakeUser = makeFakeUser({});
@@ -26,12 +28,15 @@ describe('Exchange Account API', () => {
 			// Throw only if the status code is greater than or equal to 500
 			return status < 500;
 		};
+
+		testServer = TestServer.createTestServer();
+		await connectMongo(testServer.config, testServer.logger);
 		userDatabase = testServer.userDatabase;
 		exchangeAccountDatabase = testServer.exchangeAccountDatabase;
 	});
 
   beforeEach(async () => {
-    await testServer.clearDb();
+    await clearMongo();
 
     await axios.post<IUser>('/users/register', { ...fakeUser });
 
@@ -44,6 +49,7 @@ describe('Exchange Account API', () => {
   });
 
 	afterAll(async (done) => {
+		await closeMongo();
 		await testServer.close();
 		done();
 	});

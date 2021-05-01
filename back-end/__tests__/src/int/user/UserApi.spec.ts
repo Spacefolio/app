@@ -1,10 +1,12 @@
 import axios, { AxiosResponse } from "axios";
 import { IUser } from '../../../../src/core/entities';
 import makeFakeUser from '../../fixtures/UserFixture';
-import { testServer } from '../../fixtures/TestServer';
+import { TestServer } from '../../fixtures/TestServer';
 import { IUserEntityGateway } from '../../../../src/core/use-cases/user';
+import { connectMongo, clearMongo, closeMongo } from "../../fixtures/DatabaseFixture";
 
 describe('User API', () => {
+  let testServer: TestServer;
   let userDatabase: IUserEntityGateway;
  
   beforeAll(async () => {
@@ -14,13 +16,17 @@ describe('User API', () => {
       // Throw only if the status code is greater than or equal to 500
       return status < 500;
     }
+
+    testServer = TestServer.createTestServer();
+    await connectMongo(testServer.config, testServer.logger);
     userDatabase = testServer.userDatabase;
   });
   beforeEach(async () => {
-    await testServer.clearDb();
+    await clearMongo();
   });
 
   afterAll(async (done) => {
+    await closeMongo();
     await testServer.close();
     done();
   });

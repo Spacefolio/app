@@ -1,4 +1,4 @@
-import { ExchangeAccountInMemoryEntityGateway, ExchangeAccountMongooseEntityGateway, UserInMemoryEntityGateway, UserMongooseEntityGateway } from "../../data";
+import { ExchangeAccountInMemoryEntityGateway, ExchangeAccountMongooseEntityGateway, UserInMemoryEntityGateway, UserMongooseEntityGateway, UserModel, ExchangeAccountModel } from "../../data";
 
 class DatabaseConfiguration {
 
@@ -8,7 +8,7 @@ class DatabaseConfiguration {
   }
 
   static getUserMongoDatabase(): UserMongooseEntityGateway {
-    const db = new UserMongooseEntityGateway();
+    const db = new UserMongooseEntityGateway(UserModel, ExchangeAccountModel);
     return db;
   }
 
@@ -18,7 +18,7 @@ class DatabaseConfiguration {
   }
 
   static getExchangeAccountMongoDatabase(): ExchangeAccountMongooseEntityGateway {
-    const db = new ExchangeAccountMongooseEntityGateway();
+    const db = new ExchangeAccountMongooseEntityGateway(ExchangeAccountModel);
     return db;
   }
 }

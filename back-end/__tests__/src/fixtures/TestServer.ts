@@ -1,5 +1,6 @@
+import { Logger } from 'log4js';
 import { Server } from 'node:http';
-import config from '../../../src/config';
+import config, { IAppConfig } from '../../../src/config';
 import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from '../../../src/config/core';
 import { DatabaseConfiguration } from '../../../src/config/data';
 import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from '../../../src/config/entrypoint';
@@ -7,14 +8,19 @@ import { IExchangeAccountEntityGateway } from '../../../src/core/use-cases/integ
 import IUserEntityGateway from '../../../src/core/use-cases/user/UserEntityGateway';
 
 export class TestServer {
-
-	private constructor(public userDatabase: IUserEntityGateway, public exchangeAccountDatabase: IExchangeAccountEntityGateway, public server: Server) {}
+	private constructor(
+		public userDatabase: IUserEntityGateway,
+		public exchangeAccountDatabase: IExchangeAccountEntityGateway,
+		public server: Server,
+		public config: IAppConfig,
+		public logger: Logger
+	) {}
 
 	public static createTestServer(): TestServer {
 		const logger = LoggerConfiguration.getLogger(config);
 
-		const userDatabase = DatabaseConfiguration.getUserInMemoryDatabase();
-		const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountInMemoryDatabase();
+		const userDatabase = DatabaseConfiguration.getUserMongoDatabase();
+		const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountMongoDatabase();
 
 		const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
 		const authenticateUserController = ControllersConfiguration.getAuthenticateUserController(authenticateUserUseCase);
@@ -56,20 +62,11 @@ export class TestServer {
 
 		const server = expressApp.boot();
 
-		const testServer = new TestServer(userDatabase, exchangeAccountDatabase, server);
+		const testServer = new TestServer(userDatabase, exchangeAccountDatabase, server, config, logger);
 		return testServer;
 	}
 
-	public async clearDb(): Promise<void> {
-		await this.userDatabase.clearUsers();
-		await this.exchangeAccountDatabase.clearExchangeAccounts();
-	}
-
 	public async close(): Promise<void> {
-		await this.clearDb();
-		this.server.close(() => { return; });
+		this.server.close();
 	}
 }
-
-const testServer = TestServer.createTestServer();
-export { testServer }

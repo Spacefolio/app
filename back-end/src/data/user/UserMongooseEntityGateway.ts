@@ -1,21 +1,21 @@
 import { IUserEntityGateway, CreateUserPayload } from '../../core/use-cases/user';
 import { User, IUser, makeUser, ExchangeAccount } from '../../core/entities';
-import UserModel, { IUserDocument } from './UserModel';
+import { IUserDocument } from './UserModel';
 import UserMapper from './UserMapper';
-import { ExchangeAccountModel } from '..';
-
-const Users = UserModel;
-const ExchangeAccounts = ExchangeAccountModel;
+import { IExchangeAccountDocument } from '..';
+import { Model } from 'mongoose';
 
 class UserMongooseEntityGateway implements IUserEntityGateway {
+
+  constructor(public Users: Model<IUserDocument>, public ExchangeAccounts: Model<IExchangeAccountDocument>) {}
   
   async exists (email: string): Promise<boolean> {
-    const exists = await Users.exists({ email });
+    const exists = await this.Users.exists({ email });
     return exists;
   }
 
   async getUser(email: string): Promise<User | undefined> {
-    const user = await Users.findOne({ email }).populate('exchangeAccounts');
+    const user = await this.Users.findOne({ email }).populate('exchangeAccounts');
     if (user) {
       return UserMapper.toDomain(user);
     }
@@ -23,7 +23,7 @@ class UserMongooseEntityGateway implements IUserEntityGateway {
   }
 
   async updateUser(user: IUser): Promise<User | undefined> {
-    const userToUpdate = await Users.findOne({ email: user.email });
+    const userToUpdate = await this.Users.findOne({ email: user.email });
 
     if (!userToUpdate) {
       return undefined;
@@ -43,36 +43,37 @@ class UserMongooseEntityGateway implements IUserEntityGateway {
   }
 
   async createUser(payload: CreateUserPayload): Promise<User> {
-    const newUser = await Users.create(payload);
+    const newUser = await this.Users.create(payload);
     const userEntity = UserMapper.toDomain(newUser);
     return userEntity;
   }
 
   async getUsers(): Promise<User[]> {
-    const users = await Users.find().lean();
+    const users = await this.Users.find().lean();
     return users.map((user) => UserMapper.toDomain(user));
   }
 
   async clearUsers() : Promise<void> {
-    await Users.remove({});
+    await this.Users.remove({});
   }
 
   async addExchangeAccountForUser(email: string, exchangeAccount: ExchangeAccount): Promise<void> {
-    const user = await Users.findOne({ email });
+    const user = await this.Users.findOne({ email });
     if (!user) return;
 
-    const account = await ExchangeAccounts.findOne({ accountId: exchangeAccount.accountId }).lean();
+    const account = await this.ExchangeAccounts.findOne({ accountId: exchangeAccount.accountId }).lean();
     if (!account) return;
+    
     const accounts = user.exchangeAccounts as string[];
-    user.exchangeAccounts = [...accounts, account.id];
+    user.exchangeAccounts = [...accounts, account._id];
     await user.save();
   }
 
   async removeExchangeAccountForUser(email: string, accountId: string): Promise<void> {
-    const user: IUserDocument | null = await Users.findOne({ email });
+    const user: IUserDocument | null = await this.Users.findOne({ email });
     if (!user) return;
 
-    const exchangeAccount = await ExchangeAccounts.findOne({ accountId }).lean();
+    const exchangeAccount = await this.ExchangeAccounts.findOne({ accountId }).lean();
     if (!exchangeAccount) return;
 
     const updatedAccounts = user.exchangeAccounts as string[];

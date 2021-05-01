@@ -1,43 +1,55 @@
-import mongoose from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import { IAppConfig } from '../../../src/config';
+import { Logger } from 'log4js';
 
-const mongoServer = new MongoMemoryServer();
-
-const opts = {
+const connectionOptions = {
+  useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false
 };
 
-// Provide connection to a new in-memory database server.
-const connect = async (): Promise<void> => {
-  // NOTE: before establishing a new connection close previous
-  await mongoose.disconnect();
+const mongod = new MongoMemoryServer();
 
-  const mongoUri = await mongoServer.getUri();
-  mongoose.connect(mongoUri, opts, err => {
-    if (err) {
-      console.error(err);
-    }
-  });
-};
+const connectMongo = async (config: IAppConfig, logger: Logger): Promise<Connection> => {
+  const uri = await mongod.getUri();
 
-// Remove and close the database and server.
-const close = async (): Promise<void> => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-};
-
-// Remove all data from collections
-const clear = async (): Promise<void> => {
-  const collections = mongoose.connection.collections;
-
-  for (const key in collections) {
-    await collections[key].deleteMany({});
+  if (config.env.dev) {
+    mongoose.set('debug', false);
   }
-};
 
-export {
-  connect,
-  close,
-  clear,
-};
+  // set mongoose Promise to Bluebird
+  mongoose.Promise = Promise;
+
+  // Exit application on error
+  mongoose.connection.on('error', (err) => {
+    logger.error(`MongoDB connection error: ${err}`);
+  });
+
+  mongoose.connect(uri, connectionOptions);
+
+  return new Promise((resolve) => {
+    mongoose.connection.on('connected', () => {
+      logger.info(`Mongoose default connection is open to ${uri}`);
+      resolve(mongoose.connection);
+    });
+  });
+}
+
+const clearMongo = async (): Promise<void> => {
+    const collections = mongoose.connection.collections;
+
+    for (const key in collections) {
+        const collection = collections[key];
+        await collection.deleteMany({});
+    }
+}
+
+const closeMongo = async (): Promise<void> => {
+    await mongoose.connection.dropDatabase();
+    await mongoose.connection.close();
+    await mongod.stop();
+}
+
+export { connectMongo, closeMongo, clearMongo };

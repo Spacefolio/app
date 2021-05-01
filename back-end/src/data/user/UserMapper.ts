@@ -7,7 +7,6 @@ import { IUserDocument, IUserDao } from "./UserModel";
 
 class UserMapper {
   public static toDomain(raw: LeanDocument<IUserDocument>): User {
-
     let exchangeAccounts: ExchangeAccount[] = [];
     if (raw.exchangeAccounts && raw.exchangeAccounts.length > 0 && ExchangeAccountMapper.isExchangeAccountDao(raw.exchangeAccounts[0]))
     {
