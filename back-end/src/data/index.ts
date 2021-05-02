@@ -5,6 +5,8 @@ export { default as UserMapper } from './User/UserMapper';
 export { default as ExchangeAccountInMemoryEntityGateway } from './Integrations/ExchangeAccount/ExchangeAccountInMemoryEntityGateway';
 export { default as ExchangeAccountMongooseEntityGateway } from './Integrations/ExchangeAccount/ExchangeAccountMongooseEntityGateway';
 export { default as ExchangeAccountMapper } from './Integrations/ExchangeAccount/ExchangeAccountMapper';
+export { default as DigitalAssetInMemoryEntityGateway } from './Integrations/DigitalAsset/DigitalAssetInMemoryEntityGateway';
+export { default as DigitalAssetMapper } from './Integrations/DigitalAsset/DigitalAssetMapper';
 export { IExchangeAccountDao, default as ExchangeAccountModel, IExchangeAccountDocument } from './Integrations/ExchangeAccount/ExchangeAccountModel';
 
 export { default as connectMongoose } from './mongoose';

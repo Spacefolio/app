@@ -14,4 +14,12 @@ export {
 	Exchange,
 	ExchangeNames,
 	makeExchangeAccount,
+	IDigitalAsset,
+	IAsset,
+	IHolding,
+	IHoldingTotal,
+	IHoldingBalance,
+	IAmounts,
+	IValues,
+	IValue,
 } from './Integrations';
