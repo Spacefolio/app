@@ -1,1 +1,0 @@
-export { SaveDigitalAssetsInvalidRequest } from './SaveDigitalAssetsInvalidRequest';

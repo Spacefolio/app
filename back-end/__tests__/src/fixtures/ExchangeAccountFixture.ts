@@ -3,7 +3,7 @@ import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
 import { Exchange, IExchangeAccount } from '../../../src/core/entities';
 import { makeId } from '../../../src/data';
 
-export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAccount>): IExchangeAccount {
+export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAccount> = {}): IExchangeAccount {
   const exchangeAccountParams: IExchangeAccount = {
     accountId: makeId(),
     exchange: ExchangesConfiguration.get(Exchange.COINBASE),

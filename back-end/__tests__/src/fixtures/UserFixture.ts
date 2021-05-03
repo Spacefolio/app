@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { IUser } from '../../../src/core/entities';
 
-export default function makeFakeUser (overrides: Partial<IUser>): IUser {
+export default function makeFakeUser (overrides: Partial<IUser> = {}): IUser {
   const userParams: IUser = {
     email: faker.internet.email(),
     username: faker.hacker.adjective() + '_' + faker.hacker.noun(),

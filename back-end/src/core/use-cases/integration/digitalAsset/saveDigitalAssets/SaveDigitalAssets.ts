@@ -1,25 +1,27 @@
-import { SaveDigitalAssetsInvalidRequest, SaveDigitalAssetsRequest, SaveDigitalAssetsResponse } from '.';
-import { IDigitalAssetEntityGateway } from '..';
+import { SaveDigitalAssetsResponse } from '.';
+import { IDigitalAssetEntityGateway, IDigitalAssetMarketData } from '..';
 import { IUseCase, Result } from '../../../../definitions';
 import { IDigitalAsset } from '../../../../entities/Integrations/Asset';
 
-class SaveDigitalAssetsUseCase implements IUseCase<SaveDigitalAssetsRequest, SaveDigitalAssetsResponse> {
+class SaveDigitalAssetsUseCase implements IUseCase<undefined, SaveDigitalAssetsResponse> {
 	private digitalAssetEntityGateway: IDigitalAssetEntityGateway;
+	private fetchDigitalAssets: () => Promise<IDigitalAssetMarketData[]>
 
 	constructor(
 		digitalAssetEntityGateway: IDigitalAssetEntityGateway,
+		fetchDigitalAssets: () => Promise<IDigitalAssetMarketData[]>
 	) {
 		this.digitalAssetEntityGateway = digitalAssetEntityGateway;
+		this.fetchDigitalAssets = fetchDigitalAssets;
 	}
 
-	async execute(request: SaveDigitalAssetsRequest): Promise<SaveDigitalAssetsResponse> {
-		if (!request || !request.digitalAssets) {
-			return Result.fail(new SaveDigitalAssetsInvalidRequest(request));
-		}
+	async execute(): Promise<SaveDigitalAssetsResponse> {
+
+		const marketsData = await this.fetchDigitalAssets();
 
 		const assets: IDigitalAsset[] = [];
 
-		for (const marketData of request.digitalAssets)
+		for (const marketData of marketsData)
 		{
 			let asset: IDigitalAsset | undefined = undefined;
 
