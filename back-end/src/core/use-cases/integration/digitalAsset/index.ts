@@ -1,5 +1,7 @@
-export * from './getDigitalAsset';
 export * from './saveDigitalAssets';
+export * from './getDigitalAsset';
+export * from './getDigitalAssetCurrentValue';
+
 
 export {
 	default as IDigitalAssetEntityGateway,

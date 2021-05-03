@@ -4,7 +4,7 @@ import { makeFakeDigitalAssetMarketData } from "../../../../../../__tests__/src/
 import { DigitalAssetInMemoryEntityGateway } from "../../../../../data";
 import { IDigitalAsset } from "../../../../entities";
 
-describe('Save All Digital Assets Use Case', () => {
+describe('Get Digital Asset Use Case', () => {
   const digitalAssetDatabase: IDigitalAssetEntityGateway = new DigitalAssetInMemoryEntityGateway();
   const getDigitalAssetUseCase: GetDigitalAssetUseCase = new GetDigitalAssetUseCase(digitalAssetDatabase);
   const fakeDigitalAsset = makeFakeDigitalAssetMarketData();
