@@ -65,7 +65,7 @@ export function makeFakeDigitalAssetMarketData (overrides: Partial<IDigitalAsset
     atl_date: faker.datatype.datetime().toTimeString(),
     last_updated: faker.datatype.datetime().toTimeString(),
     sparkline_in_7d: {
-      price: faker.datatype.array(7*24) as number[]
+      price: [faker.datatype.number()]
     }
   };
 

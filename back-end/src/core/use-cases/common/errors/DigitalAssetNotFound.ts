@@ -3,7 +3,7 @@ import { UseCaseError } from "../../../definitions";
 export class DigitalAssetNotFound extends UseCaseError {
 
   constructor(assetId: string) {
-    super(`The provided digital asset id '${assetId}' did not match any existing digital assets`);
+    super(`No historical data could be found for the provided digital asset id '${assetId}'`);
   }
 }
 

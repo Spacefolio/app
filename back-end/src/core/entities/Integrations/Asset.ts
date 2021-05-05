@@ -31,3 +31,13 @@ export interface IDigitalAsset extends IAsset{
     price: number[];
   }
 }
+
+export interface IHistoricalPrice {
+  timestamp: number;
+  price: number;
+}
+
+export interface IDigitalAssetHistory {
+  assetId: string;
+  prices: IHistoricalPrice[];
+}
