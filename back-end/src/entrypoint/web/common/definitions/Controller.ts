@@ -19,7 +19,7 @@ type Payload = Record<string, unknown>;
 abstract class BaseController<T extends IUseCase = IUseCase> {
 	protected usecase: T;
 
-	constructor(usecase: T) {
+	constructor(usecase: T) { 
 		this.usecase = usecase;
 	}
 

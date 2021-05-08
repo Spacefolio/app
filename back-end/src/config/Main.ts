@@ -40,11 +40,25 @@ export async function main(): Promise<void> {
 	);
 	const getAllExchangeAccountsController = ControllersConfiguration.getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase);
 
+	const getHoldingsUseCase = ExchangeAccountUseCasesConfiguration.getGetHoldingsUseCase(
+		userDatabase,
+		exchangeAccountDatabase
+	);
+	const getHoldingsController = ControllersConfiguration.getGetHoldingsController(getHoldingsUseCase);
+
+	const getTransactionsUseCase = ExchangeAccountUseCasesConfiguration.getGetTransactionsUseCase(
+		userDatabase,
+		exchangeAccountDatabase
+	);
+	const getTransactionsController = ControllersConfiguration.getGetTransactionsController(getTransactionsUseCase);
+
 	const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
 		addExchangeAccountController,
 		removeExchangeAccountController,
 		getExchangeAccountController,
-		getAllExchangeAccountsController
+		getAllExchangeAccountsController,
+		getHoldingsController,
+		getTransactionsController
 	);
 	const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
 

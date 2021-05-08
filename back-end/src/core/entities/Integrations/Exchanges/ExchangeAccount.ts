@@ -1,5 +1,6 @@
 import { IExchange } from ".";
 import { BaseIntegration, IHolding, IIntegration, ITransaction } from "..";
+import { IDigitalAssetTransaction } from "../Transaction";
 
 export interface IExchangeCredentials {
   apiKey?: string;
@@ -17,6 +18,8 @@ export interface IExchangeAccount extends IIntegration {
   accountId: string;
   exchange: IExchange;
   credentials: IExchangeCredentials;
+  transactions: IDigitalAssetTransaction[];
+  holdings: IHolding[];
 }
 
 export class ExchangeAccount extends BaseIntegration implements IExchangeAccount {
@@ -24,18 +27,21 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
   public readonly accountId: string;
   public readonly exchange: IExchange;
   public readonly credentials: IExchangeCredentials;
+  public readonly transactions: IDigitalAssetTransaction[]
 
   protected constructor(exchangeAccount: IExchangeAccount) {
     super(exchangeAccount);
     this.accountId = exchangeAccount.accountId;
     this.exchange = exchangeAccount.exchange;
     this.credentials = exchangeAccount.credentials;
+    this.transactions = exchangeAccount.transactions;
   }
 
-  public GetCurrentHoldings(): Promise<IHolding[]> {
-    throw new Error("Method not implemented.");
+  public async GetCurrentHoldings(): Promise<IHolding[]> {
+    return this.holdings;
   }
-  public GetTransactionHistory(): Promise<ITransaction[]> {
+
+  public async GetTransactionHistory(): Promise<ITransaction[]> {
     throw new Error("Method not implemented.");
   }
 

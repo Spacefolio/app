@@ -28,7 +28,9 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
       accountId: old.accountId,
       exchange: old.exchange,
       nickname: account.nickname || old.nickname,
-      credentials: account.credentials || old.credentials
+      credentials: account.credentials || old.credentials,
+      holdings: old.holdings,
+      transactions: old.transactions
     }
     this.exchangeAccounts[index] = makeExchangeAccount(accountParams);
     return this.exchangeAccounts[index];
@@ -41,7 +43,9 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
       accountId: payload.accountId,
       exchange: exchange,
       nickname: payload.nickname,
-      credentials: payload.credentials
+      credentials: payload.credentials,
+      holdings: payload.holdings || [],
+      transactions: payload.transactions || []
     }
     const exchangeAccount: ExchangeAccount = makeExchangeAccount(accountParams);
     this.exchangeAccounts.push(exchangeAccount);

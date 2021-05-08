@@ -82,6 +82,12 @@ class UserMongooseEntityGateway implements IUserEntityGateway {
 		user.exchangeAccounts = updatedAccounts.filter((id: string) => id != exchangeAccount.id);
 		await user.save();
 	}
+
+	async userHasExchangeAccount(email: string, accountId: string): Promise<boolean> {
+    const user = await this.getUser(email);
+    if (!user) return false;
+    return user.exchangeAccounts.some((account) => account.accountId === accountId);
+  }
 }
 
 export default UserMongooseEntityGateway;

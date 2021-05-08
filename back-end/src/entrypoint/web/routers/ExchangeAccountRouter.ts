@@ -6,6 +6,8 @@ import {
 	AddExchangeAccountController,
 	GetAllExchangeAccountsController,
 	GetExchangeAccountController,
+	GetHoldingsController,
+	GetTransactionsController,
 	RemoveExchangeAccountController,
 } from '../controllers';
 
@@ -14,18 +16,24 @@ class ExchangeAccountRouter implements BaseRouter {
 	removeExchangeAccountController: RemoveExchangeAccountController;
 	getExchangeAccountController: GetExchangeAccountController;
 	getAllExchangeAccountsController: GetAllExchangeAccountsController;
+	getHoldingsController: GetHoldingsController;
+	getTransactionsController: GetTransactionsController;
 	router: Router;
 
 	constructor(
 		addExchangeAccountController: AddExchangeAccountController,
 		removeExchangeAccountController: RemoveExchangeAccountController,
 		getExchangeAccountController: GetExchangeAccountController,
-		getAllExchangeAccountsController: GetAllExchangeAccountsController
+		getAllExchangeAccountsController: GetAllExchangeAccountsController,
+		getHoldingsController: GetHoldingsController,
+		getTransactionsController: GetTransactionsController
 	) {
 		this.addExchangeAccountController = addExchangeAccountController;
 		this.removeExchangeAccountController = removeExchangeAccountController;
 		this.getExchangeAccountController = getExchangeAccountController;
 		this.getAllExchangeAccountsController = getAllExchangeAccountsController;
+		this.getHoldingsController = getHoldingsController;
+		this.getTransactionsController = getTransactionsController;
 		this.router = Router();
 		this.configRouter();
 	}
@@ -33,6 +41,8 @@ class ExchangeAccountRouter implements BaseRouter {
 	private configRouter(): void {
 		this.router.get(`/`, [this.getAllExchangeAccountsController.getRequestHandler()]);
 		this.router.get(`/:accountId`, [this.getExchangeAccountController.getRequestHandler()]);
+		this.router.get(`/:accountId/transactions`, [this.getTransactionsController.getRequestHandler()]);
+		this.router.get(`/:accountId/holdings`, [this.getHoldingsController.getRequestHandler()]);
 		this.router.post(`/`, [
 			body('exchange').isString(),
 			body('nickname').isString(),

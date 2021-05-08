@@ -1,10 +1,13 @@
-import { Exchange, ExchangeAccount, IExchangeCredentials } from "../../../entities";
+import { Exchange, ExchangeAccount, IExchangeCredentials, IHolding } from "../../../entities";
+import { IDigitalAssetTransaction } from "../../../entities/Integrations/Transaction";
 
 export interface ICreateExchangeAccountPayload {
   accountId: string;
   exchange: Exchange;
   nickname: string;
   credentials: IExchangeCredentials;
+  holdings?: IHolding[];
+  transactions?: IDigitalAssetTransaction[];
 }
 
 export interface IUpdateExchangeAccountPayload {

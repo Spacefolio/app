@@ -6,6 +6,7 @@ import { DatabaseConfiguration } from '../../../src/config/data';
 import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from '../../../src/config/entrypoint';
 import { IExchangeAccountEntityGateway } from '../../../src/core/use-cases/integration/exchangeAccount';
 import IUserEntityGateway from '../../../src/core/use-cases/user/UserEntityGateway';
+import { GetHoldingsController } from '../../../src/entrypoint/web/controllers';
 
 export class TestServer {
 	private constructor(
@@ -50,11 +51,19 @@ export class TestServer {
 		);
 		const getAllExchangeAccountsController = ControllersConfiguration.getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase);
 
+		const getHoldingsUseCase = ExchangeAccountUseCasesConfiguration.getGetHoldingsUseCase(userDatabase, exchangeAccountDatabase);
+		const getHoldingsController = ControllersConfiguration.getGetHoldingsController(getHoldingsUseCase);
+
+		const getTransactionsUseCase = ExchangeAccountUseCasesConfiguration.getGetTransactionsUseCase(userDatabase, exchangeAccountDatabase);
+		const getTransactionsController = ControllersConfiguration.getGetTransactionsController(getTransactionsUseCase);
+
 		const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
 			addExchangeAccountController,
 			removeExchangeAccountController,
 			getExchangeAccountController,
-			getAllExchangeAccountsController
+			getAllExchangeAccountsController,
+			getHoldingsController,
+			getTransactionsController
 		);
 		const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
 

@@ -193,4 +193,17 @@ describe('Exchange Account API', () => {
       expect(addResponse.data.accountId + add2Response.data.accountId).toContain(getResponse.data[1].accountId);
 		});
 	});
+
+	describe('Get current holdings for an exchange account', () => {
+		it('Gets all transactions from an existing exchange account', async () => {
+			const exchangeAccount = await exchangeAccountDatabase.createExchangeAccount({ ...fakeExchangeAccount, exchange: addRequest.exchange });
+
+			const response = await axios.get(`/integrations/exchanges/${fakeExchangeAccount.accountId}/transactions`);
+			expect(response.status).toBe(200);
+		});
+	});
+
+	describe('Get transactions for an exchange account', () => {
+		
+	});
 });

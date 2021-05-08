@@ -56,6 +56,12 @@ class UserInMemoryEntityGateway implements IUserEntityGateway {
     const indexToRemove = user.exchangeAccounts.findIndex((account) => account.accountId == accountId);
     user.exchangeAccounts.splice(indexToRemove, 1);
   }
+
+  async userHasExchangeAccount(email: string, accountId: string): Promise<boolean> {
+    const user = await this.getUser(email);
+    if (!user) return false;
+    return user.exchangeAccounts.some((account) => account.accountId === accountId);
+  }
 }
 
 export default UserInMemoryEntityGateway;

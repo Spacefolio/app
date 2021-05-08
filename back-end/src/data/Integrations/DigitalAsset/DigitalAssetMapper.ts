@@ -1,31 +1,42 @@
+import { LeanDocument } from "mongoose";
 import { IDigitalAsset } from "../../../core/entities/Integrations/Asset";
 import { IDigitalAssetMarketData } from "../../../core/use-cases/integration/digitalAsset";
+import { IDigitalAssetDocument } from "./DigitalAssetModel";
 
 class DigitalAssetMapper {
-  /*
-  public static toDomain(raw: LeanDocument<IExchangeAccountDocument>): ExchangeAccount {
+  public static toDomain(raw: LeanDocument<IDigitalAssetDocument>): IDigitalAsset {
 
-    const exchangeAccount = makeExchangeAccount({
-      accountId: raw.accountId,
-      exchange: ExchangesConfiguration.get(raw.exchange),
-      credentials: raw.credentials,
-      nickname: raw.nickname
-    });
+    const digitalAsset = {
+      assetId: raw.assetId,
+      symbol: raw.symbol,
+      name: raw.name,
+      image: raw.image,
+      currentPrice: raw.currentPrice,
+      marketCap: raw.marketCap,
+      marketCapRank: raw.marketCapRank,
+      fullyDilutedValuation: raw.fullyDilutedValuation || 0,
+      totalVolume: raw.totalVolume,
+      high24Hour: raw.high24Hour,
+      low24Hour: raw.low24Hour,
+      priceChange24Hour: raw.priceChange24Hour,
+      priceChangePercentage: raw.priceChangePercentage || 0,
+      marketCapChange24Hour: raw.marketCapChange24Hour,
+      marketCapChangePercentage: raw.marketCapChangePercentage,
+      circulatingSupply: raw.circulatingSupply,
+      totalSupply: raw.totalSupply || 0,
+      maxSupply: raw.maxSupply || 0,
+      ath: raw.ath,
+      athChangePercentage: raw.athChangePercentage,
+      athDate: raw.athDate,
+      atl: raw.atl,
+      atlChangePercentage: raw.atlChangePercentage,
+      atlDate: raw.atlDate,
+      lastUpdated: raw.lastUpdated,
+      sparkline7day: raw.sparkline7day
+    };
 
-    return exchangeAccount;
+    return digitalAsset;
   }
-
-  public static fromDomain(exchangeAccount: ExchangeAccount): IExchangeAccountDao {
-    const exchangeAccountDao: IExchangeAccountDao = {
-      accountId: exchangeAccount.accountId,
-      exchange: <Exchange>(exchangeAccount.exchange.id),
-      nickname: exchangeAccount.nickname,
-      credentials: exchangeAccount.credentials
-    }
-
-    return exchangeAccountDao;
-  }
-  */
 
   public static fromMarketData(data: IDigitalAssetMarketData): IDigitalAsset {
     const digitalAsset: IDigitalAsset = {

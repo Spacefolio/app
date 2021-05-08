@@ -5,3 +5,5 @@ export { default as AddExchangeAccountController, AddExchangeAccountRequestBody 
 export { default as RemoveExchangeAccountController } from './integrations/exchanges/RemoveExchangeAccountController';
 export { default as GetAllExchangeAccountsController } from './integrations/exchanges/GetAllExchangeAccountsController';
 export { default as GetExchangeAccountController } from './integrations/exchanges/GetExchangeAccountController';
+export { default as GetHoldingsController } from './integrations/exchanges/GetHoldingsController';
+export { default as GetTransactionsController } from './integrations/exchanges/GetTransactionsController';

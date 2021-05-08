@@ -19,6 +19,7 @@ interface IUserEntityGateway {
   clearUsers(): Promise<void>;
   addExchangeAccountForUser(email: string, exchangeAccount: ExchangeAccount): Promise<void>;
   removeExchangeAccountForUser(email: string, accountId: string): Promise<void>;
+  userHasExchangeAccount(email: string, accountId: string): Promise<boolean>;
 }
 
 export default IUserEntityGateway;

@@ -4,7 +4,9 @@ import {
 	RegisterUserController,
 	RemoveExchangeAccountController,
 	GetExchangeAccountController,
-	GetAllExchangeAccountsController
+	GetAllExchangeAccountsController,
+	GetHoldingsController,
+	GetTransactionsController
 } from '../../entrypoint/web/controllers';
 import ExchangeAccountRouter from '../../entrypoint/web/routers/ExchangeAccountRouter';
 import IntegrationRouter from '../../entrypoint/web/routers/IntegrationRouter';
@@ -19,13 +21,17 @@ class RouterConfiguration {
 		addExchangeAccountController: AddExchangeAccountController,
 		removeExchangeAccountController: RemoveExchangeAccountController,
 		getExchangeAccountController: GetExchangeAccountController,
-		getAllExchangeAccountsController: GetAllExchangeAccountsController
+		getAllExchangeAccountsController: GetAllExchangeAccountsController,
+		getHoldingsController: GetHoldingsController,
+		getTransactionsController: GetTransactionsController
 	): ExchangeAccountRouter {
 		return new ExchangeAccountRouter(
 			addExchangeAccountController,
 			removeExchangeAccountController,
 			getExchangeAccountController,
-			getAllExchangeAccountsController
+			getAllExchangeAccountsController,
+			getHoldingsController,
+			getTransactionsController
 		);
 	}
 
