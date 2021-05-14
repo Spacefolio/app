@@ -1,0 +1,1 @@
+export { default as DigitalAssetsConfiguration } from './DigitalAssetsConfiguration';

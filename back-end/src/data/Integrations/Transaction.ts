@@ -1,14 +1,14 @@
-import { TransactionType } from "../../core/entities";
 import { TransactionStatus } from "../../core/entities/Integrations/Transaction";
 import mongoose from "mongoose";
+import { Action } from "../../core/entities";
 
 export interface ITransactionDao {
   timestamp: number;
-  type: TransactionType;
+  type: Action.WITHDRAW | Action.DEPOSIT;
 }
 
 export interface IFeeDao {
-  currency: string;
+  assetId: string;
   rate: number;
   cost: number;
 }
@@ -22,7 +22,7 @@ export const feeSchema = new mongoose.Schema({
 export interface IDigitalAssetTransactionDao extends ITransactionDao {
   address: string;
   amount: number;
-  currency: string;
+  assetId: string;
   status: TransactionStatus;
   fee: IFeeDao
 }
@@ -31,7 +31,7 @@ export interface IDigitalAssetTransactionDocument extends IDigitalAssetTransacti
 
 export const digitalAssetTransactionSchema = new mongoose.Schema({
   timestamp: Number,
-  type: { type: String, enum: TransactionType, required: true },
+  type: { type: String, enum: Action, required: true },
   address: String,
   amount: Number,
   currency: String,

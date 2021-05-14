@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Action } from "../../core/entities";
 import { IAssetDao } from "./DigitalAsset/DigitalAssetModel";
 
 export interface IAmountsDao {
@@ -24,6 +25,7 @@ export interface IHoldingTotalDao {
   value: IValuesDao;
   averageBuyPrice: IValueDao;
   averageSellPrice: IValueDao;
+  fees: IValueDao;
 }
 
 export interface IHoldingBalanceDao {
@@ -47,6 +49,7 @@ export interface IHoldingSnapshotDao {
   bought?: IAmountAndValueDao;
   sold?: IAmountAndValueDao;
   total: IHoldingTotalDao;
+  action: Action;
 }
 
 export interface IHoldingDao {

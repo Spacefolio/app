@@ -1,6 +1,8 @@
 import { IExchange } from ".";
-import { BaseIntegration, IHolding, IIntegration, ITransaction } from "..";
+import { BaseIntegration, IHolding, IIntegration, IOrder, ITimeslices } from "..";
+import HoldingsSnapshots from "../HoldingsSnapshots";
 import { IDigitalAssetTransaction } from "../Transaction";
+import { Balances, BaseExchange } from "./Exchange";
 
 export interface IExchangeCredentials {
   apiKey?: string;
@@ -8,7 +10,6 @@ export interface IExchangeCredentials {
   passphrase?: string;
   uid?: string;
   login?: string;
-  twofa?: string;
   privateKey?: string;
   walletAddress?: string;
   token?: string;
@@ -19,15 +20,24 @@ export interface IExchangeAccount extends IIntegration {
   exchange: IExchange;
   credentials: IExchangeCredentials;
   transactions: IDigitalAssetTransaction[];
+  orders: IOrder[];
+  openOrders: IOrder[];
   holdings: IHolding[];
+  dailyTimeslices: ITimeslices;
+  hourlyTimeslices: ITimeslices;
+  lastSynced: Date;
 }
 
 export class ExchangeAccount extends BaseIntegration implements IExchangeAccount {
-  
   public readonly accountId: string;
   public readonly exchange: IExchange;
   public readonly credentials: IExchangeCredentials;
-  public readonly transactions: IDigitalAssetTransaction[]
+  public readonly transactions: IDigitalAssetTransaction[];
+  public readonly orders: IOrder[];
+  public readonly openOrders: IOrder[];
+  public readonly lastSynced: Date;
+  public readonly dailyTimeslices: ITimeslices;
+  public readonly hourlyTimeslices: ITimeslices;
 
   protected constructor(exchangeAccount: IExchangeAccount) {
     super(exchangeAccount);
@@ -35,16 +45,45 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
     this.exchange = exchangeAccount.exchange;
     this.credentials = exchangeAccount.credentials;
     this.transactions = exchangeAccount.transactions;
+    this.orders = exchangeAccount.orders;
+    this.openOrders = exchangeAccount.openOrders;
+    this.lastSynced = exchangeAccount.lastSynced;
+    this.dailyTimeslices = exchangeAccount.dailyTimeslices;
+    this.hourlyTimeslices = exchangeAccount.hourlyTimeslices;
   }
 
-  public async GetCurrentHoldings(): Promise<IHolding[]> {
-    return this.holdings;
+  async createUpdatedOrders(orders: IOrder[]): Promise<IOrder[]> {
+    return [...this.orders].concat(orders);
   }
 
-  public async GetTransactionHistory(): Promise<ITransaction[]> {
-    throw new Error("Method not implemented.");
+  async createUpdatedTransactions(transactions: IDigitalAssetTransaction[]): Promise<IDigitalAssetTransaction[]> {
+    return [...this.transactions].concat(transactions);
   }
 
+  async createUpdatedHoldings(exchange: BaseExchange, orders: IOrder[], transactions: IDigitalAssetTransaction[], balances: Balances): Promise<IHolding[]> {
+    const holdings: IHolding[] = [];
+
+    const holdingsSnapshots: HoldingsSnapshots = await this.createHoldingsSnapshots(exchange, orders, transactions, balances);
+    
+    console.log(holdingsSnapshots);
+
+    return holdings;
+	}
+
+  async createDailyTimeslices(): Promise<ITimeslices> {
+    return {};
+  }
+
+  async createHourlyTimeslices(): Promise<ITimeslices> {
+    return {};
+  }
+
+  async createHoldingsSnapshots(exchange: BaseExchange, orders: IOrder[], transactions: IDigitalAssetTransaction[], balances: Balances): Promise<HoldingsSnapshots> {
+    const holdingsSnapshots = new HoldingsSnapshots(exchange, orders, transactions, balances);
+    await holdingsSnapshots.createSnapshots();
+    return holdingsSnapshots;
+  }
+  
   static buildMakeExchangeAccount() {
     return function makeExchangeAccount(exchangeAccountParams: IExchangeAccount): ExchangeAccount
     {

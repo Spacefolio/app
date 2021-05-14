@@ -1,4 +1,4 @@
-import { Exchange, ExchangeAccount, IExchangeCredentials, IHolding } from "../../../entities";
+import { Exchange, ExchangeAccount, IExchangeCredentials, IHolding, IOrder, ITimeslices } from "../../../entities";
 import { IDigitalAssetTransaction } from "../../../entities/Integrations/Transaction";
 
 export interface ICreateExchangeAccountPayload {
@@ -14,6 +14,13 @@ export interface IUpdateExchangeAccountPayload {
   accountId: string;
   nickname?: string;
   credentials?: IExchangeCredentials;
+  dailyTimeslices?: ITimeslices;
+  hourlyTimeslices?: ITimeslices;
+  lastSynced?: Date;
+  orders?: IOrder[];
+  openOrders?: IOrder[];
+  transactions?: IDigitalAssetTransaction[];
+  holdings?: IHolding[];
 }
 
 interface IExchangeAccountEntityGateway {

@@ -4,14 +4,14 @@ import IUserEntityGateway from "../UserEntityGateway";
 import { AuthenticateUserRequest, AuthenticateUserResponse } from ".";
 import { AuthenticateUserInvalidRequest, InvalidCredentials, UserNotFound } from "./errors";
 
-export type VerifyHash = (hash: string, pass: string) => Promise<boolean>
+export type VerifyHashHandler = (hash: string, pass: string) => Promise<boolean>
 
 class AuthenticateUserUseCase implements IUseCase<AuthenticateUserRequest, AuthenticateUserResponse> {
   
   private userEntityGateway: IUserEntityGateway;
   private verifyHash;
 
-  constructor(userEntityGateway: IUserEntityGateway, verifyHash: VerifyHash) {
+  constructor(userEntityGateway: IUserEntityGateway, verifyHash: VerifyHashHandler) {
     this.userEntityGateway = userEntityGateway;
     this.verifyHash = verifyHash;
   }

@@ -1,7 +1,4 @@
-export enum TransactionType {
-  DEPOSIT = "deposit",
-  WITHDRAWAL = "withdrawal"
-}
+import { Action } from ".";
 
 export enum TransactionStatus {
   PENDING = 'pending',
@@ -9,20 +6,20 @@ export enum TransactionStatus {
 }
 
 export interface IFee {
-  currency: string;
+  assetId: string;
   rate: number;
   cost: number;
 }
 
 export interface ITransaction {
   timestamp: number;
-  type: TransactionType;
+  type: Action.DEPOSIT | Action.WITHDRAW;
 }
 
 export interface IDigitalAssetTransaction extends ITransaction {
   address: string;
   amount: number;
-  currency: string;
+  assetId: string;
   status: TransactionStatus
   fee: IFee;
 }

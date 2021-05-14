@@ -195,15 +195,58 @@ describe('Exchange Account API', () => {
 	});
 
 	describe('Get current holdings for an exchange account', () => {
-		it('Gets all transactions from an existing exchange account', async () => {
+		it('Gets all holdings from an existing exchange account', async () => {
+			const exchangeAccount = await exchangeAccountDatabase.createExchangeAccount({ ...fakeExchangeAccount, exchange: addRequest.exchange });
+			await userDatabase.addExchangeAccountForUser(fakeUser.email, exchangeAccount);
+
+			const response = await axios.get(`/integrations/exchanges/${exchangeAccount.accountId}/holdings`);
+			expect(response.status).toBe(200);
+
+			await exchangeAccountDatabase.deleteExchangeAccount(exchangeAccount.accountId);
+		});
+		it('Exchange account must exist', async () => {
+			const exchangeAccount = await exchangeAccountDatabase.createExchangeAccount({ ...fakeExchangeAccount, exchange: addRequest.exchange });
+			await userDatabase.addExchangeAccountForUser(fakeUser.email, exchangeAccount);
+			await exchangeAccountDatabase.deleteExchangeAccount(exchangeAccount.accountId);
+
+			const response = await axios.get(`/integrations/exchanges/${exchangeAccount.accountId}/holdings`);
+			expect(response.status).toBe(404);
+			await userDatabase.removeExchangeAccountForUser(fakeUser.email, exchangeAccount.accountId);
+		});
+		it('Exchange account must belong to user', async () => {
 			const exchangeAccount = await exchangeAccountDatabase.createExchangeAccount({ ...fakeExchangeAccount, exchange: addRequest.exchange });
 
-			const response = await axios.get(`/integrations/exchanges/${fakeExchangeAccount.accountId}/transactions`);
-			expect(response.status).toBe(200);
+			const response = await axios.get(`/integrations/exchanges/${exchangeAccount.accountId}/holdings`);
+			expect(response.status).toBe(404);
+			await exchangeAccountDatabase.deleteExchangeAccount(exchangeAccount.accountId);
 		});
 	});
 
 	describe('Get transactions for an exchange account', () => {
-		
+		it('Gets all transactions from an existing exchange account', async () => {
+			const exchangeAccount = await exchangeAccountDatabase.createExchangeAccount({ ...fakeExchangeAccount, exchange: addRequest.exchange });
+			await userDatabase.addExchangeAccountForUser(fakeUser.email, exchangeAccount);
+
+			const response = await axios.get(`/integrations/exchanges/${exchangeAccount.accountId}/transactions`);
+			expect(response.status).toBe(200);
+
+			await exchangeAccountDatabase.deleteExchangeAccount(exchangeAccount.accountId);
+		});
+		it('Exchange account must exist', async () => {
+			const exchangeAccount = await exchangeAccountDatabase.createExchangeAccount({ ...fakeExchangeAccount, exchange: addRequest.exchange });
+			await userDatabase.addExchangeAccountForUser(fakeUser.email, exchangeAccount);
+			await exchangeAccountDatabase.deleteExchangeAccount(exchangeAccount.accountId);
+
+			const response = await axios.get(`/integrations/exchanges/${exchangeAccount.accountId}/transactions`);
+			expect(response.status).toBe(404);
+			await userDatabase.removeExchangeAccountForUser(fakeUser.email, exchangeAccount.accountId);
+		});
+		it('Exchange account must belong to user', async () => {
+			const exchangeAccount = await exchangeAccountDatabase.createExchangeAccount({ ...fakeExchangeAccount, exchange: addRequest.exchange });
+
+			const response = await axios.get(`/integrations/exchanges/${exchangeAccount.accountId}/transactions`);
+			expect(response.status).toBe(404);
+			await exchangeAccountDatabase.deleteExchangeAccount(exchangeAccount.accountId);
+		});
 	});
 });

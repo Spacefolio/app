@@ -1,7 +1,7 @@
 import { ExchangeAccount } from '../../../../entities';
 import { Result } from '../../../../definitions';
-import { AddExchangeAccountInvalidRequest, UserNotFound } from './errors';
+import { AddExchangeAccountInvalidRequest, InvalidExchangeCredentials, UserNotFound } from './errors';
 
-type AddExchangeAccountResponse = Result<ExchangeAccount, UserNotFound | AddExchangeAccountInvalidRequest>;
+type AddExchangeAccountResponse = Result<ExchangeAccount, UserNotFound | InvalidExchangeCredentials | AddExchangeAccountInvalidRequest>;
 
 export default AddExchangeAccountResponse;

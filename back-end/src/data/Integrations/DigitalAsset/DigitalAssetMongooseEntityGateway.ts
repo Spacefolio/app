@@ -4,6 +4,7 @@ import { IDigitalAssetEntityGateway, IDigitalAssetMarketData } from "../../../co
 import DigitalAssetMapper from "./DigitalAssetMapper";
 import { IDigitalAssetDocument } from "./DigitalAssetModel";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class DigitalAssetMongooseEntityGateway implements IDigitalAssetEntityGateway {
   constructor(public DigitalAssets: Model<IDigitalAssetDocument>) {}
   

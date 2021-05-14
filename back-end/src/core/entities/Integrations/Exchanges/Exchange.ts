@@ -1,3 +1,8 @@
+import { IHoldingBalance } from "..";
+import { IOrder } from "../Order";
+import { IDigitalAssetTransaction } from "../Transaction";
+import { IExchangeAccount } from "./ExchangeAccount";
+
 export enum Exchange {
   BINANCE = "binance",
   BINANCEUS = "binanceus",
@@ -28,6 +33,8 @@ export interface IRequiredExchangeCredentials {
   token: boolean;
 }
 
+export type Balances = { [assetId: string] : IHoldingBalance }
+
 export interface IExchange {
   id: string,
   name: string,
@@ -36,6 +43,19 @@ export interface IExchange {
 }
 
 export abstract class BaseExchange implements IExchange {
+  protected account: IExchangeAccount | undefined;
+
+	setAccount(exchangeAccount: IExchangeAccount): void {
+		this.account = exchangeAccount;
+	}
+
+  abstract checkIsFiat(symbol: string): boolean;
+  abstract getRate(base: string, quote: string, timestamp?: number): Promise<number>;
+	abstract fetchBalances(): Promise<Balances>;
+	abstract fetchTransactions(): Promise<IDigitalAssetTransaction[]>;
+	abstract fetchOrders(): Promise<IOrder[]>;
+  abstract fetchOpenOrders(): Promise<IOrder[]>;
+
   public readonly id: string;
   public readonly name: string;
   public readonly logoUrl: string;

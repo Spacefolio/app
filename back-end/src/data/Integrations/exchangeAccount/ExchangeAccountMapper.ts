@@ -6,15 +6,18 @@ import { IExchangeAccountDao, IExchangeAccountDocument } from "./ExchangeAccount
 class ExchangeAccountMapper {
   public static toDomain(raw: LeanDocument<IExchangeAccountDocument>): ExchangeAccount {
 
-    
-
     const exchangeAccount = makeExchangeAccount({
       accountId: raw.accountId,
       exchange: ExchangesConfiguration.get(raw.exchange),
       credentials: raw.credentials,
       nickname: raw.nickname,
+      orders: raw.orders,
+      openOrders: raw.openOrders,
+      dailyTimeslices: raw.dailyTimeslices,
+      hourlyTimeslices: raw.hourlyTimeslices,
       transactions: raw.transactions,
-      holdings: raw.holdings
+      holdings: raw.holdings,
+      lastSynced: raw.lastSynced
     });
 
     return exchangeAccount;
@@ -27,7 +30,12 @@ class ExchangeAccountMapper {
       nickname: exchangeAccount.nickname,
       credentials: exchangeAccount.credentials,
       holdings: exchangeAccount.holdings,
-      transactions: exchangeAccount.transactions
+      orders: exchangeAccount.orders, 
+      openOrders: exchangeAccount.openOrders,
+      dailyTimeslices: exchangeAccount.dailyTimeslices,
+      hourlyTimeslices: exchangeAccount.hourlyTimeslices,
+      transactions: exchangeAccount.transactions,
+      lastSynced: exchangeAccount.lastSynced
     }
 
     return exchangeAccountDao;

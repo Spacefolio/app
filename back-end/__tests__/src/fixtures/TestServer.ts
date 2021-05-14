@@ -6,7 +6,7 @@ import { DatabaseConfiguration } from '../../../src/config/data';
 import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from '../../../src/config/entrypoint';
 import { IExchangeAccountEntityGateway } from '../../../src/core/use-cases/integration/exchangeAccount';
 import IUserEntityGateway from '../../../src/core/use-cases/user/UserEntityGateway';
-import { GetHoldingsController } from '../../../src/entrypoint/web/controllers';
+import { verifyCredentials } from './ExchangeInteractionFixture';
 
 export class TestServer {
 	private constructor(
@@ -32,7 +32,8 @@ export class TestServer {
 
 		const addExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getAddExchangeAccountUseCase(
 			userDatabase,
-			exchangeAccountDatabase
+			exchangeAccountDatabase,
+			verifyCredentials
 		);
 		const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(addExchangeAccountUseCase);
 		const removeExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getRemoveExchangeAccountUseCase(

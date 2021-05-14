@@ -3,10 +3,9 @@ import { ExchangeAccountMapper, IExchangeAccountDocument } from '../../';
 import { ExchangesConfiguration } from '../../../config/core/Exchanges';
 import { ExchangeAccount, IExchange, IExchangeAccount, makeExchangeAccount } from '../../../core/entities';
 import { ICreateExchangeAccountPayload, IExchangeAccountEntityGateway, IUpdateExchangeAccountPayload } from '../../../core/use-cases/integration/exchangeAccount';
-import { IDigitalAssetDocument } from '../DigitalAsset/DigitalAssetModel';
 
 class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGateway {
-  constructor(public ExchangeAccounts:  Model<IExchangeAccountDocument>, public DigitalAssets: Model<IDigitalAssetDocument>) {}
+  constructor(public ExchangeAccounts:  Model<IExchangeAccountDocument>) {}
   
   async exists (accountId: string): Promise<boolean> {
     return await this.ExchangeAccounts.exists({ accountId });
@@ -41,7 +40,12 @@ class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGate
       nickname: payload.nickname,
       credentials: payload.credentials,
       holdings: payload.holdings || [],
-      transactions: payload.transactions || []
+      orders: [],
+      openOrders: [],
+      dailyTimeslices: [],
+      hourlyTimeslices: [],
+      transactions: payload.transactions || [],
+      lastSynced: new Date(0)
     }
     const exchangeAccount: ExchangeAccount = makeExchangeAccount(accountParams);
     const exchangeAccountDao = ExchangeAccountMapper.fromDomain(exchangeAccount);

@@ -7,15 +7,17 @@ import {
 	IExchangeAccountEntityGateway,
 	RemoveExchangeAccountUseCase,
 } from '../../core/use-cases/integration/exchangeAccount';
+import { VerifyCredentialsHandler } from '../../core/use-cases/integration/exchangeAccount/addExchangeAccount/AddExchangeAccount';
 import { IUserEntityGateway } from '../../core/use-cases/user';
 import { makeId } from '../../data';
 
 class ExchangeAccountUseCasesConfiguration {
 	static getAddExchangeAccountUseCase(
 		userEntityGateway: IUserEntityGateway,
-		exchangeAccountEntityGateway: IExchangeAccountEntityGateway
+		exchangeAccountEntityGateway: IExchangeAccountEntityGateway,
+		verifyCredentials: VerifyCredentialsHandler
 	): AddExchangeAccountUseCase {
-		return new AddExchangeAccountUseCase(userEntityGateway, exchangeAccountEntityGateway, makeId);
+		return new AddExchangeAccountUseCase(userEntityGateway, exchangeAccountEntityGateway, makeId, verifyCredentials);
 	}
 
 	static getRemoveExchangeAccountUseCase(

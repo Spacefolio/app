@@ -1,6 +1,32 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BaseExchange, IExchange, Exchange, ExchangeNames } from "../../../../core/entities";
+import { Balances } from "../../../../core/entities/Integrations/Exchanges/Exchange";
+import { IOrder } from "../../../../core/entities/Integrations/Order";
+import { IDigitalAssetTransaction } from "../../../../core/entities/Integrations/Transaction";
 
 export class Coinbase extends BaseExchange {
+  checkIsFiat(symbol: string): boolean {
+    throw new Error("Method not implemented.");
+  }
+  getRate(base: string, quote: string, timestamp?: number): Promise<number> {
+    throw new Error("Method not implemented.");
+  }
+  fetchOpenOrders(): Promise<IOrder[]> {
+    throw new Error("Method not implemented.");
+  }
+  
+  fetchBalances(): Promise<Balances> {
+    throw new Error("Method not implemented.");
+  }
+  
+  fetchTransactions(): Promise<IDigitalAssetTransaction[]> {
+    throw new Error("Method not implemented.");
+  }
+
+  fetchOrders(): Promise<IOrder[]> {
+    throw new Error("Method not implemented.");
+  }
+
   constructor() {
     const config: IExchange = {
       id: Exchange.COINBASE,

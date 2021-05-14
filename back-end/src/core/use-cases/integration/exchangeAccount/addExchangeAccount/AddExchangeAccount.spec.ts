@@ -5,11 +5,13 @@ import { ExchangeAccountInMemoryEntityGateway, makeId, UserInMemoryEntityGateway
 import { IUserEntityGateway, UserNotFound } from "../../../user";
 import makeFakeUser from "../../../../../../__tests__/src/fixtures/UserFixture";
 import { UseCaseError } from "../../../../definitions";
+import { InvalidExchangeCredentials } from "./errors";
 
 describe('Add Exchange Account Use Case', () => {
   const userDatabase: IUserEntityGateway = new UserInMemoryEntityGateway();
   const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway();
-  const addExchangeAccountUseCase: AddExchangeAccountUseCase = new AddExchangeAccountUseCase(userDatabase, exchangeAccountDatabase, makeId);
+  const addExchangeAccountUseCase: AddExchangeAccountUseCase = new AddExchangeAccountUseCase(userDatabase, exchangeAccountDatabase, makeId, async () => true);
+  const addExchangeAccountWithInvalidCredentialsUseCase: AddExchangeAccountUseCase = new AddExchangeAccountUseCase(userDatabase, exchangeAccountDatabase, makeId, async () => false);
   
   const fakeUser = makeFakeUser({});
   const fakeExchangeAccount: IExchangeAccount = makeFakeExchangeAccount({});
@@ -59,6 +61,26 @@ describe('Add Exchange Account Use Case', () => {
     expect(response.isError).toBe(true);
     const error = response.getError() as UseCaseError;
     expect(error).toBeInstanceOf(UserNotFound);
+    const exchangeAccounts = await exchangeAccountDatabase.getExchangeAccounts();
+    expect(exchangeAccounts.length).toBe(0);
+  });
+
+  it('Returns invalid exchange credentials', async () => {
+    const user = await userDatabase.createUser(fakeUser);
+    expect(user.exchangeAccounts.length).toBe(0);
+
+    const exchangeAccountRequest: AddExchangeAccountRequest = {
+      email: fakeUser.email,
+      exchange: <Exchange>(fakeExchangeAccount.exchange.id),
+      nickname: fakeExchangeAccount.nickname,
+      credentials: fakeExchangeAccount.credentials
+    }
+
+    const response = await addExchangeAccountWithInvalidCredentialsUseCase.execute(exchangeAccountRequest);
+    expect(response.isError).toBe(true);
+
+    const error = response.getError() as UseCaseError;
+    expect(error).toBeInstanceOf(InvalidExchangeCredentials);
     const exchangeAccounts = await exchangeAccountDatabase.getExchangeAccounts();
     expect(exchangeAccounts.length).toBe(0);
   });

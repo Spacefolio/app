@@ -1,4 +1,4 @@
-import { GetCurrentHoldingsUseCase as GetTransactionsUseCase } from ".";
+import { GetTransactionsUseCase } from ".";
 import { ExchangeAccountNotFound, ICreateExchangeAccountPayload, IExchangeAccountEntityGateway } from "..";
 import makeFakeExchangeAccount from "../../../../../../__tests__/src/fixtures/ExchangeAccountFixture";
 import makeFakeUser from "../../../../../../__tests__/src/fixtures/UserFixture";

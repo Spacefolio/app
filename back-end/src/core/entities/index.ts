@@ -5,7 +5,9 @@ export {
 	BaseIntegration,
 	IIntegration,
 	ITransaction,
-	TransactionType,
+	IDigitalAssetTransaction,
+	Action,
+	Currency,
 	BaseExchange,
 	IExchangeAccount,
 	ExchangeAccount,
@@ -22,4 +24,9 @@ export {
 	IAmounts,
 	IValues,
 	IValue,
+	IOrder,
+	OrderStatus,
+	ITimeslice,
+	ITimeslices,
+	IHoldingSlice
 } from './Integrations';

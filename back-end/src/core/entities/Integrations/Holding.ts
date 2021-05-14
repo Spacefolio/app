@@ -16,6 +16,7 @@ export interface IHoldingTotal {
   value: IValues;
   averageBuyPrice: IValue;
   averageSellPrice: IValue;
+  fees: IValue;
 }
 
 export interface IAmounts {

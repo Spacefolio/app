@@ -1,4 +1,6 @@
-import { BaseExchange, Exchange } from "../../../core/entities";
+import { BaseExchange, Exchange, IExchangeCredentials } from "../../../core/entities";
+import { VerifyCredentialsHandler } from "../../../core/use-cases/integration/exchangeAccount/addExchangeAccount/AddExchangeAccount";
+import CcxtService from "./CcxtService";
 import { Coinbase } from "./Implementations/Coinbase";
 
 
@@ -10,6 +12,14 @@ class ExchangesConfiguration {
 
   static get(exchange: Exchange): BaseExchange {
     return <BaseExchange>this.exchanges.get(exchange);
+  }
+
+  static getVerifyCredentials(): VerifyCredentialsHandler {
+    return this.verifyCredentials;
+  }
+
+  private static async verifyCredentials(exchange: Exchange, credentials: IExchangeCredentials): Promise<boolean> {
+    return await CcxtService.verifyCredentials(exchange, credentials);
   }
 }
 

@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
-import { Exchange, IExchangeAccount, IHolding, TransactionType } from '../../../src/core/entities';
+import { Action, Exchange, IExchangeAccount, IHolding } from '../../../src/core/entities';
 import { IDigitalAssetTransaction, TransactionStatus } from '../../../src/core/entities/Integrations/Transaction';
 import { makeId } from '../../../src/data';
 
@@ -34,13 +34,15 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
         withdrawn: { USD: faker.datatype.number() }
       },
       averageBuyPrice: { USD: faker.datatype.number() },
-      averageSellPrice: { USD: faker.datatype.number() }
+      averageSellPrice: { USD: faker.datatype.number() },
+      fees: { USD: faker.datatype.number() }
     },
     snapshots: [{
       timestamp: faker.date.recent().valueOf(),
       price: { USD: faker.datatype.number() },
       amountHeld: faker.datatype.number(),
       valueHeld: { USD: faker.datatype.number() },
+      action: Action.BUY,
       bought: { 
         amount: faker.datatype.number(),
         value: { USD: faker.datatype.number() }
@@ -59,7 +61,8 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
           withdrawn: { USD: faker.datatype.number() }
         },
         averageBuyPrice: { USD: faker.datatype.number() },
-        averageSellPrice: { USD: faker.datatype.number() }
+        averageSellPrice: { USD: faker.datatype.number() },
+        fees: { USD: faker.datatype.number() },
       }
     },
     {
@@ -67,6 +70,7 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
       price: { USD: faker.datatype.number() },
       amountHeld: faker.datatype.number(),
       valueHeld: { USD: faker.datatype.number() },
+      action: Action.BUY,
       bought: { 
         amount: faker.datatype.number(),
         value: { USD: faker.datatype.number() }

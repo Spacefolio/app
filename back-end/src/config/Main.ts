@@ -1,6 +1,7 @@
 import config from '.';
 import { connectMongoose } from '../data';
 import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from './core';
+import { ExchangesConfiguration } from './core/Exchanges';
 import { DatabaseConfiguration } from './data';
 import { LoggerConfiguration, ControllersConfiguration, RouterConfiguration, WebAppConfiguration } from './entrypoint';
 
@@ -21,7 +22,8 @@ export async function main(): Promise<void> {
 
 	const addExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getAddExchangeAccountUseCase(
 		userDatabase,
-		exchangeAccountDatabase
+		exchangeAccountDatabase,
+		ExchangesConfiguration.getVerifyCredentials()
 	);
 	const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(addExchangeAccountUseCase);
 	const removeExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getRemoveExchangeAccountUseCase(

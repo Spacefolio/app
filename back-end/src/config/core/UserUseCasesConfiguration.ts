@@ -6,7 +6,7 @@ class UserUseCasesConfiguration {
     const verifyHash = async (hash: string, pass: string) => {
       return await argon2.verify(hash, pass);
     }
-    return new AuthenticateUserUseCase(userEntityGateway, verifyHash)
+    return new AuthenticateUserUseCase(userEntityGateway, verifyHash);
   }
 
   static getRegisterUserUseCase(userEntityGateway: IUserEntityGateway): RegisterUserUseCase {
