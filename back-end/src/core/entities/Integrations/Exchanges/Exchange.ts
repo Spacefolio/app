@@ -48,8 +48,7 @@ export abstract class BaseExchange implements IExchange {
 	setAccount(exchangeAccount: IExchangeAccount): void {
 		this.account = exchangeAccount;
 	}
-
-  abstract checkIsFiat(symbol: string): boolean;
+  
   abstract getRate(base: string, quote: string, timestamp?: number): Promise<number>;
 	abstract fetchBalances(): Promise<Balances>;
 	abstract fetchTransactions(): Promise<IDigitalAssetTransaction[]>;

@@ -32,6 +32,14 @@ class FakeExchange extends BaseExchange {
     }
     super(config);
   }
+
+  async getRate(base: string, quote: string, timestamp?: number): Promise<number> {
+    return 1;
+  }
+  
+  async fetchOpenOrders(): Promise<IOrder[]> {
+    return [];
+  }
   
   async fetchBalances(): Promise<Balances> {
     const balances: Balances = {};

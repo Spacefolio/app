@@ -29,15 +29,15 @@ export interface IExchangeAccount extends IIntegration {
 }
 
 export class ExchangeAccount extends BaseIntegration implements IExchangeAccount {
-  public readonly accountId: string;
-  public readonly exchange: IExchange;
-  public readonly credentials: IExchangeCredentials;
-  public readonly transactions: IDigitalAssetTransaction[];
-  public readonly orders: IOrder[];
-  public readonly openOrders: IOrder[];
-  public readonly lastSynced: Date;
-  public readonly dailyTimeslices: ITimeslices;
-  public readonly hourlyTimeslices: ITimeslices;
+  public accountId: string;
+  public exchange: IExchange;
+  public credentials: IExchangeCredentials;
+  public transactions: IDigitalAssetTransaction[];
+  public orders: IOrder[];
+  public openOrders: IOrder[];
+  public lastSynced: Date;
+  public dailyTimeslices: ITimeslices;
+  public hourlyTimeslices: ITimeslices;
 
   protected constructor(exchangeAccount: IExchangeAccount) {
     super(exchangeAccount);
@@ -53,11 +53,11 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
   }
 
   async createUpdatedOrders(orders: IOrder[]): Promise<IOrder[]> {
-    return [...this.orders].concat(orders);
+    return new Array<IOrder>(...this.orders.values(), ...orders);
   }
 
   async createUpdatedTransactions(transactions: IDigitalAssetTransaction[]): Promise<IDigitalAssetTransaction[]> {
-    return [...this.transactions].concat(transactions);
+    return new Array<IDigitalAssetTransaction>(...this.transactions.values(), ...transactions);
   }
 
   async createUpdatedHoldings(exchange: BaseExchange, orders: IOrder[], transactions: IDigitalAssetTransaction[], balances: Balances): Promise<IHolding[]> {

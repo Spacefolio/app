@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
-import { Action, Exchange, IExchangeAccount, IHolding } from '../../../src/core/entities';
+import { Action, Exchange, IExchangeAccount, IHolding, IOrder, ITimeslices, OrderStatus } from '../../../src/core/entities';
 import { IDigitalAssetTransaction, TransactionStatus } from '../../../src/core/entities/Integrations/Transaction';
 import { makeId } from '../../../src/data';
 
@@ -89,24 +89,66 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
           withdrawn: { USD: faker.datatype.number() }
         },
         averageBuyPrice: { USD: faker.datatype.number() },
-        averageSellPrice: { USD: faker.datatype.number() }
+        averageSellPrice: { USD: faker.datatype.number() },
+        fees: { USD: faker.datatype.number() }
       }
     }]
   }];
 
   const transactions: IDigitalAssetTransaction[] = [{
-    type: TransactionType.DEPOSIT,
+    type: Action.DEPOSIT,
     timestamp: faker.date.recent().valueOf(),
     address: faker.random.alphaNumeric(20),
     amount: faker.datatype.number(),
-    currency: faker.random.alpha({ count: 3 }),
+    assetId: faker.random.alpha({ count: 3 }),
     status: TransactionStatus.OK,
     fee: {
-      currency: faker.random.alpha({ count: 3 }),
+      assetId: faker.random.alpha({ count: 3 }),
       rate: faker.datatype.number(),
       cost: faker.datatype.number() 
     }
   }];
+
+  const orders: IOrder[] = [{
+    timestamp: faker.date.recent().valueOf(),
+    datetime: faker.date.recent().toDateString(),
+    baseAsset: faker.random.alpha({ count: 3 }),
+    quoteAsset: faker.random.alpha({ count: 3}),
+    side: Action.BUY,
+    price: faker.datatype.number(),
+    amount: faker.datatype.number(),
+    filled: faker.datatype.number(),
+    remaining: faker.datatype.number(),
+    cost: faker.datatype.number(),
+    fee: {
+      assetId: faker.random.alpha({ count: 3 }),
+      rate: faker.datatype.number(),
+      cost: faker.datatype.number()
+    },
+    status: OrderStatus.CLOSED
+  }];
+
+  const openOrders: IOrder[] = [{
+    timestamp: faker.date.recent().valueOf(),
+    datetime: faker.date.recent().toDateString(),
+    baseAsset: faker.random.alpha({ count: 3 }),
+    quoteAsset: faker.random.alpha({ count: 3}),
+    side: Action.BUY,
+    price: faker.datatype.number(),
+    amount: faker.datatype.number(),
+    filled: faker.datatype.number(),
+    remaining: faker.datatype.number(),
+    cost: faker.datatype.number(),
+    fee: {
+      assetId: faker.random.alpha({ count: 3 }),
+      rate: faker.datatype.number(),
+      cost: faker.datatype.number()
+    },
+    status: OrderStatus.OPEN
+  }];
+
+  const dailyTimeslices: ITimeslices = {};
+  const hourlyTimeslices: ITimeslices = {};
 
   const exchangeAccountParams: IExchangeAccount = {
     accountId: makeId(),
@@ -117,8 +159,13 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
       passphrase: faker.random.alphaNumeric(10)
     },
     nickname: faker.random.word(),
+    orders,
+    openOrders,
+    dailyTimeslices,
+    hourlyTimeslices,
     holdings,
-    transactions
+    transactions,
+    lastSynced: new Date(0) 
   };
 
   return { ...exchangeAccountParams, ...overrides };
