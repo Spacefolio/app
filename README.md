@@ -1,5 +1,5 @@
-# [BotSea](https://botsea.io)
-> The front-end and back-end for the BotSea web application
+# [Spacefolio](https://spacefol.io)
+> The front-end and back-end for the Spacefolio web application
 
 ## Technologies Used
 * Language: **TypeScript**
