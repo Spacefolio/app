@@ -11,7 +11,9 @@ export interface IOrder {
 	timestamp: number;
 	datetime: string;
 	baseAsset: string;
+	baseSymbol: string;
 	quoteAsset: string;
+	quoteSymbol: string;
 	side: Action.BUY | Action.SELL;
 	price: number;
 	amount: number;

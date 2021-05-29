@@ -32,6 +32,38 @@ export interface IDigitalAsset extends IAsset{
   }
 }
 
+export class NullAsset implements IDigitalAsset {
+  currentPrice = 0;
+  marketCap = 0;
+  marketCapRank = 0;
+  fullyDilutedValuation = 0;
+  totalVolume = 0;
+  high24Hour = 0;
+  low24Hour = 0;
+  priceChange24Hour = 0;
+  priceChangePercentage = 0;
+  marketCapChange24Hour = 0;
+  marketCapChangePercentage = 0;
+  circulatingSupply = 0;
+  totalSupply = 0;
+  maxSupply = 0;
+  ath = 0;
+  athChangePercentage = 0;
+  athDate = '';
+  atl = 0;
+  atlChangePercentage = 0;
+  atlDate = '';
+  lastUpdated = '';
+  assetId = '';
+  symbol = '';
+  name = '';
+  image = '';
+
+  constructor(assetId: string) {
+    this.assetId = assetId;
+  }
+}
+
 export interface IHistoricalPrice {
   timestamp: number;
   price: number;

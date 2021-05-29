@@ -7,7 +7,11 @@ export interface ICreateExchangeAccountPayload {
   nickname: string;
   credentials: IExchangeCredentials;
   holdings?: IHolding[];
+  orders?: IOrder[];
+  openOrders?: IOrder[];
   transactions?: IDigitalAssetTransaction[];
+  dailyTimeslices?: ITimeslices;
+  hourlyTimeslices?: ITimeslices;
 }
 
 export interface IUpdateExchangeAccountPayload {

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Exchange } from '../../../core/entities/Integrations';
 import { holdingSchema, IHoldingDao } from '../Holding';
+import { IOrderDao, orderSchema } from '../Order';
 import { ITimeslicesDao } from '../Timeslice';
 import { digitalAssetTransactionSchema, IDigitalAssetTransactionDao } from '../Transaction';
 
@@ -22,8 +23,8 @@ export interface IExchangeAccountDao
     token?: string;
   },
   holdings: IHoldingDao[],
-  orders: any[],
-  openOrders: any[],
+  orders: IOrderDao[],
+  openOrders: IOrderDao[],
   transactions: IDigitalAssetTransactionDao[];
   dailyTimeslices: ITimeslicesDao;
   hourlyTimeslices: ITimeslicesDao;
@@ -49,6 +50,8 @@ const ExchangeAccountSchema = new mongoose.Schema({
       token: String,
     }, required: true 
   },
+  orders: [orderSchema],
+  openOrders: [orderSchema],
   holdings: [holdingSchema],
   transactions: [digitalAssetTransactionSchema],
   dailyTimeslices: { type: Object },

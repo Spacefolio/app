@@ -20,6 +20,7 @@ export interface IDigitalAssetTransaction extends ITransaction {
   address: string;
   amount: number;
   assetId: string;
+  symbol: string;
   status: TransactionStatus
   fee: IFee;
 }

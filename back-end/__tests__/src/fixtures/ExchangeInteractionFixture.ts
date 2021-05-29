@@ -3,6 +3,7 @@ import { BaseExchange, Exchange, IExchangeCredentials } from "../../../src/core/
 import { Balances, ExchangeNames, IExchange } from "../../../src/core/entities/Integrations/Exchanges/Exchange";
 import { IOrder } from "../../../src/core/entities";
 import { IDigitalAssetTransaction } from "../../../src/core/entities/Integrations/Transaction";
+import { FakeExchange } from "../../../src/config/core/Exchanges/Implementations/FakeExchange";
 
 async function verifyCredentials(exchange: Exchange, credentials: IExchangeCredentials): Promise<boolean> {
   return true;
@@ -12,7 +13,11 @@ function getExchange(exchange: Exchange): BaseExchange {
   return new FakeExchange();
 }
 
-class FakeExchange extends BaseExchange {
+function getExchangeThatFails(exchange: Exchange): BaseExchange {
+  return new FakeExchangeThatFails();
+}
+
+class FakeExchangeThatFails extends BaseExchange {
   constructor() {
     const config: IExchange = {
       id: Exchange.COINBASE,
@@ -38,21 +43,20 @@ class FakeExchange extends BaseExchange {
   }
   
   async fetchOpenOrders(): Promise<IOrder[]> {
-    return [];
+    throw 'Failed to fetch open orders';
   }
   
   async fetchBalances(): Promise<Balances> {
-    const balances: Balances = {};
-    return balances;
+    throw 'Failed to fetch balances';
   }
   
   async fetchTransactions(): Promise<IDigitalAssetTransaction[]> {
-    return [];
+    throw 'Failed to fetch transactions';
   }
 
   async fetchOrders(): Promise<IOrder[]> {
-    return [];
+    throw 'Failed to fetch orders';
   }
 }
 
-export { verifyCredentials, getExchange };
+export { verifyCredentials, getExchange, getExchangeThatFails };

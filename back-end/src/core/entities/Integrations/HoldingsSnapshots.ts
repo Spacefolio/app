@@ -1,6 +1,7 @@
 import { IOrder } from '.';
 import { Currency } from './Currency';
-import { Balances, BaseExchange } from './Exchanges/Exchange';
+import { Balances } from './Exchanges/Exchange';
+import { GetRateHandler } from './Exchanges/ExchangeAccount';
 import { HoldingSnapshot, IHoldingSnapshot } from './HoldingSnapshot';
 import { isOrder } from './Order';
 import { IDigitalAssetTransaction } from './Transaction';
@@ -9,12 +10,22 @@ class HoldingsSnapshots {
 	private snapshots: { [assetId: string]: IHoldingSnapshot[] };
 
 	constructor(
-		private exchange: BaseExchange,
 		private orders: IOrder[],
 		private transactions: IDigitalAssetTransaction[],
-		private balances: Balances
+		private balances: Balances,
+		private oldSnapshots: { [assetId: string]: IHoldingSnapshot[] },
+		private getRate: GetRateHandler
 	) {
 		this.snapshots = {};
+	}
+
+	getSnapshots(): { asset: string, snapshots: IHoldingSnapshot[] }[] {
+		return Object.entries(this.snapshots).map((entry) => {
+			return {
+				asset: entry[0],
+				snapshots: entry[1]
+			}
+		});
 	}
 
 	async createSnapshots(): Promise<void> {
@@ -33,7 +44,8 @@ class HoldingsSnapshots {
 	async addOrderSnapshot(order: IOrder): Promise<void> {
 		const base = order.baseAsset;
 		const quote = order.quoteAsset;
-		const quoteToUsd = await this.exchange.getRate(quote, Currency.USD, order.timestamp);
+		const quoteSymbol = order.quoteSymbol;
+		const quoteToUsd = await this.getRate(quote, quoteSymbol, Currency.USD, Currency.USD, order.timestamp);
 
 		if (this.isNewHolding(base)) this.snapshots[base] = [];
     if (this.isNewHolding(quote)) this.snapshots[quote] = [];
@@ -51,7 +63,7 @@ class HoldingsSnapshots {
 	async addTransactionSnapshot(transaction: IDigitalAssetTransaction): Promise<void> {
     const asset = transaction.assetId;
     const timestamp = transaction.timestamp;
-    const priceInUsd = await this.exchange.getRate(asset, Currency.USD, timestamp);
+		const priceInUsd = await this.getRate(asset, transaction.symbol, Currency.USD, Currency.USD, timestamp);
     
     if (this.isNewHolding(asset)) this.snapshots[asset] = [];
 
@@ -63,13 +75,17 @@ class HoldingsSnapshots {
   }
 
 	private isNewHolding(assetId: string) {
-		return !!this.snapshots[assetId];
+		return !!!this.snapshots[assetId];
 	}
 
 	private getLastSnapshotFor(assetId: string): IHoldingSnapshot {
 		const snaps = this.snapshots[assetId];
 		if (snaps?.length > 0) {
 			return snaps[snaps.length - 1];
+		}
+		const oldSnaps = this.oldSnapshots[assetId];
+		if (oldSnaps?.length > 0) {
+			return oldSnaps[oldSnaps.length - 1];
 		}
     return new HoldingSnapshot();
 	}

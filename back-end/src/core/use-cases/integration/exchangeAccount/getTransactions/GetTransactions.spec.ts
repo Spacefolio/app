@@ -43,7 +43,7 @@ describe('Get Current Holdings Use Case', () => {
     const transactions = response.getValue();
     expect(fakeExchangeAccount.transactions).toHaveLength(1);
     expect(transactions).toHaveLength(1);
-    expect(transactions[0].currency).toEqual(exchangeAccount.transactions[0].currency);
+    expect(transactions[0].assetId).toEqual(exchangeAccount.transactions[0].assetId);
     expect(transactions[0].amount).toEqual(exchangeAccount.transactions[0].amount);
     expect(transactions[0].type).toEqual(exchangeAccount.transactions[0].type);
   });

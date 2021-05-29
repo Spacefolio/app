@@ -14,7 +14,7 @@ export interface IFeeDao {
 }
 
 export const feeSchema = new mongoose.Schema({
-  currency: { type: String, required: true },
+  assetId: { type: String, required: true },
   rate: { type: Number, required: true },
   cost: { type: Number, required: true }
 });
@@ -23,6 +23,7 @@ export interface IDigitalAssetTransactionDao extends ITransactionDao {
   address: string;
   amount: number;
   assetId: string;
+  symbol: string;
   status: TransactionStatus;
   fee: IFeeDao
 }
@@ -34,7 +35,8 @@ export const digitalAssetTransactionSchema = new mongoose.Schema({
   type: { type: String, enum: Action, required: true },
   address: String,
   amount: Number,
-  currency: String,
+  assetId: String,
+  symbol: String,
   status: { type: String, enum: TransactionStatus, required: true },
   fee: feeSchema
 });

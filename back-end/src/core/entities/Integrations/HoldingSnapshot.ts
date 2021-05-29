@@ -64,7 +64,7 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 		order: IOrder,
 		quoteToUsd: number
 	): HoldingSnapshot {
-		this.total = lastSnapshotBase.total;
+		this.total = this.copyTotal(lastSnapshotBase.total);
 		this.price.USD = order.price ? order.price * quoteToUsd : (order.cost / order.filled) * quoteToUsd;
 
 		if (this.action === Action.BUY) {
@@ -77,6 +77,9 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 			this.total.value.bought.USD += this.bought.value.USD;
 			this.total.averageBuyPrice.USD = this.total.value.bought.USD / this.total.amount.bought;
 			this.total.fees.USD += order.fee.cost * quoteToUsd;
+
+			this.amountHeld = lastSnapshotBase.amountHeld + this.bought.amount;
+			this.valueHeld.USD = lastSnapshotBase.valueHeld.USD + this.bought.value.USD;
 		} else {
 			this.sold = {
 				amount: order.filled,
@@ -87,15 +90,19 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 			this.total.value.sold.USD += this.sold.value.USD;
 			this.total.averageSellPrice.USD = this.total.value.sold.USD / this.total.amount.sold;
 			this.total.fees.USD += order.fee.cost * quoteToUsd;
+
+			this.amountHeld = lastSnapshotBase.amountHeld - this.sold.amount;
+			this.valueHeld.USD = lastSnapshotBase.valueHeld.USD - this.sold.value.USD;
 		}
 
 		const snapshotQuote = new HoldingSnapshot(order.timestamp, this.action);
-		snapshotQuote.total = lastSnapshotQuote.total;
+		snapshotQuote.total = this.copyTotal(lastSnapshotQuote.total);
 		snapshotQuote.price.USD = quoteToUsd;
 		const orderCostWithFee = order.cost + order.fee.cost;
 
 		if (this.action === Action.BUY) {
 			// Counts as a sale of the quote currency
+			snapshotQuote.action = Action.SELL;
 			snapshotQuote.sold = {
 				amount: orderCostWithFee,
 				value: { USD: order.cost * quoteToUsd },
@@ -103,9 +110,13 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 
 			snapshotQuote.total.amount.sold += snapshotQuote.sold.amount;
 			snapshotQuote.total.value.sold.USD += snapshotQuote.sold.value.USD;
-			snapshotQuote.total.averageSellPrice.USD += snapshotQuote.total.value.sold.USD / snapshotQuote.total.amount.sold;
+			snapshotQuote.total.averageSellPrice.USD = snapshotQuote.total.value.sold.USD / snapshotQuote.total.amount.sold;
+
+			snapshotQuote.amountHeld = lastSnapshotQuote.amountHeld - snapshotQuote.sold.amount;
+			snapshotQuote.valueHeld.USD = lastSnapshotQuote.valueHeld.USD - snapshotQuote.sold.value.USD;
 		} /* this.action === Action.SELL */ else {
 			// Counts as a buy of the quote currency
+			snapshotQuote.action = Action.BUY;
 			snapshotQuote.bought = {
 				amount: order.cost - order.fee.cost,
 				value: { USD: order.cost * quoteToUsd },
@@ -113,7 +124,10 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 
 			snapshotQuote.total.amount.bought += snapshotQuote.bought.amount;
 			snapshotQuote.total.value.bought.USD += snapshotQuote.bought.value.USD;
-			snapshotQuote.total.averageBuyPrice.USD += snapshotQuote.total.value.bought.USD / snapshotQuote.total.amount.bought;
+			snapshotQuote.total.averageBuyPrice.USD = snapshotQuote.total.value.bought.USD / snapshotQuote.total.amount.bought;
+
+			snapshotQuote.amountHeld = lastSnapshotQuote.amountHeld + snapshotQuote.bought.amount;
+			snapshotQuote.valueHeld.USD = lastSnapshotQuote.valueHeld.USD + snapshotQuote.bought.value.USD;
 		}
 
 		return snapshotQuote;
@@ -123,7 +137,7 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 		const fee = transaction.fee ? transaction.fee.cost : 0;
 		const amount = transaction.amount;
 
-		this.total = lastSnapshot.total;
+		this.total = this.copyTotal(lastSnapshot.total);
 
 		if (this.action === Action.DEPOSIT) {
 			this.deposited = {
@@ -143,5 +157,25 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 			this.total.amount.withdrawn += this.withdrew.amount;
 			this.total.value.withdrawn.USD += this.withdrew.value.USD;
 		}
+	}
+
+	private copyTotal(total: IHoldingTotal): IHoldingTotal {
+		return {
+			amount: {
+				bought: total.amount.bought,
+				sold: total.amount.sold,
+				withdrawn: total.amount.withdrawn,
+				deposited: total.amount.deposited
+			},
+			value: {
+				bought: { USD: total.value.bought.USD },
+				sold: { USD: total.value.sold.USD },
+				deposited: { USD: total.value.deposited.USD },
+				withdrawn: { USD: total.value.withdrawn.USD }
+			},
+			averageBuyPrice: { USD: total.averageBuyPrice.USD },
+			averageSellPrice: { USD: total.averageSellPrice.USD },
+			fees: { USD: total.fees.USD }
+		};
 	}
 }

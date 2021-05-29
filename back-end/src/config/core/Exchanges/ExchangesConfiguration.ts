@@ -2,12 +2,14 @@ import { BaseExchange, Exchange, IExchangeCredentials } from "../../../core/enti
 import { VerifyCredentialsHandler } from "../../../core/use-cases/integration/exchangeAccount/addExchangeAccount/AddExchangeAccount";
 import CcxtService from "./CcxtService";
 import { Coinbase } from "./Implementations/Coinbase";
+import { FakeExchange } from "./Implementations/FakeExchange";
 
 
 
 class ExchangesConfiguration {
   static exchanges: Map<Exchange, BaseExchange> = new Map<Exchange, BaseExchange>([
-    [Exchange.COINBASE, new Coinbase()] 
+    [Exchange.FAKE, new FakeExchange()],
+    [Exchange.COINBASE, new Coinbase()]
   ]);
 
   static get(exchange: Exchange): BaseExchange {

@@ -8,89 +8,89 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
 
   const holdings: IHolding[] = [{
     asset: {
-      assetId: faker.random.alphaNumeric(7),
-      symbol: faker.random.alpha({ count: 3 }),
-      name: faker.random.alpha({ count: 10 }),
+      assetId: 'bitcoin',
+      symbol: 'btc',
+      name: 'Bitcoin',
       image: faker.random.alpha({ count: 10 })
     },
-    balance: { 
-      free: faker.datatype.number(),
-      used: faker.datatype.number(),
-      total: faker.datatype.number()
+    balance: {
+      free: 10,
+      used: 0,
+      total: 10
     },
-    price: { USD: faker.datatype.number() },
-    value: { USD: faker.datatype.number() },
+    price: { USD: 10000 },
+    value: { USD: 100000 },
     total: {
       amount: {
-        bought: faker.datatype.number(),
-        sold: faker.datatype.number(),
-        deposited: faker.datatype.number(),
-        withdrawn: faker.datatype.number()
+        bought: 10,
+        sold: 0,
+        deposited: 0,
+        withdrawn: 0
       },
       value: {
-        bought: { USD: faker.datatype.number() },
-        sold: { USD: faker.datatype.number() },
-        deposited: { USD: faker.datatype.number() },
-        withdrawn: { USD: faker.datatype.number() }
+        bought: { USD: 100000 },
+        sold: { USD: 0 },
+        deposited: { USD: 0 },
+        withdrawn: { USD: 0 }
       },
-      averageBuyPrice: { USD: faker.datatype.number() },
-      averageSellPrice: { USD: faker.datatype.number() },
-      fees: { USD: faker.datatype.number() }
+      averageBuyPrice: { USD: 10000 },
+      averageSellPrice: { USD: 0 },
+      fees: { USD: 5 }
     },
     snapshots: [{
-      timestamp: faker.date.recent().valueOf(),
-      price: { USD: faker.datatype.number() },
-      amountHeld: faker.datatype.number(),
-      valueHeld: { USD: faker.datatype.number() },
+      timestamp: 0,
+      price: { USD: 10000 },
+      amountHeld: 5,
+      valueHeld: { USD: 50000 },
       action: Action.BUY,
-      bought: { 
-        amount: faker.datatype.number(),
-        value: { USD: faker.datatype.number() }
+      bought: {
+        amount: 5,
+        value: { USD: 50000 }
       },
       total: {
         amount: {
-          bought: faker.datatype.number(),
-          sold: faker.datatype.number(),
-          deposited: faker.datatype.number(),
-          withdrawn: faker.datatype.number()
+          bought: 5,
+          sold: 0,
+          deposited: 0,
+          withdrawn: 0
         },
         value: {
-          bought: { USD: faker.datatype.number() },
-          sold: { USD: faker.datatype.number() },
-          deposited: { USD: faker.datatype.number() },
-          withdrawn: { USD: faker.datatype.number() }
+          bought: { USD: 50000 },
+          sold: { USD: 0 },
+          deposited: { USD: 0 },
+          withdrawn: { USD: 0 }
         },
-        averageBuyPrice: { USD: faker.datatype.number() },
-        averageSellPrice: { USD: faker.datatype.number() },
-        fees: { USD: faker.datatype.number() },
+        averageBuyPrice: { USD: 10000 },
+        averageSellPrice: { USD: 0 },
+        fees: { USD: 2.5 },
       }
     },
     {
-      timestamp: faker.date.recent().valueOf(),
-      price: { USD: faker.datatype.number() },
-      amountHeld: faker.datatype.number(),
-      valueHeld: { USD: faker.datatype.number() },
+      timestamp: 1,
+      price: { USD: 10000 },
+      amountHeld: 10,
+      valueHeld: { USD: 100000 },
       action: Action.BUY,
       bought: { 
-        amount: faker.datatype.number(),
-        value: { USD: faker.datatype.number() }
+        amount: 5,
+        value: { USD: 50000 }
       },
       total: {
         amount: {
-          bought: faker.datatype.number(),
-          sold: faker.datatype.number(),
-          deposited: faker.datatype.number(),
-          withdrawn: faker.datatype.number()
+          bought: 10,
+          sold: 0,
+          deposited: 0,
+          withdrawn: 0
         },
         value: {
-          bought: { USD: faker.datatype.number() },
-          sold: { USD: faker.datatype.number() },
-          deposited: { USD: faker.datatype.number() },
-          withdrawn: { USD: faker.datatype.number() }
+          bought: { USD: 100000 },
+          sold: { USD: 0 },
+          deposited: { USD: 0 },
+          withdrawn: { USD: 0 }
         },
-        averageBuyPrice: { USD: faker.datatype.number() },
-        averageSellPrice: { USD: faker.datatype.number() },
-        fees: { USD: faker.datatype.number() }
+        averageBuyPrice: { USD: 10000 },
+        averageSellPrice: { USD: 0 },
+        fees: { USD: 5 }
       }
     }]
   }];
@@ -100,30 +100,53 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
     timestamp: faker.date.recent().valueOf(),
     address: faker.random.alphaNumeric(20),
     amount: faker.datatype.number(),
-    assetId: faker.random.alpha({ count: 3 }),
+    assetId: faker.random.alpha({ count: 7 }),
+    symbol: faker.random.alpha({ count: 3 }),
     status: TransactionStatus.OK,
     fee: {
-      assetId: faker.random.alpha({ count: 3 }),
+      assetId: faker.random.alpha({ count: 7 }),
       rate: faker.datatype.number(),
       cost: faker.datatype.number() 
     }
   }];
 
   const orders: IOrder[] = [{
-    timestamp: faker.date.recent().valueOf(),
+    timestamp: 0,
     datetime: faker.date.recent().toDateString(),
-    baseAsset: faker.random.alpha({ count: 3 }),
-    quoteAsset: faker.random.alpha({ count: 3}),
+    baseAsset: 'bitcoin',
+    baseSymbol: 'BTC',
+    quoteAsset: 'usd',
+    quoteSymbol: 'USD',
     side: Action.BUY,
-    price: faker.datatype.number(),
-    amount: faker.datatype.number(),
-    filled: faker.datatype.number(),
-    remaining: faker.datatype.number(),
-    cost: faker.datatype.number(),
+    price: 10000,
+    amount: 5,
+    filled: 5,
+    remaining: 0,
+    cost: 50002.50,
     fee: {
-      assetId: faker.random.alpha({ count: 3 }),
+      assetId: 'usd',
       rate: faker.datatype.number(),
-      cost: faker.datatype.number()
+      cost: 2.5
+    },
+    status: OrderStatus.CLOSED
+  },
+  {
+    timestamp: 1,
+    datetime: faker.date.recent().toDateString(),
+    baseAsset: 'bitcoin',
+    baseSymbol: 'BTC',
+    quoteAsset: 'usd',
+    quoteSymbol: 'USD',
+    side: Action.BUY,
+    price: 10000,
+    amount: 5,
+    filled: 5,
+    remaining: 0,
+    cost: 50002.50,
+    fee: {
+      assetId: 'usd',
+      rate: faker.datatype.number(),
+      cost: 2.5
     },
     status: OrderStatus.CLOSED
   }];
@@ -131,8 +154,10 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
   const openOrders: IOrder[] = [{
     timestamp: faker.date.recent().valueOf(),
     datetime: faker.date.recent().toDateString(),
-    baseAsset: faker.random.alpha({ count: 3 }),
-    quoteAsset: faker.random.alpha({ count: 3}),
+    baseAsset: 'bitcoin',
+    baseSymbol: 'BTC',
+    quoteAsset: 'usd',
+    quoteSymbol: 'USD',
     side: Action.BUY,
     price: faker.datatype.number(),
     amount: faker.datatype.number(),
@@ -152,7 +177,7 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
 
   const exchangeAccountParams: IExchangeAccount = {
     accountId: makeId(),
-    exchange: ExchangesConfiguration.get(Exchange.COINBASE),
+    exchange: ExchangesConfiguration.get(Exchange.FAKE),
     credentials: {
       apiKey: faker.random.alphaNumeric(10),
       apiSecret: faker.random.alphaNumeric(10),
@@ -165,7 +190,7 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
     hourlyTimeslices,
     holdings,
     transactions,
-    lastSynced: new Date(0) 
+    lastSynced: new Date(0)
   };
 
   return { ...exchangeAccountParams, ...overrides };

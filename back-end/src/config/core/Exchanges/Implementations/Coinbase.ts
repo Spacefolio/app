@@ -8,7 +8,7 @@ export class Coinbase extends BaseExchange {
   checkIsFiat(symbol: string): boolean {
     throw new Error("Method not implemented.");
   }
-  getRate(base: string, quote: string, timestamp?: number): Promise<number> {
+  getRate(baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number> {
     throw new Error("Method not implemented.");
   }
   fetchOpenOrders(): Promise<IOrder[]> {

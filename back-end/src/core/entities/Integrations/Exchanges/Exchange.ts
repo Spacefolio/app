@@ -4,6 +4,7 @@ import { IDigitalAssetTransaction } from "../Transaction";
 import { IExchangeAccount } from "./ExchangeAccount";
 
 export enum Exchange {
+  FAKE = "fake",
   BINANCE = "binance",
   BINANCEUS = "binanceus",
   COINBASE = "coinbase",
@@ -13,6 +14,7 @@ export enum Exchange {
 }
 
 export const ExchangeNames = new Map<Exchange, string>([
+  [Exchange.FAKE, "Fake Exchange"],
   [Exchange.BINANCE, "Binance"],
   [Exchange.BINANCEUS, "BinanceUS"],
   [Exchange.COINBASE, "Coinbase"],
@@ -49,7 +51,7 @@ export abstract class BaseExchange implements IExchange {
 		this.account = exchangeAccount;
 	}
   
-  abstract getRate(base: string, quote: string, timestamp?: number): Promise<number>;
+  abstract getRate(baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined>;
 	abstract fetchBalances(): Promise<Balances>;
 	abstract fetchTransactions(): Promise<IDigitalAssetTransaction[]>;
 	abstract fetchOrders(): Promise<IOrder[]>;
