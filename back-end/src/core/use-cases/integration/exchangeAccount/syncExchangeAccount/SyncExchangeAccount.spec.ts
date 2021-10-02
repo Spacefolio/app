@@ -19,8 +19,10 @@ describe('Get Exchange Account Use Case', () => {
   
   const fakeUser = makeFakeUser({});
   const fakeUser2 = makeFakeUser({});
+  const fakeUser3 = makeFakeUser({});
   const fakeExchangeAccount: IExchangeAccount = makeFakeExchangeAccount({});
   const fakeExchangeAccount2: IExchangeAccount = makeFakeExchangeAccount({});
+  const fakeExchangeAccount3: IExchangeAccount = makeFakeExchangeAccount({});
 
   const exchangeAccountRequest: ICreateExchangeAccountPayload = {
     accountId: fakeExchangeAccount.accountId,
@@ -48,6 +50,19 @@ describe('Get Exchange Account Use Case', () => {
     hourlyTimeslices: fakeExchangeAccount2.hourlyTimeslices
   }
 
+  const exchangeAccountRequest3: ICreateExchangeAccountPayload = {
+    accountId: fakeExchangeAccount3.accountId,
+    exchange: <Exchange>(fakeExchangeAccount3.exchange.id),
+    nickname: fakeExchangeAccount3.nickname,
+    credentials: fakeExchangeAccount3.credentials,
+    transactions: fakeExchangeAccount3.transactions,
+    holdings: fakeExchangeAccount3.holdings,
+    orders: fakeExchangeAccount3.orders,
+    openOrders: fakeExchangeAccount3.openOrders,
+    dailyTimeslices: fakeExchangeAccount3.dailyTimeslices,
+    hourlyTimeslices: fakeExchangeAccount3.hourlyTimeslices
+  }
+
   const request: SyncExchangeAccountRequest = {
     email: fakeUser.email,
     accountId: fakeExchangeAccount.accountId
@@ -56,6 +71,11 @@ describe('Get Exchange Account Use Case', () => {
   const request2: SyncExchangeAccountRequest = {
     email: fakeUser2.email,
     accountId: fakeExchangeAccount2.accountId
+  }
+
+  const request3: SyncExchangeAccountRequest = {
+    email: fakeUser3.email,
+    accountId: fakeExchangeAccount3.accountId
   }
 
   beforeEach(async () => {
@@ -132,5 +152,18 @@ describe('Get Exchange Account Use Case', () => {
     expect(account.holdings[0].total.amount.sold).toBe(5);
     expect(account.holdings[0].total.averageSellPrice.USD).toBe(15000);
     expect(account.holdings[0].snapshots.length).toBe(3);
+  });
+
+  it('Creates daily and hourly timeslices', async () => {
+    await userDatabase.createUser(fakeUser3);
+    const exchangeAccount2 = await exchangeAccountDatabase.createExchangeAccount(exchangeAccountRequest3);
+    await userDatabase.addExchangeAccountForUser(fakeUser3.email, exchangeAccount2);
+
+    const response = await syncExchangeAccountUseCase.execute(request3);
+
+    expect(response.isError).toBe(false);
+    const account = response.getValue();
+    expect(Object.entries(account.dailyTimeslices).length).toBeGreaterThan(0);
+    expect(Object.entries(account.hourlyTimeslices).length).toBeGreaterThan(0);
   });
 });

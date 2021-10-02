@@ -29,7 +29,7 @@ class GetExchangeAccountController extends BaseController<GetExchangeAccountUseC
 		}
 
 		const exchangeAccount: Readonly<ExchangeAccount> = result.getValue();
-		this.ok<ExchangeAccount>(res, exchangeAccount);
+		this.ok<Readonly<ExchangeAccount>>(res, exchangeAccount);
 		return;
 	}
 }

@@ -1,5 +1,7 @@
 import { IExchange } from '.';
 import { BaseIntegration, IDigitalAsset, IHolding, IHoldingBalance, IIntegration, IOrder, ITimeslices } from '..';
+import { IHistoricalPrice } from '../Asset';
+import DailyTimeslices from '../DailyTimeslices';
 import { NullHoldingBalance, NullHoldingTotal } from '../Holding';
 import { IHoldingSnapshot } from '../HoldingSnapshot';
 import HoldingsSnapshots from '../HoldingsSnapshots';
@@ -32,6 +34,7 @@ export interface IExchangeAccount extends IIntegration {
 
 export type GetAssetHandler = (assetId: string) => Promise<IDigitalAsset>;
 export type GetRateHandler = (base: string, baseSymbol: string, quote: string, quoteSymbol: string, timestamp: number) => Promise<number>;
+export type GetHistoricalValuesHandler = (assetId: string, from: number, to: number) => Promise<IHistoricalPrice[]>;
 
 export class ExchangeAccount extends BaseIntegration implements IExchangeAccount {
 	public accountId: string;
@@ -88,15 +91,17 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 		return this.holdings;
 	}
 
-	async createDailyTimeslices(): Promise<ITimeslices> {
+	async createDailyTimeslices(getRate: GetRateHandler, getHistoricalValues: GetHistoricalValuesHandler): Promise<ITimeslices> {
+		const dailyTimeslices = new DailyTimeslices(this, getRate, getHistoricalValues);
+		await dailyTimeslices.createTimeslices();
 		return {};
 	}
 
-	async createHourlyTimeslices(): Promise<ITimeslices> {
+	async createHourlyTimeslices(getRate: GetRateHandler): Promise<ITimeslices> {
 		return {};
 	}
 
-	async createHoldingsSnapshots(
+	private async createHoldingsSnapshots(
 		orders: IOrder[],
 		transactions: IDigitalAssetTransaction[],
 		balances: Balances,
@@ -112,7 +117,7 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 		return holdingsSnapshots;
 	}
 
-	async createHolding(asset: IDigitalAsset, snapshots: IHoldingSnapshot[], balance: IHoldingBalance): Promise<void> {
+	private async createHolding(asset: IDigitalAsset, snapshots: IHoldingSnapshot[], balance: IHoldingBalance): Promise<void> {
 		let lastSnapshot;
 		if (snapshots.length > 0) {
 			lastSnapshot = snapshots[snapshots.length - 1];
@@ -135,7 +140,7 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 		this.holdings.push(holding);
 	}
 
-	async updateHolding(asset: IDigitalAsset, snapshots: IHoldingSnapshot[], balance: IHoldingBalance): Promise<void> {
+	private async updateHolding(asset: IDigitalAsset, snapshots: IHoldingSnapshot[], balance: IHoldingBalance): Promise<void> {
 		const oldHolding = this.holdings.find((holding) => holding.asset.assetId === asset.assetId);
 
 		if (!oldHolding) return;
@@ -171,7 +176,7 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 		oldHolding.value = { USD: balance.total * asset.currentPrice };
 	}
 
-	isNewHolding(assetId: string): boolean {
+	private isNewHolding(assetId: string): boolean {
 		return !this.holdings.some((holding) => {
 			return holding.asset.assetId === assetId;
 		});

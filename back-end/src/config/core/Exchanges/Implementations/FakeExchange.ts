@@ -3,6 +3,7 @@ import faker from "faker";
 import { BaseExchange, IExchange, Exchange, ExchangeNames, Action, IHoldingBalance } from "../../../../core/entities";
 import { Balances } from "../../../../core/entities/Integrations/Exchanges/Exchange";
 import { IOrder, OrderStatus } from "../../../../core/entities/Integrations/Order";
+import { ONE_DAY } from "../../../../core/entities/Integrations/Timeslice";
 import { IDigitalAssetTransaction } from "../../../../core/entities/Integrations/Transaction";
 
 export class FakeExchange extends BaseExchange {
@@ -57,7 +58,7 @@ export class FakeExchange extends BaseExchange {
 
   async fetchOrders(): Promise<IOrder[]> {
     const orders: IOrder[] = [{
-      timestamp: 100,
+      timestamp: Date.now() - ONE_DAY * 1,
       datetime: faker.date.recent().toDateString(),
       baseAsset: 'bitcoin',
       baseSymbol: 'BTC',

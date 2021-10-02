@@ -1,8 +1,9 @@
 import { ExchangeAccountNotFound, IExchangeAccountEntityGateway, SyncExchangeAccountInvalidRequest, SyncExchangeAccountRequest } from '..';
 import { IUseCase, Result } from '../../../../definitions';
 import { BaseExchange, Exchange, ExchangeAccount, IDigitalAsset, IOrder, OrderStatus, User } from '../../../../entities';
-import { NullAsset } from '../../../../entities/Integrations/Asset';
+import { IHistoricalPrice, NullAsset } from '../../../../entities/Integrations/Asset';
 import { Balances } from '../../../../entities/Integrations/Exchanges/Exchange';
+import { GetRateHandler } from '../../../../entities/Integrations/Exchanges/ExchangeAccount';
 import { IDigitalAssetTransaction } from '../../../../entities/Integrations/Transaction';
 import { IUserEntityGateway, UserNotFound } from '../../../user';
 import { IDigitalAssetEntityGateway, IDigitalAssetHistoryEntityGateway } from '../../digitalAsset';
@@ -16,7 +17,7 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 	private userEntityGateway: IUserEntityGateway;
 	private exchangeAccountEntityGateway: IExchangeAccountEntityGateway;
 	private digitalAssetEntityGateway: IDigitalAssetEntityGateway;
-	private digitalAssetHistoryEntityGateway: IDigitalAssetHistoryEntityGateway
+	private digitalAssetHistoryEntityGateway: IDigitalAssetHistoryEntityGateway;
 	private getExchange: GetExchangeHandler;
 
 	constructor(
@@ -31,6 +32,8 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 		this.digitalAssetEntityGateway = digitalAssetEntityGateway;
 		this.digitalAssetHistoryEntityGateway = digitalAssetHistoryEntityGateway;
 		this.getExchange = getExchange;
+		this.getRate = this.getRate.bind(this);
+		this.getHistoricalValues = this.getHistoricalValues.bind(this);
 	}
 
 	async execute(request: SyncExchangeAccountRequest): Promise<SyncExchangeAccountResponse> {
@@ -61,9 +64,9 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 
 		exchange.setAccount(exchangeAccount);
 
-		const getRate = (base: string, baseSymbol: string, quote: string, quoteSymbol: string, timestamp: number) => {
+		const getRate: GetRateHandler = (base: string, baseSymbol: string, quote: string, quoteSymbol: string, timestamp: number) => {
 			return this.getRate(exchange, base, baseSymbol, quote, quoteSymbol, timestamp);
-		}
+		};
 
 		let balances: Balances;
 		let transactions: IDigitalAssetTransaction[];
@@ -83,9 +86,15 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 
 		const updatedOrders = await exchangeAccount.createUpdatedOrders(orders);
 		const updatedTransactions = await exchangeAccount.createUpdatedTransactions(transactions);
-		const updatedHoldings = await exchangeAccount.createUpdatedHoldings(orders, transactions, balances, this.getAsset.bind(this), getRate.bind(this));
-		const dailyTimeslices = await exchangeAccount.createDailyTimeslices();
-		const hourlyTimeslices = await exchangeAccount.createHourlyTimeslices();
+		const updatedHoldings = await exchangeAccount.createUpdatedHoldings(
+			orders,
+			transactions,
+			balances,
+			this.getAsset.bind(this),
+			getRate.bind(this)
+		);
+		const dailyTimeslices = await exchangeAccount.createDailyTimeslices(getRate, this.getHistoricalValues);
+		const hourlyTimeslices = await exchangeAccount.createHourlyTimeslices(getRate);
 
 		const updatePayload: IUpdateExchangeAccountPayload = {
 			accountId: exchangeAccount.accountId,
@@ -112,7 +121,14 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 		return new NullAsset(assetId);
 	}
 
-	async getRate(exchange: BaseExchange, base: string, baseSymbol: string, quote: string, quoteSymbol: string, timestamp: number): Promise<number> {
+	async getRate(
+		exchange: BaseExchange,
+		base: string,
+		baseSymbol: string,
+		quote: string,
+		quoteSymbol: string,
+		timestamp: number
+	): Promise<number> {
 		const rate = await exchange.getRate(baseSymbol, quoteSymbol, timestamp);
 		if (rate) return rate;
 
@@ -120,6 +136,11 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 		if (historicalPrice) return historicalPrice.price;
 
 		return 0;
+	}
+
+	async getHistoricalValues(assetId: string, from: number, to: number): Promise<IHistoricalPrice[]> {
+		const historicalValues = await this.digitalAssetHistoryEntityGateway.getHistoricalValues(assetId, from, to);
+		return historicalValues || [];
 	}
 }
 

@@ -1,6 +1,7 @@
 import faker from 'faker';
 import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
 import { Action, Exchange, IExchangeAccount, IHolding, IOrder, ITimeslices, OrderStatus } from '../../../src/core/entities';
+import { ONE_DAY } from '../../../src/core/entities/Integrations/Timeslice';
 import { IDigitalAssetTransaction, TransactionStatus } from '../../../src/core/entities/Integrations/Transaction';
 import { makeId } from '../../../src/data';
 
@@ -38,7 +39,7 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
       fees: { USD: 5 }
     },
     snapshots: [{
-      timestamp: 0,
+      timestamp: Date.now() - ONE_DAY * 5,
       price: { USD: 10000 },
       amountHeld: 5,
       valueHeld: { USD: 50000 },
@@ -66,7 +67,7 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
       }
     },
     {
-      timestamp: 1,
+      timestamp: Date.now() - ONE_DAY * 3,
       price: { USD: 10000 },
       amountHeld: 10,
       valueHeld: { USD: 100000 },
@@ -111,7 +112,7 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
   }];
 
   const orders: IOrder[] = [{
-    timestamp: 0,
+    timestamp: Date.now() - ONE_DAY * 3,
     datetime: faker.date.recent().toDateString(),
     baseAsset: 'bitcoin',
     baseSymbol: 'BTC',
@@ -131,7 +132,7 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
     status: OrderStatus.CLOSED
   },
   {
-    timestamp: 1,
+    timestamp: Date.now() - ONE_DAY * 2,
     datetime: faker.date.recent().toDateString(),
     baseAsset: 'bitcoin',
     baseSymbol: 'BTC',

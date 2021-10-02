@@ -34,7 +34,7 @@ class RemoveExchangeAccountController extends BaseController<RemoveExchangeAccou
 		}
 
 		const deletedExchangeAccount: Readonly<ExchangeAccount> = result.getValue();
-		this.ok<ExchangeAccount>(res, deletedExchangeAccount);
+		this.ok<Readonly<ExchangeAccount>>(res, deletedExchangeAccount);
 		return;
 	}
 }
