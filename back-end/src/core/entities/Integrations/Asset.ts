@@ -72,4 +72,5 @@ export interface IHistoricalPrice {
 export interface IDigitalAssetHistory {
   assetId: string;
   prices: IHistoricalPrice[];
+  hourlyPrices: IHistoricalPrice[];
 }

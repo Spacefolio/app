@@ -6,6 +6,7 @@ interface IDigitalAssetHistoryEntityGateway {
   getDigitalAssetHistory(assetId: string): Promise<IDigitalAssetHistory | undefined>;
   getHistoricalValue(assetId: string, timestamp: number): Promise<IHistoricalPrice | undefined>;
   getHistoricalValues(assetId: string, from: number, to: number): Promise<IHistoricalPrice[] | undefined>;
+  getHourlyData(assetId: string, from: number, to: number): Promise<IHistoricalPrice[] | undefined>;
   updateDigitalAssetHistory(payload: IDigitalAssetHistory): Promise<IDigitalAssetHistory | undefined>;
   deleteDigitalAssetHistory(assetId: string): Promise<IDigitalAssetHistory | undefined>;
   getAllDigitalAssetHistories(): Promise<IDigitalAssetHistory[]>;

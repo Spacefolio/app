@@ -9,6 +9,17 @@ class DigitalAssetHistoryInMemoryEntityGateway implements IDigitalAssetHistoryEn
     this.digitalAssetHistories = [];
   }
 
+  async getHourlyData(assetId: string, from: number, to: number): Promise<IHistoricalPrice[] | undefined> {
+    const result = this.digitalAssetHistories.find(asset => asset.assetId === assetId);
+    if (!result) return;
+
+    const startIndex = result.hourlyPrices.findIndex((historicalPrice) => historicalPrice.timestamp == from);
+    const endIndex = result.hourlyPrices.findIndex((historicalPrice) => historicalPrice.timestamp == to);
+    if (startIndex == -1 || endIndex == -1) return;
+
+    return result.hourlyPrices.slice(startIndex, endIndex + 1);
+  }
+
   async exists (assetId: string): Promise<boolean> {
     const index = this.digitalAssetHistories.findIndex(asset => asset.assetId === assetId);
     return index != -1;

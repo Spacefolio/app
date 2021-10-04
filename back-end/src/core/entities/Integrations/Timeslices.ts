@@ -1,25 +1,13 @@
-import { IExchangeAccount, ITimeslices } from ".";
+import { IHolding, ITimeslices } from ".";
 import { IHistoricalPrice } from "./Asset";
-import { GetHistoricalValuesHandler, GetRateHandler } from "./Exchanges/ExchangeAccount";
+import { GetHistoricalValuesHandler } from "./Exchanges/ExchangeAccount";
 import { IHoldingSnapshot } from "./HoldingSnapshot";
 import { IHoldingSlice, ITimeslice, ONE_DAY } from "./Timeslice";
 
-class DailyTimeslices {
-  private account: IExchangeAccount;
-  private getRate: GetRateHandler;
-  private getHistoricalValues: GetHistoricalValuesHandler;
-  private timeslices: ITimeslices;
+class Timeslices {
 
-  constructor (account: IExchangeAccount, getRate: GetRateHandler, getHistoricalValues: GetHistoricalValuesHandler) {
-    this.account = account;
-    this.getRate = getRate;
-    this.getHistoricalValues = getHistoricalValues;
-    this.timeslices = {};
-  }
-
-  async createTimeslices(): Promise<ITimeslices> {
-    const oldTimeslices = this.account.dailyTimeslices;
-    const timeslices = this.timeslices;
+  static async createDailyTimeslices(holdings: IHolding[], oldTimeslices: ITimeslices, lastSynced: Date, getHistoricalValues: GetHistoricalValuesHandler): Promise<ITimeslices> {
+    const timeslices: ITimeslices = {};
     const prices: { [key: string]: IHistoricalPrice[] } = {};
     const lastAmount: { [key: string]: number } = {};
     const lastPrice: { [key: string]: number } = {};
@@ -28,7 +16,7 @@ class DailyTimeslices {
 	  const endDate = now + (ONE_DAY - (now % ONE_DAY)); // start of tomorrow
     let earliestTime = endDate;
 
-    if (this.account.lastSynced.valueOf() > 0) {
+    if (lastSynced.valueOf() > 0) {
       // Just pick up where we left off since we last sync'ed
       Object.keys(oldTimeslices).forEach(timestamp => {
         timeslices[Number(timestamp)] = oldTimeslices[Number(timestamp)];
@@ -36,7 +24,7 @@ class DailyTimeslices {
       });
     } else {
       // This is the first time ever syncing
-      for (const holding of this.account.holdings) {
+      for (const holding of holdings) {
         if (holding.snapshots[0].timestamp < earliestTime) {
           earliestTime = holding.snapshots[0].timestamp;
         }
@@ -44,15 +32,14 @@ class DailyTimeslices {
     }
 
     const startDate = earliestTime - (earliestTime % ONE_DAY);
-
     const currentSnapshot: { [key: string]: number } = {};
     
     // Grab historical daily price data for each asset we need
-    for (const holding of this.account.holdings) {
+    for (const holding of holdings) {
       currentSnapshot[holding.asset.assetId] = 0;
 
       const asset = holding.asset.assetId;
-      prices[asset] = await this.getHistoricalValues(asset, startDate, endDate - ONE_DAY);
+      prices[asset] = await getHistoricalValues(asset, startDate, endDate - ONE_DAY);
       lastPrice[asset] = fiat(asset);
       lastAmount[asset] = 0;
     }
@@ -64,7 +51,7 @@ class DailyTimeslices {
         holdings: {}
       };
 
-      for (const holding of this.account.holdings) {
+      for (const holding of holdings) {
         const asset = holding.asset.assetId;
         const snapsInThisSlice: IHoldingSnapshot[] = [];
 
@@ -108,8 +95,11 @@ class DailyTimeslices {
       timeslices[day] = timeslice;
     }
 
-    this.account.dailyTimeslices = this.timeslices;
-    return this.timeslices;
+    return timeslices;
+  }
+
+  static async createHourlyTimeslices(oldHourlyTimeslices: ITimeslices, dailyTimeslices: ITimeslices, getHourlyData: GetHistoricalValuesHandler): Promise<ITimeslices> {
+    return {};  
   }
 }
 
@@ -126,4 +116,4 @@ export function fiat(symbol: string) : number
   }
 }
 
-export default DailyTimeslices;
+export default Timeslices;

@@ -29,13 +29,13 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
       exchange: old.exchange,
       nickname: account.nickname || old.nickname,
       credentials: account.credentials || old.credentials,
-      holdings: old.holdings,
-      transactions: old.transactions,
-      orders: old.orders,
-      openOrders: old.openOrders,
-      dailyTimeslices: old.dailyTimeslices,
-      hourlyTimeslices: old.hourlyTimeslices,
-      lastSynced: old.lastSynced
+      holdings: account.holdings || old.holdings,
+      transactions: account.transactions || old.transactions,
+      orders: account.orders || old.orders,
+      openOrders: account.openOrders || old.openOrders,
+      dailyTimeslices: account.dailyTimeslices || old.dailyTimeslices,
+      hourlyTimeslices: account.hourlyTimeslices || old.hourlyTimeslices,
+      lastSynced: account.lastSynced || old.lastSynced
     };
     
     this.exchangeAccounts[index] = makeExchangeAccount(accountParams);

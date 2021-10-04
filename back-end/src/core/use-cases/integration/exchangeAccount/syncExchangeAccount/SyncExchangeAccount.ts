@@ -2,6 +2,7 @@ import { ExchangeAccountNotFound, IExchangeAccountEntityGateway, SyncExchangeAcc
 import { IUseCase, Result } from '../../../../definitions';
 import { BaseExchange, Exchange, ExchangeAccount, IDigitalAsset, IOrder, OrderStatus, User } from '../../../../entities';
 import { IHistoricalPrice, NullAsset } from '../../../../entities/Integrations/Asset';
+import Timeslices from '../../../../entities/Integrations/Timeslices';
 import { Balances } from '../../../../entities/Integrations/Exchanges/Exchange';
 import { GetRateHandler } from '../../../../entities/Integrations/Exchanges/ExchangeAccount';
 import { IDigitalAssetTransaction } from '../../../../entities/Integrations/Transaction';
@@ -34,6 +35,7 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 		this.getExchange = getExchange;
 		this.getRate = this.getRate.bind(this);
 		this.getHistoricalValues = this.getHistoricalValues.bind(this);
+		this.getHourlyData = this.getHourlyData.bind(this);
 	}
 
 	async execute(request: SyncExchangeAccountRequest): Promise<SyncExchangeAccountResponse> {
@@ -93,8 +95,9 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 			this.getAsset.bind(this),
 			getRate.bind(this)
 		);
-		const dailyTimeslices = await exchangeAccount.createDailyTimeslices(getRate, this.getHistoricalValues);
-		const hourlyTimeslices = await exchangeAccount.createHourlyTimeslices(getRate);
+		
+		const dailyTimeslices = await Timeslices.createDailyTimeslices(updatedHoldings, exchangeAccount.dailyTimeslices, exchangeAccount.lastSynced, this.getHistoricalValues);
+		const hourlyTimeslices = await Timeslices.createHourlyTimeslices(exchangeAccount.hourlyTimeslices, dailyTimeslices, this.getHourlyData);
 
 		const updatePayload: IUpdateExchangeAccountPayload = {
 			accountId: exchangeAccount.accountId,
@@ -141,6 +144,11 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 	async getHistoricalValues(assetId: string, from: number, to: number): Promise<IHistoricalPrice[]> {
 		const historicalValues = await this.digitalAssetHistoryEntityGateway.getHistoricalValues(assetId, from, to);
 		return historicalValues || [];
+	}
+
+	async getHourlyData(assetId: string, from: number, to: number): Promise<IHistoricalPrice[]> {
+		const hourlyData = await this.digitalAssetHistoryEntityGateway.getHourlyData(assetId, from, to);
+		return hourlyData || [];
 	}
 }
 

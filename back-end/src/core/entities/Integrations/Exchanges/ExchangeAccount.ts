@@ -1,7 +1,6 @@
 import { IExchange } from '.';
 import { BaseIntegration, IDigitalAsset, IHolding, IHoldingBalance, IIntegration, IOrder, ITimeslices } from '..';
 import { IHistoricalPrice } from '../Asset';
-import DailyTimeslices from '../DailyTimeslices';
 import { NullHoldingBalance, NullHoldingTotal } from '../Holding';
 import { IHoldingSnapshot } from '../HoldingSnapshot';
 import HoldingsSnapshots from '../HoldingsSnapshots';
@@ -89,16 +88,6 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 		}
 
 		return this.holdings;
-	}
-
-	async createDailyTimeslices(getRate: GetRateHandler, getHistoricalValues: GetHistoricalValuesHandler): Promise<ITimeslices> {
-		const dailyTimeslices = new DailyTimeslices(this, getRate, getHistoricalValues);
-		await dailyTimeslices.createTimeslices();
-		return {};
-	}
-
-	async createHourlyTimeslices(getRate: GetRateHandler): Promise<ITimeslices> {
-		return {};
 	}
 
 	private async createHoldingsSnapshots(
