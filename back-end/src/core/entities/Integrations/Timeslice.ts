@@ -5,10 +5,7 @@ export const ONE_HOUR = 3600000;
 export const ONE_DAY = 86400000;
 export const ONE_WEEK = 604800000;
 
-export interface ITimeslices {
-  [key: number]: ITimeslice;
-}
-
+export type ITimeslices = Map<number, ITimeslice>
 export interface IHoldingSlice {
   assetId: string;
   amount: number;
@@ -20,5 +17,5 @@ export interface IHoldingSlice {
 export interface ITimeslice {
   start: number;
   value: IValue;
-  holdings: { [key: string]: IHoldingSlice };
+  holdings: Map<string, IHoldingSlice>;
 }

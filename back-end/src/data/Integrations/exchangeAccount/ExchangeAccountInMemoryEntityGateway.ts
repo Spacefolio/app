@@ -1,5 +1,5 @@
 import { ExchangesConfiguration } from "../../../config/core/Exchanges";
-import { ExchangeAccount, IExchange, IExchangeAccount, makeExchangeAccount } from "../../../core/entities";
+import { ExchangeAccount, IExchange, IExchangeAccount, ITimeslice, makeExchangeAccount } from "../../../core/entities";
 import { ICreateExchangeAccountPayload, IExchangeAccountEntityGateway, IUpdateExchangeAccountPayload } from "../../../core/use-cases/integration/exchangeAccount";
 
 class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGateway {
@@ -54,8 +54,8 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
       transactions: payload.transactions || [],
       orders: payload.orders || [],
       openOrders: payload.openOrders || [],
-      dailyTimeslices: payload.dailyTimeslices || {},
-      hourlyTimeslices: payload.hourlyTimeslices || {},
+      dailyTimeslices: payload.dailyTimeslices || new Map<number, ITimeslice>(),
+      hourlyTimeslices: payload.hourlyTimeslices || new Map<number, ITimeslice>(),
       lastSynced: new Date(0)
     }
     const exchangeAccount: ExchangeAccount = makeExchangeAccount(accountParams);

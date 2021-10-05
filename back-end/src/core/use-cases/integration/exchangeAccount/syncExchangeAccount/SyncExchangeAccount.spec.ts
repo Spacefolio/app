@@ -163,7 +163,7 @@ describe('Get Exchange Account Use Case', () => {
 
     expect(response.isError).toBe(false);
     const account = response.getValue();
-    expect(Object.entries(account.dailyTimeslices).length).toBeGreaterThan(0);
-    //expect(Object.entries(account.hourlyTimeslices).length).toBeGreaterThan(0);
+    expect(account.dailyTimeslices.size).toBeGreaterThan(0);
+    //expect(account.hourlyTimeslices.size).toBeGreaterThan(0);
   });
 });
