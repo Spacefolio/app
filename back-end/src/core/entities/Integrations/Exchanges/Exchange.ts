@@ -44,18 +44,20 @@ export interface IExchange {
   requiredCredentials: IRequiredExchangeCredentials;
 }
 
+export interface IExchangeAdapter {
+  getRate(baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined>;
+  fetchBalances(exchangeAccount: IExchangeAccount): Promise<Balances>;
+  fetchTransactions(exchangeAccount: IExchangeAccount): Promise<IDigitalAssetTransaction[]>;
+  fetchOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]>;
+  fetchOpenOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]>;
+}
 export abstract class BaseExchange implements IExchange {
-  protected account: IExchangeAccount | undefined;
-
-	setAccount(exchangeAccount: IExchangeAccount): void {
-		this.account = exchangeAccount;
-	}
   
   abstract getRate(baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined>;
-	abstract fetchBalances(): Promise<Balances>;
-	abstract fetchTransactions(): Promise<IDigitalAssetTransaction[]>;
-	abstract fetchOrders(): Promise<IOrder[]>;
-  abstract fetchOpenOrders(): Promise<IOrder[]>;
+	abstract fetchBalances(exchangeAccount: IExchangeAccount): Promise<Balances>;
+	abstract fetchTransactions(exchangeAccount: IExchangeAccount): Promise<IDigitalAssetTransaction[]>;
+	abstract fetchOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]>;
+  abstract fetchOpenOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]>;
 
   public readonly id: string;
   public readonly name: string;

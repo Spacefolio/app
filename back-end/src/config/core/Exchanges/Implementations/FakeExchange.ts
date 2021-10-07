@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import faker from "faker";
-import { BaseExchange, IExchange, Exchange, ExchangeNames, Action, IHoldingBalance } from "../../../../core/entities";
+import { BaseExchange, IExchange, Exchange, ExchangeNames, Action, IHoldingBalance, IExchangeAccount } from "../../../../core/entities";
 import { Balances } from "../../../../core/entities/Integrations/Exchanges/Exchange";
 import { IOrder, OrderStatus } from "../../../../core/entities/Integrations/Order";
 import { ONE_DAY } from "../../../../core/entities/Integrations/Timeslice";
@@ -16,7 +16,7 @@ export class FakeExchange extends BaseExchange {
     return 1;
   }
   
-  async fetchOpenOrders(): Promise<IOrder[]> {
+  async fetchOpenOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]> {
     const orders: IOrder[] = [{
       timestamp: faker.date.recent().valueOf(),
       datetime: faker.date.recent().toDateString(),
@@ -41,7 +41,7 @@ export class FakeExchange extends BaseExchange {
     return orders;
   }
   
-  async fetchBalances(): Promise<Balances> {
+  async fetchBalances(exchangeAccount: IExchangeAccount): Promise<Balances> {
     const holdingBalance: IHoldingBalance = {
       free: 0,
       used: 5,
@@ -52,11 +52,11 @@ export class FakeExchange extends BaseExchange {
     return balances;
   }
   
-  async fetchTransactions(): Promise<IDigitalAssetTransaction[]> {
+  async fetchTransactions(exchangeAccount: IExchangeAccount): Promise<IDigitalAssetTransaction[]> {
     return [];
   }
 
-  async fetchOrders(): Promise<IOrder[]> {
+  async fetchOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]> {
     const orders: IOrder[] = [{
       timestamp: Date.now() - ONE_DAY * 1,
       datetime: faker.date.recent().toDateString(),

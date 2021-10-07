@@ -1,14 +1,10 @@
-import { IDigitalAssetMarketData } from "../../../core/use-cases/integration/digitalAsset";
+import IDigitalAssetAdapter from "../../../data/Integrations/DigitalAsset/DigitalAssetAdapter";
 import CoinGecko from "./CoinGecko";
 
 class DigitalAssetsConfiguration {
 
-  static getFetchDigitalAssets(): () => Promise<IDigitalAssetMarketData[]> {
-    return this.fetchDigitalAssets;
-  }
-
-  private static async fetchDigitalAssets(): Promise<IDigitalAssetMarketData[]> {
-    return await CoinGecko.fetchDigitalAssets();
+  static getDigitalAssetAdapter(): IDigitalAssetAdapter {
+    return new CoinGecko();
   }
 }
 

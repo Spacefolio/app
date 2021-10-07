@@ -1,6 +1,7 @@
 import config from '.';
 import { connectMongoose } from '../data';
 import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from './core';
+import { DigitalAssetsConfiguration } from './core/DigitalAssets';
 import { ExchangesConfiguration } from './core/Exchanges';
 import { DatabaseConfiguration } from './data';
 import { LoggerConfiguration, ControllersConfiguration, RouterConfiguration, WebAppConfiguration } from './entrypoint';
@@ -12,6 +13,9 @@ export async function main(): Promise<void> {
 
 	const userDatabase = DatabaseConfiguration.getUserMongoDatabase();
 	const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountMongoDatabase();
+	const digitalAssetAdapter = DigitalAssetsConfiguration.getDigitalAssetAdapter();
+	const digitalAssetDatabase = DatabaseConfiguration.getDigitalAssetMongoDatabase(digitalAssetAdapter);
+	const digitalAssetHistoryDatabase = DatabaseConfiguration.getDigitalAssetHistoryMongoDatabase(digitalAssetAdapter);
 
 	const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
 	const registerUserUseCase = UserUseCasesConfiguration.getRegisterUserUseCase(userDatabase);
@@ -54,13 +58,24 @@ export async function main(): Promise<void> {
 	);
 	const getTransactionsController = ControllersConfiguration.getGetTransactionsController(getTransactionsUseCase);
 
+	const syncExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getSyncExchangeAccountUseCase(
+		userDatabase,
+		exchangeAccountDatabase,
+		digitalAssetDatabase,
+		digitalAssetHistoryDatabase,
+		ExchangesConfiguration.get
+	);
+
+	const syncExchangeAccountController = ControllersConfiguration.getSyncExchangeAccountController(syncExchangeAccountUseCase);
+
 	const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
 		addExchangeAccountController,
 		removeExchangeAccountController,
 		getExchangeAccountController,
 		getAllExchangeAccountsController,
 		getHoldingsController,
-		getTransactionsController
+		getTransactionsController,
+		syncExchangeAccountController
 	);
 	const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
 

@@ -6,6 +6,7 @@ export {
 	IExchangeCredentials,
 	IExchange,
 	Exchange,
+	IExchangeAdapter,
 	ExchangeNames,
 	makeExchangeAccount,
 } from './Exchanges';

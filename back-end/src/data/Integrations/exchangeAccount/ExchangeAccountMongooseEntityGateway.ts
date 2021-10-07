@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { ExchangeAccountMapper, IExchangeAccountDocument } from '../../';
 import { ExchangesConfiguration } from '../../../config/core/Exchanges';
-import { ExchangeAccount, IExchange, IExchangeAccount, makeExchangeAccount } from '../../../core/entities';
+import { ExchangeAccount, IExchange, IExchangeAccount, ITimeslice, makeExchangeAccount } from '../../../core/entities';
 import { ICreateExchangeAccountPayload, IExchangeAccountEntityGateway, IUpdateExchangeAccountPayload } from '../../../core/use-cases/integration/exchangeAccount';
 
 class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGateway {
@@ -42,8 +42,8 @@ class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGate
       holdings: payload.holdings || [],
       orders: [],
       openOrders: [],
-      dailyTimeslices: [],
-      hourlyTimeslices: [],
+      dailyTimeslices: new Map<number, ITimeslice>(),
+      hourlyTimeslices: new Map<number, ITimeslice>(),
       transactions: payload.transactions || [],
       lastSynced: new Date(0)
     }

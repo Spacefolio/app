@@ -1,25 +1,37 @@
-import { ExchangeAccountInMemoryEntityGateway, ExchangeAccountMongooseEntityGateway, UserInMemoryEntityGateway, UserMongooseEntityGateway, UserModel, ExchangeAccountModel } from "../../data";
+import { ExchangeAccountInMemoryEntityGateway, ExchangeAccountMongooseEntityGateway, UserInMemoryEntityGateway, UserMongooseEntityGateway, UserModel, ExchangeAccountModel, DigitalAssetMongooseEntityGateway, IDigitalAssetAdapter, DigitalAssetModel, DigitalAssetHistoryMongooseEntityGateway, DigitalAssetHistoryModel, DigitalAssetInMemoryEntityGateway, DigitalAssetHistoryInMemoryEntityGateway } from "../../data";
 
 class DatabaseConfiguration {
 
   static getUserInMemoryDatabase(): UserInMemoryEntityGateway {
-    const db = new UserInMemoryEntityGateway();
-    return db;
+    return new UserInMemoryEntityGateway();
   }
 
   static getUserMongoDatabase(): UserMongooseEntityGateway {
-    const db = new UserMongooseEntityGateway(UserModel, ExchangeAccountModel);
-    return db;
+    return new UserMongooseEntityGateway(UserModel, ExchangeAccountModel);
   }
 
   static getExchangeAccountInMemoryDatabase(): ExchangeAccountInMemoryEntityGateway {
-    const db = new ExchangeAccountInMemoryEntityGateway();
-    return db;
+    return new ExchangeAccountInMemoryEntityGateway();
   }
 
   static getExchangeAccountMongoDatabase(): ExchangeAccountMongooseEntityGateway {
-    const db = new ExchangeAccountMongooseEntityGateway(ExchangeAccountModel);
-    return db;
+    return new ExchangeAccountMongooseEntityGateway(ExchangeAccountModel);
+  }
+
+  static getDigitalAssetMongoDatabase(digitalAssetAdapter: IDigitalAssetAdapter): DigitalAssetMongooseEntityGateway {
+    return new DigitalAssetMongooseEntityGateway(DigitalAssetModel, digitalAssetAdapter);
+  }
+
+  static getDigitalAssetInMemoryDatabase(): DigitalAssetInMemoryEntityGateway {
+    return new DigitalAssetInMemoryEntityGateway();
+  }
+
+  static getDigitalAssetHistoryMongoDatabase(digitalAssetAdapter: IDigitalAssetAdapter): DigitalAssetHistoryMongooseEntityGateway {
+    return new DigitalAssetHistoryMongooseEntityGateway(DigitalAssetHistoryModel, digitalAssetAdapter);
+  }
+
+  static getDigitalAssetHistoryInMemoryDatabase(): DigitalAssetHistoryInMemoryEntityGateway {
+    return new DigitalAssetHistoryInMemoryEntityGateway();
   }
 }
 

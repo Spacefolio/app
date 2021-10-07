@@ -9,6 +9,7 @@ import {
 	GetHoldingsController,
 	GetTransactionsController,
 	RemoveExchangeAccountController,
+	SyncExchangeAccountController
 } from '../controllers';
 
 class ExchangeAccountRouter implements BaseRouter {
@@ -18,6 +19,7 @@ class ExchangeAccountRouter implements BaseRouter {
 	getAllExchangeAccountsController: GetAllExchangeAccountsController;
 	getHoldingsController: GetHoldingsController;
 	getTransactionsController: GetTransactionsController;
+	syncExchangeAccountController: SyncExchangeAccountController;
 	router: Router;
 
 	constructor(
@@ -26,7 +28,8 @@ class ExchangeAccountRouter implements BaseRouter {
 		getExchangeAccountController: GetExchangeAccountController,
 		getAllExchangeAccountsController: GetAllExchangeAccountsController,
 		getHoldingsController: GetHoldingsController,
-		getTransactionsController: GetTransactionsController
+		getTransactionsController: GetTransactionsController,
+		syncExchangeAccountController: SyncExchangeAccountController
 	) {
 		this.addExchangeAccountController = addExchangeAccountController;
 		this.removeExchangeAccountController = removeExchangeAccountController;
@@ -34,6 +37,7 @@ class ExchangeAccountRouter implements BaseRouter {
 		this.getAllExchangeAccountsController = getAllExchangeAccountsController;
 		this.getHoldingsController = getHoldingsController;
 		this.getTransactionsController = getTransactionsController;
+		this.syncExchangeAccountController = syncExchangeAccountController;
 		this.router = Router();
 		this.configRouter();
 	}
@@ -50,6 +54,7 @@ class ExchangeAccountRouter implements BaseRouter {
 			BodyValidationMiddleware.verifyBodyFieldsErrors,
 			this.addExchangeAccountController.getRequestHandler(),
 		]);
+		this.router.post(`/:accountId/sync`, [this.syncExchangeAccountController.getRequestHandler()]);
 		this.router.delete('/:accountId', [this.removeExchangeAccountController.getRequestHandler()]);
 	}
 

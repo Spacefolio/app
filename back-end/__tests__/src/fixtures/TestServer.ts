@@ -2,6 +2,7 @@ import { Logger } from 'log4js';
 import { Server } from 'node:http';
 import config, { IAppConfig } from '../../../src/config';
 import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from '../../../src/config/core';
+import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
 import { DatabaseConfiguration } from '../../../src/config/data';
 import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from '../../../src/config/entrypoint';
 import { IExchangeAccountEntityGateway } from '../../../src/core/use-cases/integration/exchangeAccount';
@@ -22,6 +23,8 @@ export class TestServer {
 
 		const userDatabase = DatabaseConfiguration.getUserMongoDatabase();
 		const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountMongoDatabase();
+		const digitalAssetDatabase = DatabaseConfiguration.getDigitalAssetInMemoryDatabase();
+		const digitalAssetHistoryDatabase = DatabaseConfiguration.getDigitalAssetHistoryInMemoryDatabase();
 
 		const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
 		const authenticateUserController = ControllersConfiguration.getAuthenticateUserController(authenticateUserUseCase);
@@ -58,13 +61,17 @@ export class TestServer {
 		const getTransactionsUseCase = ExchangeAccountUseCasesConfiguration.getGetTransactionsUseCase(userDatabase, exchangeAccountDatabase);
 		const getTransactionsController = ControllersConfiguration.getGetTransactionsController(getTransactionsUseCase);
 
+		const syncExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getSyncExchangeAccountUseCase(userDatabase, exchangeAccountDatabase, digitalAssetDatabase, digitalAssetHistoryDatabase, ExchangesConfiguration.get);
+		const syncExchangeAccountController = ControllersConfiguration.getSyncExchangeAccountController(syncExchangeAccountUseCase);
+
 		const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
 			addExchangeAccountController,
 			removeExchangeAccountController,
 			getExchangeAccountController,
 			getAllExchangeAccountsController,
 			getHoldingsController,
-			getTransactionsController
+			getTransactionsController,
+			syncExchangeAccountController
 		);
 		const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
 

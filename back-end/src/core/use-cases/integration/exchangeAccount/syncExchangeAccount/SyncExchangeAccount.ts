@@ -64,8 +64,6 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 		const exchangeName = <Exchange>exchangeAccount.exchange.id;
 		const exchange = this.getExchange(exchangeName);
 
-		exchange.setAccount(exchangeAccount);
-
 		const getRate: GetRateHandler = (base: string, baseSymbol: string, quote: string, quoteSymbol: string, timestamp: number) => {
 			return this.getRate(exchange, base, baseSymbol, quote, quoteSymbol, timestamp);
 		};
@@ -76,10 +74,10 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 		let openOrders: IOrder[];
 
 		try {
-			balances = await exchange.fetchBalances();
-			transactions = await exchange.fetchTransactions();
-			orders = await exchange.fetchOrders();
-			openOrders = await exchange.fetchOpenOrders();
+			balances = await exchange.fetchBalances(exchangeAccount);
+			transactions = await exchange.fetchTransactions(exchangeAccount);
+			orders = await exchange.fetchOrders(exchangeAccount);
+			openOrders = await exchange.fetchOpenOrders(exchangeAccount);
 		} catch {
 			return Result.fail(new ExchangeAccountSyncFailed(exchangeAccount.accountId));
 		}

@@ -1,11 +1,14 @@
+import { IDigitalAssetEntityGateway, IDigitalAssetHistoryEntityGateway } from '../../core/use-cases/integration/digitalAsset';
 import {
 	AddExchangeAccountUseCase,
 	GetAllExchangeAccountsUseCase,
 	GetCurrentHoldingsUseCase,
 	GetExchangeAccountUseCase,
+	GetExchangeHandler,
 	GetTransactionsUseCase,
 	IExchangeAccountEntityGateway,
 	RemoveExchangeAccountUseCase,
+	SyncExchangeAccountUseCase,
 } from '../../core/use-cases/integration/exchangeAccount';
 import { VerifyCredentialsHandler } from '../../core/use-cases/integration/exchangeAccount/addExchangeAccount/AddExchangeAccount';
 import { IUserEntityGateway } from '../../core/use-cases/user';
@@ -53,6 +56,16 @@ class ExchangeAccountUseCasesConfiguration {
 		exchangeAccountEntityGateway: IExchangeAccountEntityGateway
 	): GetTransactionsUseCase {
 		return new GetTransactionsUseCase(userEntityGateway, exchangeAccountEntityGateway);
+	}
+
+	static getSyncExchangeAccountUseCase(
+		userEntityGateway: IUserEntityGateway,
+		exchangeAccountEntityGateway: IExchangeAccountEntityGateway,
+		digitalAssetEntityGateway: IDigitalAssetEntityGateway,
+		digitalAssetHistoryEntityGateway: IDigitalAssetHistoryEntityGateway,
+		getExchange: GetExchangeHandler
+	): SyncExchangeAccountUseCase {
+		return new SyncExchangeAccountUseCase(userEntityGateway, exchangeAccountEntityGateway, digitalAssetEntityGateway, digitalAssetHistoryEntityGateway, getExchange);
 	}
 }
 

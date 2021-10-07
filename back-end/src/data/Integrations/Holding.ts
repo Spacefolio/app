@@ -91,7 +91,8 @@ export const holdingTotalSchema = new mongoose.Schema({
   amount: amountsSchema,
   value: valuesSchema,
   averageBuyPrice: valueSchema,
-  averageSellPrice: valueSchema
+  averageSellPrice: valueSchema,
+  fees: valueSchema
 });
 
 export const amountAndValueSchema = new mongoose.Schema({

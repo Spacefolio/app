@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
 import { Action, Exchange, IExchangeAccount, IHolding, IOrder, ITimeslices, OrderStatus } from '../../../src/core/entities';
-import { ONE_DAY } from '../../../src/core/entities/Integrations/Timeslice';
+import { ITimeslice, ONE_DAY } from '../../../src/core/entities/Integrations/Timeslice';
 import { IDigitalAssetTransaction, TransactionStatus } from '../../../src/core/entities/Integrations/Transaction';
 import { makeId } from '../../../src/data';
 
@@ -173,8 +173,8 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
     status: OrderStatus.OPEN
   }];
 
-  const dailyTimeslices: ITimeslices = {};
-  const hourlyTimeslices: ITimeslices = {};
+  const dailyTimeslices: ITimeslices = new Map<number, ITimeslice>();
+  const hourlyTimeslices: ITimeslices = new Map<number, ITimeslice>();
 
   const exchangeAccountParams: IExchangeAccount = {
     accountId: makeId(),

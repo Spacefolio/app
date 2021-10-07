@@ -1,8 +1,6 @@
 import { IHoldingSnapshotDao, IValueDao } from "./Holding";
 
-export interface ITimeslicesDao {
-  [key: number]: ITimesliceDao;
-}
+export type ITimeslicesDao = Map<number, ITimesliceDao>;
 
 export interface IHoldingSliceDao {
   assetId: string;
@@ -15,5 +13,5 @@ export interface IHoldingSliceDao {
 export interface ITimesliceDao {
   start: number;
   value: IValueDao;
-  holdings: { [key: string]: IHoldingSliceDao };
+  holdings: Map<string, IHoldingSliceDao>;
 }

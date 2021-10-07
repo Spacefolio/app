@@ -1,4 +1,4 @@
-import { AddExchangeAccountUseCase, GetAllExchangeAccountsUseCase, GetCurrentHoldingsUseCase, GetExchangeAccountUseCase, GetTransactionsUseCase, RemoveExchangeAccountUseCase } from '../../core/use-cases/integration/exchangeAccount';
+import { AddExchangeAccountUseCase, GetAllExchangeAccountsUseCase, GetCurrentHoldingsUseCase, GetExchangeAccountUseCase, GetTransactionsUseCase, RemoveExchangeAccountUseCase, SyncExchangeAccountUseCase } from '../../core/use-cases/integration/exchangeAccount';
 import { RegisterUserUseCase, AuthenticateUserUseCase } from '../../core/use-cases/user';
 import {
 	RegisterUserController,
@@ -8,7 +8,8 @@ import {
 	GetExchangeAccountController,
 	GetAllExchangeAccountsController,
 	GetHoldingsController,
-	GetTransactionsController
+	GetTransactionsController,
+	SyncExchangeAccountController
 } from '../../entrypoint/web/controllers';
 
 class ControllersConfiguration {
@@ -42,6 +43,10 @@ class ControllersConfiguration {
 
 	static getGetTransactionsController(getTransactionsUseCase: GetTransactionsUseCase): GetTransactionsController {
 		return new GetTransactionsController(getTransactionsUseCase);
+	}
+
+	static getSyncExchangeAccountController(syncExchangeAccountUseCase: SyncExchangeAccountUseCase): SyncExchangeAccountController {
+		return new SyncExchangeAccountController(syncExchangeAccountUseCase);
 	}
 }
 

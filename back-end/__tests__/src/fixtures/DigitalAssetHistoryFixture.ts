@@ -1,22 +1,31 @@
 import faker from 'faker';
 import { IDigitalAssetHistory, IHistoricalPrice } from '../../../src/core/entities/Integrations/Asset';
+import { ONE_DAY } from '../../../src/core/entities/Integrations/Timeslice';
 import { IDigitalAssetMarketData } from '../../../src/core/use-cases/integration/digitalAsset';
 
 export function makeFakeDigitalAssetHistory (overrides: Partial<IDigitalAssetHistory> = {}): IDigitalAssetHistory {
   const ONE_HOUR = 3600 * 1000;
   const historicalPrices: IHistoricalPrice[] = [];
+  const dailyPrices: IHistoricalPrice[] = [];
   const startTimestamp = faker.date.recent();
+  let today = Date.now();
+  today = today - (today % ONE_DAY);
   
-  for (let i = 0; i < 7*24; i++) {
+  for (let i = 0; i < 8*24; i++) {
     historicalPrices[i] = {
       timestamp: startTimestamp.valueOf() + (i * ONE_HOUR),
       price: faker.datatype.number()
-    }
+    };
+    dailyPrices[i] = {
+      timestamp: today - (8*24*ONE_DAY) + (i * ONE_DAY),
+      price: faker.datatype.number()
+    };
   }
 
   const digitalAssetHistoryParams: IDigitalAssetHistory = {
     assetId: faker.random.alphaNumeric(7),
-    prices: historicalPrices
+    prices: dailyPrices,
+    hourlyPrices: historicalPrices
   };
 
   return { ...digitalAssetHistoryParams, ...overrides };
