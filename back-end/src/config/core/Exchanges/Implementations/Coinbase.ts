@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BaseExchange, IExchange, Exchange, ExchangeNames, IExchangeAccount } from "../../../../core/entities";
-import { Balances, IExchangeAdapter } from "../../../../core/entities/Integrations/Exchanges/Exchange";
+import { Balances } from "../../../../core/entities/Integrations/Exchanges/Exchange";
 import { IOrder } from "../../../../core/entities/Integrations/Order";
 import { IDigitalAssetTransaction } from "../../../../core/entities/Integrations/Transaction";
+import { IExchangeAdapter } from "../ExchangeAdapter";
 
 export class Coinbase extends BaseExchange {
   private exchangeAdapter: IExchangeAdapter;

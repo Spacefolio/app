@@ -1,5 +1,6 @@
 export * from './registerUser';
 export * from './authenticateUser';
+export * from './checkRegistration';
 // export * from './changeEmail';
 // export * from './changeName';
 // export * from './changePassword';

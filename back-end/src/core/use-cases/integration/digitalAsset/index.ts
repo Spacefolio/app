@@ -11,5 +11,3 @@ export {
 export {
 	default as IDigitalAssetHistoryEntityGateway
 } from './DigitalAssetHistoryEntityGateway';
-
-export { default as IDigitalAssetAdapter } from '../../../../data/Integrations/DigitalAsset/DigitalAssetAdapter';

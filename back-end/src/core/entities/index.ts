@@ -14,7 +14,6 @@ export {
 	IExchangeCredentials,
 	IExchange,
 	Exchange,
-	IExchangeAdapter,
 	ExchangeNames,
 	makeExchangeAccount,
 	IDigitalAsset,
