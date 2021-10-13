@@ -1,5 +1,5 @@
 import argon2 from "argon2";
-import { AuthenticateUserUseCase, RegisterUserUseCase, IUserEntityGateway } from "../../core/use-cases/user";
+import { AuthenticateUserUseCase, RegisterUserUseCase, IUserEntityGateway, CheckRegistrationUseCase } from "../../core/use-cases/user";
 
 class UserUseCasesConfiguration {
   static getAuthenticateUserUseCase(userEntityGateway: IUserEntityGateway): AuthenticateUserUseCase {
@@ -11,6 +11,10 @@ class UserUseCasesConfiguration {
 
   static getRegisterUserUseCase(userEntityGateway: IUserEntityGateway): RegisterUserUseCase {
     return new RegisterUserUseCase(userEntityGateway);
+  }
+
+  static getCheckRegistrationUseCase(userEntityGateway: IUserEntityGateway): CheckRegistrationUseCase {
+    return new CheckRegistrationUseCase(userEntityGateway);
   }
 }
 

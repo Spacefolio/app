@@ -9,7 +9,8 @@ import {
 	GetHoldingsController,
 	GetTransactionsController,
 	RemoveExchangeAccountController,
-	SyncExchangeAccountController
+	SyncExchangeAccountController,
+	SyncExchangeAccountsController
 } from '../controllers';
 
 class ExchangeAccountRouter implements BaseRouter {
@@ -20,6 +21,7 @@ class ExchangeAccountRouter implements BaseRouter {
 	getHoldingsController: GetHoldingsController;
 	getTransactionsController: GetTransactionsController;
 	syncExchangeAccountController: SyncExchangeAccountController;
+	syncExchangeAccountsController: SyncExchangeAccountsController;
 	router: Router;
 
 	constructor(
@@ -29,7 +31,8 @@ class ExchangeAccountRouter implements BaseRouter {
 		getAllExchangeAccountsController: GetAllExchangeAccountsController,
 		getHoldingsController: GetHoldingsController,
 		getTransactionsController: GetTransactionsController,
-		syncExchangeAccountController: SyncExchangeAccountController
+		syncExchangeAccountController: SyncExchangeAccountController,
+		syncExchangeAccountsController: SyncExchangeAccountsController
 	) {
 		this.addExchangeAccountController = addExchangeAccountController;
 		this.removeExchangeAccountController = removeExchangeAccountController;
@@ -38,6 +41,7 @@ class ExchangeAccountRouter implements BaseRouter {
 		this.getHoldingsController = getHoldingsController;
 		this.getTransactionsController = getTransactionsController;
 		this.syncExchangeAccountController = syncExchangeAccountController;
+		this.syncExchangeAccountsController = syncExchangeAccountsController;
 		this.router = Router();
 		this.configRouter();
 	}
@@ -54,6 +58,7 @@ class ExchangeAccountRouter implements BaseRouter {
 			BodyValidationMiddleware.verifyBodyFieldsErrors,
 			this.addExchangeAccountController.getRequestHandler(),
 		]);
+		this.router.post(`/sync`, [this.syncExchangeAccountsController.getRequestHandler()]);
 		this.router.post(`/:accountId/sync`, [this.syncExchangeAccountController.getRequestHandler()]);
 		this.router.delete('/:accountId', [this.removeExchangeAccountController.getRequestHandler()]);
 	}

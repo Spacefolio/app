@@ -8,7 +8,6 @@ import {
 } from '../../../types';
 import axios from 'axios';
 import { ITimeframe } from '../../../types';
-import { plugins } from '../../webpack.config';
 import { getCachedPortfolio, updateCachedPortfolio } from '../_helpers/caching';
 
 export const portfolioService = {
@@ -26,8 +25,8 @@ async function syncPortfolio() {
 	};
 
 	return await axios
-		.post<IPortfolioDataView[]>(
-			`${API_DOMAIN}/portfolios/sync`,
+		.post<{ exchangeAccounts: IPortfolioDataView[] }>(
+			`${API_DOMAIN}/integrations/exchanges/sync`,
 			{},
 			{ headers: requestOptions }
 		)
@@ -36,7 +35,7 @@ async function syncPortfolio() {
 			localStorage.setItem(
 				'Portfolio',
 				JSON.stringify(
-					response.data.map((item: IPortfolioDataView) => {
+					response.data.exchangeAccounts.map((item: IPortfolioDataView) => {
 						return { ...item, lastRefresh: Date.now() };
 					})
 				)
@@ -70,7 +69,7 @@ async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
 		//refresh portfolio from server
 		return await axios
 			.get<IPortfolioDataView>(
-				`${API_DOMAIN}/portfolios${
+				`${API_DOMAIN}/integrations/exchanges${
 					portfolioFilterId != 'ALL' ? '/' + portfolioFilterId : ''
 				}`,
 				{
@@ -115,7 +114,7 @@ async function getTransactionData(exchangeID?: string) {
 
 	return await axios
 		.get(
-			`${API_DOMAIN}/portfolios${
+			`${API_DOMAIN}/integrations/exchanges${
 				exchangeID != undefined ? '/' + exchangeID + '/' : '/'
 			}transactions`,
 			{
@@ -138,7 +137,7 @@ async function getOpenOrdersData(exchangeID?: string) {
 
 	return await axios
 		.get(
-			`${API_DOMAIN}/portfolios/${exchangeID ? exchangeID : ''}open-orders/`,
+			`${API_DOMAIN}/integrations/exchanges/${exchangeID ? exchangeID : ''}open-orders/`,
 			{
 				headers: requestOptions,
 			}
@@ -233,7 +232,7 @@ async function getPortfolioChartData(
 
 	return await axios
 		.get(
-			`${API_DOMAIN}/portfolios${
+			`${API_DOMAIN}/integrations/exchanges${
 				portfolioFilterId != 'ALL' ? '/' + portfolioFilterId + '/' : '/'
 			}chart`,
 			{ headers: requestOptions, params: { timeframe: timeframe } }

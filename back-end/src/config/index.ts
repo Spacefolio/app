@@ -24,7 +24,7 @@ const PORT = ENV_IS_PRODUCTION ? (process.env.PORT ? parseInt(process.env.PORT) 
 
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_PORT = process.env.DB_PORT || '27017';
-const DB_NAME = process.env.DB_NAME || 'botsea';
+const DB_NAME = process.env.DB_NAME || 'spacefolio';
 const DB_DIALECT = process.env.DB_DIALECT || 'mongodb';
 const DB_USERNAME = process.env.DB_USERNAME || undefined;
 const DB_PASSWORD = process.env.DB_PASSWORD || undefined;

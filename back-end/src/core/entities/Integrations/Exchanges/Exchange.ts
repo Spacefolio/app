@@ -16,9 +16,9 @@ export enum Exchange {
 export const ExchangeNames = new Map<Exchange, string>([
   [Exchange.FAKE, "Fake Exchange"],
   [Exchange.BINANCE, "Binance"],
-  [Exchange.BINANCEUS, "BinanceUS"],
+  [Exchange.BINANCEUS, "Binance US"],
   [Exchange.COINBASE, "Coinbase"],
-  [Exchange.COINBASEPRO, "CoinbasePro"],
+  [Exchange.COINBASEPRO, "Coinbase Pro"],
   [Exchange.HITBTC, "HitBTC"],
   [Exchange.KUCOIN, "KuCoin"]
 ]);
@@ -44,13 +44,6 @@ export interface IExchange {
   requiredCredentials: IRequiredExchangeCredentials;
 }
 
-export interface IExchangeAdapter {
-  getRate(baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined>;
-  fetchBalances(exchangeAccount: IExchangeAccount): Promise<Balances>;
-  fetchTransactions(exchangeAccount: IExchangeAccount): Promise<IDigitalAssetTransaction[]>;
-  fetchOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]>;
-  fetchOpenOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]>;
-}
 export abstract class BaseExchange implements IExchange {
   
   abstract getRate(baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined>;

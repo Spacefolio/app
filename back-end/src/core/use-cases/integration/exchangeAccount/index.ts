@@ -5,6 +5,7 @@ export * from './getAllExchangeAccounts';
 export * from './getCurrentHoldings';
 export * from './getTransactions';
 export * from './syncExchangeAccount';
+export * from './syncExchangeAccounts';
 export {
 	default as IExchangeAccountEntityGateway,
 	ICreateExchangeAccountPayload,

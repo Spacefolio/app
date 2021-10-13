@@ -11,8 +11,8 @@ import './App.scss';
 import { AppContainer } from './_styles';
 import '../_styles/variables.scss';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
-import { Login } from '../Login/Login';
 import { theme } from '../_styles/Theme';
+import { Login } from '../Login/login';
 
 export const App = () => {
 	const dispatch = useDispatch();

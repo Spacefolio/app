@@ -14,7 +14,7 @@ class UserMiddleware {
       });
       return res
         .status(201)
-        .send({ token });
+        .send({ email: req.body.email, token });
     } catch (err) {
       return res.status(500).send();
     }

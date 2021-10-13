@@ -1,6 +1,4 @@
-import { IHoldingSnapshot } from '../back-end/src/exchanges/exchange.model';
-import { ITransaction } from '../back-end/src/transactions/transaction.model';
-import { exchangeType } from '.';
+import { exchangeType, IDigitalAssetTransaction, IHolding, IOrder } from '.';
 
 export interface IPortfolioDataView {
 	name: string;
@@ -14,8 +12,9 @@ export interface IPortfolioDataView {
 		passphrase: string;
 	};
 	logoUrl?: string;
-	transactions?: ITransactionItemView[];
-	openOrders?: IOpenOrderItemView[];
+	transactions?: IDigitalAssetTransaction[];
+	orders: IOrder[];
+	openOrders?: IOrder[];
 	portfolioItems: IPortfolioItemView[];
 	profitPercentage: number;
 	portfolioTotal: { USD: number };
@@ -34,8 +33,10 @@ export interface ICachedPortfolioDataView {
 		passphrase: string;
 	};
 	logoUrl?: string;
-	transactions: ITransactionItemView[];
-	openOrders: IOpenOrderItemView[];
+	transactions: IDigitalAssetTransaction[];
+	orders: IOrder[];
+	openOrders: IOrder[];
+	holdings: IHolding[];
 	portfolioItems: IPortfolioItemView[];
 	profitPercentage: number;
 	portfolioTotal: { USD: number };

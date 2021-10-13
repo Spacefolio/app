@@ -2,7 +2,7 @@ import { dispatch } from 'd3-dispatch';
 import { useRef, useEffect, RefObject, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { IPortfolioDataView } from '../../../types/portfolio.types';
+import { IPortfolioDataView } from '../../../types';
 import { portfolioActions } from '../_actions';
 import { applicationViewActions } from '../_actions/applicationView.actions';
 import { IRootState } from '../_reducers';

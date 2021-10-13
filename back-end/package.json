@@ -1,11 +1,11 @@
 {
-	"name": "botsea-back-end",
+	"name": "spacefolio-back-end",
 	"version": "1.0.0",
-	"description": "The back-end for BotSea",
+	"description": "The back-end for Spacefolio",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/BotSeaio/BotSea.git"
+		"url": "https://github.com/Spacefolio/app"
 	},
 	"scripts": {
 		"start": "npm run clean && tsc && node dist/app.js",

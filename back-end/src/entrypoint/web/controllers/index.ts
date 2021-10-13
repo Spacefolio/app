@@ -9,3 +9,4 @@ export { default as GetExchangeAccountController } from './integrations/exchange
 export { default as GetHoldingsController } from './integrations/exchanges/GetHoldingsController';
 export { default as GetTransactionsController } from './integrations/exchanges/GetTransactionsController';
 export { default as SyncExchangeAccountController } from './integrations/exchanges/SyncExchangeAccountController';
+export { default as SyncExchangeAccountsController } from './integrations/exchanges/SyncExchangeAccountsController';

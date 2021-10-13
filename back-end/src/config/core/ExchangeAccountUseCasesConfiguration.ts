@@ -9,6 +9,7 @@ import {
 	IExchangeAccountEntityGateway,
 	RemoveExchangeAccountUseCase,
 	SyncExchangeAccountUseCase,
+	SyncExchangeAccountsUseCase
 } from '../../core/use-cases/integration/exchangeAccount';
 import { VerifyCredentialsHandler } from '../../core/use-cases/integration/exchangeAccount/addExchangeAccount/AddExchangeAccount';
 import { IUserEntityGateway } from '../../core/use-cases/user';
@@ -66,6 +67,16 @@ class ExchangeAccountUseCasesConfiguration {
 		getExchange: GetExchangeHandler
 	): SyncExchangeAccountUseCase {
 		return new SyncExchangeAccountUseCase(userEntityGateway, exchangeAccountEntityGateway, digitalAssetEntityGateway, digitalAssetHistoryEntityGateway, getExchange);
+	}
+
+	static getSyncExchangeAccountsUseCase(
+		userEntityGateway: IUserEntityGateway,
+		exchangeAccountEntityGateway: IExchangeAccountEntityGateway,
+		digitalAssetEntityGateway: IDigitalAssetEntityGateway,
+		digitalAssetHistoryEntityGateway: IDigitalAssetHistoryEntityGateway,
+		getExchange: GetExchangeHandler
+	): SyncExchangeAccountsUseCase {
+		return new SyncExchangeAccountsUseCase(userEntityGateway, exchangeAccountEntityGateway, digitalAssetEntityGateway, digitalAssetHistoryEntityGateway, getExchange);
 	}
 }
 

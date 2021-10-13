@@ -19,10 +19,12 @@ export async function main(): Promise<void> {
 
 	const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
 	const registerUserUseCase = UserUseCasesConfiguration.getRegisterUserUseCase(userDatabase);
+	const checkRegistrationUseCase = UserUseCasesConfiguration.getCheckRegistrationUseCase(userDatabase);
 	const authenticateUserController = ControllersConfiguration.getAuthenticateUserController(authenticateUserUseCase);
 	const registerUserController = ControllersConfiguration.getRegisterUserController(registerUserUseCase);
+	const checkRegistrationController = ControllersConfiguration.getCheckRegistrationController(checkRegistrationUseCase);
 
-	const userRouter = RouterConfiguration.getUserRouter(authenticateUserController, registerUserController);
+	const userRouter = RouterConfiguration.getUserRouter(authenticateUserController, registerUserController, checkRegistrationController);
 
 	const addExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getAddExchangeAccountUseCase(
 		userDatabase,
@@ -68,6 +70,16 @@ export async function main(): Promise<void> {
 
 	const syncExchangeAccountController = ControllersConfiguration.getSyncExchangeAccountController(syncExchangeAccountUseCase);
 
+	const syncExchangeAccountsUseCase = ExchangeAccountUseCasesConfiguration.getSyncExchangeAccountsUseCase(
+		userDatabase,
+		exchangeAccountDatabase,
+		digitalAssetDatabase,
+		digitalAssetHistoryDatabase,
+		ExchangesConfiguration.get
+	);
+
+	const syncExchangeAccountsController = ControllersConfiguration.getSyncExchangeAccountsController(syncExchangeAccountsUseCase);
+
 	const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
 		addExchangeAccountController,
 		removeExchangeAccountController,
@@ -75,7 +87,8 @@ export async function main(): Promise<void> {
 		getAllExchangeAccountsController,
 		getHoldingsController,
 		getTransactionsController,
-		syncExchangeAccountController
+		syncExchangeAccountController,
+		syncExchangeAccountsController
 	);
 	const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
 

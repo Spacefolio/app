@@ -65,7 +65,7 @@ export const ExchangeItem: React.FC<ExchangeItemProps> = ({
 						<DialogTitle id="alert-dialog-title">{`Remove ${data.name}`}</DialogTitle>
 						<DialogContent>
 							<DialogContentText id="alert-dialog-description">
-								Removing an integration from Algonex is permanent. Restoring it
+								Removing an integration from Spacefolio is permanent. Restoring it
 								to your account will require you to re-enter your API keys. Do
 								you wish to continue?
 							</DialogContentText>

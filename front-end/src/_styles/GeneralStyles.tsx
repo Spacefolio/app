@@ -95,7 +95,7 @@ export const SvgWrapperButton = styled(ClickableDiv)`
 
 `;
 
-export const AlgonexLogo = styled(Polymer)`
+export const SpacefolioLogo = styled(Polymer)`
 	height: 100%;
 	width: 100%;
 	fill: ${theme.palette.primary.main} !important;

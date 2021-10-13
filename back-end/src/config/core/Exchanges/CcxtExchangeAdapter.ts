@@ -1,5 +1,6 @@
-import { IDigitalAssetTransaction, IExchangeAccount, IExchangeAdapter, IOrder } from "../../../core/entities";
+import { IDigitalAssetTransaction, IExchangeAccount, IOrder } from "../../../core/entities";
 import { Balances } from "../../../core/entities/Integrations/Exchanges/Exchange";
+import { IExchangeAdapter } from "./ExchangeAdapter";
 
 class CcxtExchangeAdapter implements IExchangeAdapter {
   getRate(baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined> {

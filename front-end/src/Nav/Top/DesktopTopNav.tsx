@@ -152,7 +152,7 @@ export const TopNav = () => {
 				<InlineDiv>
 					<Avatar color="primary">
 						{!user.firstName
-							? user.email[0].toUpperCase() + user.email[1].toUpperCase()
+							? !user.username ? user.email[0].toUpperCase() + user.email[1].toUpperCase() : user.username
 							: user.firstName[0].toUpperCase() +
 							  user.firstName[1].toUpperCase()}
 					</Avatar>

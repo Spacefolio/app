@@ -7,6 +7,7 @@ import { digitalAssetTransactionSchema, IDigitalAssetTransactionDao } from '../T
 
 export interface IExchangeAccountDao
 {
+  name: string,
   accountId: string,
 	exchange: Exchange,
   nickname: string,
@@ -34,6 +35,7 @@ export interface IExchangeAccountDao
 export interface IExchangeAccountDocument extends IExchangeAccountDao, mongoose.Document {}
 
 const ExchangeAccountSchema = new mongoose.Schema({
+  name: { type: String, required: true },
   accountId: { type: String, unique: true, required: true },
 	exchange: { type: String, enum: Exchange, required: true },
   nickname: { type: String, required: true },

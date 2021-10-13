@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, check } from 'express-validator';
+import { body } from 'express-validator';
 import { BodyValidationMiddleware } from '../common/middleware';
 import { CheckRegistrationController, RegisterUserController } from '../controllers';
 import AuthenticateUserController from '../controllers/user/AuthenticateUserController';
@@ -36,8 +36,8 @@ class UserRouter implements BaseRouter {
 			body('email').isEmail(),
 			body('username').isString(),
 			body('password').isString(),
-			body('firstName').isString(),
-			body('lastName').isString(),
+			body('firstName').isString().optional(),
+			body('lastName').isString().optional(),
 			BodyValidationMiddleware.verifyBodyFieldsErrors,
 			UserMiddleware.hashPassword,
 			this.registerUserController.getRequestHandler(),

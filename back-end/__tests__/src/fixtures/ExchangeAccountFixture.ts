@@ -177,6 +177,7 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
   const hourlyTimeslices: ITimeslices = new Map<number, ITimeslice>();
 
   const exchangeAccountParams: IExchangeAccount = {
+    name: "Fake Exchange",
     accountId: makeId(),
     exchange: ExchangesConfiguration.get(Exchange.FAKE),
     credentials: {

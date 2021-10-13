@@ -35,6 +35,7 @@ class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGate
 
     const exchange: IExchange = ExchangesConfiguration.get(payload.exchange);
     const accountParams: IExchangeAccount = {
+      name: exchange.name,
       accountId: payload.accountId,
       exchange: exchange,
       nickname: payload.nickname,

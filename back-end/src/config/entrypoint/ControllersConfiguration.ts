@@ -1,5 +1,14 @@
-import { AddExchangeAccountUseCase, GetAllExchangeAccountsUseCase, GetCurrentHoldingsUseCase, GetExchangeAccountUseCase, GetTransactionsUseCase, RemoveExchangeAccountUseCase, SyncExchangeAccountUseCase } from '../../core/use-cases/integration/exchangeAccount';
-import { RegisterUserUseCase, AuthenticateUserUseCase } from '../../core/use-cases/user';
+import {
+	AddExchangeAccountUseCase,
+	GetAllExchangeAccountsUseCase,
+	GetCurrentHoldingsUseCase,
+	GetExchangeAccountUseCase,
+	GetTransactionsUseCase,
+	RemoveExchangeAccountUseCase,
+	SyncExchangeAccountsUseCase,
+	SyncExchangeAccountUseCase,
+} from '../../core/use-cases/integration/exchangeAccount';
+import { RegisterUserUseCase, AuthenticateUserUseCase, CheckRegistrationUseCase } from '../../core/use-cases/user';
 import {
 	RegisterUserController,
 	AuthenticateUserController,
@@ -9,7 +18,9 @@ import {
 	GetAllExchangeAccountsController,
 	GetHoldingsController,
 	GetTransactionsController,
-	SyncExchangeAccountController
+	SyncExchangeAccountController,
+	CheckRegistrationController,
+	SyncExchangeAccountsController,
 } from '../../entrypoint/web/controllers';
 
 class ControllersConfiguration {
@@ -19,6 +30,10 @@ class ControllersConfiguration {
 
 	static getRegisterUserController(registerUserUseCase: RegisterUserUseCase): RegisterUserController {
 		return new RegisterUserController(registerUserUseCase);
+	}
+
+	static getCheckRegistrationController(checkRegistrationUseCase: CheckRegistrationUseCase): CheckRegistrationController {
+		return new CheckRegistrationController(checkRegistrationUseCase);
 	}
 
 	static getAddExchangeAccountController(addExchangeAccountUseCase: AddExchangeAccountUseCase): AddExchangeAccountController {
@@ -33,7 +48,9 @@ class ControllersConfiguration {
 		return new GetExchangeAccountController(getExchangeAccountUseCase);
 	}
 
-	static getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase: GetAllExchangeAccountsUseCase): GetAllExchangeAccountsController {
+	static getGetAllExchangeAccountsController(
+		getAllExchangeAccountsUseCase: GetAllExchangeAccountsUseCase
+	): GetAllExchangeAccountsController {
 		return new GetAllExchangeAccountsController(getAllExchangeAccountsUseCase);
 	}
 
@@ -47,6 +64,10 @@ class ControllersConfiguration {
 
 	static getSyncExchangeAccountController(syncExchangeAccountUseCase: SyncExchangeAccountUseCase): SyncExchangeAccountController {
 		return new SyncExchangeAccountController(syncExchangeAccountUseCase);
+	}
+
+	static getSyncExchangeAccountsController(syncExchangeAccountsUseCase: SyncExchangeAccountsUseCase): SyncExchangeAccountsController {
+		return new SyncExchangeAccountsController(syncExchangeAccountsUseCase);
 	}
 }
 

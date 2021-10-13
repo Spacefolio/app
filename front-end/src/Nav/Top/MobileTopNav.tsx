@@ -17,7 +17,7 @@ import {
 	ToggleSidebar,
 } from './_styles';
 import {
-	AlgonexLogo,
+	SpacefolioLogo,
 	BaseLink,
 	ClickableDiv,
 	InlineDiv,
@@ -120,7 +120,7 @@ export const MobileTopNav = () => {
 				<NavLogoArea>
 					<BrandTextLink to="/dashboard">
 						<SvgWrapperButton>
-							<AlgonexLogo />
+							<SpacefolioLogo />
 						</SvgWrapperButton>
 					</BrandTextLink>
 				</NavLogoArea>

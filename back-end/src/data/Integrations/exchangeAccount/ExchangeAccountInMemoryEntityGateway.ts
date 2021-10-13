@@ -25,6 +25,7 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
 
     const old = this.exchangeAccounts[index];
     const accountParams: IExchangeAccount = {
+      name: old.name,
       accountId: old.accountId,
       exchange: old.exchange,
       nickname: account.nickname || old.nickname,
@@ -46,6 +47,7 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
 
     const exchange: IExchange = ExchangesConfiguration.get(payload.exchange);
     const accountParams: IExchangeAccount = {
+      name: exchange.name,
       accountId: payload.accountId,
       exchange: exchange,
       nickname: payload.nickname,

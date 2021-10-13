@@ -7,6 +7,7 @@ class ExchangeAccountMapper {
   public static toDomain(raw: LeanDocument<IExchangeAccountDocument>): ExchangeAccount {
 
     const exchangeAccount = makeExchangeAccount({
+      name: raw.name,
       accountId: raw.accountId,
       exchange: ExchangesConfiguration.get(raw.exchange),
       credentials: raw.credentials,
@@ -25,6 +26,7 @@ class ExchangeAccountMapper {
 
   public static fromDomain(exchangeAccount: ExchangeAccount): IExchangeAccountDao {
     const exchangeAccountDao: IExchangeAccountDao = {
+      name: exchangeAccount.name,
       accountId: exchangeAccount.accountId,
       exchange: <Exchange>(exchangeAccount.exchange.id),
       nickname: exchangeAccount.nickname,
