@@ -24,6 +24,8 @@ import { emailTester } from '../_helpers';
 export const Login = () => {
 	const [email, setEmail] = useState('');
 
+	const [username, setUsername] = useState('');
+
 	const [password, setPassword] = useState('');
 
 	const [passwordCheck, setPasswordCheck] = useState('');
@@ -62,7 +64,7 @@ export const Login = () => {
 			password &&
 			password == passwordCheck
 		) {
-			dispatch(userActions.register({ email, password }));
+			dispatch(userActions.register({ email, password, username }));
 		}
 	}
 
@@ -74,7 +76,7 @@ export const Login = () => {
 		}
 		if (formType == 'register') {
 			setHeaderText('Sign Up');
-			setHeaderSubText('Enter and confirm your password to sign up');
+			setHeaderSubText('Enter your username and password to sign up');
 		}
 		if (formType == 'CheckRegistration') {
 			setHeaderText('Enter Email');
@@ -124,6 +126,23 @@ export const Login = () => {
 							}
 						/>
 					</Grid>
+
+					{formType == 'register' ? (
+						<Grid item xs={12}>
+							<TextField
+								variant="outlined"
+								required
+								margin="normal"
+								fullWidth
+								name="username"
+								label="Username"
+								type="text"
+								id="username"
+								value={username}
+								onChange={(e: any) => setUsername(e.target.value)}
+							/>
+						</Grid>
+					) : null}
 
 					{formType == 'login' || formType == 'register' ? (
 						<Grid item xs={12}>
