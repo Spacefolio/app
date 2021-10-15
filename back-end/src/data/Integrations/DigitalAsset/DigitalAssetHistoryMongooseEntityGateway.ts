@@ -75,9 +75,9 @@ class DigitalAssetHistoryMongooseEntityGateway implements IDigitalAssetHistoryEn
 		return result.prices.slice(startIndex, endIndex + 1);
 	}
 
-	async updateDigitalAssetHistory(asset: IDigitalAssetHistory): Promise<IDigitalAssetHistory | undefined> {
-		const history = await this.DigitalAssetHistory.updateOne({ assetId: asset.assetId }, { ...asset }, { upsert: true });
-		return (history.nModified ?? 0) > 0 ? asset : undefined;
+	async updateDigitalAssetHistory(asset: IDigitalAssetHistory): Promise<IDigitalAssetHistory> {
+		await this.DigitalAssetHistory.updateOne({ assetId: asset.assetId }, { ...asset }, { upsert: true });
+		return asset;
 	}
 
 	async createDigitalAssetHistory(payload: IDigitalAssetHistory): Promise<IDigitalAssetHistory> {

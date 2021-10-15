@@ -1,5 +1,5 @@
 import { Request, RequestHandler, Response, NextFunction } from 'express';
-import { UseCaseError } from '../../../../core/definitions';
+import { IPresenter, UseCaseError } from '../../../../core/definitions';
 import IUseCase from '../../../../core/definitions/UseCase';
 
 export const awaitHandlerFactory = (middleware: RequestHandler) => {
@@ -18,9 +18,11 @@ type Payload = Record<string, unknown>;
 
 abstract class BaseController<T extends IUseCase = IUseCase> {
 	protected usecase: T;
+	private presenter?: IPresenter;
 
-	constructor(usecase: T) { 
+	constructor(usecase: T, presenter?: IPresenter) { 
 		this.usecase = usecase;
+		this.presenter = presenter;
 	}
 
 	protected abstract processRequest(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -33,6 +35,10 @@ abstract class BaseController<T extends IUseCase = IUseCase> {
 	protected ok<T>(res: Response, dto?: T): JsonResponse {
 		if (dto) {
 			res.type('application/json');
+			if (this.presenter) {
+				const viewModel = this.presenter.present(dto);
+				return res.status(200).json(viewModel);
+			}
 			return res.status(200).json(dto);
 		} else {
 			return res.sendStatus(200);
@@ -79,6 +85,9 @@ abstract class BaseController<T extends IUseCase = IUseCase> {
 	}
 
 	protected created(res: Response, payload: Payload = {}): JsonResponse {
+		if (this.presenter) {
+			payload = this.presenter.present(payload);
+		}
 		return BaseController.jsonResponse(res, 201, payload);
 	}
 

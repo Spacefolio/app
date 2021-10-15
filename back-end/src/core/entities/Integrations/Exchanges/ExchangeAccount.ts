@@ -16,6 +16,7 @@ export interface IExchangeCredentials {
 	privateKey?: string;
 	walletAddress?: string;
 	token?: string;
+	twofa?: string;
 }
 
 export interface IExchangeAccount extends IIntegration {
@@ -29,6 +30,7 @@ export interface IExchangeAccount extends IIntegration {
 	dailyTimeslices: ITimeslices;
 	hourlyTimeslices: ITimeslices;
 	lastSynced: Date;
+	createdAt: Date;
 }
 
 export type GetAssetHandler = (assetId: string) => Promise<IDigitalAsset>;
@@ -45,6 +47,7 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 	public lastSynced: Date;
 	public dailyTimeslices: ITimeslices;
 	public hourlyTimeslices: ITimeslices;
+	public createdAt: Date;
 
 	protected constructor(exchangeAccount: IExchangeAccount) {
 		super(exchangeAccount);
@@ -57,6 +60,7 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 		this.lastSynced = exchangeAccount.lastSynced;
 		this.dailyTimeslices = exchangeAccount.dailyTimeslices;
 		this.hourlyTimeslices = exchangeAccount.hourlyTimeslices;
+		this.createdAt = exchangeAccount.createdAt;
 	}
 
 	async createUpdatedOrders(orders: IOrder[]): Promise<IOrder[]> {

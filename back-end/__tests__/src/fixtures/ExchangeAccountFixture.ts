@@ -192,7 +192,8 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
     hourlyTimeslices,
     holdings,
     transactions,
-    lastSynced: new Date(0)
+    lastSynced: new Date(0),
+    createdAt: new Date(0)
   };
 
   return { ...exchangeAccountParams, ...overrides };

@@ -1,3 +1,4 @@
+import { IPresenter } from '../../core/definitions';
 import {
 	AddExchangeAccountUseCase,
 	GetAllExchangeAccountsUseCase,
@@ -36,8 +37,8 @@ class ControllersConfiguration {
 		return new CheckRegistrationController(checkRegistrationUseCase);
 	}
 
-	static getAddExchangeAccountController(addExchangeAccountUseCase: AddExchangeAccountUseCase): AddExchangeAccountController {
-		return new AddExchangeAccountController(addExchangeAccountUseCase);
+	static getAddExchangeAccountController(addExchangeAccountUseCase: AddExchangeAccountUseCase, presenter?: IPresenter): AddExchangeAccountController {
+		return new AddExchangeAccountController(addExchangeAccountUseCase, presenter);
 	}
 
 	static getRemoveExchangeAccountController(removeExchangeAccountUseCase: RemoveExchangeAccountUseCase): RemoveExchangeAccountController {

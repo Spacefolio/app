@@ -48,9 +48,9 @@ describe('Exchange Account API', () => {
 		axios.defaults.headers.common['Authorization'] = `Bearer ${authenticateUserResponse.data.token}`;
   });
 
-	afterAll(async (done) => {
-		await closeMongo();
-		await testServer.close();
+	afterAll((done) => {
+		closeMongo();
+		testServer.close();
 		done();
 	});
 

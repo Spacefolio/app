@@ -46,7 +46,8 @@ class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGate
       dailyTimeslices: new Map<number, ITimeslice>(),
       hourlyTimeslices: new Map<number, ITimeslice>(),
       transactions: payload.transactions || [],
-      lastSynced: new Date(0)
+      lastSynced: new Date(0),
+      createdAt: new Date()
     }
     const exchangeAccount: ExchangeAccount = makeExchangeAccount(accountParams);
     const exchangeAccountDao = ExchangeAccountMapper.fromDomain(exchangeAccount);

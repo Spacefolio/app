@@ -39,6 +39,7 @@ class AddExchangeAccountController extends BaseController<AddExchangeAccountUseC
 		}
 
 		const createdExchangeAccount: Readonly<ExchangeAccount> = result.getValue();
+		
 		this.created(res, createdExchangeAccount);
 		return;
 	}

@@ -25,9 +25,9 @@ describe('User API', () => {
     await clearMongo();
   });
 
-  afterAll(async (done) => {
-    await closeMongo();
-    await testServer.close();
+  afterAll((done) => {
+    closeMongo();
+    testServer.close();
     done();
   });
 

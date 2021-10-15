@@ -36,7 +36,8 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
       openOrders: account.openOrders || old.openOrders,
       dailyTimeslices: account.dailyTimeslices || old.dailyTimeslices,
       hourlyTimeslices: account.hourlyTimeslices || old.hourlyTimeslices,
-      lastSynced: account.lastSynced || old.lastSynced
+      lastSynced: account.lastSynced || old.lastSynced,
+      createdAt: old.createdAt
     };
     
     this.exchangeAccounts[index] = makeExchangeAccount(accountParams);
@@ -58,7 +59,8 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
       openOrders: payload.openOrders || [],
       dailyTimeslices: payload.dailyTimeslices || new Map<number, ITimeslice>(),
       hourlyTimeslices: payload.hourlyTimeslices || new Map<number, ITimeslice>(),
-      lastSynced: new Date(0)
+      lastSynced: new Date(0),
+      createdAt: new Date()
     }
     const exchangeAccount: ExchangeAccount = makeExchangeAccount(accountParams);
     this.exchangeAccounts.push(exchangeAccount);

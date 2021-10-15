@@ -1,16 +1,27 @@
 import { LeanDocument } from "mongoose";
 import { ExchangesConfiguration } from "../../../config/core/Exchanges";
-import { ExchangeAccount, makeExchangeAccount, Exchange } from "../../../core/entities/Integrations/Exchanges";
+import { ExchangeAccount, makeExchangeAccount, Exchange, IExchangeCredentials } from "../../../core/entities/Integrations/Exchanges";
 import { IExchangeAccountDao, IExchangeAccountDocument } from "./ExchangeAccountModel";
 
 class ExchangeAccountMapper {
   public static toDomain(raw: LeanDocument<IExchangeAccountDocument>): ExchangeAccount {
+    const credentials: IExchangeCredentials = {
+      ...(raw.credentials.apiKey && { apiKey: raw.credentials.apiKey }),
+      ...(raw.credentials.apiSecret && { apiSecret: raw.credentials.apiSecret }),
+      ...(raw.credentials.login && { login: raw.credentials.login }),
+      ...(raw.credentials.passphrase && { passphrase: raw.credentials.passphrase }),
+      ...(raw.credentials.privateKey && { privateKey: raw.credentials.privateKey }),
+      ...(raw.credentials.token && { token: raw.credentials.token }),
+      ...(raw.credentials.twofa && { twofa: raw.credentials.twofa }),
+      ...(raw.credentials.uid && { uid: raw.credentials.uid }),
+      ...(raw.credentials.walletAddress && { walletAddress: raw.credentials.walletAddress })
+     };
 
     const exchangeAccount = makeExchangeAccount({
       name: raw.name,
       accountId: raw.accountId,
       exchange: ExchangesConfiguration.get(raw.exchange),
-      credentials: raw.credentials,
+      credentials,
       nickname: raw.nickname,
       orders: raw.orders,
       openOrders: raw.openOrders,
@@ -18,7 +29,8 @@ class ExchangeAccountMapper {
       hourlyTimeslices: raw.hourlyTimeslices,
       transactions: raw.transactions,
       holdings: raw.holdings,
-      lastSynced: raw.lastSynced
+      lastSynced: raw.lastSynced,
+      createdAt: raw.createdAt
     });
 
     return exchangeAccount;
@@ -37,7 +49,8 @@ class ExchangeAccountMapper {
       dailyTimeslices: exchangeAccount.dailyTimeslices,
       hourlyTimeslices: exchangeAccount.hourlyTimeslices,
       transactions: exchangeAccount.transactions,
-      lastSynced: exchangeAccount.lastSynced
+      lastSynced: exchangeAccount.lastSynced,
+      createdAt: exchangeAccount.createdAt
     }
 
     return exchangeAccountDao;

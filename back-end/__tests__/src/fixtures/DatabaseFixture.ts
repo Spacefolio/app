@@ -3,13 +3,6 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { IAppConfig } from '../../../src/config';
 import { Logger } from 'log4js';
 
-const connectionOptions = {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-};
-
 const mongod = new MongoMemoryServer();
 
 const connectMongo = async (config: IAppConfig, logger: Logger): Promise<Connection> => {
@@ -27,7 +20,7 @@ const connectMongo = async (config: IAppConfig, logger: Logger): Promise<Connect
     logger.error(`MongoDB connection error: ${err}`);
   });
 
-  mongoose.connect(uri, connectionOptions);
+  mongoose.connect(uri);
 
   return new Promise((resolve) => {
     mongoose.connection.on('connected', () => {

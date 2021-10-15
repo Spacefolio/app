@@ -49,9 +49,11 @@ class DigitalAssetHistoryInMemoryEntityGateway implements IDigitalAssetHistoryEn
     return result.prices.slice(startIndex, endIndex + 1);
   }
 
-  async updateDigitalAssetHistory(asset: IDigitalAssetHistory): Promise<IDigitalAssetHistory | undefined> {
-    const index = this.digitalAssetHistories.findIndex((a: IDigitalAssetHistory) => a.assetId === asset.assetId);
-    if (index === -1) { return; }
+  async updateDigitalAssetHistory(asset: IDigitalAssetHistory): Promise<IDigitalAssetHistory> {
+    let index = this.digitalAssetHistories.findIndex((a: IDigitalAssetHistory) => a.assetId === asset.assetId);
+    if (index === -1) {
+      index = this.digitalAssetHistories.length;
+    }
 
     this.digitalAssetHistories[index] = asset;
     return this.digitalAssetHistories[index];

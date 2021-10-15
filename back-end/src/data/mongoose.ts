@@ -2,13 +2,6 @@ import { Logger } from 'log4js';
 import mongoose, { Connection } from 'mongoose';
 import { IAppConfig } from '../config';
 
-const connectionOptions = {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-};
-
 const connectMongoose = (config: IAppConfig, logger: Logger): Promise<Connection> => {
   const uri: string = config.db.uri;
 
@@ -24,7 +17,7 @@ const connectMongoose = (config: IAppConfig, logger: Logger): Promise<Connection
     logger.error(`MongoDB connection error: ${err}`);
   });
 
-  mongoose.connect(uri, connectionOptions);
+  mongoose.connect(uri);
 
   return new Promise((resolve) => {
     mongoose.connection.on('connected', () => {

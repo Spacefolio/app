@@ -5,6 +5,7 @@ import { DigitalAssetsConfiguration } from './core/DigitalAssets';
 import { ExchangesConfiguration } from './core/Exchanges';
 import { DatabaseConfiguration } from './data';
 import { LoggerConfiguration, ControllersConfiguration, RouterConfiguration, WebAppConfiguration } from './entrypoint';
+import PresentersConfiguration from './entrypoint/PresentersConfiguration';
 
 export async function main(): Promise<void> {
 	const logger = LoggerConfiguration.getLogger(config);
@@ -31,7 +32,8 @@ export async function main(): Promise<void> {
 		exchangeAccountDatabase,
 		ExchangesConfiguration.getVerifyCredentials()
 	);
-	const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(addExchangeAccountUseCase);
+	const exchangeAccountPresenter = PresentersConfiguration.getExchangeAccountPresenter();
+	const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(addExchangeAccountUseCase, exchangeAccountPresenter);
 	const removeExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getRemoveExchangeAccountUseCase(
 		userDatabase,
 		exchangeAccountDatabase

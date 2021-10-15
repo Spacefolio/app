@@ -30,6 +30,7 @@ export interface IExchangeAccountDao
   dailyTimeslices: ITimeslicesDao;
   hourlyTimeslices: ITimeslicesDao;
   lastSynced: Date;
+  createdAt: Date;
 }
 
 export interface IExchangeAccountDocument extends IExchangeAccountDao, mongoose.Document {}
@@ -41,15 +42,15 @@ const ExchangeAccountSchema = new mongoose.Schema({
   nickname: { type: String, required: true },
   credentials: { 
     type: {
-      apiKey: String,
-      apiSecret: String,
-      passphrase: String,
-      uid: String,
-      login: String,
-      twofa: String,
-      privateKey: String,
-      walletAddress: String,
-      token: String,
+      apiKey: { type: String, required: false },
+      apiSecret:  { type: String, required: false },
+      passphrase: { type: String, required: false },
+      uid: { type: String, required: false },
+      login: { type: String, required: false },
+      twofa: { type: String, required: false },
+      privateKey: { type: String, required: false },
+      walletAddress: { type: String, required: false },
+      token: { type: String, required: false },
     }, required: true 
   },
   orders: [orderSchema],
@@ -58,7 +59,8 @@ const ExchangeAccountSchema = new mongoose.Schema({
   transactions: [digitalAssetTransactionSchema],
   dailyTimeslices: { type: Object },
   hourlyTimeslices: { type: Object },
-  lastSynced: { type: Date, default: 0 }
+  lastSynced: { type: Date, default: 0 },
+  createdAt: { type: Date, default: new Date() }
 }, { timestamps: true });
 
 const ExchangeAccountModel = mongoose.model<IExchangeAccountDocument>('ExchangeAccount', ExchangeAccountSchema);
