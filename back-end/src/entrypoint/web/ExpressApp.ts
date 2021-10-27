@@ -7,19 +7,22 @@ import { Logger } from "log4js";
 import UserRouter from "./routers/UserRouter";
 import IntegrationRouter from './routers/IntegrationRouter';
 import { Server } from "node:http";
+import PortfolioRouter from "./routers/PortfolioRouter";
 
 class ExpressApp {
   app: Application;
   config: IAppConfig;
   userRouter: UserRouter;
   integrationRouter: IntegrationRouter;
+  portfolioRouter: PortfolioRouter;
   logger: Logger;
 
-  constructor(config: IAppConfig, userRouter: UserRouter, integrationRouter: IntegrationRouter, logger: Logger) {
+  constructor(config: IAppConfig, userRouter: UserRouter, integrationRouter: IntegrationRouter, portfolioRouter: PortfolioRouter, logger: Logger) {
     this.app = express();
     this.config = config;
     this.userRouter = userRouter;
     this.integrationRouter = integrationRouter;
+    this.portfolioRouter = portfolioRouter;
     this.logger = logger;
   }
 
@@ -35,6 +38,7 @@ class ExpressApp {
       
     app.use('/users', this.userRouter.getRouter());
     app.use('/integrations', this.integrationRouter.getRouter());
+    app.use('/portfolio', this.portfolioRouter.getRouter());
   }
 
   boot(): Server {

@@ -45,14 +45,14 @@ class ControllersConfiguration {
 		return new RemoveExchangeAccountController(removeExchangeAccountUseCase);
 	}
 
-	static getGetExchangeAccountController(getExchangeAccountUseCase: GetExchangeAccountUseCase): GetExchangeAccountController {
-		return new GetExchangeAccountController(getExchangeAccountUseCase);
+	static getGetExchangeAccountController(getExchangeAccountUseCase: GetExchangeAccountUseCase, presenter?: IPresenter): GetExchangeAccountController {
+		return new GetExchangeAccountController(getExchangeAccountUseCase, presenter);
 	}
 
 	static getGetAllExchangeAccountsController(
-		getAllExchangeAccountsUseCase: GetAllExchangeAccountsUseCase
+		getAllExchangeAccountsUseCase: GetAllExchangeAccountsUseCase, presenter?: IPresenter
 	): GetAllExchangeAccountsController {
-		return new GetAllExchangeAccountsController(getAllExchangeAccountsUseCase);
+		return new GetAllExchangeAccountsController(getAllExchangeAccountsUseCase, presenter);
 	}
 
 	static getGetHoldingsController(getHoldingsUseCase: GetCurrentHoldingsUseCase): GetHoldingsController {
@@ -67,8 +67,8 @@ class ControllersConfiguration {
 		return new SyncExchangeAccountController(syncExchangeAccountUseCase);
 	}
 
-	static getSyncExchangeAccountsController(syncExchangeAccountsUseCase: SyncExchangeAccountsUseCase): SyncExchangeAccountsController {
-		return new SyncExchangeAccountsController(syncExchangeAccountsUseCase);
+	static getSyncExchangeAccountsController(syncExchangeAccountsUseCase: SyncExchangeAccountsUseCase, presenter?: IPresenter): SyncExchangeAccountsController {
+		return new SyncExchangeAccountsController(syncExchangeAccountsUseCase, presenter);
 	}
 }
 

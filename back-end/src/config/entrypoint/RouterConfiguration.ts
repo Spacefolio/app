@@ -9,14 +9,19 @@ import {
 	GetTransactionsController,
 	SyncExchangeAccountController,
 	SyncExchangeAccountsController,
-	CheckRegistrationController
+	CheckRegistrationController,
 } from '../../entrypoint/web/controllers';
 import ExchangeAccountRouter from '../../entrypoint/web/routers/ExchangeAccountRouter';
 import IntegrationRouter from '../../entrypoint/web/routers/IntegrationRouter';
+import PortfolioRouter from '../../entrypoint/web/routers/PortfolioRouter';
 import UserRouter from '../../entrypoint/web/routers/UserRouter';
 
 class RouterConfiguration {
-	static getUserRouter(authenticateUserController: AuthenticateUserController, registerUserController: RegisterUserController, checkRegistrationController: CheckRegistrationController): UserRouter {
+	static getUserRouter(
+		authenticateUserController: AuthenticateUserController,
+		registerUserController: RegisterUserController,
+		checkRegistrationController: CheckRegistrationController
+	): UserRouter {
 		return new UserRouter(authenticateUserController, registerUserController, checkRegistrationController);
 	}
 
@@ -44,6 +49,14 @@ class RouterConfiguration {
 
 	static getIntegrationRouter(exchangeAccountRouter: ExchangeAccountRouter): IntegrationRouter {
 		return new IntegrationRouter(exchangeAccountRouter);
+	}
+
+	static getPortfolioRouter(
+		getExchangeAccountController: GetExchangeAccountController,
+		getAllExchangeAccountsController: GetAllExchangeAccountsController,
+		syncExchangeAccountsController: SyncExchangeAccountsController
+	): PortfolioRouter {
+		return new PortfolioRouter(getExchangeAccountController, getAllExchangeAccountsController, syncExchangeAccountsController);
 	}
 }
 

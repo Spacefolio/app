@@ -18,6 +18,8 @@ export async function main(): Promise<void> {
 	const digitalAssetDatabase = DatabaseConfiguration.getDigitalAssetMongoDatabase(digitalAssetAdapter);
 	const digitalAssetHistoryDatabase = DatabaseConfiguration.getDigitalAssetHistoryMongoDatabase(digitalAssetAdapter);
 
+	//#region Users
+
 	const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
 	const registerUserUseCase = UserUseCasesConfiguration.getRegisterUserUseCase(userDatabase);
 	const checkRegistrationUseCase = UserUseCasesConfiguration.getCheckRegistrationUseCase(userDatabase);
@@ -27,13 +29,19 @@ export async function main(): Promise<void> {
 
 	const userRouter = RouterConfiguration.getUserRouter(authenticateUserController, registerUserController, checkRegistrationController);
 
+	//#endregion
+
+	//#region Exchange Accounts
 	const addExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getAddExchangeAccountUseCase(
 		userDatabase,
 		exchangeAccountDatabase,
 		ExchangesConfiguration.getVerifyCredentials()
 	);
 	const exchangeAccountPresenter = PresentersConfiguration.getExchangeAccountPresenter();
-	const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(addExchangeAccountUseCase, exchangeAccountPresenter);
+	const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(
+		addExchangeAccountUseCase,
+		exchangeAccountPresenter
+	);
 	const removeExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getRemoveExchangeAccountUseCase(
 		userDatabase,
 		exchangeAccountDatabase
@@ -50,16 +58,10 @@ export async function main(): Promise<void> {
 	);
 	const getAllExchangeAccountsController = ControllersConfiguration.getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase);
 
-	const getHoldingsUseCase = ExchangeAccountUseCasesConfiguration.getGetHoldingsUseCase(
-		userDatabase,
-		exchangeAccountDatabase
-	);
+	const getHoldingsUseCase = ExchangeAccountUseCasesConfiguration.getGetHoldingsUseCase(userDatabase, exchangeAccountDatabase);
 	const getHoldingsController = ControllersConfiguration.getGetHoldingsController(getHoldingsUseCase);
 
-	const getTransactionsUseCase = ExchangeAccountUseCasesConfiguration.getGetTransactionsUseCase(
-		userDatabase,
-		exchangeAccountDatabase
-	);
+	const getTransactionsUseCase = ExchangeAccountUseCasesConfiguration.getGetTransactionsUseCase(userDatabase, exchangeAccountDatabase);
 	const getTransactionsController = ControllersConfiguration.getGetTransactionsController(getTransactionsUseCase);
 
 	const syncExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getSyncExchangeAccountUseCase(
@@ -92,9 +94,36 @@ export async function main(): Promise<void> {
 		syncExchangeAccountController,
 		syncExchangeAccountsController
 	);
+
+	//#endregion
+
+	//#region Portfolio
+	const portfolioPresenter = PresentersConfiguration.getPortfolioPresenter();
+	const syncPortfolioPresenter = PresentersConfiguration.getSyncPortfolioPresenter();
+	const metaportfolioPresenter = PresentersConfiguration.getMetaportfolioPresenter();
+	const getExchangeAccountPortfolioController = ControllersConfiguration.getGetExchangeAccountController(
+		getExchangeAccountUseCase,
+		portfolioPresenter
+	);
+	const getAllExchangeAccountsPortfolioController = ControllersConfiguration.getGetAllExchangeAccountsController(
+		getAllExchangeAccountsUseCase,
+		metaportfolioPresenter
+	);
+	const syncExchangeAccountsPortfolioController = ControllersConfiguration.getSyncExchangeAccountsController(
+		syncExchangeAccountsUseCase,
+		syncPortfolioPresenter
+	);
+	const portfolioRouter = RouterConfiguration.getPortfolioRouter(
+		getExchangeAccountPortfolioController,
+		getAllExchangeAccountsPortfolioController,
+		syncExchangeAccountsPortfolioController
+	);
+
+	// #endregion
+
 	const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
 
-	const expressApp = WebAppConfiguration.getExpressApp(config, userRouter, integrationRouter, logger);
+	const expressApp = WebAppConfiguration.getExpressApp(config, userRouter, integrationRouter, portfolioRouter, logger);
 
 	expressApp.boot();
 }

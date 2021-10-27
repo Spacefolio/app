@@ -5,6 +5,7 @@ import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from 
 import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
 import { DatabaseConfiguration } from '../../../src/config/data';
 import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from '../../../src/config/entrypoint';
+import PresentersConfiguration from '../../../src/config/entrypoint/PresentersConfiguration';
 import { IExchangeAccountEntityGateway } from '../../../src/core/use-cases/integration/exchangeAccount';
 import IUserEntityGateway from '../../../src/core/use-cases/user/UserEntityGateway';
 import { verifyCredentials } from './ExchangeInteractionFixture';
@@ -26,6 +27,8 @@ export class TestServer {
 		const digitalAssetDatabase = DatabaseConfiguration.getDigitalAssetInMemoryDatabase();
 		const digitalAssetHistoryDatabase = DatabaseConfiguration.getDigitalAssetHistoryInMemoryDatabase();
 
+		//#region Users
+
 		const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
 		const authenticateUserController = ControllersConfiguration.getAuthenticateUserController(authenticateUserUseCase);
 		const registerUserUseCase = UserUseCasesConfiguration.getRegisterUserUseCase(userDatabase);
@@ -34,6 +37,10 @@ export class TestServer {
 		const checkRegistrationController = ControllersConfiguration.getCheckRegistrationController(checkRegistrationUseCase);
 
 		const userRouter = RouterConfiguration.getUserRouter(authenticateUserController, registerUserController, checkRegistrationController);
+
+		//#endregion
+
+		//#region Exchange Accounts
 
 		const addExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getAddExchangeAccountUseCase(
 			userDatabase,
@@ -63,10 +70,22 @@ export class TestServer {
 		const getTransactionsUseCase = ExchangeAccountUseCasesConfiguration.getGetTransactionsUseCase(userDatabase, exchangeAccountDatabase);
 		const getTransactionsController = ControllersConfiguration.getGetTransactionsController(getTransactionsUseCase);
 
-		const syncExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getSyncExchangeAccountUseCase(userDatabase, exchangeAccountDatabase, digitalAssetDatabase, digitalAssetHistoryDatabase, ExchangesConfiguration.get);
+		const syncExchangeAccountUseCase = ExchangeAccountUseCasesConfiguration.getSyncExchangeAccountUseCase(
+			userDatabase,
+			exchangeAccountDatabase,
+			digitalAssetDatabase,
+			digitalAssetHistoryDatabase,
+			ExchangesConfiguration.get
+		);
 		const syncExchangeAccountController = ControllersConfiguration.getSyncExchangeAccountController(syncExchangeAccountUseCase);
 
-		const syncExchangeAccountsUseCase = ExchangeAccountUseCasesConfiguration.getSyncExchangeAccountsUseCase(userDatabase, exchangeAccountDatabase, digitalAssetDatabase, digitalAssetHistoryDatabase, ExchangesConfiguration.get);
+		const syncExchangeAccountsUseCase = ExchangeAccountUseCasesConfiguration.getSyncExchangeAccountsUseCase(
+			userDatabase,
+			exchangeAccountDatabase,
+			digitalAssetDatabase,
+			digitalAssetHistoryDatabase,
+			ExchangesConfiguration.get
+		);
 		const syncExchangeAccountsController = ControllersConfiguration.getSyncExchangeAccountsController(syncExchangeAccountsUseCase);
 
 		const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
@@ -79,9 +98,37 @@ export class TestServer {
 			syncExchangeAccountController,
 			syncExchangeAccountsController
 		);
+
+		//#endregion
+
+		//#region Portfolio
+
+		const portfolioPresenter = PresentersConfiguration.getPortfolioPresenter();
+		const syncPortfolioPresenter = PresentersConfiguration.getSyncPortfolioPresenter();
+		const metaportfolioPresenter = PresentersConfiguration.getMetaportfolioPresenter();
+		const getExchangeAccountPortfolioController = ControllersConfiguration.getGetExchangeAccountController(
+			getExchangeAccountUseCase,
+			portfolioPresenter
+		);
+		const getAllExchangeAccountsPortfolioController = ControllersConfiguration.getGetAllExchangeAccountsController(
+			getAllExchangeAccountsUseCase,
+			metaportfolioPresenter
+		);
+		const syncExchangeAccountsPortfolioController = ControllersConfiguration.getSyncExchangeAccountsController(
+			syncExchangeAccountsUseCase,
+			syncPortfolioPresenter
+		);
+		const portfolioRouter = RouterConfiguration.getPortfolioRouter(
+			getExchangeAccountPortfolioController,
+			getAllExchangeAccountsPortfolioController,
+			syncExchangeAccountsPortfolioController
+		);
+
+		//#endregion
+
 		const integrationRouter = RouterConfiguration.getIntegrationRouter(exchangeAccountRouter);
 
-		const expressApp = WebAppConfiguration.getExpressApp(config, userRouter, integrationRouter, logger);
+		const expressApp = WebAppConfiguration.getExpressApp(config, userRouter, integrationRouter, portfolioRouter, logger);
 
 		const server = expressApp.boot();
 

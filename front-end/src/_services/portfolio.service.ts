@@ -26,7 +26,7 @@ async function syncPortfolio() {
 
 	return await axios
 		.post<{ exchangeAccounts: IPortfolioDataView[] }>(
-			`${API_DOMAIN}/integrations/exchanges/sync`,
+			`${API_DOMAIN}/portfolio/sync`,
 			{},
 			{ headers: requestOptions }
 		)
@@ -40,7 +40,7 @@ async function syncPortfolio() {
 					})
 				)
 			);
-			return response.data;
+			return response.data.exchangeAccounts;
 		})
 		.catch((err) => {
 			handleErr(err);
@@ -69,8 +69,8 @@ async function refreshPortfolio(portfolioFilterId: string, manual: boolean) {
 		//refresh portfolio from server
 		return await axios
 			.get<IPortfolioDataView>(
-				`${API_DOMAIN}/integrations/exchanges${
-					portfolioFilterId != 'ALL' ? '/' + portfolioFilterId : ''
+				`${API_DOMAIN}/portfolio${
+					portfolioFilterId != 'ALL' ? '/exchanges/' + portfolioFilterId : ''
 				}`,
 				{
 					headers: requestOptions,
@@ -114,7 +114,7 @@ async function getTransactionData(exchangeID?: string) {
 
 	return await axios
 		.get(
-			`${API_DOMAIN}/integrations/exchanges${
+			`${API_DOMAIN}/portfolio/exchanges${
 				exchangeID != undefined ? '/' + exchangeID + '/' : '/'
 			}transactions`,
 			{
@@ -137,7 +137,7 @@ async function getOpenOrdersData(exchangeID?: string) {
 
 	return await axios
 		.get(
-			`${API_DOMAIN}/integrations/exchanges/${exchangeID ? exchangeID : ''}open-orders/`,
+			`${API_DOMAIN}/portfolio/exchanges/${exchangeID ? exchangeID : ''}open-orders/`,
 			{
 				headers: requestOptions,
 			}
@@ -232,7 +232,7 @@ async function getPortfolioChartData(
 
 	return await axios
 		.get(
-			`${API_DOMAIN}/integrations/exchanges${
+			`${API_DOMAIN}/portfolio/exchanges${
 				portfolioFilterId != 'ALL' ? '/' + portfolioFilterId + '/' : '/'
 			}chart`,
 			{ headers: requestOptions, params: { timeframe: timeframe } }
