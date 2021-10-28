@@ -6,13 +6,13 @@ export interface IPortfolioViewModel {
   exchangeAccounts: IExchangeAccountPortfolioViewModel[];
 }
 
-class SyncPortfolioPresenter implements IPresenter<IExchangeAccount[], IPortfolioViewModel> {
-  present(models: IExchangeAccount[]): IPortfolioViewModel {
-
+class SyncPortfolioPresenter implements IPresenter<{ exchangeAccounts: IExchangeAccount[] }, IPortfolioViewModel> {
+  present(models: { exchangeAccounts: IExchangeAccount[] }): IPortfolioViewModel {
+		const accountModels = models.exchangeAccounts;
 		let exchangeAccounts: IExchangeAccountPortfolioViewModel[] = [];
 
-		if (models && models.length > 0) {
-			exchangeAccounts = models.map((model) => portfolioViewModelFrom(model));			
+		if (accountModels && accountModels.length > 0) {
+			exchangeAccounts = accountModels.map((model) => portfolioViewModelFrom(model));	
 		}
 
 		const metaportfolio = createMetaportfolio(exchangeAccounts);

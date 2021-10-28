@@ -1,5 +1,5 @@
 import { IPresenter } from "../../../core/definitions";
-import { IExchangeAccount } from "../../../core/entities";
+import { IExchange, IExchangeAccount, IHolding } from "../../../core/entities";
 
 export interface IExchangeAccountPortfolioViewModel {
 	name: string;
@@ -71,6 +71,9 @@ export interface IOpenOrderItemView {
 }
 
 export function portfolioViewModelFrom(model: IExchangeAccount): IExchangeAccountPortfolioViewModel {
+  
+  const portfolioItems = model.holdings.map((holding) => extractPortfolioItemsFrom(holding));
+  
   const viewModel: IExchangeAccountPortfolioViewModel = {
     name: model.name,
     id: model.accountId,
@@ -83,13 +86,36 @@ export function portfolioViewModelFrom(model: IExchangeAccount): IExchangeAccoun
       apiSecret: model.credentials.apiSecret || '',
       passphrase: model.credentials.passphrase || ''
     },
-    portfolioItems: [],
+    portfolioItems,
     profitPercentage: 0, 
     profitTotal: { USD: 0 },
     portfolioTotal: { USD: 0 }
   };
 
   return viewModel;
+}
+
+export function extractPortfolioItemsFrom(holding: IHolding): IPortfolioItemView {
+  const valueInvested = holding.total.value.bought.USD + holding.total.value.deposited.USD;
+  const valueReceived = holding.total.value.sold.USD + holding.total.value.withdrawn.USD;
+  const totalProfit = valueReceived - valueInvested + holding.value.USD;
+  const profitPercentage = (totalProfit/valueInvested)*100;
+  const portfolioItemView: IPortfolioItemView = {
+    asset: {
+      assetId: holding.asset.assetId,
+      name: holding.asset.name,
+      symbol: holding.asset.symbol,
+      logoUrl: holding.asset.image
+    },
+    amount: holding.balance.total,
+    value: holding.value,
+    currentPrice: holding.price.USD,
+    profitTotal: { all: totalProfit, h24: totalProfit },
+    profitPercentage: { all: profitPercentage, h24: profitPercentage},
+    sparkline: []
+  }
+
+  return portfolioItemView;
 }
 
 class PortfolioPresenter implements IPresenter<IExchangeAccount, IExchangeAccountPortfolioViewModel> {

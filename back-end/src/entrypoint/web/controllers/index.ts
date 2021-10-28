@@ -10,3 +10,4 @@ export { default as GetHoldingsController } from './integrations/exchanges/GetHo
 export { default as GetTransactionsController } from './integrations/exchanges/GetTransactionsController';
 export { default as SyncExchangeAccountController } from './integrations/exchanges/SyncExchangeAccountController';
 export { default as SyncExchangeAccountsController } from './integrations/exchanges/SyncExchangeAccountsController';
+export { default as GetMetaportfolioChartController } from './portfolio/GetMetaportfolioChartController';

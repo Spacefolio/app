@@ -3,6 +3,7 @@ import { Server } from 'node:http';
 import config, { IAppConfig } from '../../../src/config';
 import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from '../../../src/config/core';
 import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
+import PortfolioUseCasesConfiguration from '../../../src/config/core/PortfolioUseCasesConfiguration';
 import { DatabaseConfiguration } from '../../../src/config/data';
 import { ControllersConfiguration, LoggerConfiguration, RouterConfiguration, WebAppConfiguration } from '../../../src/config/entrypoint';
 import PresentersConfiguration from '../../../src/config/entrypoint/PresentersConfiguration';
@@ -118,10 +119,14 @@ export class TestServer {
 			syncExchangeAccountsUseCase,
 			syncPortfolioPresenter
 		);
+		const getMetaportfolioChartUseCase = PortfolioUseCasesConfiguration.getGetMetaportfolioChartUseCase(userDatabase, exchangeAccountDatabase);
+
+		const getMetaportfolioChartController = ControllersConfiguration.getGetMetaportfolioChartController(getMetaportfolioChartUseCase);
 		const portfolioRouter = RouterConfiguration.getPortfolioRouter(
 			getExchangeAccountPortfolioController,
 			getAllExchangeAccountsPortfolioController,
-			syncExchangeAccountsPortfolioController
+			syncExchangeAccountsPortfolioController,
+			getMetaportfolioChartController
 		);
 
 		//#endregion

@@ -9,6 +9,7 @@ import {
 	SyncExchangeAccountsUseCase,
 	SyncExchangeAccountUseCase,
 } from '../../core/use-cases/integration/exchangeAccount';
+import { GetMetaportfolioChartUseCase } from '../../core/use-cases/portfolio/getMetaportfolioChart';
 import { RegisterUserUseCase, AuthenticateUserUseCase, CheckRegistrationUseCase } from '../../core/use-cases/user';
 import {
 	RegisterUserController,
@@ -22,6 +23,7 @@ import {
 	SyncExchangeAccountController,
 	CheckRegistrationController,
 	SyncExchangeAccountsController,
+	GetMetaportfolioChartController,
 } from '../../entrypoint/web/controllers';
 
 class ControllersConfiguration {
@@ -69,6 +71,10 @@ class ControllersConfiguration {
 
 	static getSyncExchangeAccountsController(syncExchangeAccountsUseCase: SyncExchangeAccountsUseCase, presenter?: IPresenter): SyncExchangeAccountsController {
 		return new SyncExchangeAccountsController(syncExchangeAccountsUseCase, presenter);
+	}
+
+	static getGetMetaportfolioChartController(getMetaportfolioChartUseCase: GetMetaportfolioChartUseCase, presenter?: IPresenter): GetMetaportfolioChartController {
+		return new GetMetaportfolioChartController(getMetaportfolioChartUseCase, presenter);
 	}
 }
 

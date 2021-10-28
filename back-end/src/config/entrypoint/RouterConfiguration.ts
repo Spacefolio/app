@@ -10,6 +10,7 @@ import {
 	SyncExchangeAccountController,
 	SyncExchangeAccountsController,
 	CheckRegistrationController,
+	GetMetaportfolioChartController,
 } from '../../entrypoint/web/controllers';
 import ExchangeAccountRouter from '../../entrypoint/web/routers/ExchangeAccountRouter';
 import IntegrationRouter from '../../entrypoint/web/routers/IntegrationRouter';
@@ -54,9 +55,10 @@ class RouterConfiguration {
 	static getPortfolioRouter(
 		getExchangeAccountController: GetExchangeAccountController,
 		getAllExchangeAccountsController: GetAllExchangeAccountsController,
-		syncExchangeAccountsController: SyncExchangeAccountsController
+		syncExchangeAccountsController: SyncExchangeAccountsController,
+		getMetaportfolioChartController: GetMetaportfolioChartController
 	): PortfolioRouter {
-		return new PortfolioRouter(getExchangeAccountController, getAllExchangeAccountsController, syncExchangeAccountsController);
+		return new PortfolioRouter(getExchangeAccountController, getAllExchangeAccountsController, syncExchangeAccountsController, getMetaportfolioChartController);
 	}
 }
 

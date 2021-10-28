@@ -3,6 +3,7 @@ import { connectMongoose } from '../data';
 import { ExchangeAccountUseCasesConfiguration, UserUseCasesConfiguration } from './core';
 import { DigitalAssetsConfiguration } from './core/DigitalAssets';
 import { ExchangesConfiguration } from './core/Exchanges';
+import PortfolioUseCasesConfiguration from './core/PortfolioUseCasesConfiguration';
 import { DatabaseConfiguration } from './data';
 import { LoggerConfiguration, ControllersConfiguration, RouterConfiguration, WebAppConfiguration } from './entrypoint';
 import PresentersConfiguration from './entrypoint/PresentersConfiguration';
@@ -113,10 +114,15 @@ export async function main(): Promise<void> {
 		syncExchangeAccountsUseCase,
 		syncPortfolioPresenter
 	);
+
+	const getMetaportfolioChartUseCase = PortfolioUseCasesConfiguration.getGetMetaportfolioChartUseCase(userDatabase, exchangeAccountDatabase);
+
+	const getMetaportfolioChartController = ControllersConfiguration.getGetMetaportfolioChartController(getMetaportfolioChartUseCase);
 	const portfolioRouter = RouterConfiguration.getPortfolioRouter(
 		getExchangeAccountPortfolioController,
 		getAllExchangeAccountsPortfolioController,
-		syncExchangeAccountsPortfolioController
+		syncExchangeAccountsPortfolioController,
+		getMetaportfolioChartController
 	);
 
 	// #endregion

@@ -30,3 +30,4 @@ export {
 	ITimeslices,
 	IHoldingSlice
 } from './Integrations';
+export { Chart, ChartPoint } from './Portfolio/Chart';
