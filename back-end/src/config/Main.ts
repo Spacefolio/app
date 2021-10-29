@@ -19,6 +19,8 @@ export async function main(): Promise<void> {
 	const digitalAssetDatabase = DatabaseConfiguration.getDigitalAssetMongoDatabase(digitalAssetAdapter);
 	const digitalAssetHistoryDatabase = DatabaseConfiguration.getDigitalAssetHistoryMongoDatabase(digitalAssetAdapter);
 
+	const availableExchanges = ExchangesConfiguration.getAvailableExchanges();
+
 	//#region Users
 
 	const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
@@ -85,6 +87,9 @@ export async function main(): Promise<void> {
 
 	const syncExchangeAccountsController = ControllersConfiguration.getSyncExchangeAccountsController(syncExchangeAccountsUseCase);
 
+	const getAvailableExchangesUseCase = ExchangeAccountUseCasesConfiguration.getGetAvailableExchangesUseCase(availableExchanges);
+	const getAvailableExchangesController = ControllersConfiguration.getGetAvailableExchangesController(getAvailableExchangesUseCase);
+
 	const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
 		addExchangeAccountController,
 		removeExchangeAccountController,
@@ -93,7 +98,8 @@ export async function main(): Promise<void> {
 		getHoldingsController,
 		getTransactionsController,
 		syncExchangeAccountController,
-		syncExchangeAccountsController
+		syncExchangeAccountsController,
+		getAvailableExchangesController
 	);
 
 	//#endregion

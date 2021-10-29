@@ -8,8 +8,8 @@ export interface IPortfolioDataView {
 	exchangeType?: exchangeType;
 	apiInfo: {
 		apiKey: string;
-		apiSecret: string;
-		passphrase: string;
+		secret: string;
+		password: string;
 	};
 	logoUrl?: string;
 	transactions?: ITransactionItemView[];
@@ -28,8 +28,8 @@ export interface ICachedPortfolioDataView {
 	exchangeType?: exchangeType;
 	apiInfo: {
 		apiKey: string;
-		apiSecret: string;
-		passphrase: string;
+		secret: string;
+		password: string;
 	};
 	logoUrl?: string;
 	transactions: ITransactionItemView[];

@@ -4,7 +4,7 @@ import { BaseExchange, Exchange, ExchangeAccount, IDigitalAsset, IOrder, OrderSt
 import { IHistoricalPrice, NullAsset } from '../../../../entities/Integrations/Asset';
 import Timeslices from '../../../../entities/Integrations/Timeslices';
 import { Balances } from '../../../../entities/Integrations/Exchanges/Exchange';
-import { GetRateHandler } from '../../../../entities/Integrations/Exchanges/ExchangeAccount';
+import { GetRateHandler, IExchangeAccount } from '../../../../entities/Integrations/Exchanges/ExchangeAccount';
 import { IDigitalAssetTransaction } from '../../../../entities/Integrations/Transaction';
 import { IUserEntityGateway, UserNotFound } from '../../../user';
 import { IDigitalAssetEntityGateway, IDigitalAssetHistoryEntityGateway } from '../../digitalAsset';
@@ -52,10 +52,12 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountsRequest
 		const syncedAccounts = [];
 
 		for (const account of user.exchangeAccounts) {
+			console.log(account);
+			console.log("Started syncing");
 			const exchangeAccount = await this.syncExchangeAccount(account);
-			if (!exchangeAccount) return Result.fail(new ExchangeAccountSyncFailed(account.accountId));
+			if (!exchangeAccount) return Result.fail(new ExchangeAccountSyncFailed(account.exchange.name));
 			const updatedAccount = await this.exchangeAccountEntityGateway.updateExchangeAccount(account);
-			if (!updatedAccount) return Result.fail(new ExchangeAccountSyncFailed(exchangeAccount.accountId));
+			if (!updatedAccount) return Result.fail(new ExchangeAccountSyncFailed(account.exchange.name));
 			syncedAccounts.push(updatedAccount);
 		}
 
@@ -69,6 +71,7 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountsRequest
 	}
 
 	async getRate(
+		exchangeAccount: IExchangeAccount,
 		exchange: BaseExchange,
 		base: string,
 		baseSymbol: string,
@@ -76,7 +79,7 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountsRequest
 		quoteSymbol: string,
 		timestamp: number
 	): Promise<number> {
-		const rate = await exchange.getRate(baseSymbol, quoteSymbol, timestamp);
+		const rate = await exchange.getRate(exchangeAccount, baseSymbol, quoteSymbol, timestamp);
 		if (rate) return rate;
 
 		const historicalPrice = await this.digitalAssetHistoryEntityGateway.getHistoricalValue(base, timestamp);
@@ -100,7 +103,7 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountsRequest
 		const exchange = this.getExchange(exchangeName);
 
 		const getRate: GetRateHandler = (base: string, baseSymbol: string, quote: string, quoteSymbol: string, timestamp: number) => {
-			return this.getRate(exchange, base, baseSymbol, quote, quoteSymbol, timestamp);
+			return this.getRate(exchangeAccount, exchange, base, baseSymbol, quote, quoteSymbol, timestamp);
 		};
 
 		let balances: Balances;
@@ -109,10 +112,18 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountsRequest
 		let openOrders: IOrder[];
 
 		try {
+			console.log("Fetching balances...");
 			balances = await exchange.fetchBalances(exchangeAccount);
+			console.log(balances);
+			console.log("Fetching transactions...");
 			transactions = await exchange.fetchTransactions(exchangeAccount);
+			console.log(transactions);
+			console.log("Fetching orders...")
 			orders = await exchange.fetchOrders(exchangeAccount);
+			console.log(orders);
+			console.log("Fetching open orders...")
 			openOrders = await exchange.fetchOpenOrders(exchangeAccount);
+			console.log(openOrders);
 		} catch {
 			return;
 		}

@@ -1,5 +1,5 @@
 import { IPresenter } from "../../../core/definitions";
-import { IExchange, IExchangeAccount, IHolding } from "../../../core/entities";
+import { IExchangeAccount, IHolding } from "../../../core/entities";
 
 export interface IExchangeAccountPortfolioViewModel {
 	name: string;
@@ -9,8 +9,14 @@ export interface IExchangeAccountPortfolioViewModel {
 	exchangeType?: string;
 	apiInfo: {
 		apiKey: string;
-		apiSecret: string;
-		passphrase: string;
+		secret: string;
+		password: string;
+		uid: string;
+		login: string;
+		privateKey: string;
+		walletAddress: string;
+		token: string;
+		twofa: string;
 	};
 	logoUrl?: string;
 	transactions?: ITransactionItemView[];
@@ -83,8 +89,14 @@ export function portfolioViewModelFrom(model: IExchangeAccount): IExchangeAccoun
     logoUrl: model.exchange.logoUrl,
     apiInfo: {
       apiKey: model.credentials.apiKey || '',
-      apiSecret: model.credentials.apiSecret || '',
-      passphrase: model.credentials.passphrase || ''
+      secret: model.credentials.secret || '',
+      password: model.credentials.password || '',
+			uid: model.credentials.uid || '',
+			login: model.credentials.login || '',
+			privateKey: model.credentials.privateKey || '',
+			walletAddress: model.credentials.walletAddress || '',
+			token: model.credentials.token || '',
+			twofa: model.credentials.twofa || ''
     },
     portfolioItems,
     profitPercentage: 0, 

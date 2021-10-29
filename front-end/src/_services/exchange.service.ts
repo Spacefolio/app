@@ -1,5 +1,5 @@
 import { authHeader } from '../_helpers';
-import { IExchangeAccountRequest, IExchangeAccountView } from '../../../types';
+import { IAddExchangeAccountRequest, IExchangeAccountRequest, IExchangeAccountView } from '../../../types';
 import axios from 'axios';
 
 export const exchangeService = {
@@ -18,7 +18,7 @@ async function getAll() {
 	};
 
 	return await axios
-		.get(`${API_DOMAIN}/exchanges`, { headers: requestOptions })
+		.get(`${API_DOMAIN}/integrations/exchanges`, { headers: requestOptions })
 		.then((response) => {
 			return response.data;
 		})
@@ -34,7 +34,7 @@ async function getInfo() {
 	};
 
 	return await axios
-		.get(`${API_DOMAIN}/exchanges/available-exchanges`, {
+		.get(`${API_DOMAIN}/integrations/exchanges/available-exchanges`, {
 			headers: requestOptions,
 		})
 		.then((response) => {
@@ -53,15 +53,21 @@ async function addNew(exchange: IExchangeAccountRequest) {
 		'Content-Type': 'application/json',
 	};
 	console.log('front end service', exchange);
+	
+	const request: IAddExchangeAccountRequest = {
+		exchange: exchange.exchangeType,
+		credentials: exchange.apiInfo,
+		nickname: exchange.nickname || exchange.name
+	}
+
 	return await axios
-		.post(`${API_DOMAIN}/exchanges`, exchange, {
+		.post(`${API_DOMAIN}/integrations/exchanges`, request, {
 			headers: requestOptions,
 		})
 		.then((response) => {
 			return response.data;
-		})
-		.catch((err) => {
-			throw err;
+		}, (error) => {
+			throw error.response.data.error;
 		});
 }
 
@@ -72,7 +78,7 @@ async function update(id: string, data: IExchangeAccountRequest) {
 		'Content-Type': 'application/json',
 	};
 	return await axios
-		.put(`${API_DOMAIN}/exchanges/${id}`, data, {
+		.put(`${API_DOMAIN}/integrations/exchanges/${id}`, data, {
 			headers: requestOptions,
 		})
 		.then((response) => {
@@ -93,7 +99,7 @@ async function _delete(id: string) {
 	};
 
 	return await axios
-		.delete(`${API_DOMAIN}/exchanges/${id}`, {
+		.delete(`${API_DOMAIN}/integrations/exchanges/${id}`, {
 			headers: requestOptions,
 		})
 		.then((response) => {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { exchangeActions } from '../../_actions';
 import {
+	IExchangeAccountCredentials,
 	IExchangeAccountRequest,
-	IExchangeAccountView,
 	IIntegrationInfo,
 } from '../../../../types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,9 +24,9 @@ export const AddIntegrationForm: React.FC<ExchangeFormProps> = ({
 
 	const [apiKey, setApiKey] = useState('');
 
-	const [apiSecret, setApiSecret] = useState('');
+	const [secret, setSecret] = useState('');
 
-	const [passphrase, setPassphrase] = useState('');
+	const [password, setPassword] = useState('');
 
 	const [privateKey, setPrivateKey] = useState('');
 
@@ -46,8 +46,8 @@ export const AddIntegrationForm: React.FC<ExchangeFormProps> = ({
 		exchangeType: integrationId,
 		apiInfo: {
 			apiKey,
-			apiSecret,
-			passphrase,
+			secret,
+			password,
 			privateKey,
 			login,
 			token,
@@ -64,19 +64,19 @@ export const AddIntegrationForm: React.FC<ExchangeFormProps> = ({
 			exchangeType: integrationId,
 			apiInfo: {
 				apiKey,
-				apiSecret,
-				passphrase,
+				secret,
+				password,
 				privateKey,
 				login,
 				token,
 				uid,
-				walletAddress,
+				walletAddress
 			},
 			name,
 			logoUrl: integrationInfo.logoUrl,
 			nickname,
 		});
-	}, [integrationId, apiKey, apiSecret, passphrase, name, nickname]);
+	}, [integrationId, apiKey, secret, password, privateKey, login, token, uid, walletAddress, name, nickname]);
 
 	const nicknameCharLimit = 20;
 
@@ -84,11 +84,7 @@ export const AddIntegrationForm: React.FC<ExchangeFormProps> = ({
 		e.preventDefault();
 		setSubmitted(true);
 
-		if (
-			apiKey &&
-			apiSecret &&
-			passphrase &&
-			nickname &&
+		if (providedRequiredCredentials(integrationInfo, exchange.apiInfo) &&
 			nickname.length <= nicknameCharLimit
 		) {
 			dispatch(exchangeActions.addNew(exchange));
@@ -145,8 +141,8 @@ export const AddIntegrationForm: React.FC<ExchangeFormProps> = ({
 						fullWidth
 						label="API Secret"
 						type="text"
-						onChange={(e) => setApiSecret(e.target.value)}
-						value={apiSecret}
+						onChange={(e) => setSecret(e.target.value)}
+						value={secret}
 					/>
 				</StyledFormRow>
 			)}
@@ -155,12 +151,12 @@ export const AddIntegrationForm: React.FC<ExchangeFormProps> = ({
 					<TextField
 						variant="outlined"
 						required
-						id="passphrase"
+						id="password"
 						fullWidth
-						label="Passphrase"
-						value={passphrase}
+						label="Password"
+						value={password}
 						type="text"
-						onChange={(e) => setPassphrase(e.target.value)}
+						onChange={(e) => setPassword(e.target.value)}
 					/>
 				</StyledFormRow>
 			)}
@@ -237,3 +233,16 @@ export const AddIntegrationForm: React.FC<ExchangeFormProps> = ({
 		</form>
 	);
 };
+
+function providedRequiredCredentials(integrationInfo: IIntegrationInfo, credentials: IExchangeAccountCredentials): boolean {
+	for (const [prop, required] of Object.entries(integrationInfo.requiredCredentials)) {
+		if (required) {
+			const credential = prop as keyof IExchangeAccountCredentials;
+			if (!credentials.hasOwnProperty(prop) || !credentials[credential]) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}

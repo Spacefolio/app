@@ -5,6 +5,7 @@ import BaseRouter from '../common/definitions/Router';
 import {
 	AddExchangeAccountController,
 	GetAllExchangeAccountsController,
+	GetAvailableExchangesController,
 	GetExchangeAccountController,
 	GetHoldingsController,
 	GetTransactionsController,
@@ -22,6 +23,7 @@ class ExchangeAccountRouter implements BaseRouter {
 	getTransactionsController: GetTransactionsController;
 	syncExchangeAccountController: SyncExchangeAccountController;
 	syncExchangeAccountsController: SyncExchangeAccountsController;
+	getAvailableExchangesController: GetAvailableExchangesController;
 	router: Router;
 
 	constructor(
@@ -32,7 +34,8 @@ class ExchangeAccountRouter implements BaseRouter {
 		getHoldingsController: GetHoldingsController,
 		getTransactionsController: GetTransactionsController,
 		syncExchangeAccountController: SyncExchangeAccountController,
-		syncExchangeAccountsController: SyncExchangeAccountsController
+		syncExchangeAccountsController: SyncExchangeAccountsController,
+		getAvailableExchangesController: GetAvailableExchangesController
 	) {
 		this.addExchangeAccountController = addExchangeAccountController;
 		this.removeExchangeAccountController = removeExchangeAccountController;
@@ -42,12 +45,14 @@ class ExchangeAccountRouter implements BaseRouter {
 		this.getTransactionsController = getTransactionsController;
 		this.syncExchangeAccountController = syncExchangeAccountController;
 		this.syncExchangeAccountsController = syncExchangeAccountsController;
+		this.getAvailableExchangesController = getAvailableExchangesController;
 		this.router = Router();
 		this.configRouter();
 	}
 
 	private configRouter(): void {
 		this.router.get(`/`, [this.getAllExchangeAccountsController.getRequestHandler()]);
+		this.router.get(`/available-exchanges`, [this.getAvailableExchangesController.getRequestHandler()]);
 		this.router.get(`/:accountId`, [this.getExchangeAccountController.getRequestHandler()]);
 		this.router.get(`/:accountId/transactions`, [this.getTransactionsController.getRequestHandler()]);
 		this.router.get(`/:accountId/holdings`, [this.getHoldingsController.getRequestHandler()]);

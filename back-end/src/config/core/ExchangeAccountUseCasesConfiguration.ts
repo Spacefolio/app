@@ -1,3 +1,4 @@
+import { IExchange } from '../../core/entities';
 import { IDigitalAssetEntityGateway, IDigitalAssetHistoryEntityGateway } from '../../core/use-cases/integration/digitalAsset';
 import {
 	AddExchangeAccountUseCase,
@@ -9,7 +10,8 @@ import {
 	IExchangeAccountEntityGateway,
 	RemoveExchangeAccountUseCase,
 	SyncExchangeAccountUseCase,
-	SyncExchangeAccountsUseCase
+	SyncExchangeAccountsUseCase,
+	GetAvailableExchangesUseCase,
 } from '../../core/use-cases/integration/exchangeAccount';
 import { VerifyCredentialsHandler } from '../../core/use-cases/integration/exchangeAccount/addExchangeAccount/AddExchangeAccount';
 import { IUserEntityGateway } from '../../core/use-cases/user';
@@ -66,7 +68,13 @@ class ExchangeAccountUseCasesConfiguration {
 		digitalAssetHistoryEntityGateway: IDigitalAssetHistoryEntityGateway,
 		getExchange: GetExchangeHandler
 	): SyncExchangeAccountUseCase {
-		return new SyncExchangeAccountUseCase(userEntityGateway, exchangeAccountEntityGateway, digitalAssetEntityGateway, digitalAssetHistoryEntityGateway, getExchange);
+		return new SyncExchangeAccountUseCase(
+			userEntityGateway,
+			exchangeAccountEntityGateway,
+			digitalAssetEntityGateway,
+			digitalAssetHistoryEntityGateway,
+			getExchange
+		);
 	}
 
 	static getSyncExchangeAccountsUseCase(
@@ -76,7 +84,17 @@ class ExchangeAccountUseCasesConfiguration {
 		digitalAssetHistoryEntityGateway: IDigitalAssetHistoryEntityGateway,
 		getExchange: GetExchangeHandler
 	): SyncExchangeAccountsUseCase {
-		return new SyncExchangeAccountsUseCase(userEntityGateway, exchangeAccountEntityGateway, digitalAssetEntityGateway, digitalAssetHistoryEntityGateway, getExchange);
+		return new SyncExchangeAccountsUseCase(
+			userEntityGateway,
+			exchangeAccountEntityGateway,
+			digitalAssetEntityGateway,
+			digitalAssetHistoryEntityGateway,
+			getExchange
+		);
+	}
+
+	static getGetAvailableExchangesUseCase(availableExchanges: IExchange[]): GetAvailableExchangesUseCase {
+		return new GetAvailableExchangesUseCase(availableExchanges);
 	}
 }
 

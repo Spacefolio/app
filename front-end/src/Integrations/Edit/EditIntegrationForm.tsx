@@ -36,9 +36,9 @@ export const EditIntegrationForm: React.FC<ExchangeFormProps> = ({ data }) => {
 
 	const [apiKey, setApiKey] = useState(data.apiInfo.apiKey);
 
-	const [apiSecret, setApiSecret] = useState(data.apiInfo.apiSecret);
+	const [secret, setSecret] = useState(data.apiInfo.secret);
 
-	const [passphrase, setPassphrase] = useState(data.apiInfo.passphrase);
+	const [password, setPassword] = useState(data.apiInfo.password);
 
 	const [name, setName] = useState(data.name);
 
@@ -50,8 +50,8 @@ export const EditIntegrationForm: React.FC<ExchangeFormProps> = ({ data }) => {
 		exchangeType,
 		apiInfo: {
 			apiKey,
-			apiSecret,
-			passphrase,
+			secret: secret,
+			password: password,
 		},
 		name,
 		nickname,
@@ -62,13 +62,13 @@ export const EditIntegrationForm: React.FC<ExchangeFormProps> = ({ data }) => {
 			exchangeType,
 			apiInfo: {
 				apiKey,
-				apiSecret,
-				passphrase,
+				secret,
+				password,
 			},
 			name,
 			nickname,
 		});
-	}, [exchangeType, apiKey, apiSecret, passphrase, name, nickname]);
+	}, [exchangeType, apiKey, secret, password, name, nickname]);
 
 	const nicknameCharLimit = 20;
 
@@ -77,8 +77,8 @@ export const EditIntegrationForm: React.FC<ExchangeFormProps> = ({ data }) => {
 		setSubmitted(true);
 		if (
 			apiKey &&
-			apiSecret &&
-			passphrase &&
+			secret &&
+			password &&
 			nickname &&
 			nickname.length <= nicknameCharLimit
 		) {
@@ -135,22 +135,22 @@ export const EditIntegrationForm: React.FC<ExchangeFormProps> = ({ data }) => {
 						fullWidth
 						label="API SECRET"
 						type="text"
-						onChange={(e) => setApiSecret(e.target.value)}
-						helperText={submitted && !apiSecret && 'First Name is Required.'}
-						value={apiSecret}
+						onChange={(e) => setSecret(e.target.value)}
+						helperText={submitted && !secret && 'First Name is Required.'}
+						value={secret}
 					/>
 				</StyledFormRow>
 
 				<StyledFormRow>
 					<TextField
 						required
-						id="passphrase"
+						id="password"
 						fullWidth
-						label="PASSPHRASE"
-						value={passphrase}
+						label="PASSWORD"
+						value={password}
 						type="text"
-						onChange={(e) => setPassphrase(e.target.value)}
-						helperText={submitted && !passphrase && 'First Name is Required.'}
+						onChange={(e) => setPassword(e.target.value)}
+						helperText={submitted && !password && 'First Name is Required.'}
 					/>
 				</StyledFormRow>
 
@@ -158,8 +158,8 @@ export const EditIntegrationForm: React.FC<ExchangeFormProps> = ({ data }) => {
 					disabled={
 						data.nickname == nickname &&
 						data.apiInfo.apiKey == apiKey &&
-						data.apiInfo.passphrase == passphrase &&
-						data.apiInfo.apiSecret == apiSecret
+						data.apiInfo.password == password &&
+						data.apiInfo.secret == secret
 							? true
 							: false
 					}

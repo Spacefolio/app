@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BaseExchange, Exchange, IExchangeCredentials } from "../../../src/core/entities";
+import { BaseExchange, Exchange, IExchangeAccount, IExchangeCredentials } from "../../../src/core/entities";
 import { Balances, ExchangeNames, IExchange } from "../../../src/core/entities/Integrations/Exchanges/Exchange";
 import { IOrder } from "../../../src/core/entities";
 import { IDigitalAssetTransaction } from "../../../src/core/entities/Integrations/Transaction";
@@ -38,7 +38,7 @@ class FakeExchangeThatFails extends BaseExchange {
     super(config);
   }
 
-  async getRate(base: string, quote: string, timestamp?: number): Promise<number> {
+  async getRate(exchangeAccount: IExchangeAccount, base: string, quote: string, timestamp?: number): Promise<number> {
     return 1;
   }
   

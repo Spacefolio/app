@@ -11,7 +11,7 @@ export class FakeExchange extends BaseExchange {
     return symbol.toUpperCase() === 'USD';
   }
   
-  async getRate(baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number> {
+  async getRate(exchangeAccount: IExchangeAccount, baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number> {
     if (baseSymbol.toUpperCase() === 'BTC') return 15000;
     return 1;
   }

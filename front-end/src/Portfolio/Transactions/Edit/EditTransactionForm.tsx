@@ -23,9 +23,9 @@ export const EditTransactionForm: React.FC<ExchangeFormProps> = ({
 
   const [apiKey, setApiKey] = useState("");
 
-  const [apiSecret, setApiSecret] = useState("");
+  const [secret, setSecret] = useState("");
 
-  const [passphrase, setPassphrase] = useState("");
+  const [password, setPassword] = useState("");
 
   const [privateKey, setPrivateKey] = useState("");
 
@@ -45,8 +45,8 @@ export const EditTransactionForm: React.FC<ExchangeFormProps> = ({
     exchangeType: integrationId,
     apiInfo: {
       apiKey,
-      apiSecret,
-      passphrase,
+      secret,
+      password,
       privateKey,
       login,
       token,
@@ -63,8 +63,8 @@ export const EditTransactionForm: React.FC<ExchangeFormProps> = ({
       exchangeType: integrationId,
       apiInfo: {
         apiKey,
-        apiSecret,
-        passphrase,
+        secret,
+        password,
         privateKey,
         login,
         token,
@@ -75,7 +75,7 @@ export const EditTransactionForm: React.FC<ExchangeFormProps> = ({
       logoUrl: integrationInfo.logoUrl,
       nickname,
     });
-  }, [integrationId, apiKey, apiSecret, passphrase, name, nickname]);
+  }, [integrationId, apiKey, secret, password, name, nickname]);
 
   const nicknameCharLimit = 20;
 
@@ -85,8 +85,8 @@ export const EditTransactionForm: React.FC<ExchangeFormProps> = ({
 
     if (
       apiKey &&
-      apiSecret &&
-      passphrase &&
+      secret &&
+      password &&
       nickname &&
       nickname.length <= nicknameCharLimit
     ) {
@@ -144,8 +144,8 @@ export const EditTransactionForm: React.FC<ExchangeFormProps> = ({
             fullWidth
             label="API Secret"
             type="text"
-            onChange={(e) => setApiSecret(e.target.value)}
-            value={apiSecret}
+            onChange={(e) => setSecret(e.target.value)}
+            value={secret}
           />
         </StyledFormRow>
       )}
@@ -154,12 +154,12 @@ export const EditTransactionForm: React.FC<ExchangeFormProps> = ({
           <TextField
             variant="outlined"
             required
-            id="passphrase"
+            id="password"
             fullWidth
-            label="Passphrase"
-            value={passphrase}
+            label="Password"
+            value={password}
             type="text"
-            onChange={(e) => setPassphrase(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </StyledFormRow>
       )}
@@ -226,7 +226,7 @@ export const EditTransactionForm: React.FC<ExchangeFormProps> = ({
             required
             id="walletAddress"
             fullWidth
-            label="WalletAddress"
+            label="Wallet Address"
             value={walletAddress}
             type="text"
             onChange={(e) => setWalletAddress(e.target.value)}

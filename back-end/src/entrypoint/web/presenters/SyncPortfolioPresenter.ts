@@ -34,8 +34,14 @@ export function createMetaportfolio(exchangeAccounts: IExchangeAccountPortfolioV
     addedDate: new Date(),
     apiInfo: {
 			apiKey: '',
-			apiSecret: '',
-			passphrase: '',
+			secret: '',
+			password: '',
+      uid: '',
+      login: '',
+      privateKey: '',
+      walletAddress: '',
+      token: '',
+      twofa: ''
 		},
     portfolioItems: [],
     profitPercentage: 0, 

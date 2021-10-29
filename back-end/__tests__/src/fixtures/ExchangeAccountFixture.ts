@@ -182,8 +182,8 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
     exchange: ExchangesConfiguration.get(Exchange.FAKE),
     credentials: {
       apiKey: faker.random.alphaNumeric(10),
-      apiSecret: faker.random.alphaNumeric(10),
-      passphrase: faker.random.alphaNumeric(10)
+      secret: faker.random.alphaNumeric(10),
+      password: faker.random.alphaNumeric(10)
     },
     nickname: faker.random.word(),
     orders,

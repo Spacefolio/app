@@ -9,8 +9,8 @@ import { Balances } from './Exchange';
 
 export interface IExchangeCredentials {
 	apiKey?: string;
-	apiSecret?: string;
-	passphrase?: string;
+	secret?: string;
+	password?: string;
 	uid?: string;
 	login?: string;
 	privateKey?: string;

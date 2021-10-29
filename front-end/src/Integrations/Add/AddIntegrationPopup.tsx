@@ -75,9 +75,11 @@ export const AddIntegrationPopup: React.FC<IAddExchangeProps> = ({}) => {
 	const handleClick = () => {
 		switch (activeStep) {
 			case 0:
+				console.log(activeStep)
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				break;
 			case 1:
+				console.log(activeStep)
 				break;
 			case 2:
 				console.log(activeStep);

@@ -7,9 +7,9 @@ class ExchangeAccountMapper {
   public static toDomain(raw: LeanDocument<IExchangeAccountDocument>): ExchangeAccount {
     const credentials: IExchangeCredentials = {
       ...(raw.credentials.apiKey && { apiKey: raw.credentials.apiKey }),
-      ...(raw.credentials.apiSecret && { apiSecret: raw.credentials.apiSecret }),
+      ...(raw.credentials.secret && { secret: raw.credentials.secret }),
       ...(raw.credentials.login && { login: raw.credentials.login }),
-      ...(raw.credentials.passphrase && { passphrase: raw.credentials.passphrase }),
+      ...(raw.credentials.password && { password: raw.credentials.password }),
       ...(raw.credentials.privateKey && { privateKey: raw.credentials.privateKey }),
       ...(raw.credentials.token && { token: raw.credentials.token }),
       ...(raw.credentials.twofa && { twofa: raw.credentials.twofa }),

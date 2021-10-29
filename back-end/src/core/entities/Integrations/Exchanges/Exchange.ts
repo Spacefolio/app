@@ -46,7 +46,7 @@ export interface IExchange {
 
 export abstract class BaseExchange implements IExchange {
   
-  abstract getRate(baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined>;
+  abstract getRate(exchangeAccount: IExchangeAccount, baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined>;
 	abstract fetchBalances(exchangeAccount: IExchangeAccount): Promise<Balances>;
 	abstract fetchTransactions(exchangeAccount: IExchangeAccount): Promise<IDigitalAssetTransaction[]>;
 	abstract fetchOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]>;

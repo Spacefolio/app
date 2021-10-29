@@ -28,6 +28,8 @@ export class TestServer {
 		const digitalAssetDatabase = DatabaseConfiguration.getDigitalAssetInMemoryDatabase();
 		const digitalAssetHistoryDatabase = DatabaseConfiguration.getDigitalAssetHistoryInMemoryDatabase();
 
+		const availableExchanges = ExchangesConfiguration.getAvailableExchanges();
+
 		//#region Users
 
 		const authenticateUserUseCase = UserUseCasesConfiguration.getAuthenticateUserUseCase(userDatabase);
@@ -89,6 +91,10 @@ export class TestServer {
 		);
 		const syncExchangeAccountsController = ControllersConfiguration.getSyncExchangeAccountsController(syncExchangeAccountsUseCase);
 
+
+		const getAvailableExchangesUseCase = ExchangeAccountUseCasesConfiguration.getGetAvailableExchangesUseCase(availableExchanges);
+		const getAvailableExchangesController = ControllersConfiguration.getGetAvailableExchangesController(getAvailableExchangesUseCase);
+
 		const exchangeAccountRouter = RouterConfiguration.getExchangeAccountRouter(
 			addExchangeAccountController,
 			removeExchangeAccountController,
@@ -97,7 +103,8 @@ export class TestServer {
 			getHoldingsController,
 			getTransactionsController,
 			syncExchangeAccountController,
-			syncExchangeAccountsController
+			syncExchangeAccountsController,
+			getAvailableExchangesController
 		);
 
 		//#endregion

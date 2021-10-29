@@ -14,8 +14,8 @@ export interface IExchangeAccountDao
   credentials: 
   {
     apiKey?: string;
-    apiSecret?: string;
-    passphrase?: string;
+    secret?: string;
+    password?: string;
     uid?: string;
     login?: string;
     twofa?: string;
@@ -43,8 +43,8 @@ const ExchangeAccountSchema = new mongoose.Schema({
   credentials: { 
     type: {
       apiKey: { type: String, required: false },
-      apiSecret:  { type: String, required: false },
-      passphrase: { type: String, required: false },
+      secret:  { type: String, required: false },
+      password: { type: String, required: false },
       uid: { type: String, required: false },
       login: { type: String, required: false },
       twofa: { type: String, required: false },

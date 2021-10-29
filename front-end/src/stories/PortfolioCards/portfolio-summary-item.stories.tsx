@@ -21,8 +21,8 @@ const Template: Story<IPortfolioSummaryItemView> = ({ ...args }) => (
 const data = {
   "apiInfo": {
     "apiKey": "e3d122254043721d4d602768bc7963ee",
-    "apiSecret": "au2mQvKqG1agmKPUJUOsX5kGTDS5aP909mhttLtPRo1BHQ+YhaO+e5zxzxlJYpFBKapPRTkudHjn3WEoy694xQ==",
-    "passphrase": "6gbpx19oaik"
+    "secret": "au2mQvKqG1agmKPUJUOsX5kGTDS5aP909mhttLtPRo1BHQ+YhaO+e5zxzxlJYpFBKapPRTkudHjn3WEoy694xQ==",
+    "password": "6gbpx19oaik"
   },
   "exchangeType": "coinbasepro",
   "name": "Coinbase Pro",

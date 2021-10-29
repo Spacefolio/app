@@ -7,8 +7,9 @@ class CcxtService {
 
 		try {
 			exchangeAccess.checkRequiredCredentials();
-			await exchangeAccess.fetchMyTrades(undefined, Date.now());
-		} catch {
+			await exchangeAccess.fetchBalance();
+		} catch (e) {
+			console.log(e);
 			return false;
 		}
 
@@ -20,8 +21,8 @@ class CcxtService {
 		const exchangeClass = ccxt[exchange];
 		const exchangeAccess = new exchangeClass({
 			apiKey: credentials.apiKey,
-			secret: credentials.apiSecret,
-			password: credentials.passphrase,
+			secret: credentials.secret,
+			password: credentials.password,
 			uid: credentials.uid,
 			login: credentials.login,
 			privateKey: credentials.privateKey,

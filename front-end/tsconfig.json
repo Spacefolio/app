@@ -10,7 +10,7 @@
 		"jsx": "react",
 		"noFallthroughCasesInSwitch": true,
 		"allowJs": true,
-		"forceConsistentCasingInFileNames": true,
+		"forceConsistentCasingInFileNames": false,
 		"esModuleInterop": true,
 		"sourceMap": true,
 

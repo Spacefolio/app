@@ -48,10 +48,9 @@ abstract class BaseController<T extends IUseCase = IUseCase> {
 	protected fail(res: Response, error: Error | string): JsonResponse {
 		console.log(error);
 		if (error instanceof Error) {
-			const name = error.name;
 			return res.status(500).json({
 				error: {
-					name,
+					name: error.name,
 					message: error.message
 				}
 			});

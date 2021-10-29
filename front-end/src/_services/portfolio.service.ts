@@ -246,5 +246,5 @@ async function getPortfolioChartData(
 }
 
 function handleErr(err: any) {
-	throw err;
+	throw err.response.data.error;
 }

@@ -1,4 +1,4 @@
-import { BaseExchange, Exchange, IExchangeCredentials } from "../../../core/entities";
+import { BaseExchange, Exchange, IExchange, IExchangeCredentials } from "../../../core/entities";
 import { VerifyCredentialsHandler } from "../../../core/use-cases/integration/exchangeAccount/addExchangeAccount/AddExchangeAccount";
 import CcxtExchangeAdapter from "./CcxtExchangeAdapter";
 import CcxtService from "./CcxtService";
@@ -13,6 +13,18 @@ class ExchangesConfiguration {
 
   static get(exchange: Exchange): BaseExchange {
     return <BaseExchange>ExchangesConfiguration.exchanges.get(exchange);
+  }
+
+  static getAvailableExchanges(): IExchange[] {
+    const availableExchanges: IExchange[] = [];
+    ExchangesConfiguration.exchanges.forEach((value: BaseExchange, key: Exchange) => {
+      if (key === Exchange.FAKE) {
+        return;
+      }
+      availableExchanges.push(value as IExchange);
+    });
+
+    return availableExchanges;
   }
 
   static getVerifyCredentials(): VerifyCredentialsHandler {

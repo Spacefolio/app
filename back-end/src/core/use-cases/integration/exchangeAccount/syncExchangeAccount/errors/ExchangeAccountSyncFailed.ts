@@ -2,8 +2,8 @@ import { UseCaseError } from "../../../../../definitions";
 
 export class ExchangeAccountSyncFailed extends UseCaseError {
 
-  constructor(accountId: string) {
-    super(`An error occurred while syncing the exchange account with id: '${accountId}'.`);
+  constructor(exchange: string) {
+    super(`Unable to sync ${exchange} account`);
   }
 }
 

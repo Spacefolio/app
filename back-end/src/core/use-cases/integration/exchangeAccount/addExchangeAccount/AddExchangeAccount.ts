@@ -41,7 +41,7 @@ class AddExchangeAccountUseCase implements IUseCase<AddExchangeAccountRequest, A
 
 		const validCredentials = await this.verifyCredentials(exchange, request.credentials);
 		if (!validCredentials) {
-			return Result.fail(new InvalidExchangeCredentials(request.credentials));
+			return Result.fail(new InvalidExchangeCredentials());
 		}
 
 		const savedAccount = await this.exchangeAccountEntityGateway.createExchangeAccount({ ...request, accountId });

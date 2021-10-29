@@ -2,6 +2,7 @@ import { IPresenter } from '../../core/definitions';
 import {
 	AddExchangeAccountUseCase,
 	GetAllExchangeAccountsUseCase,
+	GetAvailableExchangesUseCase,
 	GetCurrentHoldingsUseCase,
 	GetExchangeAccountUseCase,
 	GetTransactionsUseCase,
@@ -24,6 +25,7 @@ import {
 	CheckRegistrationController,
 	SyncExchangeAccountsController,
 	GetMetaportfolioChartController,
+	GetAvailableExchangesController,
 } from '../../entrypoint/web/controllers';
 
 class ControllersConfiguration {
@@ -39,7 +41,10 @@ class ControllersConfiguration {
 		return new CheckRegistrationController(checkRegistrationUseCase);
 	}
 
-	static getAddExchangeAccountController(addExchangeAccountUseCase: AddExchangeAccountUseCase, presenter?: IPresenter): AddExchangeAccountController {
+	static getAddExchangeAccountController(
+		addExchangeAccountUseCase: AddExchangeAccountUseCase,
+		presenter?: IPresenter
+	): AddExchangeAccountController {
 		return new AddExchangeAccountController(addExchangeAccountUseCase, presenter);
 	}
 
@@ -47,12 +52,16 @@ class ControllersConfiguration {
 		return new RemoveExchangeAccountController(removeExchangeAccountUseCase);
 	}
 
-	static getGetExchangeAccountController(getExchangeAccountUseCase: GetExchangeAccountUseCase, presenter?: IPresenter): GetExchangeAccountController {
+	static getGetExchangeAccountController(
+		getExchangeAccountUseCase: GetExchangeAccountUseCase,
+		presenter?: IPresenter
+	): GetExchangeAccountController {
 		return new GetExchangeAccountController(getExchangeAccountUseCase, presenter);
 	}
 
 	static getGetAllExchangeAccountsController(
-		getAllExchangeAccountsUseCase: GetAllExchangeAccountsUseCase, presenter?: IPresenter
+		getAllExchangeAccountsUseCase: GetAllExchangeAccountsUseCase,
+		presenter?: IPresenter
 	): GetAllExchangeAccountsController {
 		return new GetAllExchangeAccountsController(getAllExchangeAccountsUseCase, presenter);
 	}
@@ -69,12 +78,25 @@ class ControllersConfiguration {
 		return new SyncExchangeAccountController(syncExchangeAccountUseCase);
 	}
 
-	static getSyncExchangeAccountsController(syncExchangeAccountsUseCase: SyncExchangeAccountsUseCase, presenter?: IPresenter): SyncExchangeAccountsController {
+	static getSyncExchangeAccountsController(
+		syncExchangeAccountsUseCase: SyncExchangeAccountsUseCase,
+		presenter?: IPresenter
+	): SyncExchangeAccountsController {
 		return new SyncExchangeAccountsController(syncExchangeAccountsUseCase, presenter);
 	}
 
-	static getGetMetaportfolioChartController(getMetaportfolioChartUseCase: GetMetaportfolioChartUseCase, presenter?: IPresenter): GetMetaportfolioChartController {
+	static getGetMetaportfolioChartController(
+		getMetaportfolioChartUseCase: GetMetaportfolioChartUseCase,
+		presenter?: IPresenter
+	): GetMetaportfolioChartController {
 		return new GetMetaportfolioChartController(getMetaportfolioChartUseCase, presenter);
+	}
+
+	static getGetAvailableExchangesController(
+		getAvailableExchangesUseCase: GetAvailableExchangesUseCase,
+		presenter?: IPresenter
+	): GetAvailableExchangesController {
+		return new GetAvailableExchangesController(getAvailableExchangesUseCase, presenter);
 	}
 }
 

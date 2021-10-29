@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { UseCaseError } from "../../../../../core/definitions";
 import { Exchange, ExchangeAccount, IExchangeCredentials } from "../../../../../core/entities";
-import { AddExchangeAccountInvalidRequest, AddExchangeAccountRequest, AddExchangeAccountResponse, AddExchangeAccountUseCase, UserNotFound } from "../../../../../core/use-cases/integration/exchangeAccount";
+import { AddExchangeAccountInvalidRequest, AddExchangeAccountRequest, AddExchangeAccountResponse, AddExchangeAccountUseCase, InvalidExchangeCredentials, UserNotFound } from "../../../../../core/use-cases/integration/exchangeAccount";
 import BaseController from "../../../common/definitions/Controller";
 import JwtRequest from "../../../common/definitions/JwtRequest";
 
@@ -31,6 +31,9 @@ class AddExchangeAccountController extends BaseController<AddExchangeAccountUseC
 				return;
       } else if (error instanceof UserNotFound) {
 				this.notFound(res, error);
+				return;
+			} else if (error instanceof InvalidExchangeCredentials) {
+				this.badRequest(res, error);
 				return;
 			}
 
