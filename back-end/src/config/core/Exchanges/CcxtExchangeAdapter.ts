@@ -1,9 +1,9 @@
-import { Action, IDigitalAssetTransaction, IExchangeAccount, IOrder } from "../../../core/entities";
+import { Action, IDigitalAssetTransaction, IExchangeAccount, IOrder, OrderStatus } from "../../../core/entities";
 import { Balances, Exchange } from "../../../core/entities/Integrations/Exchanges/Exchange";
 import CcxtService from "./CcxtService";
 import { IExchangeAdapter } from "./ExchangeAdapter";
 import ccxt from 'ccxt';
-import { TransactionStatus } from "../../../core/entities/Integrations/Transaction";
+import { IFee, TransactionStatus } from "../../../core/entities/Integrations/Transaction";
 
 class CcxtExchangeAdapter implements IExchangeAdapter {
   sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
@@ -16,10 +16,11 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
 
     return false;
   }
+  
   async getRate(exchangeAccount: IExchangeAccount, baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined> {
     if (baseSymbol === 'USD') { return 1; }
 
-    const marketPair = baseSymbol + '/' + quoteSymbol;
+    const marketPair = baseSymbol.toUpperCase() + '/' + quoteSymbol.toUpperCase();
 
     const exchange = CcxtService.createExchangeAccess(exchangeAccount.exchange.id as Exchange, exchangeAccount.credentials);
 
@@ -49,14 +50,19 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
 
     await this.sleep(exchange.rateLimit);
 
-    const OHLCV = await exchange.fetchOHLCV(marketPair, '1m', timestamp, 1);
-    if (OHLCV.length < 1) {
+    const OHLCV = await exchange.fetchOHLCV(baseSymbol, '1m', timestamp, 1).catch(err => {
+      console.log(err);
+      return undefined;
+    });
+
+    if (!OHLCV || OHLCV.length < 1) {
       return;
     }
 
     const rate = (OHLCV[0][1] + OHLCV[0][4]) / 2;
     return rate;
   }
+
   async fetchBalances(exchangeAccount: IExchangeAccount): Promise<Balances> {
     const exchange = CcxtService.createExchangeAccess(exchangeAccount.exchange.id as Exchange, exchangeAccount.credentials);
 
@@ -67,50 +73,91 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
     }
     console.log("Sleeping");
     await this.sleep(exchange.rateLimit);
-    const balances = await exchange.fetchBalance().catch(err => { console.log(err); return {}; });
+    const balances = await exchange.fetchBalance().catch(err => { console.log(err); return; });
+    if (!balances) {
+      return {};
+    }
+
+    delete balances.total;
+    delete balances.used;
+    delete balances.info;
+    delete balances.free;
+
     return balances;
   }
+
   async fetchTransactions(exchangeAccount: IExchangeAccount): Promise<IDigitalAssetTransaction[]> {
     const exchange = CcxtService.createExchangeAccess(exchangeAccount.exchange.id as Exchange, exchangeAccount.credentials);
-    let params = {};
-    if (exchangeAccount.exchange.id === Exchange.COINBASE) {
-      await this.sleep(exchange.rateLimit);
-      const accounts = await exchange.fetchAccounts();
-      console.log(accounts);
-      params = {
-        accountId: 0
-      };
-    }
-    console.log("In transactions");
     let ccxtTransactions: ccxt.Transaction[] = [];
+    let digitalAssetTransactions: IDigitalAssetTransaction[] = [];
+
+    if (exchangeAccount.exchange.id === Exchange.COINBASE) {
+      let ledgerEntries: CcxtLedgerEntry[] = [];
+      await this.sleep(exchange.rateLimit);
+      const accounts = await exchange.fetchAccounts().catch((err: any) => { console.log(err) });
+      if (!accounts) { return []; }
+      console.log(accounts);
+      for (const account of accounts) {
+        await this.sleep(exchange.rateLimit);
+        const transactions = await exchange.fetchLedger(undefined, exchangeAccount.lastSynced.valueOf(), undefined, { accountId: account.id }).catch(err => console.log(err));
+        if (transactions) ledgerEntries = ledgerEntries.concat(transactions);
+      }
+
+      // const fiatDeposits = await exchange.fetchDeposits('USD', exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err): ccxt.Transaction[] => {
+      //   console.log(err);
+      //   return [];
+      // });
+
+      // if (fiatDeposits.length > 0) {
+      //   ccxtTransactions = ccxtTransactions.concat(fiatDeposits);
+      // }
+
+      // const fiatWithdrawals = await exchange.fetchWithdrawals('USD', exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err): ccxt.Transaction[] => {
+      //   console.log(err);
+      //   return [];
+      // });
+
+      // if (fiatWithdrawals.length > 0) {
+      //   ccxtTransactions = ccxtTransactions.concat(fiatWithdrawals);
+      // }
+
+      digitalAssetTransactions = ledgerEntries.map((transaction) => this.transactionFromCcxtLedgerEntry(transaction));
+      //digitalAssetTransactions = digitalAssetTransactions.concat(ccxtTransactions.map((transaction) => this.transactionFromCcxtTransaction(transaction)));
+      console.log(digitalAssetTransactions);
+      return digitalAssetTransactions;
+    }
     
-    if (!exchange.hasFetchTransactions || exchangeAccount.exchange.id === Exchange.COINBASE) {
+    if (!exchange.hasFetchTransactions) {
       if (!exchange.hasFetchDeposits && !exchange.hasFetchWithdrawals) return [];
 
       if (exchange.hasFetchDeposits) {
         await this.sleep(exchange.rateLimit);
-        const deposits = await exchange.fetchDeposits(undefined, exchangeAccount.lastSynced.valueOf(), undefined, params).catch(err => {
+        const deposits = await exchange.fetchDeposits(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch(err => {
           console.log(err);
-          return [];
+          return;
         });
 
-        ccxtTransactions = ccxtTransactions.concat(deposits);
+        if (deposits) {
+          ccxtTransactions = ccxtTransactions.concat(deposits);
+        }
       }
 
       if (exchange.hasFetchWithdrawals) {
         await this.sleep(exchange.rateLimit);
 
-        const withdrawals = await exchange.fetchWithdrawals(undefined, exchangeAccount.lastSynced.valueOf(), undefined, params).catch(err => {
+        const withdrawals = await exchange.fetchWithdrawals(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch(err => {
           console.log(err);
-          return [];
+          return;
         });
 
-        ccxtTransactions = ccxtTransactions.concat(withdrawals);
+        if (withdrawals) {
+          ccxtTransactions = ccxtTransactions.concat(withdrawals);
+        }
       }
     } else {
       await this.sleep(exchange.rateLimit);
 
-      ccxtTransactions = await exchange.fetchTransactions(undefined, exchangeAccount.lastSynced.valueOf(), undefined, params).catch(err => {
+      ccxtTransactions = await exchange.fetchTransactions(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch(err => {
         console.log(err);
         return [];
       });
@@ -119,33 +166,159 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
     const transactions: IDigitalAssetTransaction[] = ccxtTransactions.map((transaction) => this.transactionFromCcxtTransaction(transaction));
     return transactions;
   }
+
   async fetchOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]> {
     const exchange = CcxtService.createExchangeAccess(exchangeAccount.exchange.id as Exchange, exchangeAccount.credentials);
+    let ccxtOrders: ccxt.Order[] = [];
+
+    if (exchangeAccount.exchange.id === Exchange.COINBASE) {
+      await this.sleep(exchange.rateLimit);
+      const accounts = await exchange.fetchAccounts().catch((err: any) => { console.log(err) });
+      if (!accounts) { return []; }
+      for (const account of accounts) {
+        await this.sleep(exchange.rateLimit);
+        const buyOrders = await exchange.fetchBuys(account.code, exchangeAccount.lastSynced.valueOf(), undefined, { accountId: account.id }).catch((err: any) => console.log(err));
+        await this.sleep(exchange.rateLimit);
+        const sellOrders = await exchange.fetchSells(account.code, exchangeAccount.lastSynced.valueOf(), undefined, { accountId: account.id }).catch((err: any) => console.log(err));
+        if (buyOrders) ccxtOrders = ccxtOrders.concat(buyOrders);
+        if (sellOrders) ccxtOrders = ccxtOrders.concat(sellOrders);
+      }
+
+      return ccxtOrders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.CLOSED));
+    }
+
+    if (exchange.hasFetchClosedOrders) {
+      const orders = await exchange.fetchClosedOrders(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err: any) => console.log(err));
+      if (!orders) return [];
+      return orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.CLOSED));
+    }
+
+    if (exchange.hasFetchOrders) {
+      let orders = await exchange.fetchOrders(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err: any) => console.log(err));
+      if (!orders) return [];
+      orders = orders.filter((order) => order.status === 'closed');
+      return orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.CLOSED));
+    }
+
     return [];
   }
+
   async fetchOpenOrders(exchangeAccount: IExchangeAccount): Promise<IOrder[]> {
     const exchange = CcxtService.createExchangeAccess(exchangeAccount.exchange.id as Exchange, exchangeAccount.credentials);
+
+    if (exchange.hasFetchOpenOrders) {
+      const orders = await exchange.fetchOpenOrders(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err: any) => console.log(err));
+      if (!orders) return [];
+      return orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.OPEN));
+    }
+
+    if (exchange.hasFetchOrders) {
+      let orders = await exchange.fetchOrders(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err: any) => console.log(err));
+      if (!orders) return [];
+      orders = orders.filter((order) => order.status === 'open');
+      return orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.OPEN));
+    }
+
     return [];
   }
 
   private transactionFromCcxtTransaction(transaction: ccxt.Transaction): IDigitalAssetTransaction {
+    const fee: IFee = {
+      assetId: transaction.fee?.currency ?? transaction.currency,
+      rate: transaction.fee?.rate ?? 0,
+      cost: transaction.fee?.cost ?? 0
+    };
+
     const digitalAssetTransaction: IDigitalAssetTransaction = {
-      address: transaction.address,
+      address: transaction.address || '',
       amount: transaction.amount,
       assetId: transaction.currency,
       symbol: transaction.currency,
       status: transaction.status as TransactionStatus,
-      fee: {
-        assetId: transaction.fee.currency,
-        rate: transaction.fee.rate,
-        cost: transaction.fee.cost
-      },
+      fee: fee,
       timestamp: transaction.timestamp,
       type: transaction.type === 'deposit' ? Action.DEPOSIT : Action.WITHDRAW
     }
 
     return digitalAssetTransaction;
   }
+
+  private transactionFromCcxtLedgerEntry(transaction: CcxtLedgerEntry) {
+    const digitalAssetTransaction: IDigitalAssetTransaction = {
+      address: '',
+      amount: transaction.amount,
+      assetId: transaction.currency,
+      symbol: transaction.currency,
+      status: transaction.status as TransactionStatus,
+      fee: {
+        assetId: transaction.fee.currency,
+        rate: 0,
+        cost: transaction.fee.cost
+      },
+      timestamp: transaction.timestamp,
+      type: transaction.direction === 'in' ? Action.DEPOSIT : Action.WITHDRAW
+    }
+
+    return digitalAssetTransaction;
+  }
+
+  private orderFromCcxtOrder(ccxtOrder: ccxt.Order, status: OrderStatus) {
+    const symbols = ccxtOrder.symbol.split('/');
+    const order: IOrder = {
+      timestamp: ccxtOrder.timestamp,
+      datetime: ccxtOrder.datetime,
+      baseAsset: symbols[0],
+      baseSymbol: symbols[0],
+      quoteAsset: symbols[1],
+      quoteSymbol: symbols[1],
+      side: ccxtOrder.side === 'buy' ? Action.BUY: Action.SELL,
+      price: ccxtOrder.price,
+      amount: ccxtOrder.amount,
+      filled: ccxtOrder.filled,
+      remaining: ccxtOrder.remaining,
+      cost: ccxtOrder.cost,
+      status: status,
+      fee: { assetId: ccxtOrder.fee.currency, ...ccxtOrder.fee }
+    }
+
+    return order;
+  }
+}
+
+type CoinbaseAccount = {
+  id: string
+  name: string
+  primary: boolean
+  type: string
+  currency: {
+    code: string
+    name: string
+    type: string
+  }
+  balance: {
+    amount: string
+    currency: string
+  }
+}
+
+type CoinbaseAccounts = {
+  info: {
+    data: CoinbaseAccount[]
+  }
+}
+
+type CcxtLedgerEntry = {
+  account: string
+  amount: number
+  currency: string
+  datetime: string
+  direction: string,
+  fee: {
+    cost: number
+    currency: string
+  }
+  timestamp: number
+  status: string
 }
 
 export default CcxtExchangeAdapter;

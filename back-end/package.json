@@ -8,6 +8,7 @@
 		"url": "https://github.com/Spacefolio/app"
 	},
 	"scripts": {
+		"dev": "npm run clean && tsc && nodemon app.ts",
 		"start": "npm run clean && tsc && node dist/app.js",
 		"build": "tsc",
 		"clean": "rimraf dist && rimraf src/logs",

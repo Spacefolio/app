@@ -3,12 +3,14 @@ import { VerifyCredentialsHandler } from "../../../core/use-cases/integration/ex
 import CcxtExchangeAdapter from "./CcxtExchangeAdapter";
 import CcxtService from "./CcxtService";
 import { Coinbase } from "./Implementations/Coinbase";
+import { CoinbasePro } from "./Implementations/CoinbasePro";
 import { FakeExchange } from "./Implementations/FakeExchange";
 
 class ExchangesConfiguration {
   static exchanges: Map<Exchange, BaseExchange> = new Map<Exchange, BaseExchange>([
     [Exchange.FAKE, new FakeExchange()],
-    [Exchange.COINBASE, new Coinbase(new CcxtExchangeAdapter())]
+    [Exchange.COINBASE, new Coinbase(new CcxtExchangeAdapter())],
+    [Exchange.COINBASEPRO, new CoinbasePro(new CcxtExchangeAdapter())]
   ]);
 
   static get(exchange: Exchange): BaseExchange {

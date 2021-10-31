@@ -123,12 +123,12 @@ class Timeslices {
       prices.set(assets[i], values);
     }
 
-    if (timeslices[timeslices.length - 1].start < startOfToday) {
-      // The exchange account has not been synced
+    if (timeslices.length < 8) {
+      // The exchange account does not have a full week of data
       return hourlySlices;
     }
-    if (timeslices.length  < 8) {
-      // The exchange account does not have a full week of data
+    if (timeslices[timeslices.length - 1].start < startOfToday) {
+      // The exchange account has not been synced
       return hourlySlices;
     }
 
