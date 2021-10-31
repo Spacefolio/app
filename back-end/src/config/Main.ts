@@ -59,7 +59,7 @@ export async function main(): Promise<void> {
 		userDatabase,
 		exchangeAccountDatabase
 	);
-	const getAllExchangeAccountsController = ControllersConfiguration.getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase);
+	const getAllExchangeAccountsController = ControllersConfiguration.getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase, exchangeAccountPresenter);
 
 	const getHoldingsUseCase = ExchangeAccountUseCasesConfiguration.getGetHoldingsUseCase(userDatabase, exchangeAccountDatabase);
 	const getHoldingsController = ControllersConfiguration.getGetHoldingsController(getHoldingsUseCase);

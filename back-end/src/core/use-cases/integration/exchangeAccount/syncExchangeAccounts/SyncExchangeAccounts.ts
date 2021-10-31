@@ -14,7 +14,7 @@ import { SyncExchangeAccountsRequest, SyncExchangeAccountsResponse } from '.';
 
 export type GetExchangeHandler = (exchange: Exchange) => BaseExchange;
 
-class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountsRequest, SyncExchangeAccountsResponse> {
+class SyncExchangeAccountsUseCase implements IUseCase<SyncExchangeAccountsRequest, SyncExchangeAccountsResponse> {
 	private userEntityGateway: IUserEntityGateway;
 	private exchangeAccountEntityGateway: IExchangeAccountEntityGateway;
 	private digitalAssetEntityGateway: IDigitalAssetEntityGateway;
@@ -157,4 +157,4 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountsRequest
 	}
 }
 
-export default SyncExchangeAccountUseCase;
+export default SyncExchangeAccountsUseCase;
