@@ -65,7 +65,7 @@ class DigitalAssetMapper {
       atlChangePercentage: data.atl_change_percentage,
       atlDate: data.atl_date,
       lastUpdated: data.last_updated,
-      sparkline7day: data.sparkline_in_7d
+      sparkline7day: { price: data.sparkline_in_7d?.price || [] }
     }
 
     return digitalAsset;

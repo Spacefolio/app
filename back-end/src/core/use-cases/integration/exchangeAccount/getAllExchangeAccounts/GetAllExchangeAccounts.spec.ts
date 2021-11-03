@@ -6,10 +6,11 @@ import { IUserEntityGateway, UserNotFound } from "../../../user";
 import makeFakeUser from "../../../../../../__tests__/src/fixtures/UserFixture";
 import { UseCaseError } from "../../../../definitions";
 import { GetAllExchangeAccountsRequest, GetAllExchangeAccountsUseCase } from ".";
+import { getExchange } from "../../../../../../__tests__/src/fixtures/ExchangeInteractionFixture";
 
 describe('Get All Exchange Accounts Use Case', () => {
   const userDatabase: IUserEntityGateway = new UserInMemoryEntityGateway();
-  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway();
+  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway(getExchange);
   const getAllExchangeAccountsUseCase: GetAllExchangeAccountsUseCase = new GetAllExchangeAccountsUseCase(userDatabase, exchangeAccountDatabase);
   
   const fakeUser = makeFakeUser({});

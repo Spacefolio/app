@@ -1,12 +1,15 @@
 import { IUserEntityGateway, CreateUserPayload } from '../../core/use-cases/user';
-import { User, IUser, makeUser, ExchangeAccount } from '../../core/entities';
+import { User, IUser, makeUser, ExchangeAccount, BaseExchange, Exchange } from '../../core/entities';
 import { IUserDocument } from './UserModel';
 import UserMapper from './UserMapper';
 import { IExchangeAccountDocument } from '..';
 import { Model } from 'mongoose';
 
 class UserMongooseEntityGateway implements IUserEntityGateway {
-	constructor(public Users: Model<IUserDocument>, public ExchangeAccounts: Model<IExchangeAccountDocument>) {}
+	private userMapper;
+	constructor(public Users: Model<IUserDocument>, public ExchangeAccounts: Model<IExchangeAccountDocument>, exchanges: (exchange: Exchange) => BaseExchange) {
+		this.userMapper = new UserMapper(exchanges);
+	}
 
 	async exists(email: string): Promise<boolean> {
 		return await this.Users.exists({ email });
@@ -19,7 +22,7 @@ class UserMongooseEntityGateway implements IUserEntityGateway {
 	async getUser(email: string): Promise<User | undefined> {
 		const user = await this.Users.findOne({ email }).populate('exchangeAccounts');
 		if (user) {
-			return UserMapper.toDomain(user);
+			return this.userMapper.toDomain(user);
 		}
 		return undefined;
 	}
@@ -46,13 +49,13 @@ class UserMongooseEntityGateway implements IUserEntityGateway {
 
 	async createUser(payload: CreateUserPayload): Promise<User> {
 		const newUser = await this.Users.create(payload);
-		const userEntity = UserMapper.toDomain(newUser);
+		const userEntity = this.userMapper.toDomain(newUser);
 		return userEntity;
 	}
 
 	async getUsers(): Promise<User[]> {
 		const users = await this.Users.find().lean();
-		return users.map((user) => UserMapper.toDomain(user));
+		return users.map((user) => this.userMapper.toDomain(user));
 	}
 
 	async clearUsers(): Promise<void> {

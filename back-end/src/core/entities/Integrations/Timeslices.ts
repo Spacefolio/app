@@ -39,7 +39,11 @@ class Timeslices {
       currentSnapshot[holding.asset.assetId] = 0;
 
       const asset = holding.asset.assetId;
-      prices[asset] = await getHistoricalValues(asset, startDate, endDate - ONE_DAY);
+
+      if (!fiat(asset)) {
+        prices[asset] = await getHistoricalValues(asset, startDate, endDate - ONE_DAY);
+      }
+
       lastPrice[asset] = fiat(asset);
       lastAmount[asset] = 0;
     }
@@ -73,7 +77,7 @@ class Timeslices {
           }
         }
 
-        const historicalPrice = prices[asset][day];
+        const historicalPrice = prices[asset] && prices[asset][day];
         if (historicalPrice) {
           lastPrice[asset] = historicalPrice.price;
         }
@@ -115,6 +119,7 @@ class Timeslices {
     for (let i = 0; i < assets.length; i++)
     { // Grab last week of hourly prices for each symbol in holdings
       const hourlyPrices = await getHourlyData(assets[i], oneWeekAgo-ONE_HOUR, latestHour);
+      
       const values = new Map<number, IHistoricalPrice>();
       for (let j = 0; j < hourlyPrices.length; j++)
       {

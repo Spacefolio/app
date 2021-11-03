@@ -1,12 +1,13 @@
-import { ExchangesConfiguration } from "../../../config/core/Exchanges";
-import { ExchangeAccount, IExchange, IExchangeAccount, ITimeslice, makeExchangeAccount } from "../../../core/entities";
+import { BaseExchange, Exchange, ExchangeAccount, IExchange, IExchangeAccount, ITimeslice, makeExchangeAccount } from "../../../core/entities";
 import { ICreateExchangeAccountPayload, IExchangeAccountEntityGateway, IUpdateExchangeAccountPayload } from "../../../core/use-cases/integration/exchangeAccount";
 
 class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGateway {
   exchangeAccounts: ExchangeAccount[];
+  exchanges: (exchange: Exchange) => BaseExchange;
 
-  constructor() {
+  constructor(exchanges: (exchange: Exchange) => BaseExchange) {
     this.exchangeAccounts = [];
+    this.exchanges = exchanges;
   }
 
   async exists (accountId: string): Promise<boolean> {
@@ -46,7 +47,7 @@ class ExchangeAccountInMemoryEntityGateway implements IExchangeAccountEntityGate
 
   async createExchangeAccount(payload: ICreateExchangeAccountPayload): Promise<ExchangeAccount> {
 
-    const exchange: IExchange = ExchangesConfiguration.get(payload.exchange);
+    const exchange: IExchange = this.exchanges(payload.exchange);
     const accountParams: IExchangeAccount = {
       name: exchange.name,
       accountId: payload.accountId,

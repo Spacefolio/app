@@ -2,7 +2,7 @@ import { ExchangeAccountSyncFailed, IExchangeAccountEntityGateway } from '..';
 import { IUseCase, Result } from '../../../../definitions';
 import { BaseExchange, Exchange, ExchangeAccount, IDigitalAsset, IOrder, OrderStatus, User } from '../../../../entities';
 import { IHistoricalPrice, NullAsset } from '../../../../entities/Integrations/Asset';
-import Timeslices from '../../../../entities/Integrations/Timeslices';
+import Timeslices, { fiat } from '../../../../entities/Integrations/Timeslices';
 import { Balances } from '../../../../entities/Integrations/Exchanges/Exchange';
 import { GetRateHandler, IExchangeAccount } from '../../../../entities/Integrations/Exchanges/ExchangeAccount';
 import { IDigitalAssetTransaction } from '../../../../entities/Integrations/Transaction';
@@ -65,6 +65,14 @@ class SyncExchangeAccountsUseCase implements IUseCase<SyncExchangeAccountsReques
 	}
 
 	async getAsset(assetId: string): Promise<IDigitalAsset> {
+		if (fiat(assetId)) {
+			const asset = new NullAsset(assetId);
+			asset.symbol = 'USD';
+			asset.currentPrice = 1;
+			asset.image = 'https://assets.coingecko.com/coins/images/5013/small/sUSD.png?1616150765';
+			asset.name = 'US Dollar'
+			return asset;
+		}
 		const asset = await this.digitalAssetEntityGateway.getDigitalAsset(assetId);
 		if (asset) return asset;
 		return new NullAsset(assetId);
@@ -79,11 +87,11 @@ class SyncExchangeAccountsUseCase implements IUseCase<SyncExchangeAccountsReques
 		quoteSymbol: string,
 		timestamp: number
 	): Promise<number> {
-		const rate = await exchange.getRate(exchangeAccount, baseSymbol, quoteSymbol, timestamp);
-		if (rate) return rate;
-
 		const historicalPrice = await this.digitalAssetHistoryEntityGateway.getHistoricalValue(base, timestamp);
 		if (historicalPrice) return historicalPrice.price;
+
+		const rate = await exchange.getRate(exchangeAccount, baseSymbol, quoteSymbol, timestamp);
+		if (rate) return rate;
 
 		return 0;
 	}
@@ -99,6 +107,7 @@ class SyncExchangeAccountsUseCase implements IUseCase<SyncExchangeAccountsReques
 	}
 
 	async syncExchangeAccount(exchangeAccount: ExchangeAccount): Promise<IUpdateExchangeAccountPayload | undefined> {
+		const lastSynced = new Date();
 		const exchangeName = <Exchange>exchangeAccount.exchange.id;
 		const exchange = this.getExchange(exchangeName);
 
@@ -151,6 +160,7 @@ class SyncExchangeAccountsUseCase implements IUseCase<SyncExchangeAccountsReques
 			holdings: updatedHoldings,
 			dailyTimeslices,
 			hourlyTimeslices,
+			lastSynced
 		};
 
 		return updatePayload;

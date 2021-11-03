@@ -11,7 +11,7 @@ import { IDigitalAssetEntityGateway, IDigitalAssetHistoryEntityGateway } from ".
 
 describe('Get Exchange Account Use Case', () => {
   const userDatabase: IUserEntityGateway = new UserInMemoryEntityGateway();
-  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway();
+  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway(getExchange);
   const digitalAssetDatabase: IDigitalAssetEntityGateway = new DigitalAssetInMemoryEntityGateway();
   const digitalAssetHistoryDatabase: IDigitalAssetHistoryEntityGateway = new DigitalAssetHistoryInMemoryEntityGateway();
   const syncExchangeAccountUseCase: SyncExchangeAccountUseCase = new SyncExchangeAccountUseCase(userDatabase, exchangeAccountDatabase, digitalAssetDatabase, digitalAssetHistoryDatabase, getExchange);

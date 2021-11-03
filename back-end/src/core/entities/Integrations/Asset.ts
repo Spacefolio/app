@@ -61,6 +61,8 @@ export class NullAsset implements IDigitalAsset {
 
   constructor(assetId: string) {
     this.assetId = assetId;
+    this.symbol = assetId;
+    this.name = assetId;
   }
 }
 

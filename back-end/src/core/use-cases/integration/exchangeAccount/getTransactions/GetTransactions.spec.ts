@@ -1,6 +1,7 @@
 import { GetTransactionsUseCase } from ".";
 import { ExchangeAccountNotFound, ICreateExchangeAccountPayload, IExchangeAccountEntityGateway } from "..";
 import makeFakeExchangeAccount from "../../../../../../__tests__/src/fixtures/ExchangeAccountFixture";
+import { getExchange } from "../../../../../../__tests__/src/fixtures/ExchangeInteractionFixture";
 import makeFakeUser from "../../../../../../__tests__/src/fixtures/UserFixture";
 import { ExchangeAccountInMemoryEntityGateway, UserInMemoryEntityGateway } from "../../../../../data";
 import { UseCaseError } from "../../../../definitions";
@@ -9,7 +10,7 @@ import { IUserEntityGateway, UserNotFound } from "../../../user";
 
 describe('Get Current Holdings Use Case', () => {
   const userDatabase: IUserEntityGateway = new UserInMemoryEntityGateway();
-  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway();
+  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway(getExchange);
   const getTransactionsUseCase: GetTransactionsUseCase = new GetTransactionsUseCase(userDatabase, exchangeAccountDatabase);
   
   const fakeUser = makeFakeUser({});

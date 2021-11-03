@@ -6,10 +6,11 @@ import { IUserEntityGateway, UserNotFound } from "../../../user";
 import makeFakeUser from "../../../../../../__tests__/src/fixtures/UserFixture";
 import { UseCaseError } from "../../../../definitions";
 import { InvalidExchangeCredentials } from "./errors";
+import { getExchange } from "../../../../../../__tests__/src/fixtures/ExchangeInteractionFixture";
 
 describe('Add Exchange Account Use Case', () => {
   const userDatabase: IUserEntityGateway = new UserInMemoryEntityGateway();
-  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway();
+  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway(getExchange);
   const addExchangeAccountUseCase: AddExchangeAccountUseCase = new AddExchangeAccountUseCase(userDatabase, exchangeAccountDatabase, makeId, async () => true);
   const addExchangeAccountWithInvalidCredentialsUseCase: AddExchangeAccountUseCase = new AddExchangeAccountUseCase(userDatabase, exchangeAccountDatabase, makeId, async () => false);
   

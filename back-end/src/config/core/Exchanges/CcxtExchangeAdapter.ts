@@ -4,8 +4,15 @@ import CcxtService from "./CcxtService";
 import { IExchangeAdapter } from "./ExchangeAdapter";
 import ccxt from 'ccxt';
 import { IFee, TransactionStatus } from "../../../core/entities/Integrations/Transaction";
+import { IDigitalAssetEntityGateway } from "../../../core/use-cases/integration/digitalAsset";
 
 class CcxtExchangeAdapter implements IExchangeAdapter {
+  digitalAssetEntityGateway: IDigitalAssetEntityGateway;
+
+  constructor (digitalAssetEntityGateway: IDigitalAssetEntityGateway) {
+    this.digitalAssetEntityGateway = digitalAssetEntityGateway;
+  }
+
   sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
   async checkIsFiat(exchangeAccount: IExchangeAccount, symbol: string): Promise<boolean> {
@@ -16,7 +23,7 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
 
     return false;
   }
-  
+
   async getRate(exchangeAccount: IExchangeAccount, baseSymbol: string, quoteSymbol: string, timestamp?: number): Promise<number | undefined> {
     if (baseSymbol === 'USD') { return 1; }
 
@@ -50,7 +57,7 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
 
     await this.sleep(exchange.rateLimit);
 
-    const OHLCV = await exchange.fetchOHLCV(baseSymbol, '1m', timestamp, 1).catch(err => {
+    const OHLCV = await exchange.fetchOHLCV(marketPair, '1m', timestamp, 1).catch(err => {
       console.log(err);
       return undefined;
     });
@@ -121,7 +128,7 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
       //   ccxtTransactions = ccxtTransactions.concat(fiatWithdrawals);
       // }
 
-      digitalAssetTransactions = ledgerEntries.map((transaction) => this.transactionFromCcxtLedgerEntry(transaction));
+      digitalAssetTransactions = await Promise.all(ledgerEntries.map((transaction) => this.transactionFromCcxtLedgerEntry(transaction)));
       //digitalAssetTransactions = digitalAssetTransactions.concat(ccxtTransactions.map((transaction) => this.transactionFromCcxtTransaction(transaction)));
       console.log(digitalAssetTransactions);
       return digitalAssetTransactions;
@@ -163,7 +170,7 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
       });
     }
 
-    const transactions: IDigitalAssetTransaction[] = ccxtTransactions.map((transaction) => this.transactionFromCcxtTransaction(transaction));
+    const transactions: IDigitalAssetTransaction[] = await Promise.all(ccxtTransactions.map((transaction) => this.transactionFromCcxtTransaction(transaction)));
     return transactions;
   }
 
@@ -184,20 +191,20 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
         if (sellOrders) ccxtOrders = ccxtOrders.concat(sellOrders);
       }
 
-      return ccxtOrders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.CLOSED));
+      return await Promise.all(ccxtOrders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.CLOSED)));
     }
 
     if (exchange.hasFetchClosedOrders) {
       const orders = await exchange.fetchClosedOrders(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err: any) => console.log(err));
       if (!orders) return [];
-      return orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.CLOSED));
+      return await Promise.all(orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.CLOSED)));
     }
 
     if (exchange.hasFetchOrders) {
       let orders = await exchange.fetchOrders(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err: any) => console.log(err));
       if (!orders) return [];
       orders = orders.filter((order) => order.status === 'closed');
-      return orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.CLOSED));
+      return await Promise.all(orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.CLOSED)));
     }
 
     return [];
@@ -209,22 +216,30 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
     if (exchange.hasFetchOpenOrders) {
       const orders = await exchange.fetchOpenOrders(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err: any) => console.log(err));
       if (!orders) return [];
-      return orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.OPEN));
+      return await Promise.all(orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.OPEN)));
     }
 
     if (exchange.hasFetchOrders) {
       let orders = await exchange.fetchOrders(undefined, exchangeAccount.lastSynced.valueOf(), undefined, {}).catch((err: any) => console.log(err));
       if (!orders) return [];
       orders = orders.filter((order) => order.status === 'open');
-      return orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.OPEN));
+      return await Promise.all(orders.map((order) => this.orderFromCcxtOrder(order, OrderStatus.OPEN)));
     }
 
     return [];
   }
 
-  private transactionFromCcxtTransaction(transaction: ccxt.Transaction): IDigitalAssetTransaction {
+  private async transactionFromCcxtTransaction(transaction: ccxt.Transaction): Promise<IDigitalAssetTransaction> {
+    const digitalAsset = await this.digitalAssetEntityGateway.getDigitalAssetBySymbol(transaction.currency);
+
+    let assetId = transaction.currency;
+
+    if (digitalAsset) {
+      assetId = digitalAsset.assetId;
+    }
+
     const fee: IFee = {
-      assetId: transaction.fee?.currency ?? transaction.currency,
+      assetId: assetId,
       rate: transaction.fee?.rate ?? 0,
       cost: transaction.fee?.cost ?? 0
     };
@@ -232,7 +247,7 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
     const digitalAssetTransaction: IDigitalAssetTransaction = {
       address: transaction.address || '',
       amount: transaction.amount,
-      assetId: transaction.currency,
+      assetId: assetId,
       symbol: transaction.currency,
       status: transaction.status as TransactionStatus,
       fee: fee,
@@ -243,11 +258,19 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
     return digitalAssetTransaction;
   }
 
-  private transactionFromCcxtLedgerEntry(transaction: CcxtLedgerEntry) {
+  private async transactionFromCcxtLedgerEntry(transaction: CcxtLedgerEntry): Promise<IDigitalAssetTransaction> {
+    const digitalAsset = await this.digitalAssetEntityGateway.getDigitalAssetBySymbol(transaction.currency);
+
+    let assetId = transaction.currency;
+
+    if (digitalAsset) {
+      assetId = digitalAsset.assetId;
+    }
+
     const digitalAssetTransaction: IDigitalAssetTransaction = {
       address: '',
       amount: transaction.amount,
-      assetId: transaction.currency,
+      assetId: assetId,
       symbol: transaction.currency,
       status: transaction.status as TransactionStatus,
       fee: {
@@ -262,14 +285,36 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
     return digitalAssetTransaction;
   }
 
-  private orderFromCcxtOrder(ccxtOrder: ccxt.Order, status: OrderStatus) {
+  private async orderFromCcxtOrder(ccxtOrder: ccxt.Order, status: OrderStatus): Promise<IOrder> {
     const symbols = ccxtOrder.symbol.split('/');
+    const digitalAssetBase = await this.digitalAssetEntityGateway.getDigitalAssetBySymbol(symbols[0]);
+    const digitalAssetQuote = await this.digitalAssetEntityGateway.getDigitalAssetBySymbol(symbols[1]);
+
+    let assetIdBase = symbols[0];
+    let assetIdQuote = symbols[1];
+
+    if (digitalAssetBase) {
+      assetIdBase = digitalAssetBase.assetId;
+    }
+
+    if (digitalAssetQuote) {
+      assetIdQuote = digitalAssetQuote.assetId;
+    }
+
+    let feeAssetId = ccxtOrder.fee.currency;
+
+    if (ccxtOrder.fee.currency === symbols[0]) {
+      feeAssetId = assetIdBase;
+    } else if (ccxtOrder.fee.currency === symbols[1]) {
+      feeAssetId = assetIdQuote;
+    }
+    
     const order: IOrder = {
       timestamp: ccxtOrder.timestamp,
       datetime: ccxtOrder.datetime,
-      baseAsset: symbols[0],
+      baseAsset: assetIdBase,
       baseSymbol: symbols[0],
-      quoteAsset: symbols[1],
+      quoteAsset: assetIdQuote,
       quoteSymbol: symbols[1],
       side: ccxtOrder.side === 'buy' ? Action.BUY: Action.SELL,
       price: ccxtOrder.price,
@@ -278,7 +323,7 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
       remaining: ccxtOrder.remaining,
       cost: ccxtOrder.cost,
       status: status,
-      fee: { assetId: ccxtOrder.fee.currency, ...ccxtOrder.fee }
+      fee: { assetId: feeAssetId, ...ccxtOrder.fee }
     }
 
     return order;

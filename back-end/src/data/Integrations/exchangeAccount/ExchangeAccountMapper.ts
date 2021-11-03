@@ -1,10 +1,12 @@
 import { LeanDocument } from "mongoose";
-import { ExchangesConfiguration } from "../../../config/core/Exchanges";
-import { ExchangeAccount, makeExchangeAccount, Exchange, IExchangeCredentials } from "../../../core/entities/Integrations/Exchanges";
+import { IDigitalAssetTransaction, IHolding, IOrder, ITimeslices } from "../../../core/entities";
+import { ExchangeAccount, makeExchangeAccount, Exchange, IExchangeCredentials, BaseExchange, IExchangeAccount, IExchange } from "../../../core/entities/Integrations/Exchanges";
 import { IExchangeAccountDao, IExchangeAccountDocument } from "./ExchangeAccountModel";
 
 class ExchangeAccountMapper {
-  public static toDomain(raw: LeanDocument<IExchangeAccountDocument>): ExchangeAccount {
+  constructor (private exchanges: (exchange: Exchange) => BaseExchange) {}
+
+  public toDomain(raw: LeanDocument<IExchangeAccountDocument>): ExchangeAccount {
     const credentials: IExchangeCredentials = {
       ...(raw.credentials.apiKey && { apiKey: raw.credentials.apiKey }),
       ...(raw.credentials.secret && { secret: raw.credentials.secret }),
@@ -17,21 +19,23 @@ class ExchangeAccountMapper {
       ...(raw.credentials.walletAddress && { walletAddress: raw.credentials.walletAddress })
      };
 
-    const exchangeAccount = makeExchangeAccount({
+     const params: IExchangeAccount = {
       name: raw.name,
       accountId: raw.accountId,
-      exchange: ExchangesConfiguration.get(raw.exchange),
+      exchange: this.exchanges(raw.exchange as Exchange) as IExchange,
       credentials,
       nickname: raw.nickname,
-      orders: raw.orders,
-      openOrders: raw.openOrders,
-      dailyTimeslices: raw.dailyTimeslices,
-      hourlyTimeslices: raw.hourlyTimeslices,
-      transactions: raw.transactions,
-      holdings: raw.holdings,
+      orders: raw.orders as IOrder[],
+      openOrders: raw.openOrders as IOrder[],
+      dailyTimeslices: raw.dailyTimeslices as ITimeslices,
+      hourlyTimeslices: raw.hourlyTimeslices as ITimeslices,
+      transactions: raw.transactions as IDigitalAssetTransaction[],
+      holdings: raw.holdings as IHolding[],
       lastSynced: raw.lastSynced,
       createdAt: raw.createdAt
-    });
+    };
+
+    const exchangeAccount = makeExchangeAccount(params);
 
     return exchangeAccount;
   }

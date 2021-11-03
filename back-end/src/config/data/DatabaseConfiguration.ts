@@ -1,3 +1,4 @@
+import { BaseExchange, Exchange } from "../../core/entities";
 import { ExchangeAccountInMemoryEntityGateway, ExchangeAccountMongooseEntityGateway, UserInMemoryEntityGateway, UserMongooseEntityGateway, UserModel, ExchangeAccountModel, DigitalAssetMongooseEntityGateway, IDigitalAssetAdapter, DigitalAssetModel, DigitalAssetHistoryMongooseEntityGateway, DigitalAssetHistoryModel, DigitalAssetInMemoryEntityGateway, DigitalAssetHistoryInMemoryEntityGateway } from "../../data";
 
 class DatabaseConfiguration {
@@ -6,16 +7,16 @@ class DatabaseConfiguration {
     return new UserInMemoryEntityGateway();
   }
 
-  static getUserMongoDatabase(): UserMongooseEntityGateway {
-    return new UserMongooseEntityGateway(UserModel, ExchangeAccountModel);
+  static getUserMongoDatabase(exchanges: (exchange: Exchange) => BaseExchange): UserMongooseEntityGateway {
+    return new UserMongooseEntityGateway(UserModel, ExchangeAccountModel, exchanges);
   }
 
-  static getExchangeAccountInMemoryDatabase(): ExchangeAccountInMemoryEntityGateway {
-    return new ExchangeAccountInMemoryEntityGateway();
+  static getExchangeAccountInMemoryDatabase(exchanges: (exchange: Exchange) => BaseExchange): ExchangeAccountInMemoryEntityGateway {
+    return new ExchangeAccountInMemoryEntityGateway(exchanges);
   }
 
-  static getExchangeAccountMongoDatabase(): ExchangeAccountMongooseEntityGateway {
-    return new ExchangeAccountMongooseEntityGateway(ExchangeAccountModel);
+  static getExchangeAccountMongoDatabase(exchanges: (exchange: Exchange) => BaseExchange): ExchangeAccountMongooseEntityGateway {
+    return new ExchangeAccountMongooseEntityGateway(ExchangeAccountModel, exchanges);
   }
 
   static getDigitalAssetMongoDatabase(digitalAssetAdapter: IDigitalAssetAdapter): DigitalAssetMongooseEntityGateway {

@@ -7,10 +7,11 @@ import makeFakeUser from "../../../../../../__tests__/src/fixtures/UserFixture";
 import { UseCaseError } from "../../../../definitions";
 import { ExchangeAccountNotFound } from "../../../common/errors";
 import { GetExchangeAccountRequest, GetExchangeAccountUseCase } from ".";
+import { getExchange } from "../../../../../../__tests__/src/fixtures/ExchangeInteractionFixture";
 
 describe('Get Exchange Account Use Case', () => {
   const userDatabase: IUserEntityGateway = new UserInMemoryEntityGateway();
-  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway();
+  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway(getExchange);
   const getExchangeAccountUseCase: GetExchangeAccountUseCase = new GetExchangeAccountUseCase(userDatabase, exchangeAccountDatabase);
   
   const fakeUser = makeFakeUser({});

@@ -1,18 +1,21 @@
 import { LeanDocument } from "mongoose";
 import { makeUser, User } from "../../core/entities";
-import { ExchangeAccount } from "../../core/entities/Integrations";
+import { BaseExchange, Exchange, ExchangeAccount } from "../../core/entities/Integrations";
 import ExchangeAccountMapper from "../Integrations/ExchangeAccount/ExchangeAccountMapper";
 import { IExchangeAccountDao } from "../Integrations/ExchangeAccount/ExchangeAccountModel";
 import { IUserDocument, IUserDao } from "./UserModel";
 
 class UserMapper {
-  public static toDomain(raw: LeanDocument<IUserDocument>): User {
+
+  constructor(private exchanges: (exchange: Exchange) => BaseExchange) {}
+
+  public toDomain(raw: LeanDocument<IUserDocument>): User {
     let exchangeAccounts: ExchangeAccount[] = [];
     if (raw.exchangeAccounts && raw.exchangeAccounts.length > 0 && ExchangeAccountMapper.isExchangeAccountDao(raw.exchangeAccounts[0]))
     {
       const exchangeAccountDaos = <unknown>raw.exchangeAccounts as IExchangeAccountDao[];
       exchangeAccounts = exchangeAccountDaos.map((exchangeAccountDao: IExchangeAccountDao) => {
-        return ExchangeAccountMapper.toDomain(exchangeAccountDao);
+        return (new ExchangeAccountMapper(this.exchanges)).toDomain(exchangeAccountDao);
       });
     }
 

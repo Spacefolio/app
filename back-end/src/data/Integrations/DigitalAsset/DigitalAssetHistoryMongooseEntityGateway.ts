@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 import { IDigitalAssetHistory, IHistoricalPrice } from '../../../core/entities/Integrations/Asset';
-import { ONE_HOUR } from '../../../core/entities/Integrations/Timeslice';
+import { ONE_DAY, ONE_HOUR } from '../../../core/entities/Integrations/Timeslice';
 import { fiat } from '../../../core/entities/Integrations/Timeslices';
 import { IDigitalAssetHistoryEntityGateway } from '../../../core/use-cases/integration/digitalAsset';
 import IDigitalAssetAdapter from './DigitalAssetAdapter';
@@ -54,17 +54,43 @@ class DigitalAssetHistoryMongooseEntityGateway implements IDigitalAssetHistoryEn
 	}
 
 	async getHistoricalValue(assetId: string, timestamp: number): Promise<IHistoricalPrice | undefined> {
-		const result = await this.DigitalAssetHistory.findOne({ assetId });
-		if (!result) return;
+		timestamp = timestamp - (timestamp % ONE_DAY);
+
+		if (fiat(assetId)) {
+			return { timestamp, price: fiat(assetId) };
+		}
+
+		let result = await this.DigitalAssetHistory.findOne({ assetId });
+		if (!result) {
+			await this.fetchHistory(assetId);
+			result = await this.DigitalAssetHistory.findOne({ assetId });
+		}
+
+		if (!result) { return; }
 
 		const historicalPrice = result.prices.find((historicalPrice) => historicalPrice.timestamp == timestamp);
 		return historicalPrice;
 	}
 
 	async getHistoricalValues(assetId: string, from: number, to: number): Promise<IHistoricalPrice[] | undefined> {
-		from = from - (from % ONE_HOUR);
-		to = to - (to % ONE_HOUR);
-		const result = await this.DigitalAssetHistory.findOne({ assetId });
+		from = from - (from % ONE_DAY);
+		to = to - (to % ONE_DAY);
+
+		if (fiat(assetId)) {
+			const prices: IHistoricalPrice[] = [];
+			for (let i = from; i <= to; i += ONE_DAY) {
+				prices.push({ timestamp: i, price: 1 });
+			}
+			return prices;
+		}
+
+		let result = await this.DigitalAssetHistory.findOne({ assetId });
+		
+		if (!result) {
+			await this.fetchHistory(assetId);
+			result = await this.DigitalAssetHistory.findOne({ assetId });
+		}
+
 		if (!result) return;
 
 		const startIndex = result.prices.findIndex((historicalPrice) => historicalPrice.timestamp == from);
@@ -129,7 +155,7 @@ class DigitalAssetHistoryMongooseEntityGateway implements IDigitalAssetHistoryEn
 		}
 		historicalData.hourlyPrices.push(...hourlyPrices);
 
-		const history = await this.createDigitalAssetHistory({ ...historicalData });
+		const history = await historicalData.save();
 		return history;
 	}
 }

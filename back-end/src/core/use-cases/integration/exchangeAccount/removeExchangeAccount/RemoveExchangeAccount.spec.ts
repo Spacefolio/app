@@ -1,6 +1,7 @@
 import { RemoveExchangeAccountRequest } from ".";
 import { ICreateExchangeAccountPayload, IExchangeAccountEntityGateway } from "..";
 import makeFakeExchangeAccount from "../../../../../../__tests__/src/fixtures/ExchangeAccountFixture";
+import { getExchange } from "../../../../../../__tests__/src/fixtures/ExchangeInteractionFixture";
 import makeFakeUser from "../../../../../../__tests__/src/fixtures/UserFixture";
 import { ExchangeAccountInMemoryEntityGateway, UserInMemoryEntityGateway } from "../../../../../data";
 import { UseCaseError } from "../../../../definitions";
@@ -11,7 +12,7 @@ import RemoveExchangeAccountUseCase from "./RemoveExchangeAccount";
 
 describe('Remove Exchange Account Use Case', () => {
   const userDatabase: IUserEntityGateway = new UserInMemoryEntityGateway();
-  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway();
+  const exchangeAccountDatabase: IExchangeAccountEntityGateway = new ExchangeAccountInMemoryEntityGateway(getExchange);
   const removeExchangeAccountUseCase: RemoveExchangeAccountUseCase = new RemoveExchangeAccountUseCase(userDatabase, exchangeAccountDatabase);
   
   const fakeUser = makeFakeUser({});

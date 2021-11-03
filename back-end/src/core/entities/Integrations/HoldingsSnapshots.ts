@@ -4,6 +4,7 @@ import { Balances } from './Exchanges/Exchange';
 import { GetRateHandler } from './Exchanges/ExchangeAccount';
 import { HoldingSnapshot, IHoldingSnapshot } from './HoldingSnapshot';
 import { isOrder } from './Order';
+import { fiat } from './Timeslices';
 import { IDigitalAssetTransaction } from './Transaction';
 
 class HoldingsSnapshots {
@@ -45,7 +46,12 @@ class HoldingsSnapshots {
 		const base = order.baseAsset;
 		const quote = order.quoteAsset;
 		const quoteSymbol = order.quoteSymbol;
-		const quoteToUsd = await this.getRate(quote, quoteSymbol, Currency.USD, Currency.USD, order.timestamp);
+
+		let quoteToUsd = 1;
+
+		if (!fiat(quoteSymbol)) {
+			quoteToUsd = await this.getRate(quote, quoteSymbol, Currency.USD, Currency.USD, order.timestamp);
+		}
 
 		if (this.isNewHolding(base)) this.snapshots[base] = [];
     if (this.isNewHolding(quote)) this.snapshots[quote] = [];
@@ -63,7 +69,11 @@ class HoldingsSnapshots {
 	async addTransactionSnapshot(transaction: IDigitalAssetTransaction): Promise<void> {
     const asset = transaction.assetId;
     const timestamp = transaction.timestamp;
-		const priceInUsd = await this.getRate(asset, transaction.symbol, Currency.USD, Currency.USD, timestamp);
+		let priceInUsd = 1;
+
+		if (!fiat(asset)) {
+			priceInUsd = await this.getRate(asset, transaction.symbol, Currency.USD, Currency.USD, timestamp);
+		}
     
     if (this.isNewHolding(asset)) this.snapshots[asset] = [];
 

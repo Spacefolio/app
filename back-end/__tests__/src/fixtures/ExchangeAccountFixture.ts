@@ -1,5 +1,6 @@
 import faker from 'faker';
 import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
+import { FakeExchange } from '../../../src/config/core/Exchanges/Implementations/FakeExchange';
 import { Action, Exchange, IExchangeAccount, IHolding, IOrder, ITimeslices, OrderStatus } from '../../../src/core/entities';
 import { ITimeslice, ONE_DAY } from '../../../src/core/entities/Integrations/Timeslice';
 import { IDigitalAssetTransaction, TransactionStatus } from '../../../src/core/entities/Integrations/Transaction';
@@ -179,7 +180,7 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
   const exchangeAccountParams: IExchangeAccount = {
     name: "Fake Exchange",
     accountId: makeId(),
-    exchange: ExchangesConfiguration.get(Exchange.FAKE),
+    exchange: new FakeExchange(),
     credentials: {
       apiKey: faker.random.alphaNumeric(10),
       secret: faker.random.alphaNumeric(10),

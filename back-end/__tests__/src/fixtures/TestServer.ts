@@ -20,15 +20,17 @@ export class TestServer {
 		public logger: Logger
 	) {}
 
-	public static createTestServer(): TestServer {
+	public static   createTestServer(): TestServer {
 		const logger = LoggerConfiguration.getLogger(config);
 
-		const userDatabase = DatabaseConfiguration.getUserMongoDatabase();
-		const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountMongoDatabase();
 		const digitalAssetDatabase = DatabaseConfiguration.getDigitalAssetInMemoryDatabase();
 		const digitalAssetHistoryDatabase = DatabaseConfiguration.getDigitalAssetHistoryInMemoryDatabase();
 
-		const availableExchanges = ExchangesConfiguration.getAvailableExchanges();
+		const exchangesConfiguration = new ExchangesConfiguration(digitalAssetDatabase);
+		const availableExchanges = exchangesConfiguration.getAvailableExchanges();
+
+		const userDatabase = DatabaseConfiguration.getUserMongoDatabase(exchangesConfiguration.get);
+		const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountMongoDatabase(exchangesConfiguration.get);
 
 		//#region Users
 
@@ -78,7 +80,7 @@ export class TestServer {
 			exchangeAccountDatabase,
 			digitalAssetDatabase,
 			digitalAssetHistoryDatabase,
-			ExchangesConfiguration.get
+			exchangesConfiguration.get
 		);
 		const syncExchangeAccountController = ControllersConfiguration.getSyncExchangeAccountController(syncExchangeAccountUseCase);
 
@@ -87,7 +89,7 @@ export class TestServer {
 			exchangeAccountDatabase,
 			digitalAssetDatabase,
 			digitalAssetHistoryDatabase,
-			ExchangesConfiguration.get
+			exchangesConfiguration.get
 		);
 		const syncExchangeAccountsController = ControllersConfiguration.getSyncExchangeAccountsController(syncExchangeAccountsUseCase);
 

@@ -26,7 +26,19 @@ class DigitalAssetMongooseEntityGateway implements IDigitalAssetEntityGateway {
       digitalAsset = await this.DigitalAssets.findOne({ assetId }).lean();
     }
 
-    if (!digitalAsset) return;
+    if (!digitalAsset) { return; }
+    return DigitalAssetMapper.toDomain(digitalAsset);
+  }
+
+  async getDigitalAssetBySymbol(symbol: string): Promise<IDigitalAsset | undefined> {
+    symbol = symbol.toLowerCase();
+    let digitalAsset = await this.DigitalAssets.findOne({ symbol }).lean();
+    if (!digitalAsset && !(await this.DigitalAssets.findOne({}))) {
+      await this.fetchDigitalAssets();
+      digitalAsset = await this.DigitalAssets.findOne({ symbol }).lean();
+    }
+
+    if (!digitalAsset) { return; }
     return DigitalAssetMapper.toDomain(digitalAsset);
   }
 
@@ -56,7 +68,7 @@ class DigitalAssetMongooseEntityGateway implements IDigitalAssetEntityGateway {
   private async fetchDigitalAssets(): Promise<void> {
     const digitalAssets = await this.DigitalAssetAdapter.fetchDigitalAssets();
     for (let i = 0; i < digitalAssets.length; i++) {
-      await this.DigitalAssets.updateOne({ assetId: digitalAssets[i].id }, { id: digitalAssets[i].id, symbol: digitalAssets[i].symbol, currentMarketData: digitalAssets[i], currentPrice: digitalAssets[i].current_price }, { upsert: true });
+      await this.DigitalAssets.updateOne({ assetId: digitalAssets[i].id }, { ...digitalAssets[i] }, { upsert: true });
     }
   }
 }

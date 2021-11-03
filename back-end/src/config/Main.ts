@@ -13,13 +13,15 @@ export async function main(): Promise<void> {
 
 	await connectMongoose(config, logger);
 
-	const userDatabase = DatabaseConfiguration.getUserMongoDatabase();
-	const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountMongoDatabase();
 	const digitalAssetAdapter = DigitalAssetsConfiguration.getDigitalAssetAdapter();
 	const digitalAssetDatabase = DatabaseConfiguration.getDigitalAssetMongoDatabase(digitalAssetAdapter);
 	const digitalAssetHistoryDatabase = DatabaseConfiguration.getDigitalAssetHistoryMongoDatabase(digitalAssetAdapter);
 
-	const availableExchanges = ExchangesConfiguration.getAvailableExchanges();
+	const exchangesConfiguration = new ExchangesConfiguration(digitalAssetDatabase);
+	const availableExchanges = exchangesConfiguration.getAvailableExchanges();
+
+	const userDatabase = DatabaseConfiguration.getUserMongoDatabase(exchangesConfiguration.get);
+	const exchangeAccountDatabase = DatabaseConfiguration.getExchangeAccountMongoDatabase(exchangesConfiguration.get);
 
 	//#region Users
 
@@ -40,7 +42,10 @@ export async function main(): Promise<void> {
 		exchangeAccountDatabase,
 		ExchangesConfiguration.getVerifyCredentials()
 	);
+	
 	const exchangeAccountPresenter = PresentersConfiguration.getExchangeAccountPresenter();
+	const exchangeAccountsPresenter = PresentersConfiguration.getExchangeAccountsPresenter();
+
 	const addExchangeAccountController = ControllersConfiguration.getAddExchangeAccountController(
 		addExchangeAccountUseCase,
 		exchangeAccountPresenter
@@ -59,7 +64,7 @@ export async function main(): Promise<void> {
 		userDatabase,
 		exchangeAccountDatabase
 	);
-	const getAllExchangeAccountsController = ControllersConfiguration.getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase, exchangeAccountPresenter);
+	const getAllExchangeAccountsController = ControllersConfiguration.getGetAllExchangeAccountsController(getAllExchangeAccountsUseCase, exchangeAccountsPresenter);
 
 	const getHoldingsUseCase = ExchangeAccountUseCasesConfiguration.getGetHoldingsUseCase(userDatabase, exchangeAccountDatabase);
 	const getHoldingsController = ControllersConfiguration.getGetHoldingsController(getHoldingsUseCase);
@@ -72,7 +77,7 @@ export async function main(): Promise<void> {
 		exchangeAccountDatabase,
 		digitalAssetDatabase,
 		digitalAssetHistoryDatabase,
-		ExchangesConfiguration.get
+		exchangesConfiguration.get
 	);
 
 	const syncExchangeAccountController = ControllersConfiguration.getSyncExchangeAccountController(syncExchangeAccountUseCase);
@@ -82,7 +87,7 @@ export async function main(): Promise<void> {
 		exchangeAccountDatabase,
 		digitalAssetDatabase,
 		digitalAssetHistoryDatabase,
-		ExchangesConfiguration.get
+		exchangesConfiguration.get
 	);
 
 	const syncExchangeAccountsController = ControllersConfiguration.getSyncExchangeAccountsController(syncExchangeAccountsUseCase);

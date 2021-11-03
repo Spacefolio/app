@@ -1,11 +1,14 @@
 import { Model } from 'mongoose';
 import { ExchangeAccountMapper, IExchangeAccountDocument } from '../../';
-import { ExchangesConfiguration } from '../../../config/core/Exchanges';
-import { ExchangeAccount, IExchange, IExchangeAccount, ITimeslice, makeExchangeAccount } from '../../../core/entities';
+import { BaseExchange, Exchange, ExchangeAccount, IExchange, IExchangeAccount, ITimeslice, makeExchangeAccount } from '../../../core/entities';
 import { ICreateExchangeAccountPayload, IExchangeAccountEntityGateway, IUpdateExchangeAccountPayload } from '../../../core/use-cases/integration/exchangeAccount';
 
 class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGateway {
-  constructor(public ExchangeAccounts:  Model<IExchangeAccountDocument>) {}
+  private exchangeAccountMapper: ExchangeAccountMapper;
+
+  constructor(public ExchangeAccounts:  Model<IExchangeAccountDocument>, public exchanges: (exchange: Exchange) => BaseExchange) {
+    this.exchangeAccountMapper = new ExchangeAccountMapper(exchanges);
+  }
   
   async exists (accountId: string): Promise<boolean> {
     return await this.ExchangeAccounts.exists({ accountId });
@@ -15,25 +18,33 @@ class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGate
     const result = await this.ExchangeAccounts.findOne({ accountId }).lean();
     if (!result) return;
 
-    return ExchangeAccountMapper.toDomain(result);
+    return this.exchangeAccountMapper.toDomain(result);
   }
 
   async updateExchangeAccount(account: IUpdateExchangeAccountPayload): Promise<ExchangeAccount | undefined> {
-    const old = await this.ExchangeAccounts.findOne({ accountId: account.accountId });
-    if (!old) { return; }
+    const updates: IUpdateExchangeAccountPayload = {
+      accountId: account.accountId,
+      nickname: account.nickname,
+      credentials: account.credentials,
+      dailyTimeslices: account.dailyTimeslices,
+      hourlyTimeslices: account.hourlyTimeslices,
+      lastSynced: account.lastSynced,
+      orders: account.orders,
+      openOrders: account.openOrders,
+      transactions: account.transactions,
+      holdings: account.holdings
+    };
 
-    old.nickname = account.nickname || old.nickname;
-    old.credentials = account.credentials || old.credentials;
+    const updatedAccount = await this.ExchangeAccounts.findOneAndUpdate({ accountId: account.accountId }, updates).lean();
+    if (!updatedAccount) { return; }
 
-    const updatedAccount = await old.save();
-
-    const updatedAccountAsEntity = ExchangeAccountMapper.toDomain(updatedAccount);
+    const updatedAccountAsEntity = this.exchangeAccountMapper.toDomain(updatedAccount);
     return updatedAccountAsEntity;
   }
 
   async createExchangeAccount(payload: ICreateExchangeAccountPayload): Promise<ExchangeAccount> {
 
-    const exchange: IExchange = ExchangesConfiguration.get(payload.exchange);
+    const exchange: IExchange = this.exchanges(payload.exchange);
     const accountParams: IExchangeAccount = {
       name: exchange.name,
       accountId: payload.accountId,
@@ -60,7 +71,7 @@ class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGate
   async deleteExchangeAccount(accountId: string): Promise<ExchangeAccount | undefined> {
    const deletedAccount = await this.ExchangeAccounts.findOneAndRemove({ accountId }).lean();
    if (!deletedAccount) return;
-   const deletedAccountAsEntity = ExchangeAccountMapper.toDomain(deletedAccount);
+   const deletedAccountAsEntity = this.exchangeAccountMapper.toDomain(deletedAccount);
    return deletedAccountAsEntity;
   }
 
@@ -68,7 +79,7 @@ class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGate
     const exchangeAccounts = await this.ExchangeAccounts.find({}).lean();
 
     const exchangeAccountEntities = exchangeAccounts.map((account) => {
-      return ExchangeAccountMapper.toDomain(account);
+      return this.exchangeAccountMapper.toDomain(account);
     });
 
     return exchangeAccountEntities;

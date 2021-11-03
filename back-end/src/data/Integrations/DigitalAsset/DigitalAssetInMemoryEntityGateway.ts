@@ -19,6 +19,11 @@ class DigitalAssetInMemoryEntityGateway implements IDigitalAssetEntityGateway {
     return result;
   }
 
+  async getDigitalAssetBySymbol(symbol: string): Promise<IDigitalAsset | undefined> {
+    const result = this.digitalAssets.find(asset => asset.symbol === symbol);
+    return result;
+  }
+
   async updateDigitalAsset(asset: IDigitalAssetMarketData): Promise<IDigitalAsset | undefined> {
     const index = this.digitalAssets.findIndex((a: IDigitalAsset) => a.assetId === asset.id);
     if (index === -1) { return; }
