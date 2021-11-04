@@ -22,20 +22,10 @@ class ExchangeAccountMongooseEntityGateway implements IExchangeAccountEntityGate
   }
 
   async updateExchangeAccount(account: IUpdateExchangeAccountPayload): Promise<ExchangeAccount | undefined> {
-    const updates: IUpdateExchangeAccountPayload = {
-      accountId: account.accountId,
-      nickname: account.nickname,
-      credentials: account.credentials,
-      dailyTimeslices: account.dailyTimeslices,
-      hourlyTimeslices: account.hourlyTimeslices,
-      lastSynced: account.lastSynced,
-      orders: account.orders,
-      openOrders: account.openOrders,
-      transactions: account.transactions,
-      holdings: account.holdings
-    };
 
-    const updatedAccount = await this.ExchangeAccounts.findOneAndUpdate({ accountId: account.accountId }, updates).lean();
+    const exchangeAccountDao = ExchangeAccountMapper.updatePayloadFromDomain(account);
+
+    const updatedAccount = await this.ExchangeAccounts.findOneAndUpdate({ accountId: account.accountId }, { ...exchangeAccountDao }).lean();
     if (!updatedAccount) { return; }
 
     const updatedAccountAsEntity = this.exchangeAccountMapper.toDomain(updatedAccount);

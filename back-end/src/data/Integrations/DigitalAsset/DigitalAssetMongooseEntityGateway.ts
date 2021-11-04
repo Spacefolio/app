@@ -1,5 +1,6 @@
 import { Model } from "mongoose";
 import { IDigitalAsset } from "../../../core/entities";
+import { ONE_HOUR } from "../../../core/entities/Integrations/Timeslice";
 import { IDigitalAssetEntityGateway, IDigitalAssetMarketData } from "../../../core/use-cases/integration/digitalAsset";
 import IDigitalAssetAdapter from "./DigitalAssetAdapter";
 import DigitalAssetMapper from "./DigitalAssetMapper";
@@ -15,18 +16,24 @@ class DigitalAssetMongooseEntityGateway implements IDigitalAssetEntityGateway {
   
   async createDigitalAsset(payload: IDigitalAssetMarketData): Promise<IDigitalAsset> {
     const digitalAsset = DigitalAssetMapper.fromMarketData(payload);
-    await this.DigitalAssets.create({...digitalAsset});
+    await this.DigitalAssets.create({...digitalAsset, lastUpdatedTimestamp: Date.now()});
     return digitalAsset;
   }
 
   async getDigitalAsset(assetId: string): Promise<IDigitalAsset | undefined> {
-    let digitalAsset = await this.DigitalAssets.findOne({ assetId }).lean();
+    let digitalAsset = await this.DigitalAssets.findOne({ assetId });
     if (!digitalAsset && !(await this.DigitalAssets.findOne({}))) {
       await this.fetchDigitalAssets();
-      digitalAsset = await this.DigitalAssets.findOne({ assetId }).lean();
+      digitalAsset = await this.DigitalAssets.findOne({ assetId });
     }
 
     if (!digitalAsset) { return; }
+
+    if (digitalAsset.lastUpdatedTimestamp < (Date.now() - ONE_HOUR)) {
+      const updatedAsset = await this.fetchDigitalAsset(assetId);
+      return updatedAsset;
+    }
+
     return DigitalAssetMapper.toDomain(digitalAsset);
   }
 
@@ -47,7 +54,7 @@ class DigitalAssetMongooseEntityGateway implements IDigitalAssetEntityGateway {
     if (!digitalAsset) return;
 
     const updateWith = DigitalAssetMapper.fromMarketData(payload);
-    digitalAsset?.updateOne({ ...updateWith });
+    digitalAsset?.updateOne({ ...updateWith, lastUpdatedTimestamp: Date.now() });
   }
   
   async deleteDigitalAsset(assetId: string): Promise<IDigitalAsset | undefined> {
@@ -67,9 +74,21 @@ class DigitalAssetMongooseEntityGateway implements IDigitalAssetEntityGateway {
 
   private async fetchDigitalAssets(): Promise<void> {
     const digitalAssets = await this.DigitalAssetAdapter.fetchDigitalAssets();
+    const now = Date.now();
+
     for (let i = 0; i < digitalAssets.length; i++) {
-      await this.DigitalAssets.updateOne({ assetId: digitalAssets[i].id }, { ...digitalAssets[i] }, { upsert: true });
+      const digitalAsset = DigitalAssetMapper.fromMarketData(digitalAssets[i]);
+      await this.DigitalAssets.updateOne({ assetId: digitalAssets[i].id }, { ...digitalAsset, lastUpdatedTimestamp: now }, { upsert: true });
     }
+  }
+
+  private async fetchDigitalAsset(assetId: string): Promise<IDigitalAsset> {
+    const digitalAssetMarketData = await this.DigitalAssetAdapter.fetchDigitalAsset(assetId);
+    const now = Date.now();
+
+    const digitalAsset = DigitalAssetMapper.fromMarketData(digitalAssetMarketData);
+    await this.DigitalAssets.updateOne({ assetId }, { ...digitalAsset, lastUpdatedTimestamp: now }, { upsert: true });
+    return digitalAsset;
   }
 }
 

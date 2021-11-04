@@ -56,7 +56,7 @@ class SyncExchangeAccountsUseCase implements IUseCase<SyncExchangeAccountsReques
 			console.log("Started syncing");
 			const exchangeAccount = await this.syncExchangeAccount(account);
 			if (!exchangeAccount) return Result.fail(new ExchangeAccountSyncFailed(account.exchange.name));
-			const updatedAccount = await this.exchangeAccountEntityGateway.updateExchangeAccount(account);
+			const updatedAccount = await this.exchangeAccountEntityGateway.updateExchangeAccount(exchangeAccount);
 			if (!updatedAccount) return Result.fail(new ExchangeAccountSyncFailed(account.exchange.name));
 			syncedAccounts.push(updatedAccount);
 		}

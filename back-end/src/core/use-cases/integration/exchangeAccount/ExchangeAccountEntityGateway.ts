@@ -16,15 +16,15 @@ export interface ICreateExchangeAccountPayload {
 
 export interface IUpdateExchangeAccountPayload {
   accountId: string;
-  nickname?: string;
+  nickname?: string
   credentials?: IExchangeCredentials;
-  dailyTimeslices?: ITimeslices;
-  hourlyTimeslices?: ITimeslices;
-  lastSynced?: Date;
-  orders?: IOrder[];
-  openOrders?: IOrder[];
-  transactions?: IDigitalAssetTransaction[];
-  holdings?: IHolding[];
+  dailyTimeslices: ITimeslices;
+  hourlyTimeslices: ITimeslices;
+  lastSynced: Date;
+  orders: IOrder[];
+  openOrders: IOrder[];
+  transactions: IDigitalAssetTransaction[];
+  holdings: IHolding[];
 }
 
 interface IExchangeAccountEntityGateway {

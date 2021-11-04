@@ -30,6 +30,7 @@ export interface IDigitalAssetDao extends IAssetDao
   atlChangePercentage: number;
   atlDate: string;
   lastUpdated: string;
+  lastUpdatedTimestamp: number;
   sparkline7day?: {
     price: number[];
   };
@@ -63,6 +64,7 @@ const DigitalAssetSchema = new mongoose.Schema<IDigitalAssetDocument>({
   atlChangePercentage: Number,
   atlDate: String,
   lastUpdated: String,
+  lastUpdatedTimestamp: Number,
   sparkline7day: { 
     type: {
       price: [Number]

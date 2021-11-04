@@ -28,7 +28,7 @@ class CcxtService {
 			privateKey: credentials.privateKey,
 			walletAddress: credentials.walletAddress,
 			token: credentials.token,
-			timeout: 5000,
+			timeout: 50000,
 			enableRateLimit: false,
 		});
 

@@ -116,11 +116,11 @@ export function extractPortfolioItemsFrom(holding: IHolding): IPortfolioItemView
     asset: {
       assetId: holding.asset.assetId,
       name: holding.asset.name,
-      symbol: holding.asset.symbol,
+      symbol: holding.asset.symbol.toUpperCase(),
       logoUrl: holding.asset.image
     },
     amount: holding.balance.total,
-    value: holding.value,
+    value: { USD: holding.value.USD },
     currentPrice: holding.price.USD,
     profitTotal: { all: totalProfit, h24: totalProfit },
     profitPercentage: { all: profitPercentage, h24: profitPercentage},

@@ -65,6 +65,11 @@ class CoinGecko implements IDigitalAssetAdapter {
 		return digitalAssets;
 	}
 
+	public async fetchDigitalAsset(assetId: string): Promise<IDigitalAssetMarketData> {
+		const digitalAsset: IDigitalAssetMarketData = await this.fetchCoinMarketData(assetId);
+		return digitalAsset;
+	}
+
 	private async fetchAllCoinsMarketDataCursor(page = 1): Promise<IDigitalAssetMarketData[]> {
 		const results = await this.fetchCoinMarketDataPage(page);
 		if (results.length > 0) {
@@ -87,6 +92,19 @@ class CoinGecko implements IDigitalAssetAdapter {
 			});
 
 		return results;
+	}
+
+	private async fetchCoinMarketData(assetId: string): Promise<IDigitalAssetMarketData> {
+		console.log('Grabbed updated market data for ' + assetId);
+		const results = await axios.get<IDigitalAssetMarketData[]>(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${assetId}&order=market_cap_desc&per_page=250&page=1&sparkline=true`)
+		.then((res) => {
+			return res.data;
+		})
+		.catch((err) => {
+			throw err;
+		});
+
+		return results[0];
 	}
 }
 

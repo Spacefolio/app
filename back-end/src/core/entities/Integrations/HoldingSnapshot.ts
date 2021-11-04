@@ -137,6 +137,7 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 		const fee = transaction.fee ? transaction.fee.cost : 0;
 		const amount = transaction.amount;
 
+		this.price = { USD: priceInUsd };
 		this.total = this.copyTotal(lastSnapshot.total);
 
 		if (this.action === Action.DEPOSIT) {

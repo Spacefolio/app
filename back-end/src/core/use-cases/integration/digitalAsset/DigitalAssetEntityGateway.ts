@@ -41,7 +41,7 @@ interface IDigitalAssetEntityGateway {
   exists(assetId: string): Promise<boolean>;
   createDigitalAsset(payload: IDigitalAssetMarketData): Promise<IDigitalAsset>;
   getDigitalAsset(assetId: string): Promise<IDigitalAsset | undefined>;
-  getDigitalAssetBySymbol(symbol: string): Promise<IDigitalAsset | undefined>;
+  getDigitalAssetBySymbol(symbol: string): Promise<IDigitalAsset | undefined>
   updateDigitalAsset(payload: IDigitalAssetMarketData): Promise<IDigitalAsset | undefined>;
   deleteDigitalAsset(assetId: string): Promise<IDigitalAsset | undefined>;
   getDigitalAssets(): Promise<IDigitalAsset[]>;

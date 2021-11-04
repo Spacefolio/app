@@ -17,7 +17,7 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
 
   async checkIsFiat(exchangeAccount: IExchangeAccount, symbol: string): Promise<boolean> {
     //const exchange = CcxtService.createExchangeAccess(exchangeAccount.exchange.id as Exchange, exchangeAccount.credentials);
-    if (symbol === 'USD') {
+    if (symbol.toUpperCase() === 'USD') {
       return true;
     }
 
@@ -71,6 +71,7 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
   }
 
   async fetchBalances(exchangeAccount: IExchangeAccount): Promise<Balances> {
+    const actualBalances: Balances = {};
     const exchange = CcxtService.createExchangeAccess(exchangeAccount.exchange.id as Exchange, exchangeAccount.credentials);
 
     console.log("In fetchBalances");
@@ -90,7 +91,20 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
     delete balances.info;
     delete balances.free;
 
-    return balances;
+    for (const [symbol, balance] of Object.entries(balances)) {
+      if (balance.total > 0) {
+        const asset = await this.digitalAssetEntityGateway.getDigitalAssetBySymbol(symbol);
+        if (asset) {
+          actualBalances[asset.assetId] = {
+            free: balance.free,
+            used: balance.used,
+            total: balance.total
+          };
+        }
+      }
+    }
+
+    return actualBalances;
   }
 
   async fetchTransactions(exchangeAccount: IExchangeAccount): Promise<IDigitalAssetTransaction[]> {
@@ -105,6 +119,9 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
       if (!accounts) { return []; }
       console.log(accounts);
       for (const account of accounts) {
+        if (Number.parseFloat(account.info.balance.amount) === 0) {
+          continue;
+        }
         await this.sleep(exchange.rateLimit);
         const transactions = await exchange.fetchLedger(undefined, exchangeAccount.lastSynced.valueOf(), undefined, { accountId: account.id }).catch(err => console.log(err));
         if (transactions) ledgerEntries = ledgerEntries.concat(transactions);
@@ -183,10 +200,13 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
       const accounts = await exchange.fetchAccounts().catch((err: any) => { console.log(err) });
       if (!accounts) { return []; }
       for (const account of accounts) {
+        if (Number.parseFloat(account.info.balance.amount) === 0) {
+          continue;
+        }
         await this.sleep(exchange.rateLimit);
-        const buyOrders = await exchange.fetchBuys(account.code, exchangeAccount.lastSynced.valueOf(), undefined, { accountId: account.id }).catch((err: any) => console.log(err));
+        const buyOrders = await exchange.fetchMyBuys(account.code, exchangeAccount.lastSynced.valueOf(), undefined, { accountId: account.id }).catch((err: any) => console.log(err));
         await this.sleep(exchange.rateLimit);
-        const sellOrders = await exchange.fetchSells(account.code, exchangeAccount.lastSynced.valueOf(), undefined, { accountId: account.id }).catch((err: any) => console.log(err));
+        const sellOrders = await exchange.fetchMySells(account.code, exchangeAccount.lastSynced.valueOf(), undefined, { accountId: account.id }).catch((err: any) => console.log(err));
         if (buyOrders) ccxtOrders = ccxtOrders.concat(buyOrders);
         if (sellOrders) ccxtOrders = ccxtOrders.concat(sellOrders);
       }
@@ -262,8 +282,13 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
     const digitalAsset = await this.digitalAssetEntityGateway.getDigitalAssetBySymbol(transaction.currency);
 
     let assetId = transaction.currency;
+    let feeAssetId = transaction.fee?.currency || '';
+    const feeCost = transaction.fee?.cost || 0;
 
     if (digitalAsset) {
+      if (assetId === feeAssetId) {
+        feeAssetId = digitalAsset.assetId;
+      }
       assetId = digitalAsset.assetId;
     }
 
@@ -274,9 +299,9 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
       symbol: transaction.currency,
       status: transaction.status as TransactionStatus,
       fee: {
-        assetId: transaction.fee.currency,
+        assetId: feeAssetId,
         rate: 0,
-        cost: transaction.fee.cost
+        cost: feeCost
       },
       timestamp: transaction.timestamp,
       type: transaction.direction === 'in' ? Action.DEPOSIT : Action.WITHDRAW

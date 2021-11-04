@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { Exchange } from '../../../core/entities/Integrations';
 import { holdingSchema, IHoldingDao } from '../Holding';
 import { IOrderDao, orderSchema } from '../Order';
-import { ITimeslicesDao } from '../Timeslice';
+import { ITimeslicesDao, timesliceSchema } from '../Timeslice';
 import { digitalAssetTransactionSchema, IDigitalAssetTransactionDao } from '../Transaction';
 
 export interface IExchangeAccountDao
@@ -57,8 +57,8 @@ const ExchangeAccountSchema = new mongoose.Schema({
   openOrders: [orderSchema],
   holdings: [holdingSchema],
   transactions: [digitalAssetTransactionSchema],
-  dailyTimeslices: { type: Object },
-  hourlyTimeslices: { type: Object },
+  dailyTimeslices: { type: mongoose.Schema.Types.Map, of: timesliceSchema },
+  hourlyTimeslices: { type: mongoose.Schema.Types.Map, of: timesliceSchema },
   lastSynced: { type: Date, default: 0 },
   createdAt: { type: Date, default: new Date() }
 }, { timestamps: true });

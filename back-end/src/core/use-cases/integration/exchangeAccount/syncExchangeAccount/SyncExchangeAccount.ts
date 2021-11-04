@@ -75,6 +75,8 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 		let orders: IOrder[];
 		let openOrders: IOrder[];
 
+		const now = new Date();
+
 		try {
 			console.log("Fetching balances...");
 			balances = await exchange.fetchBalances(exchangeAccount);
@@ -115,6 +117,7 @@ class SyncExchangeAccountUseCase implements IUseCase<SyncExchangeAccountRequest,
 			holdings: updatedHoldings,
 			dailyTimeslices,
 			hourlyTimeslices,
+			lastSynced: now
 		};
 
 		const updatedAccount = await this.exchangeAccountEntityGateway.updateExchangeAccount(updatePayload);

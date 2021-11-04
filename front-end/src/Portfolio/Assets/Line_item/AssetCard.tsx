@@ -105,7 +105,7 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 					<Grid xs={12} container justify="center" alignItems="center">
 						<Grid item>
 							<Typography gutterBottom style={{ fontSize: '1.35rem' }}>
-								${currentPrice.toLocaleString()}
+								${currentPrice && currentPrice.toLocaleString()}
 							</Typography>
 						</Grid>
 						<Grid item>

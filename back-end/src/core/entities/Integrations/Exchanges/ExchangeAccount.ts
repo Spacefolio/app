@@ -80,7 +80,23 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 	): Promise<IHolding[]> {
 		const holdingsSnapshots: HoldingsSnapshots = await this.createHoldingsSnapshots(orders, transactions, balances, getRate);
 
-		for (const holding of holdingsSnapshots.getSnapshots()) {
+		const newSnapshots = holdingsSnapshots.getSnapshots();
+
+		if (newSnapshots.length < 1) {
+			for (const [assetId, holdingBalance] of Object.entries(balances)) {
+				if (holdingBalance.total > 0) {
+					const asset = await getAsset(assetId);
+
+					if (this.isNewHolding(assetId)) {
+						await this.createHolding(asset, [], holdingBalance);
+					} else {
+						await this.updateHolding(asset, [], holdingBalance);
+					}
+				}
+			}
+		}
+
+		for (const holding of newSnapshots) {
 			const asset = await getAsset(holding.asset);
 			const balance: IHoldingBalance = balances[holding.asset] || new NullHoldingBalance();
 
@@ -124,7 +140,11 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 				image: asset.image
 			},
 			price: { USD: asset.currentPrice },
-			balance,
+			balance: {
+				free: balance.free,
+				used: balance.used,
+				total: balance.total
+			},
 			value: { USD: balance.total * asset.currentPrice },
 			total: lastSnapshot?.total || new NullHoldingTotal(),
 			snapshots,
@@ -138,9 +158,13 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 
 		if (!oldHolding) return;
 
-		const last = snapshots[snapshots.length - 1].total;
+		const last = snapshots?.length > 0 ? snapshots[snapshots.length - 1].total : oldHolding.total;
 
-		oldHolding.balance = balance;
+		oldHolding.balance = {
+			free: balance.free,
+			used: balance.used,
+			total: balance.total
+		}
 		oldHolding.asset = {
 			assetId: asset.assetId,
 			symbol: asset.symbol,

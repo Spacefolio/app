@@ -1,6 +1,8 @@
 import { LeanDocument } from "mongoose";
-import { IDigitalAssetTransaction, IHolding, IOrder, ITimeslices } from "../../../core/entities";
+import { IDigitalAssetTransaction, IHolding, IOrder, ITimeslice, ITimeslices } from "../../../core/entities";
 import { ExchangeAccount, makeExchangeAccount, Exchange, IExchangeCredentials, BaseExchange, IExchangeAccount, IExchange } from "../../../core/entities/Integrations/Exchanges";
+import { IUpdateExchangeAccountPayload } from "../../../core/use-cases/integration/exchangeAccount";
+import { ITimesliceDao } from "../Timeslice";
 import { IExchangeAccountDao, IExchangeAccountDocument } from "./ExchangeAccountModel";
 
 class ExchangeAccountMapper {
@@ -27,8 +29,8 @@ class ExchangeAccountMapper {
       nickname: raw.nickname,
       orders: raw.orders as IOrder[],
       openOrders: raw.openOrders as IOrder[],
-      dailyTimeslices: raw.dailyTimeslices as ITimeslices,
-      hourlyTimeslices: raw.hourlyTimeslices as ITimeslices,
+      dailyTimeslices: ExchangeAccountMapper.timeslicesToDomain(raw.dailyTimeslices) as ITimeslices,
+      hourlyTimeslices: ExchangeAccountMapper.timeslicesToDomain(raw.hourlyTimeslices) as ITimeslices,
       transactions: raw.transactions as IDigitalAssetTransaction[],
       holdings: raw.holdings as IHolding[],
       lastSynced: raw.lastSynced,
@@ -41,6 +43,7 @@ class ExchangeAccountMapper {
   }
 
   public static fromDomain(exchangeAccount: ExchangeAccount): IExchangeAccountDao {
+
     const exchangeAccountDao: IExchangeAccountDao = {
       name: exchangeAccount.name,
       accountId: exchangeAccount.accountId,
@@ -50,13 +53,27 @@ class ExchangeAccountMapper {
       holdings: exchangeAccount.holdings,
       orders: exchangeAccount.orders, 
       openOrders: exchangeAccount.openOrders,
-      dailyTimeslices: exchangeAccount.dailyTimeslices,
-      hourlyTimeslices: exchangeAccount.hourlyTimeslices,
+      dailyTimeslices: this.convertTimeslicesFrom(exchangeAccount.dailyTimeslices),
+      hourlyTimeslices: this.convertTimeslicesFrom(exchangeAccount.hourlyTimeslices),
       transactions: exchangeAccount.transactions,
       lastSynced: exchangeAccount.lastSynced,
       createdAt: exchangeAccount.createdAt
     }
 
+    return exchangeAccountDao;
+  }
+
+  public static updatePayloadFromDomain(exchangeAccount: IUpdateExchangeAccountPayload): Partial<IExchangeAccountDao> {
+    const exchangeAccountDao: Partial<IExchangeAccountDao> = {
+      holdings: exchangeAccount.holdings,
+      orders: exchangeAccount.orders,
+      openOrders: exchangeAccount.openOrders,
+      transactions: exchangeAccount.transactions,
+      lastSynced: exchangeAccount.lastSynced,
+      dailyTimeslices: this.convertTimeslicesFrom(exchangeAccount.dailyTimeslices),
+      hourlyTimeslices: this.convertTimeslicesFrom(exchangeAccount.hourlyTimeslices)
+    }
+    
     return exchangeAccountDao;
   }
 
@@ -66,6 +83,32 @@ class ExchangeAccountMapper {
       return true;
     }
     return false;
+  }
+
+  private static convertTimeslicesFrom(timeslices: Map<number, ITimeslice>): Map<string, ITimesliceDao> {
+    if (Object.entries(timeslices).length < 1 || !(timeslices?.size) || timeslices.size < 1) {
+      return new Map<string, ITimesliceDao>();
+    }
+
+    const values = Array.from(timeslices.values());
+    const entries: [string, ITimesliceDao][] = values.map(value => {
+      return [value.start.toString(), value];
+    });
+
+    return new Map<string, ITimesliceDao>(entries);
+  }
+
+  private static timeslicesToDomain(timeslices: Map<string, ITimesliceDao>): Map<number, ITimeslice> {
+    if (Object.entries(timeslices).length < 1 || !(timeslices?.size) || timeslices.size < 1) {
+      return new Map<number, ITimeslice>();
+    }
+
+    const values = Array.from(timeslices.values());
+    const entries: [number, ITimesliceDao][] = values.map(value => {
+      return [value.start, value];
+    });
+
+    return new Map<number, ITimeslice>(entries);
   }
 }
 
