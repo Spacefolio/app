@@ -113,6 +113,8 @@ export async function main(): Promise<void> {
 	const portfolioPresenter = PresentersConfiguration.getPortfolioPresenter();
 	const syncPortfolioPresenter = PresentersConfiguration.getSyncPortfolioPresenter();
 	const metaportfolioPresenter = PresentersConfiguration.getMetaportfolioPresenter();
+	const chartPresenter = PresentersConfiguration.getChartPresenter();
+	
 	const getExchangeAccountPortfolioController = ControllersConfiguration.getGetExchangeAccountController(
 		getExchangeAccountUseCase,
 		portfolioPresenter
@@ -126,9 +128,9 @@ export async function main(): Promise<void> {
 		syncPortfolioPresenter
 	);
 
-	const getMetaportfolioChartUseCase = PortfolioUseCasesConfiguration.getGetMetaportfolioChartUseCase(userDatabase, exchangeAccountDatabase);
+	const getMetaportfolioChartUseCase = PortfolioUseCasesConfiguration.getGetMetaportfolioChartUseCase(userDatabase, exchangeAccountDatabase, digitalAssetHistoryDatabase);
 
-	const getMetaportfolioChartController = ControllersConfiguration.getGetMetaportfolioChartController(getMetaportfolioChartUseCase);
+	const getMetaportfolioChartController = ControllersConfiguration.getGetMetaportfolioChartController(getMetaportfolioChartUseCase, chartPresenter);
 	const portfolioRouter = RouterConfiguration.getPortfolioRouter(
 		getExchangeAccountPortfolioController,
 		getAllExchangeAccountsPortfolioController,

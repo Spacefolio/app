@@ -1,5 +1,5 @@
 import { IPresenter } from '../../core/definitions';
-import { ExchangeAccountPresenter, ExchangeAccountsPresenter, MetaportfolioPresenter, PortfolioPresenter, SyncPortfolioPresenter } from '../../entrypoint/web/presenters';
+import { ChartPresenter, ExchangeAccountPresenter, ExchangeAccountsPresenter, MetaportfolioPresenter, PortfolioPresenter, SyncPortfolioPresenter } from '../../entrypoint/web/presenters';
 
 class PresentersConfiguration {
 	static getExchangeAccountPresenter(): IPresenter {
@@ -21,6 +21,10 @@ class PresentersConfiguration {
   static getMetaportfolioPresenter(): IPresenter {
     return new MetaportfolioPresenter();
   }
+
+	static getChartPresenter(): IPresenter {
+		return new ChartPresenter();
+	}
 }
 
 export default PresentersConfiguration;

@@ -3,3 +3,4 @@ export { IExchangeAccountsViewModel, default as ExchangeAccountsPresenter } from
 export { default as PortfolioPresenter } from './PortfolioPresenter';
 export { default as SyncPortfolioPresenter } from './SyncPortfolioPresenter';
 export { default as MetaportfolioPresenter } from './MetaportfolioPresenter';
+export { default as ChartPresenter } from './ChartPresenter';

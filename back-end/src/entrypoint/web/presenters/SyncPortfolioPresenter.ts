@@ -1,6 +1,6 @@
 import { IPresenter } from "../../../core/definitions";
 import { IExchangeAccount } from "../../../core/entities";
-import { IExchangeAccountPortfolioViewModel, portfolioViewModelFrom } from "./PortfolioPresenter";
+import { IExchangeAccountPortfolioViewModel, IPortfolioItemView, portfolioViewModelFrom } from "./PortfolioPresenter";
 
 export interface IPortfolioViewModel {
   exchangeAccounts: IExchangeAccountPortfolioViewModel[];
@@ -27,6 +27,12 @@ class SyncPortfolioPresenter implements IPresenter<{ exchangeAccounts: IExchange
 }
 
 export function createMetaportfolio(exchangeAccounts: IExchangeAccountPortfolioViewModel[]): IExchangeAccountPortfolioViewModel {
+  const portfolioItems: Map<string, IPortfolioItemView> = new Map<string, IPortfolioItemView>();
+
+  for (const exchangeAccount of exchangeAccounts) {
+    mergePortfolioItems(portfolioItems, exchangeAccount.portfolioItems);
+  }
+
 	const metaportfolio: IExchangeAccountPortfolioViewModel = {
     name: 'All Portfolios',
     id: 'ALL',
@@ -43,13 +49,40 @@ export function createMetaportfolio(exchangeAccounts: IExchangeAccountPortfolioV
       token: '',
       twofa: ''
 		},
-    portfolioItems: [],
+    portfolioItems: Array.from(portfolioItems.values()),
     profitPercentage: 0, 
     profitTotal: { USD: 0 },
     portfolioTotal: { USD: 0 }
   };
 
   return metaportfolio;
+}
+
+function mergePortfolioItems(portfolioItems: Map<string, IPortfolioItemView>, newPortfolioItems: IPortfolioItemView[]) {
+  for (const portfolioItem of newPortfolioItems) {
+    const existingItem = portfolioItems.get(portfolioItem.asset.assetId);
+    if (existingItem !== undefined) {
+      if (!existingItem.currentPrice) {
+        existingItem.currentPrice = portfolioItem.currentPrice;
+      }
+
+      if (!existingItem.sparkline || existingItem.sparkline.length < 1) {
+        existingItem.sparkline = portfolioItem.sparkline;
+      }
+
+      existingItem.amount += portfolioItem.amount;
+      existingItem.profitTotal.all += portfolioItem.profitTotal.all;
+      existingItem.profitTotal.h24 += portfolioItem.profitTotal.h24;
+      existingItem.value.USD += portfolioItem.value.USD;
+      existingItem.totalInvested.all += portfolioItem.totalInvested.all;
+      existingItem.totalInvested.h24 += portfolioItem.totalInvested.h24;
+      existingItem.totalFees += portfolioItem.totalFees;
+      existingItem.profitPercentage.all = (existingItem.profitTotal.all / existingItem.totalInvested.all) * 100 || 0;
+      existingItem.profitPercentage.h24 = (existingItem.profitTotal.h24 / existingItem.totalInvested.h24) * 100 || 0;
+    } else {
+      portfolioItems.set(portfolioItem.asset.assetId, portfolioItem);
+    }
+  }  
 }
 
 export default SyncPortfolioPresenter;

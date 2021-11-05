@@ -31,6 +31,7 @@ class PortfolioRouter implements BaseRouter {
 	private configRouter(): void {
 		this.router.get(`/`, [this.getAllExchangeAccountsController.getRequestHandler()]);
 		this.router.get(`/exchanges/chart`, [this.getMetaportfolioChartController.getRequestHandler()]);
+		this.router.get(`/exchanges/:accountId/chart`, [this.getMetaportfolioChartController.getRequestHandler()]);
 		this.router.get(`/exchanges/:accountId`, [this.getExchangeAccountController.getRequestHandler()]);
 		this.router.post(`/sync`, [this.syncExchangeAccountsController.getRequestHandler()]);
 	}

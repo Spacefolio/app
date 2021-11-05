@@ -4,6 +4,7 @@ import { IUserDocument } from './UserModel';
 import UserMapper from './UserMapper';
 import { IExchangeAccountDocument } from '..';
 import { Model } from 'mongoose';
+import mongoose from '../mongoose';
 
 class UserMongooseEntityGateway implements IUserEntityGateway {
 	private userMapper;
@@ -78,7 +79,7 @@ class UserMongooseEntityGateway implements IUserEntityGateway {
 		const user: IUserDocument | null = await this.Users.findOne({ email });
 		if (!user) return;
 
-		const exchangeAccount = await this.ExchangeAccounts.findOne({ accountId }).lean();
+		const exchangeAccount = await this.ExchangeAccounts.findOne({ accountId });
 		if (!exchangeAccount) return;
 
 		const updatedAccounts = user.exchangeAccounts as string[];

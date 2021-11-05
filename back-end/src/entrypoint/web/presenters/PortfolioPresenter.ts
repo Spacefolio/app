@@ -36,6 +36,8 @@ export interface IPortfolioItemView {
 	profitTotal: { all: number; h24: number };
 	currentPrice: number;
 	profitPercentage: { all: number; h24: number };
+	totalInvested: { all: number; h24: number };
+	totalFees: number;
 	sparkline: number[];
 }
 
@@ -124,6 +126,8 @@ export function extractPortfolioItemsFrom(holding: IHolding): IPortfolioItemView
     currentPrice: holding.price.USD,
     profitTotal: { all: totalProfit, h24: totalProfit },
     profitPercentage: { all: profitPercentage, h24: profitPercentage},
+		totalInvested: { all: valueInvested, h24: valueInvested },
+		totalFees: holding.total.fees.USD,
     sparkline: []
   }
 

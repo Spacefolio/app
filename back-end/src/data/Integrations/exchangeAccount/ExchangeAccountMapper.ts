@@ -86,7 +86,7 @@ class ExchangeAccountMapper {
   }
 
   private static convertTimeslicesFrom(timeslices: Map<number, ITimeslice>): Map<string, ITimesliceDao> {
-    if (Object.entries(timeslices).length < 1 || !(timeslices?.size) || timeslices.size < 1) {
+    if (!(timeslices?.size) || timeslices.size < 1) {
       return new Map<string, ITimesliceDao>();
     }
 

@@ -128,7 +128,7 @@ export class TestServer {
 			syncExchangeAccountsUseCase,
 			syncPortfolioPresenter
 		);
-		const getMetaportfolioChartUseCase = PortfolioUseCasesConfiguration.getGetMetaportfolioChartUseCase(userDatabase, exchangeAccountDatabase);
+		const getMetaportfolioChartUseCase = PortfolioUseCasesConfiguration.getGetMetaportfolioChartUseCase(userDatabase, exchangeAccountDatabase, digitalAssetHistoryDatabase);
 
 		const getMetaportfolioChartController = ControllersConfiguration.getGetMetaportfolioChartController(getMetaportfolioChartUseCase);
 		const portfolioRouter = RouterConfiguration.getPortfolioRouter(

@@ -1,7 +1,7 @@
 import { Application, default as express } from "express";
 import { IAppConfig } from "../../config";
 import cors from 'cors';
-import { json, urlencoded } from 'body-parser';
+import { json, urlencoded } from 'express';
 import jwt from 'express-jwt';
 import { Logger } from "log4js";
 import UserRouter from "./routers/UserRouter";

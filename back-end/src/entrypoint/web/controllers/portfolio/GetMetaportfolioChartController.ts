@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { UserNotFound } from '../../../../core/use-cases/common/errors';
+import { ExchangeAccountNotFound, UserNotFound } from '../../../../core/use-cases/common/errors';
 import { UseCaseError } from '../../../../core/definitions';
 import BaseController from '../../common/definitions/Controller';
 import JwtRequest from '../../common/definitions/JwtRequest';
@@ -15,7 +15,8 @@ class GetMetaportfolioChartController extends BaseController<GetMetaportfolioCha
 	protected async processRequest(req: JwtRequest, res: Response): Promise<void> {
     const request: GetMetaportfolioChartRequest = {
       email: req.user.sub,
-      timeframe: req.query.timeframe as string || 'ALL'
+      timeframe: req.query.timeframe as string || 'ALL',
+			accountId: req.params.accountId
     };
 
 		const result: GetMetaportfolioChartResponse = await this.usecase.execute(request);
@@ -28,6 +29,9 @@ class GetMetaportfolioChartController extends BaseController<GetMetaportfolioCha
 				return;
 			} else if (error instanceof UserNotFound) {
 				this.notFound(res, error);
+				return;
+			} else if (error instanceof ExchangeAccountNotFound) {
+				this.badRequest(res, error);
 				return;
 			}
 
