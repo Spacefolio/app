@@ -250,6 +250,7 @@ export function fiat(symbol: string) : number
     case "usd":
     case "USD":
     case "USD/USD":
+    case "uniswap-state-dollar":
       return 1;
     default:
       return 0;

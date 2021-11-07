@@ -79,7 +79,7 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 			this.total.fees.USD += order.fee.cost * quoteToUsd;
 
 			this.amountHeld = lastSnapshotBase.amountHeld + this.bought.amount;
-			this.valueHeld.USD = lastSnapshotBase.valueHeld.USD + this.bought.value.USD;
+			this.valueHeld.USD = this.amountHeld * this.price.USD;
 		} else {
 			this.sold = {
 				amount: order.filled,
@@ -92,7 +92,7 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 			this.total.fees.USD += order.fee.cost * quoteToUsd;
 
 			this.amountHeld = lastSnapshotBase.amountHeld - this.sold.amount;
-			this.valueHeld.USD = lastSnapshotBase.valueHeld.USD - this.sold.value.USD;
+			this.valueHeld.USD = this.amountHeld * this.price.USD;
 		}
 
 		const snapshotQuote = new HoldingSnapshot(order.timestamp, this.action);
@@ -113,13 +113,13 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 			snapshotQuote.total.averageSellPrice.USD = snapshotQuote.total.value.sold.USD / snapshotQuote.total.amount.sold;
 
 			snapshotQuote.amountHeld = lastSnapshotQuote.amountHeld - snapshotQuote.sold.amount;
-			snapshotQuote.valueHeld.USD = lastSnapshotQuote.valueHeld.USD - snapshotQuote.sold.value.USD;
+			snapshotQuote.valueHeld.USD = snapshotQuote.amountHeld * quoteToUsd;
 		} /* this.action === Action.SELL */ else {
 			// Counts as a buy of the quote currency
 			snapshotQuote.action = Action.BUY;
 			snapshotQuote.bought = {
 				amount: order.cost - order.fee.cost,
-				value: { USD: order.cost * quoteToUsd },
+				value: { USD: (order.cost - order.fee.cost) * quoteToUsd },
 			};
 
 			snapshotQuote.total.amount.bought += snapshotQuote.bought.amount;
@@ -127,7 +127,7 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 			snapshotQuote.total.averageBuyPrice.USD = snapshotQuote.total.value.bought.USD / snapshotQuote.total.amount.bought;
 
 			snapshotQuote.amountHeld = lastSnapshotQuote.amountHeld + snapshotQuote.bought.amount;
-			snapshotQuote.valueHeld.USD = lastSnapshotQuote.valueHeld.USD + snapshotQuote.bought.value.USD;
+			snapshotQuote.valueHeld.USD = snapshotQuote.amountHeld * quoteToUsd;
 		}
 
 		return snapshotQuote;
@@ -148,6 +148,8 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 
 			this.total.amount.deposited += amount;
 			this.total.value.deposited.USD += this.deposited.value.USD;
+			this.amountHeld = lastSnapshot.amountHeld + this.deposited.amount;
+			this.valueHeld.USD = this.amountHeld * priceInUsd;
 		} else {
 			// this.action === Action.WITHDRAW
 			this.withdrew = {
@@ -157,6 +159,8 @@ export class HoldingSnapshot implements IHoldingSnapshot {
 
 			this.total.amount.withdrawn += this.withdrew.amount;
 			this.total.value.withdrawn.USD += this.withdrew.value.USD;
+			this.amountHeld = lastSnapshot.amountHeld - this.withdrew.amount;
+			this.valueHeld.USD = this.amountHeld * priceInUsd;
 		}
 	}
 

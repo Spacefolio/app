@@ -10,6 +10,7 @@ import {
 	GetMetaportfolioChartUseCase,
 } from '../../../../core/use-cases/portfolio/getMetaportfolioChart';
 import { Chart } from '../../../../core/entities';
+import { ExchangeAccountsNotSynced } from '../../../../core/use-cases/portfolio/getMetaportfolioChart/errors';
 
 class GetMetaportfolioChartController extends BaseController<GetMetaportfolioChartUseCase> {
 	protected async processRequest(req: JwtRequest, res: Response): Promise<void> {
@@ -31,6 +32,9 @@ class GetMetaportfolioChartController extends BaseController<GetMetaportfolioCha
 				this.notFound(res, error);
 				return;
 			} else if (error instanceof ExchangeAccountNotFound) {
+				this.badRequest(res, error);
+				return;
+			} else if (error instanceof ExchangeAccountsNotSynced) {
 				this.badRequest(res, error);
 				return;
 			}

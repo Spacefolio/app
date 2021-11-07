@@ -1,8 +1,8 @@
 import { Result } from "../../../definitions";
 import { Chart } from "../../../entities";
 import { ExchangeAccountNotFound, UserNotFound } from "../../common/errors";
-import { GetMetaportfolioChartInvalidRequest } from "./errors";
+import { ExchangeAccountsNotSynced, GetMetaportfolioChartInvalidRequest } from "./errors";
 
-type GetMetaportfolioChartResponse = Result<Chart, UserNotFound | ExchangeAccountNotFound | GetMetaportfolioChartInvalidRequest>;
+type GetMetaportfolioChartResponse = Result<Chart, UserNotFound | ExchangeAccountNotFound | ExchangeAccountsNotSynced | GetMetaportfolioChartInvalidRequest>;
 
 export default GetMetaportfolioChartResponse;

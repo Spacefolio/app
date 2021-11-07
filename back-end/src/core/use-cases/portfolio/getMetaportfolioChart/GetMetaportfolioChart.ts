@@ -8,6 +8,7 @@ import { Timespan } from '../../../entities/Portfolio/Chart';
 import { IDigitalAssetHistoryEntityGateway } from '../../integration/digitalAsset';
 import { ExchangeAccountNotFound, IExchangeAccountEntityGateway } from '../../integration/exchangeAccount';
 import { IUserEntityGateway, UserNotFound } from '../../user';
+import { ExchangeAccountsNotSynced } from './errors';
 
 class GetMetaportfolioChartUseCase implements IUseCase<GetMetaportfolioChartRequest, GetMetaportfolioChartResponse> {
 	private userEntityGateway: IUserEntityGateway;
@@ -50,22 +51,27 @@ class GetMetaportfolioChartUseCase implements IUseCase<GetMetaportfolioChartRequ
 			if (!exchangeAccount) {
 				return Result.fail(new ExchangeAccountNotFound(request.accountId));
 			}
-			switch (<Timespan>request.timeframe) {
-				case Timespan.H24:
-					chart = await this.getTwentyFourHourChart(exchangeAccount);
-					break;
-				case Timespan.W1:
-					chart = await this.getOneWeekChart(exchangeAccount);
-					break;
-				case Timespan.M1:
-				case Timespan.M3:
-				case Timespan.M6:
-				case Timespan.Y1:
-				case Timespan.ALL:
-					chart = this.getDailyChart(exchangeAccount, numberOfDays);
-					break;
-				default:
-					chart = [];
+
+			try {
+				switch (<Timespan>request.timeframe) {
+					case Timespan.H24:
+						chart = await this.getTwentyFourHourChart(exchangeAccount);
+						break;
+					case Timespan.W1:
+						chart = await this.getOneWeekChart(exchangeAccount);
+						break;
+					case Timespan.M1:
+					case Timespan.M3:
+					case Timespan.M6:
+					case Timespan.Y1:
+					case Timespan.ALL:
+						chart = this.getDailyChart(exchangeAccount, numberOfDays);
+						break;
+					default:
+						chart = [];
+				}
+			} catch (exception) {
+				return Result.fail(new ExchangeAccountsNotSynced());
 			}
 
 			if (chart.length < 1) {
@@ -88,29 +94,34 @@ class GetMetaportfolioChartUseCase implements IUseCase<GetMetaportfolioChartRequ
 			return Result.ok<Chart>(chart);
 		}
 
-		for (const exchangeAccount of exchangeAccounts) {
-			let chart: Chart = [];
-			switch (<Timespan>request.timeframe) {
-				case Timespan.H24:
-					chart = await this.getTwentyFourHourChart(exchangeAccount);
-					break;
-				case Timespan.W1:
-					chart = await this.getOneWeekChart(exchangeAccount);
-					break;
-				case Timespan.M1:
-				case Timespan.M3:
-				case Timespan.M6:
-				case Timespan.Y1:
-				case Timespan.ALL:
-					chart = this.getDailyChart(exchangeAccount, numberOfDays);
-					break;
-				default:
-					chart = [];
+		try {
+			for (const exchangeAccount of exchangeAccounts) {
+				let chart: Chart = [];
+				switch (<Timespan>request.timeframe) {
+					case Timespan.H24:
+						chart = await this.getTwentyFourHourChart(exchangeAccount);
+						break;
+					case Timespan.W1:
+						chart = await this.getOneWeekChart(exchangeAccount);
+						break;
+					case Timespan.M1:
+					case Timespan.M3:
+					case Timespan.M6:
+					case Timespan.Y1:
+					case Timespan.ALL:
+						chart = this.getDailyChart(exchangeAccount, numberOfDays);
+						break;
+					default:
+						chart = [];
+				}
+	
+				charts.push(chart);
 			}
-
-			charts.push(chart);
+		} catch (exception) {
+			return Result.fail(new ExchangeAccountsNotSynced());
 		}
 
+		
 		const metaChart = this.combineCharts(charts);
 
 		if (metaChart.length < 1) {
@@ -148,7 +159,7 @@ class GetMetaportfolioChartUseCase implements IUseCase<GetMetaportfolioChartRequ
 		// Generate hourly time series for last 7 days (last whole hour and 167 previous hours)
 		// if this is already cached, we can just return it as is. If there is partial data available,
 		// we will append the latest data and return the whole series.
-		const hourlyTimeSeries = await this.getLatestHourlyTimeSeries(exchangeAccount);
+		const hourlyTimeSeries = await this.getLatestHourlyTimeSeries(exchangeAccount).catch(err => { throw(err); });
 		return hourlyTimeSeries.slice(hourlyTimeSeries.length - 24);
 	}
 	
@@ -156,7 +167,7 @@ class GetMetaportfolioChartUseCase implements IUseCase<GetMetaportfolioChartRequ
 		// Generate hourly time series for last 7 days (last whole hour and 167 previous hours)
 		// if this is already cached, we can just return it as is. If there is partial data available,
 		// we will append the latest data and return the whole series.
-		const hourlyTimeSeries = await this.getLatestHourlyTimeSeries(exchangeAccount);
+		const hourlyTimeSeries = await this.getLatestHourlyTimeSeries(exchangeAccount).catch(err => { throw(err); });
 		return hourlyTimeSeries.slice(hourlyTimeSeries.length - 168);
 	}
 

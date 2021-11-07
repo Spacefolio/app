@@ -187,6 +187,8 @@ class CcxtExchangeAdapter implements IExchangeAdapter {
       });
     }
 
+    ccxtTransactions = ccxtTransactions.filter((ccxtTransaction) => (ccxtTransaction.status as string) !== 'canceled');
+
     const transactions: IDigitalAssetTransaction[] = await Promise.all(ccxtTransactions.map((transaction) => this.transactionFromCcxtTransaction(transaction)));
     return transactions;
   }
