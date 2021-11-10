@@ -3,6 +3,7 @@ export interface IAsset {
   symbol: string;
   name: string;
   image: string;
+  sparkline: number[];
 }
 
 export interface IDigitalAsset extends IAsset{
@@ -58,11 +59,16 @@ export class NullAsset implements IDigitalAsset {
   symbol = '';
   name = '';
   image = '';
+  sparkline;
 
   constructor(assetId: string) {
     this.assetId = assetId;
     this.symbol = assetId;
     this.name = assetId;
+    this.sparkline = [];
+    for (let i = 0; i < 168; i++) {
+      this.sparkline.push(1);
+    }
   }
 }
 

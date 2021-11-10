@@ -98,15 +98,15 @@ export const Login = () => {
 
 	return (
 		<Container>
-			<Grid style={{ paddingTop: '30%' }} xs={12} container>
+			<Grid style={{ paddingTop: '30%' }} direction="column" alignItems="center" xs={12} container>
 				<Grid direction="column" justify="center" alignItems="center" container>
 					<Typography align="justify" component="h1" variant="h5">
 						{headerText}
 					</Typography>
 					<Typography>{headerSubText}</Typography>
 				</Grid>
-				<form style={{ width: '400px' }} onSubmit={handleSubmit}>
-					<Grid item xs={12}>
+				<form style={{ width: "400px" }} onSubmit={handleSubmit}>
+					<Grid direction="column" justify="center" alignItems="center" item xs={12}>
 						<TextField
 							variant="outlined"
 							margin="normal"

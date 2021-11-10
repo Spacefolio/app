@@ -137,7 +137,8 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 				assetId: asset.assetId,
 				symbol: asset.symbol,
 				name: asset.name,
-				image: asset.image
+				image: asset.image,
+				sparkline: asset.sparkline7day?.price ?? []
 			},
 			price: { USD: asset.currentPrice },
 			balance: {
@@ -169,7 +170,8 @@ export class ExchangeAccount extends BaseIntegration implements IExchangeAccount
 			assetId: asset.assetId,
 			symbol: asset.symbol,
 			name: asset.name,
-			image: asset.image
+			image: asset.image,
+			sparkline: asset.sparkline7day?.price ?? oldHolding.asset.sparkline
 		};
 		oldHolding.price.USD = asset.currentPrice;
 		oldHolding.snapshots.push(...snapshots);

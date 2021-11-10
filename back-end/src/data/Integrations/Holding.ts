@@ -116,7 +116,8 @@ export const assetSchema = new mongoose.Schema({
   assetId: String,
   symbol: String,
   name: String,
-  image: String
+  image: String,
+  sparkline: [Number]
 });
 
 export const holdingSchema = new mongoose.Schema<IHoldingDocument>({

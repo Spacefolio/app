@@ -8,7 +8,7 @@ class Timeslices {
 
   static async createDailyTimeslices(holdings: IHolding[], oldTimeslices: ITimeslices, lastSynced: Date, getHistoricalValues: GetHistoricalValuesHandler): Promise<ITimeslices> {
     const timeslices: ITimeslices = new Map<number, ITimeslice>();
-    const prices: { [key: string]: IHistoricalPrice[] } = {};
+    const prices: { [key: string]: { [key: number]: IHistoricalPrice } } = {};
     const lastAmount: { [key: string]: number } = {};
     const lastPrice: { [key: string]: number } = {};
     
@@ -41,7 +41,12 @@ class Timeslices {
       const asset = holding.asset.assetId;
 
       if (!fiat(asset)) {
-        prices[asset] = await getHistoricalValues(asset, startDate, endDate - ONE_DAY);
+        const priceData: IHistoricalPrice[] = await getHistoricalValues(asset, startDate, endDate - ONE_DAY);
+        const priceByDate: { [key: number]: IHistoricalPrice } = {};
+        for (const historicalPrice of priceData) {
+          priceByDate[historicalPrice.timestamp] = historicalPrice;
+        }
+        prices[asset] = priceByDate;
       }
 
       lastPrice[asset] = fiat(asset);

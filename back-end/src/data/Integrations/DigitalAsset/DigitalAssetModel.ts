@@ -5,6 +5,7 @@ export interface IAssetDao {
   symbol: string;
   name: string;
   image: string;
+  sparkline: number[]
 }
 
 export interface IDigitalAssetDao extends IAssetDao

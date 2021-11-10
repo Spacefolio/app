@@ -50,7 +50,7 @@ export const AssetCard: React.FC<HoldingItemProps> = ({ portfolioItem }) => {
 	const fakeChart = () => {
 		var dataArray: IPortfolioLineChartItem[] = [];
 
-		if (sparkline) {
+		if (sparkline && sparkline.length > 0) {
 			for (let i = 0; i < sparkline.length; i++) {
 				dataArray.push({ T: i, USD: sparkline[i] });
 			}

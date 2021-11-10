@@ -31,7 +31,8 @@ export function makeFakeDigitalAsset (overrides: Partial<IDigitalAsset> = {}): I
     lastUpdated: faker.datatype.datetime().toTimeString(),
     sparkline7day: {
       price: faker.datatype.array(7*24) as number[]
-    }
+    },
+    sparkline: faker.datatype.array(7*24) as number[]
   };
 
   return { ...digitalAssetParams, ...overrides };

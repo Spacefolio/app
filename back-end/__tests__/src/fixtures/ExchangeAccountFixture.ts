@@ -1,7 +1,6 @@
 import faker from 'faker';
-import { ExchangesConfiguration } from '../../../src/config/core/Exchanges';
 import { FakeExchange } from '../../../src/config/core/Exchanges/Implementations/FakeExchange';
-import { Action, Exchange, IExchangeAccount, IHolding, IOrder, ITimeslices, OrderStatus } from '../../../src/core/entities';
+import { Action, IExchangeAccount, IHolding, IOrder, ITimeslices, OrderStatus } from '../../../src/core/entities';
 import { ITimeslice, ONE_DAY } from '../../../src/core/entities/Integrations/Timeslice';
 import { IDigitalAssetTransaction, TransactionStatus } from '../../../src/core/entities/Integrations/Transaction';
 import { makeId } from '../../../src/data';
@@ -13,7 +12,8 @@ export default function makeFakeExchangeAccount (overrides: Partial<IExchangeAcc
       assetId: 'bitcoin',
       symbol: 'btc',
       name: 'Bitcoin',
-      image: faker.random.alpha({ count: 10 })
+      image: faker.random.alpha({ count: 10 }),
+      sparkline: faker.datatype.array(7*24) as number[]
     },
     balance: {
       free: 10,

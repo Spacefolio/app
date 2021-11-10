@@ -128,7 +128,7 @@ export function extractPortfolioItemsFrom(holding: IHolding): IPortfolioItemView
     profitPercentage: { all: profitPercentage, h24: profitPercentage},
 		totalInvested: { all: valueInvested, h24: valueInvested },
 		totalFees: holding.total.fees.USD,
-    sparkline: []
+    sparkline: holding.asset.sparkline || []
   }
 
   return portfolioItemView;
