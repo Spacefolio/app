@@ -19,7 +19,9 @@
 		"test:unit": "jest --rootDir=./src/core --maxWorkers=25% --detectOpenHandles --forceExit",
 		"test:int": "jest --rootDir=./__tests__/src/int --runInBand --detectOpenHandles --forceExit",
 		"test:all": "npm run test:unit && npm run test:int",
-		"lint": "eslint \"src/**\""
+		"lint": "eslint \"src/**\"",
+		"deploy-production": "pm2 deploy ecosystem.config.js production --force",
+		"reload-production": "pm2 deploy ecosystem.config.js production exec 'pm2 reload spacefolio-back-end'"
 	},
 	"jest": {
 		"preset": "ts-jest",
