@@ -10,8 +10,8 @@
 	"scripts": {
 		"dev": "npm run clean && tsc && nodemon app.ts",
 		"start": "npm run clean && tsc && node dist/app.js",
-		"build": "tsc",
-		"clean": "rimraf dist && rimraf src/logs",
+		"build": "npm run clean && tsc",
+		"clean": "rimraf dist",
 		"postinstall": "npm run build",
 		"build-client": "cd ../front-end/ && npm run build && cp -r build ../back-end/client",
 		"buildall": "npm run build && npm run build-client",
