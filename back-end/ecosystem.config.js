@@ -14,7 +14,7 @@ module.exports = {
   deploy : {
     production : {
       user : 'ubuntu',
-      host : 'ec2-54-159-188-168.compute-1.amazonaws.com',
+      host : '100.25.236.222',
       key  : '~/.ssh/spacefolio-back-end.pem',
       ref  : 'origin/main',
       repo : 'git@github.com:Spacefolio/app.git',
