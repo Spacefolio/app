@@ -135,7 +135,7 @@ export const TopNav = () => {
 			</Hidden>
 			<NavFlexSpacer />
 			<InlineDiv>
-				{DEV_SERVER == 'development' && (
+				{/*DEV_SERVER == 'development'*/ true && (
 					<SyncIcon
 						onClick={() => dispatch(portfolioActions.sync())}
 						isSyncing={isSyncing}
