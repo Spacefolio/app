@@ -20,7 +20,7 @@ module.exports = {
       repo : 'git@github.com:Spacefolio/app.git',
       path : '~/Spacefolio',
       'pre-deploy-local': '',
-      'post-deploy' : 'cd ~/Spacefolio/current/back-end && npm install && cd ~/Spacefolio/current/front-end && npm install && npm run build && yes | sudo cp -rf ~/Spacefolio/front-end/dist/* /var/www/html/ && cd ~/Spacefolio/current/back-end && pm2 reload ecosystem.config.js --env production',
+      'post-deploy' : 'cd ~/Spacefolio/current/back-end && npm install && cd ~/Spacefolio/current/front-end && npm install && npm run build && yes | sudo cp -rf ~/Spacefolio/current/front-end/dist/* /var/www/html/ && cd ~/Spacefolio/current/back-end && pm2 reload ecosystem.config.js --env production',
       'pre-setup': ''
     }
   }
