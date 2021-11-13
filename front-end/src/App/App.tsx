@@ -12,7 +12,7 @@ import { AppContainer } from './_styles';
 import '../_styles/variables.scss';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { theme } from '../_styles/Theme';
-import { Login } from '../Login/login';
+import { Login } from '../Login/Login';
 
 export const App = () => {
 	const dispatch = useDispatch();
