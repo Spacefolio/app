@@ -28,10 +28,22 @@ class SyncPortfolioPresenter implements IPresenter<{ exchangeAccounts: IExchange
 
 export function createMetaportfolio(exchangeAccounts: IExchangeAccountPortfolioViewModel[]): IExchangeAccountPortfolioViewModel {
   const portfolioItems: Map<string, IPortfolioItemView> = new Map<string, IPortfolioItemView>();
+  let totalProfit = 0;
+  let totalInvested = 0;
+  let totalProfitPercentage = 0;
+  let portfolioTotal = 0;
 
   for (const exchangeAccount of exchangeAccounts) {
     mergePortfolioItems(portfolioItems, exchangeAccount.portfolioItems);
   }
+
+  for (const portfolioItem of portfolioItems.values()) {
+    portfolioTotal += portfolioItem.value.USD;
+    totalProfit += portfolioItem.profitTotal.all;
+    totalInvested += portfolioItem.totalInvested.all;
+  }
+
+  totalProfitPercentage = (totalProfit/totalInvested ?? 1) * 100;
 
 	const metaportfolio: IExchangeAccountPortfolioViewModel = {
     name: 'All Portfolios',
@@ -50,9 +62,9 @@ export function createMetaportfolio(exchangeAccounts: IExchangeAccountPortfolioV
       twofa: ''
 		},
     portfolioItems: Array.from(portfolioItems.values()),
-    profitPercentage: 0, 
-    profitTotal: { USD: 0 },
-    portfolioTotal: { USD: 0 }
+    profitPercentage: totalProfitPercentage, 
+    profitTotal: { USD: totalProfit },
+    portfolioTotal: { USD: portfolioTotal }
   };
 
   return metaportfolio;

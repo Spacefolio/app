@@ -81,6 +81,19 @@ export interface IOpenOrderItemView {
 export function portfolioViewModelFrom(model: IExchangeAccount): IExchangeAccountPortfolioViewModel {
   
   const portfolioItems = model.holdings.map((holding) => extractPortfolioItemsFrom(holding));
+
+	let profitPercentage = 0;
+	let totalInvested = 0;
+	let totalProfit = 0;
+	let portfolioTotal = 0;
+
+	for (const item of portfolioItems) {
+		totalInvested += item.totalInvested.all;
+		totalProfit += item.profitTotal.all;
+		portfolioTotal += item.value.USD;
+	}
+
+	profitPercentage = (totalProfit / totalInvested ?? 1) * 100;
   
   const viewModel: IExchangeAccountPortfolioViewModel = {
     name: model.name,
@@ -101,9 +114,9 @@ export function portfolioViewModelFrom(model: IExchangeAccount): IExchangeAccoun
 			twofa: model.credentials.twofa || ''
     },
     portfolioItems,
-    profitPercentage: 0, 
-    profitTotal: { USD: 0 },
-    portfolioTotal: { USD: 0 }
+    profitPercentage: profitPercentage, 
+    profitTotal: { USD: totalProfit },
+    portfolioTotal: { USD: portfolioTotal }
   };
 
   return viewModel;

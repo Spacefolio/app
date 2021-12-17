@@ -82,8 +82,11 @@ class DigitalAssetMongooseEntityGateway implements IDigitalAssetEntityGateway {
     }
   }
 
-  private async fetchDigitalAsset(assetId: string): Promise<IDigitalAsset> {
-    const digitalAssetMarketData = await this.DigitalAssetAdapter.fetchDigitalAsset(assetId);
+  private async fetchDigitalAsset(assetId: string): Promise<IDigitalAsset | undefined> {
+    const digitalAssetMarketData = await this.DigitalAssetAdapter.fetchDigitalAsset(assetId).catch(() => undefined);
+    if (!digitalAssetMarketData) {
+      return digitalAssetMarketData;
+    }
     const now = Date.now();
 
     const digitalAsset = DigitalAssetMapper.fromMarketData(digitalAssetMarketData);

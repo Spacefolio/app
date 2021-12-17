@@ -66,7 +66,7 @@ class CoinGecko implements IDigitalAssetAdapter {
 	}
 
 	public async fetchDigitalAsset(assetId: string): Promise<IDigitalAssetMarketData> {
-		const digitalAsset: IDigitalAssetMarketData = await this.fetchCoinMarketData(assetId);
+		const digitalAsset: IDigitalAssetMarketData = await this.fetchCoinMarketData(assetId).catch();
 		return digitalAsset;
 	}
 

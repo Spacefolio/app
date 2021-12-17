@@ -132,7 +132,8 @@ class DigitalAssetHistoryMongooseEntityGateway implements IDigitalAssetHistoryEn
 		}
 
 		// Fetch daily prices and combine with existing daily prices saved
-		let dailyPrices = await this.DigitalAssetAdapter.fetchDailyData(assetId);
+		let dailyPrices = await this.DigitalAssetAdapter.fetchDailyData(assetId).catch(() => []);
+		
 		const length = historicalData.prices.length;
 		if (length > 0) {
 			const lastTimestamp = historicalData.prices[length - 1].timestamp;
@@ -144,7 +145,7 @@ class DigitalAssetHistoryMongooseEntityGateway implements IDigitalAssetHistoryEn
 		historicalData.prices.push(...dailyPrices);
 
 		// Fetch hourly prices and combine with existing hourly prices saved
-		let hourlyPrices = await this.DigitalAssetAdapter.fetchHourlyData(assetId);
+		let hourlyPrices = await this.DigitalAssetAdapter.fetchHourlyData(assetId).catch(() => []);
 		const length2 = historicalData.hourlyPrices.length;
 		if (length2 > 0) {
 			const lastTimestamp = historicalData.hourlyPrices[length2 - 1].timestamp;
