@@ -40,10 +40,10 @@ export const Transactions: React.FC<ITransactionsProps> = ({
 			),
 		},
 		{ field: 'action', headerName: 'Action', width: 120 },
-		{ field: 'amount', type: 'number', headerName: 'Amount', width: 100, resizable: true },
+		{ field: 'amount', type: 'number', headerName: 'Amount', width: 100 },
 		{ field: 'price', type: 'number', headerName: 'Price', width: 100 },
 		{ field: 'value', type: 'number', headerName: 'Value', width: 100 },
-		{ field: 'date', type: 'dateTime', headerName: 'Date', width: 200, resizable: true },
+		{ field: 'date', type: 'dateTime', headerName: 'Date', width: 200 },
 		{ field: 'fee', type: 'number', headerName: 'Fee', width: 100 }
 	];
 
