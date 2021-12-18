@@ -1,5 +1,5 @@
 import { Avatar, ThemeProvider, Typography } from "@material-ui/core";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
 import { ITransactionItemView } from "../../../../../types";
 import { FlexCard, FlexCardHeader, InlineDiv } from "../../../_styles";
