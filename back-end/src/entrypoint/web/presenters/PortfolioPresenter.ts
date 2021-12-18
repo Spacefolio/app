@@ -1,5 +1,5 @@
 import { IPresenter } from "../../../core/definitions";
-import { Action, IDigitalAssetTransaction, IExchangeAccount, IHolding, IOrder, ITransaction } from "../../../core/entities";
+import { Action, IDigitalAssetTransaction, IExchangeAccount, IHolding, IOrder } from "../../../core/entities";
 
 export interface IExchangeAccountPortfolioViewModel {
 	name: string;

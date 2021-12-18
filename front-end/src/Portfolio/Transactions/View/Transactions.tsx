@@ -1,7 +1,6 @@
 import { Avatar, ThemeProvider, Typography } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import React from "react";
-import ScrollContainer from "react-indiana-drag-scroll";
 import { ITransactionItemView } from "../../../../../types";
 import { FlexCard, FlexCardHeader, InlineDiv } from "../../../_styles";
 import { theme } from '../../../_styles/Theme';
@@ -43,7 +42,7 @@ export const Transactions: React.FC<ITransactionsProps> = ({
 		{ field: 'amount', type: 'number', headerName: 'Amount', width: 100 },
 		{ field: 'price', type: 'number', headerName: 'Price', width: 100 },
 		{ field: 'value', type: 'number', headerName: 'Value', width: 100 },
-		{ field: 'date', type: 'dateTime', headerName: 'Date', width: 200 },
+		{ field: 'date', headerName: 'Date', width: 200 },
 		{ field: 'fee', type: 'number', headerName: 'Fee', width: 100 }
 	];
 
