@@ -4,14 +4,10 @@ const path = require('path');
 require('dotenv').config();
 var webpack = require('webpack');
 const { CheckerPlugin } = require('awesome-typescript-loader');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
 	mode: process.env.NODE_ENV,
 	entry: ['./src/index.tsx'],
-	optimization: {
-		minimizer: [new UglifyJsPlugin({ parallel: true })],
-	},
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		publicPath: '/',
