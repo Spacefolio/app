@@ -26,6 +26,7 @@ import { theme } from '../../_styles/Theme';
 import { AssetAllocations } from '../Assets/AssetAllocations';
 import { Assets } from '../Assets/Assets';
 import { AssetsMiniList } from '../Assets/AssetsMiniList';
+import { Transactions } from '../Transactions';
 import { PortfolioSummaryItem } from './Line_item/PortfolioSummaryItem';
 import { SummaryWrapper } from './Line_item/_styles';
 
@@ -145,7 +146,7 @@ export const PortfolioSummary = () => {
 
 					<Assets portfolioItems={filteredPortfolio.portfolioItems} />
 
-					{/* <Transactions transactions={filteredPortfolio.transactions} />  */}
+					<Transactions transactions={filteredPortfolio.transactions} />
 				</SummaryWrapper>
 			) : (
 				<Backdrop open>

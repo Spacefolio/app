@@ -1,6 +1,6 @@
 import { IPresenter } from "../../../core/definitions";
 import { IExchangeAccount } from "../../../core/entities";
-import { IExchangeAccountPortfolioViewModel, IPortfolioItemView, portfolioViewModelFrom } from "./PortfolioPresenter";
+import { IExchangeAccountPortfolioViewModel, IPortfolioItemView, ITransactionItemView, portfolioViewModelFrom } from "./PortfolioPresenter";
 
 export interface IPortfolioViewModel {
   exchangeAccounts: IExchangeAccountPortfolioViewModel[];
@@ -28,6 +28,8 @@ class SyncPortfolioPresenter implements IPresenter<{ exchangeAccounts: IExchange
 
 export function createMetaportfolio(exchangeAccounts: IExchangeAccountPortfolioViewModel[]): IExchangeAccountPortfolioViewModel {
   const portfolioItems: Map<string, IPortfolioItemView> = new Map<string, IPortfolioItemView>();
+  const transactions: ITransactionItemView[] = [];
+  const openOrders: ITransactionItemView[] = [];
   let totalProfit = 0;
   let totalInvested = 0;
   let totalProfitPercentage = 0;
@@ -35,6 +37,12 @@ export function createMetaportfolio(exchangeAccounts: IExchangeAccountPortfolioV
 
   for (const exchangeAccount of exchangeAccounts) {
     mergePortfolioItems(portfolioItems, exchangeAccount.portfolioItems);
+    if (exchangeAccount.transactions) {
+      transactions.push(...exchangeAccount.transactions);
+    }
+    if (exchangeAccount.openOrders) {
+      openOrders.push(...exchangeAccount.openOrders);
+    }
   }
 
   for (const portfolioItem of portfolioItems.values()) {
@@ -64,7 +72,9 @@ export function createMetaportfolio(exchangeAccounts: IExchangeAccountPortfolioV
     portfolioItems: Array.from(portfolioItems.values()),
     profitPercentage: totalProfitPercentage, 
     profitTotal: { USD: totalProfit },
-    portfolioTotal: { USD: portfolioTotal }
+    portfolioTotal: { USD: portfolioTotal },
+    transactions,
+    openOrders
   };
 
   return metaportfolio;

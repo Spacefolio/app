@@ -54,11 +54,11 @@ export const theme = responsiveFontSizes(
 				contrastText: 'white',
 			},
 			secondary: {
-				main: '#61ff69',
+				main: '#67CF63',
 				contrastText: 'white',
 			},
 			error: {
-				main: '#ff6961',
+				main: '#EE6352',
 				contrastText: 'white',
 			},
 		},

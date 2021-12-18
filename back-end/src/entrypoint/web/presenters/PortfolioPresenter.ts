@@ -1,5 +1,5 @@
 import { IPresenter } from "../../../core/definitions";
-import { IExchangeAccount, IHolding } from "../../../core/entities";
+import { Action, IDigitalAssetTransaction, IExchangeAccount, IHolding, IOrder, ITransaction } from "../../../core/entities";
 
 export interface IExchangeAccountPortfolioViewModel {
 	name: string;
@@ -79,8 +79,16 @@ export interface IOpenOrderItemView {
 }
 
 export function portfolioViewModelFrom(model: IExchangeAccount): IExchangeAccountPortfolioViewModel {
-  
+  const assets: Map<string, IHolding> = new Map<string, IHolding>();
   const portfolioItems = model.holdings.map((holding) => extractPortfolioItemsFrom(holding));
+	for (const holding of model.holdings) {
+		assets.set(holding.asset.assetId, holding); 
+	}
+	const transactions = model.transactions.map((transaction) => transactionViewModelFromTransaction(transaction, model.exchange.id, assets));
+	const orders = model.orders.map((order) => transactionViewModelFromOrder(order, model.exchange.id, assets));
+	const openOrders = model.openOrders.map((openOrder) => transactionViewModelFromOrder(openOrder, model.exchange.id, assets));
+
+	transactions.push(...orders);
 
 	let profitPercentage = 0;
 	let totalInvested = 0;
@@ -116,7 +124,9 @@ export function portfolioViewModelFrom(model: IExchangeAccount): IExchangeAccoun
     portfolioItems,
     profitPercentage: profitPercentage, 
     profitTotal: { USD: totalProfit },
-    portfolioTotal: { USD: portfolioTotal }
+    portfolioTotal: { USD: portfolioTotal },
+		transactions: transactions || [],
+		openOrders: openOrders || []
   };
 
   return viewModel;
@@ -145,6 +155,56 @@ export function extractPortfolioItemsFrom(holding: IHolding): IPortfolioItemView
   }
 
   return portfolioItemView;
+}
+
+export function transactionViewModelFromTransaction(transaction: IDigitalAssetTransaction, exchange: string, assets: Map<string, IHolding>): ITransactionItemView {
+	const asset = assets.get(transaction.assetId);
+
+	const transactionViewModel: ITransactionItemView = {
+		id: "",
+		exchangeName: exchange,
+		symbol: transaction.symbol,
+		quoteSymbol: "",
+		logoUrl: asset?.asset.image || "",
+		type: transaction.type == Action.DEPOSIT ? "deposit" : "withdrawal",
+		date: transaction.timestamp,
+		amount: transaction.amount,
+		quoteAmount: 0,
+		price: asset?.price.USD ?? 0,
+		value: (asset?.price.USD ?? 1) * transaction.amount,
+		fee: {
+			cost: transaction.fee.cost,
+			currency: transaction.fee.assetId,
+			rate: transaction.fee.rate
+		}
+	}
+
+	return transactionViewModel;
+}
+
+export function transactionViewModelFromOrder(order: IOrder, exchange: string, assets: Map<string, IHolding>): ITransactionItemView {
+	const asset = assets.get(order.quoteAsset);
+
+	const transactionViewModel: ITransactionItemView = {
+		id: "",
+		exchangeName: exchange,
+		symbol: order.baseSymbol,
+		quoteSymbol: order.quoteSymbol,
+		logoUrl: asset?.asset.image || "",
+		type: order.side == Action.BUY ? "buy" : "sell",
+		date: order.timestamp,
+		amount: order.amount,
+		quoteAmount: order.cost,
+		price: order.price ?? asset?.price.USD ?? 0,
+		value: order.price ?? (asset?.price.USD ?? 1) * order.amount,
+		fee: {
+			cost: order.fee.cost,
+			currency: order.fee.assetId,
+			rate: order.fee.rate
+		}
+	}
+
+	return transactionViewModel;
 }
 
 class PortfolioPresenter implements IPresenter<IExchangeAccount, IExchangeAccountPortfolioViewModel> {

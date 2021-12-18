@@ -9,13 +9,13 @@ export const SummaryWrapper = styled.div`
 	display: grid;
 	gap: ${theme.spacing(2)}px;
 	grid-template-columns: 2fr 1fr 1fr;
-	grid-template-rows: auto auto auto;
-	grid-template-areas: 'selector selector selector' 'summary summary summary' 'holdings holdings allocations';
+	grid-template-rows: auto auto auto auto;
+	grid-template-areas: 'selector selector selector' 'summary summary summary' 'holdings holdings allocations' 'transactions transactions transactions';
 
 	@media (max-width: ${theme.breakpoints.values.md}px) {
 		grid-template-columns: 100%;
-		grid-template-rows: auto auto auto auto;
-		grid-template-areas: 'selector' 'summary' 'allocations' 'holdings';
+		grid-template-rows: auto auto auto auto auto;
+		grid-template-areas: 'selector' 'summary' 'allocations' 'holdings' 'transactions';
 	}
 `;
 

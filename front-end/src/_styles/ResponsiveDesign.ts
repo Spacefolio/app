@@ -22,7 +22,7 @@ export const COLORS = {
 	accentLight1: '#00E05A',
 	accentDark1: '#00B849',
 	accentDark2: '#00A341',
-	errorBase: '#ea0000',
+	errorBase: '#EE6352',
 	errorLight2: '#ff5c38',
 	errorLight1: '#ff3a1f',
 	errorDark1: '#c90000',
