@@ -22,6 +22,17 @@ module.exports = {
       'pre-deploy-local': '',
       'post-deploy' : 'cd ~/Spacefolio/current/back-end && npm install && cd ~/Spacefolio/current/front-end && npm install && npm run build && yes | sudo cp -rf ~/Spacefolio/current/front-end/dist/* /var/www/html/ && cd ~/Spacefolio/current/back-end && pm2 reload ecosystem.config.js --env production',
       'pre-setup': ''
+    },
+    production_back_end : {
+      user : 'ubuntu',
+      host : '100.25.236.222',
+      key  : '~/.ssh/spacefolio-back-end.pem',
+      ref  : 'origin/main',
+      repo : 'git@github.com:Spacefolio/app.git',
+      path : '~/Spacefolio',
+      'pre-deploy-local': '',
+      'post-deploy' : 'cd ~/Spacefolio/current/back-end && npm install && pm2 reload ecosystem.config.js --env production',
+      'pre-setup': ''
     }
   }
 };

@@ -21,6 +21,7 @@
 		"test:all": "npm run test:unit && npm run test:int",
 		"lint": "eslint \"src/**\"",
 		"deploy-production": "pm2 deploy ecosystem.config.js production --force",
+		"deploy-production-back-end": "pm2 deploy ecosystem.config.js production_back_end --force",
 		"reload-production": "pm2 deploy ecosystem.config.js production exec 'pm2 reload spacefolio-back-end'",
 		"restart-production": "pm2 startOrRestart ecosystem.config.js"
 	},
