@@ -51,7 +51,7 @@ export function createMetaportfolio(exchangeAccounts: IExchangeAccountPortfolioV
     totalInvested += portfolioItem.totalInvested.all;
   }
 
-  totalProfitPercentage = (totalProfit/totalInvested ?? 1) * 100;
+  totalProfitPercentage = (totalProfit/(totalInvested || 1)) * 100;
 
 	const metaportfolio: IExchangeAccountPortfolioViewModel = {
     name: 'All Portfolios',

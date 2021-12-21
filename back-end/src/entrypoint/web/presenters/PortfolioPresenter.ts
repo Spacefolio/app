@@ -101,7 +101,7 @@ export function portfolioViewModelFrom(model: IExchangeAccount): IExchangeAccoun
 		portfolioTotal += item.value.USD;
 	}
 
-	profitPercentage = (totalProfit / totalInvested ?? 1) * 100;
+	profitPercentage = (totalProfit / (totalInvested || 1)) * 100;
   
   const viewModel: IExchangeAccountPortfolioViewModel = {
     name: model.name,
